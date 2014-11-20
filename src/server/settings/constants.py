@@ -2,6 +2,6 @@
 CURRENT_VERSION = 0.1
 
 #Debig status of the API
-DEBUG = True
+DEBUG = False
 
 __author__ = 'mahesmohan'
