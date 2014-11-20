@@ -19,6 +19,7 @@ TaskApp enables users to share tasks and collaborate
 * Use camel case while naming.
 * All functions should be commented.
 * A pseudo-code or algorithm is a must.
+* All contribution to dev branch only. The merge to master will be done by Mahesh or Ashwin only.
 
 
 ### Who do I talk to? ###
