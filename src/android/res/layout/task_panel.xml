@@ -37,7 +37,7 @@
     </LinearLayout>
     
     <RelativeLayout android:id="@+id/taskStatusLinearLayout"
-        android:layout_width="@dimen/smallMargin_xhdp"
+        android:layout_width="@dimen/taskStatusStripWidth_xhdp"
         android:layout_height="fill_parent"
         android:layout_marginLeft="@dimen/smallMargin_xhdp"
         android:background="#48BA1A"

@@ -11,4 +11,5 @@
     <dimen name="taskPanelHeight_xhdp">72dp</dimen>
     <dimen name="userImageSize_xhdp">40dp</dimen>
     <dimen name="smallTextHeight_xhdp">24dp</dimen>
+    <dimen name="taskStatusStripWidth_xhdp">8dp</dimen>
 </resources>
