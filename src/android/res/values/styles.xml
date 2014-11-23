@@ -24,7 +24,13 @@
     
     <style name="TasksAtHandActionBar"
         parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:background">@color/taskAtHandPrimaryActionBar</item>
+        <item name="android:background">@color/tasksAtHandPrimaryActionBar</item>
+        <item name="android:titleTextStyle">@style/TasksAtHandActionBarTitleText</item>
+    </style>
+    
+    <style name="TasksAtHandActionBarTitleText"
+           parent="@android:style/TextAppearance.Holo.Widget.ActionMode.Title.Inverse">
+        <item name="android:textColor">@color/tasksAtHandActionBarText</item>
     </style>
 
 </resources>
