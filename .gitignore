@@ -42,7 +42,12 @@ tmp/
 storage/
 # Logs
 *.log
+
 # Server Cache
 cache/
+
 # Server Fuse files.
 *.fuse*
+
+# Adobe Illustrator Files.
+*.ai
