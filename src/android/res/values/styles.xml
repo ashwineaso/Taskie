@@ -26,6 +26,7 @@
         parent="@android:style/Widget.Holo.Light.ActionBar">
         <item name="android:background">@color/tasksAtHandPrimaryActionBar</item>
         <item name="android:titleTextStyle">@style/TasksAtHandActionBarTitleText</item>
+        <item name="android:height">56dp</item>
     </style>
     
     <style name="TasksAtHandActionBarTitleText"
