@@ -14,7 +14,7 @@ debug(DEBUG)
 
 # In case of execution from command line the following gets executed.
 if __name__ == '__main__':
-	TaskApp.run(host='0.0.0.0',port=8080,reloader=True)
+	TaskApp.run(host='localhost', port=8080, reloader=True)
 else:
 	TaskApp = default_app()
 routes.set(TaskApp)

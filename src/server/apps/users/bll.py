@@ -8,3 +8,16 @@ def createUser(userObj):
 
 	user = dal.createUser(userObj)
 	return user
+
+def getUserByEmail(userObj):
+	"""
+	Find a user by email id
+	
+	:type userObj: object
+	:pram userObj: An instance with the following attribute(s)
+		email
+	:return: An object of User class
+	"""
+
+	user = dal.getUserByEmail(userObj)
+	return user

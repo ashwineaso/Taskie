@@ -1,5 +1,6 @@
 __author__ = ["ashwineaso"]
 from models import User
+from mongoengine import DoesNotExist
 
 def createUser(userObj):
 	"""
@@ -13,5 +14,19 @@ def createUser(userObj):
 	# try:
 	user.save()
 	return user
-	# except Exception as e:
-	# 	raise e
+
+def getUserByEmail(userObj):
+	"""
+	Finds a user by their email
+
+	:type userObj: object
+	:param userObj: An instance with the following attribute(s)
+		email
+	:return user: An instance of User class
+	"""
+
+	try:
+		user = User.objects(email = userObj.email).get()
+		return user 
+	except Exception as e:
+		raise e
