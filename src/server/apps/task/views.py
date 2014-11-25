@@ -15,8 +15,8 @@ def addNewTask():
 		taskObj.name = obj["name"]
 		taskObj.description = obj["description"]
 		taskObj.dueDateTime = obj["dueDateTime"]
-		taskObj.status = obj["status"]
 		taskObj.collaborators = obj["collaborators"]
+		taskObj.status = obj["status"]
 		task = bll.addNewTask(taskObj)
 		data["task"] = task.to_dict()
 		response["status"] = RESPONSE_SUCCESS
