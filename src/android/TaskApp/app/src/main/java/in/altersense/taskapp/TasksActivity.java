@@ -1,18 +1,32 @@
 package in.altersense.taskapp;
 
 import android.app.Activity;
-import android.support.v7.app.ActionBarActivity;
+import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 
 
 public class TasksActivity extends Activity {
+
+    private LinearLayout tasksAtHandLinearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
+
+        this.tasksAtHandLinearLayout = (LinearLayout) findViewById(R.id.taskAtHandLinearLayout);
+        LayoutInflater inflater = (LayoutInflater) this.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        for(int i=0; i<10; i++) {
+            View taskPanel = inflater.inflate(R.layout.task_panel, null);
+            this.tasksAtHandLinearLayout.addView(taskPanel);
+        }
+
     }
 
 

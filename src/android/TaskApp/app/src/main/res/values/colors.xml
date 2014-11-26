@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="tasksAtHandPrimaryActionBar">#00BCD5</color>
+	<color name="tasksAtHandActionBarText">#FFFFFF</color>
+    <color name="primaryText">#000000</color>
+    <color name="secondaryText">#ABABAB</color>
+</resources>
