@@ -1,44 +1,24 @@
 package in.altersense.taskapp;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.LinearLayout;
 
 
-public class TasksActivity extends Activity {
-
-    private LinearLayout tasksAtHandLinearLayout;
+public class CreateTaskActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tasks);
-
-        this.tasksAtHandLinearLayout = (LinearLayout) findViewById(R.id.taskAtHandLinearLayout);
-        LayoutInflater inflater = (LayoutInflater) this.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-//        SubHeader
-        View subHeaderLayout = inflater.inflate(R.layout.sub_header_panel, null);
-        this.tasksAtHandLinearLayout.addView(subHeaderLayout);
-
-//        Tasks as list
-        for(int i=0; i<10; i++) {
-            View taskPanel = inflater.inflate(R.layout.task_panel, null);
-            this.tasksAtHandLinearLayout.addView(taskPanel);
-        }
-
+        setContentView(R.layout.activity_create_task);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_tasks, menu);
+        getMenuInflater().inflate(R.menu.menu_create_task, menu);
         return true;
     }
 

@@ -6,9 +6,10 @@
     
     <TextView android:id="@+id/titleText"
         android:layout_marginLeft="@dimen/smallMargin_xhdp"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/subHeaderHeight_xhdp"
         android:layout_width="wrap_content"
         android:gravity="center_vertical"
+        android:textColor="@color/primaryText"
         android:text="Today"/>
 
 </LinearLayout>
