@@ -4,6 +4,7 @@ from apps.users import bll as userbll
 from settings.altEngine import Collection
 import datetime
 
+
 def addNewTask(taskObj):
 	"""
 	Creates a task
@@ -37,3 +38,49 @@ def addNewTask(taskObj):
 		status = taskObj.status
 		).save()
 	return task
+
+
+def editTask(taskObj):
+	"""
+	Edits and existing taskObj
+
+	:type taskObj : object
+	:para taskObj : An object with the following attributes
+			_id,
+			name,
+			description,
+			dueDateTime,
+			priority
+	: return : an object of task class
+
+	"""
+	task = Task.objects.get(id = taskObj.id)
+	Task.objects(id = task.id).update(
+										set__name = taskObj.name,
+										set__description = taskObj.description,
+										set__priority = taskObj.priority,
+										set__dueDateTime = taskObj.dueDateTime)
+	task.reload()
+	return task
+
+
+
+def getTaskByID(taskObj):
+	"""
+	Get the task using its id and return Task object
+
+	:type taskObj: object
+	:param taskObj: An instance with the following attributes
+			id,
+			name,
+			description,
+			priority,
+			dueDateTime
+	:return An instance of the Task class
+
+	"""
+	try:
+		task = Task.objects.get(id = taskObj.id)
+		return task
+	except DoesNotExist as e:
+		raise TaskwithIDNotFound
