@@ -19,6 +19,7 @@
         </activity>
         <activity
             android:name="in.altersense.taskapp.CreateTaskActivity"
+            android:theme="@style/CreateTasksTheme"
             android:label="@string/title_activity_create_task" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

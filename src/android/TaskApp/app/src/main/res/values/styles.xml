@@ -22,4 +22,8 @@
         <item name="colorPrimary">@color/tasksAtHandPrimaryActionBar</item>
     </style>
 
+    <style name="CreateTasksTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/createTaskPrimaryActionBar</item>
+    </style>
+
 </resources>
