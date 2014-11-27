@@ -27,40 +27,6 @@
 
         </RelativeLayout>
 
-    <com.marvinlabs.widget.floatinglabel.edittext.FloatingLabelEditText
-        android:id="@+id/taskTitleEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:layout_marginLeft="@dimen/smallMargin_xhdp"
-        app:flw_labelText="Task Title" />
-
-    <com.marvinlabs.widget.floatinglabel.edittext.FloatingLabelEditText
-        android:id="@+id/taskDescriptionEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/smallMargin_xhdp"
-        android:layout_marginBottom="15dp"
-        android:drawablePadding="10dp"
-        android:inputType="textMultiLine"
-        app:flw_labelText="Task Description" />
-
-    <com.marvinlabs.widget.floatinglabel.edittext.FloatingLabelEditText
-        android:id="@+id/dueDateEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:layout_marginLeft="@dimen/smallMargin_xhdp"
-        app:flw_labelText="Due Date and Time" />
-
-    <com.marvinlabs.widget.floatinglabel.edittext.FloatingLabelEditText
-        android:id="@+id/attachmentEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:layout_marginLeft="@dimen/smallMargin_xhdp"
-        app:flw_labelText="AttachFiles" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

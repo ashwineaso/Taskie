@@ -1,8 +1,8 @@
 package in.altersense.taskapp;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 
-public class TasksActivity extends Activity {
+public class TasksActivity extends ActionBarActivity {
 
     private LinearLayout tasksAtHandLinearLayout;
 

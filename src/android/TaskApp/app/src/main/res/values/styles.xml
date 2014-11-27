@@ -18,20 +18,8 @@
     </style>
     
     <style name="TasksAtHandTheme"
-        parent="@android:style/Theme.Holo.Light.DarkActionBar">
-        <item name="android:actionBarStyle">@style/TasksAtHandActionBar</item>
-    </style>
-    
-    <style name="TasksAtHandActionBar"
-        parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:background">@color/tasksAtHandPrimaryActionBar</item>
-        <item name="android:titleTextStyle">@style/TasksAtHandActionBarTitleText</item>
-        <item name="android:height">56dp</item>
-    </style>
-    
-    <style name="TasksAtHandActionBarTitleText"
-           parent="@android:style/TextAppearance.Holo.Widget.ActionMode.Title.Inverse">
-        <item name="android:textColor">@color/tasksAtHandActionBarText</item>
+        parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/tasksAtHandPrimaryActionBar</item>
     </style>
 
 </resources>
