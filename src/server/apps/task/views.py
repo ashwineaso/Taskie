@@ -75,3 +75,19 @@ def remCollaborators():
 		response["status"] = RESPONSE_FAILED
 		response["message"] = e.message
 	return response
+
+
+def modifyTaskStatus():
+	obj = request.json
+	try:
+		taskObj.id = obj["id"]
+		taskObj.status = obj["status"]
+		taskObj.dateTime = obj["dateTime"]
+		task = bll.modifyTaskStatus(taskObj)
+		data["task"] = task.to_dict()
+		response["status"] = RESPONSE_SUCCESS
+		response["data"] = data
+	except Exception as e:
+		response["status"] = RESPONSE_FAILED
+		response["message"] = e.message
+	return response

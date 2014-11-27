@@ -3,6 +3,7 @@ from . import dal
 from settings.exceptions import TaskWithIDNotFound
 from apps.users import bll as userbll
 from settings.altEngine import Collection
+from datetime import datetime
 
 
 def addNewTask(taskObj):
@@ -78,4 +79,22 @@ def remCollaborators(taskObj):
 	"""
 
 	task = dal.remCollaborators(taskObj)
+	return task
+
+
+def modifyTaskStatus(taskObj):
+	"""
+	Modfiy the status of the existing taskObj
+
+	type taskObj: object
+	:param taskObj: An instance with the following attributes
+			id
+			status
+	:return An instance of the Task class
+
+	"""
+
+	if (taskObj.dateTime == "0"):
+		taskObj.dateTime = datetime.now()
+	task = dal.modifyTaskStatus(taskObj)
 	return task

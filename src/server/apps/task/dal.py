@@ -138,3 +138,24 @@ def remCollaborators(taskObj):
 			Task.objects(id = task.id).update( pull__collaborators = coll)
 	task.reload()
 	return task
+
+
+def modifyTaskStatus(taskObj):
+	"""
+	Modfiy the status of the existing taskObj
+
+	type taskObj: object
+	:param taskObj: An instance with the following attributes
+			id
+			status
+	:return An instance of the Task class
+
+	"""
+
+	statusObj = Status()
+	statusObj = Status(status = taskObj.status,
+						dateTime = taskObj.dateTime)
+	task  = Task.objects(id = taskObj.id).get()
+	Task.objects(id = taskObj.id).update(set__status = statusObj)
+	task.reload()
+	return task
