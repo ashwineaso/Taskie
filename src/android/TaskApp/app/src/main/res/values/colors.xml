@@ -8,6 +8,15 @@
     <color name="createTaskTextWidgetsColor">#27A398</color>
     <color name="createTaskSliderWidgetsColor">#0F9C57</color>
 
+    <color name="taskPrimaryActionBar">#607D88</color>
+    <color name="taskAccentColor">#63B0B8</color>
+    <color name="taskSecondaryAccent">#C36CA4</color>
+
+    <color name="collaborationInvited">#1AB5D1</color>
+    <color name="taskUnattended">#607D88</color>
+    <color name="taskDoingColor">#EC962C</color>
+    <color name="taskDone">#0F9C57</color>
+
     <color name="primaryText">#000000</color>
     <color name="secondaryText">#ABABAB</color>
 </resources>
