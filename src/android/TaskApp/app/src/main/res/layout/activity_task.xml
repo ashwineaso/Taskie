@@ -1,12 +1,205 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:background="@color/secondaryText"
     tools:context="in.altersense.taskapp.TaskActivity">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-</RelativeLayout>
+        <LinearLayout android:id="@+id/taskHeaderLinearLayout"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="144dp"
+            android:background="@color/createTaskPrimaryActionBar"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="@drawable/user_pic"
+                android:layout_marginLeft="@dimen/smallMargin_xhdp" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="64dp"
+                android:textColor="@color/lightText"
+                android:layout_marginLeft="@dimen/smallMargin_xhdp"
+                android:textSize="30dp"
+                android:text="Ashwin Easo Zachariah"/>
+
+        </LinearLayout>
+
+        <RelativeLayout android:id="@+id/taskDetailsRelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/lightText">
+
+            <LinearLayout android:id="@+id/taskMainLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/smallMargin_xhdp"
+                android:orientation="horizontal">
+
+                <TextView android:id="@+id/taskTitleTextView"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/smallMargin_xhdp"
+                    android:textSize="@dimen/smallMargin_xhdp"
+                    android:text="Title of the Task"/>
+
+                <TextView android:id="@+id/dueDateTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/smallMargin_xhdp"
+                    android:text="25 Dec, 2014"
+                    />
+
+            </LinearLayout>
+            
+            <TextView android:id="@+id/taskDescriptionTextView"
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:layout_below="@id/taskMainLinearLayout"
+                android:padding="@dimen/smallMargin_xhdp"
+                android:textSize="16dp"
+                android:text="As I said earlier, this is a longer description of the task for the recieve to understand what the hell is going on."/>
+
+            <TextView android:id="@+id/taskPriorityTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/smallMargin_xhdp"
+                android:layout_marginRight="@dimen/smallMargin_xhdp"
+                android:textSize="16dp"
+                android:layout_below="@id/taskDescriptionTextView"
+                android:textColor="@color/taskSecondaryAccent"
+                android:text="High Priority"/>
+
+            <TextView android:id="@+id/taskAttachmentTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/smallMargin_xhdp"
+                android:textSize="16dp"
+                android:layout_below="@id/taskPriorityTextView"
+                android:textColor="@color/taskAccentColor"
+                android:text="Attatchment: Profile_Picture.jpg"/>
+
+            <LinearLayout android:id="@+id/taskStatusLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/taskAttachmentTextView"
+                android:padding="8dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView android:id="@+id/taskStatusTextView"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Status: Ongoing"/>
+
+                <TextView android:id="@+id/changeStatusTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/taskSecondaryAccent"
+                    android:text="Change Status"
+                    />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/menu"/>
+
+            </LinearLayout>
+
+            </RelativeLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/smallMargin_xhdp"
+        android:layout_marginBottom="8dp"
+        android:text="Collaborators of this task"/>
+
+    <LinearLayout android:id="@+id/collaborator1"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/lightText"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="8dp"
+        android:padding="8dp" > b
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/user_pic"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="8dp"
+            android:textSize="16dp"
+            android:textColor="@color/primaryText"
+            android:text="Shrigovind Sreelal Nair"/>
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ongoing_notif"
+            android:layout_marginRight="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="09:50"/>
+
+        </LinearLayout>
+
+    <LinearLayout android:id="@+id/collaborator2"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/lightText"
+        android:gravity="center_vertical"
+        android:padding="8dp" >
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/user_pic"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="8dp"
+            android:textSize="16dp"
+            android:textColor="@color/primaryText"
+            android:text="Mahesh"/>
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/done_notif"
+            android:layout_marginRight="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="09:50"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

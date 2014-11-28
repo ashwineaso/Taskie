@@ -17,6 +17,7 @@
     <color name="taskDoingColor">#EC962C</color>
     <color name="taskDone">#0F9C57</color>
 
+    <color name="lightText">#FFFFFF</color>
     <color name="primaryText">#000000</color>
     <color name="secondaryText">#ABABAB</color>
 </resources>
