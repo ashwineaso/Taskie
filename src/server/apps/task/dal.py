@@ -159,3 +159,26 @@ def modifyTaskStatus(taskObj):
 	Task.objects(id = taskObj.id).update(set__status = statusObj)
 	task.reload()
 	return task
+
+
+def modifyCollStatus(taskObj):
+	"""
+	Modify the status of the collaborator
+
+	:type taskObj : object
+	:param taskObj : An instance with the following attributes
+					id - id of the task
+					collemail - email of the collaborator
+					collstatus - new status of the collaborator
+					statusDateTime - dateTime of status update
+	:return An instance of the Collaborator class
+	"""
+
+	task = Task.objects.get(id = taskObj.id)
+	userObj = userbll.getUserByEmail(taskObj)
+	for collaborator in task.collaborators:
+		if collaborator.user == userObj:
+			collaborator.status.status = taskObj.collstatus
+			collaborator.status.dateTime = taskObj.statusDateTime
+	task.save()
+	return task

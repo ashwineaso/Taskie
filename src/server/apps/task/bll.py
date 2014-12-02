@@ -98,3 +98,22 @@ def modifyTaskStatus(taskObj):
 		taskObj.dateTime = datetime.now()
 	task = dal.modifyTaskStatus(taskObj)
 	return task
+
+
+def modifyCollStatus(taskObj):
+	"""
+	Modify the status of the collaborator
+
+	:type taskObj : object
+	:param taskObj : An instance with the following attributes
+					id - id of the task
+					collemail - email of the collaborator
+					collstatus - new status of the collaborator
+					statusDateTime - dateTime of status update
+	:return An instance of the Collaborator class
+	"""
+
+	if (taskObj.statusDateTime == "0"):
+		taskObj.statusDateTime = datetime.now()
+	task = dal.modifyCollStatus(taskObj)
+	return task

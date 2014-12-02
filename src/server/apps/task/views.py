@@ -91,3 +91,20 @@ def modifyTaskStatus():
 		response["status"] = RESPONSE_FAILED
 		response["message"] = e.message
 	return response
+
+
+def modifyCollStatus():
+	obj = request.json
+	try:
+		taskObj.id = obj["id"]
+		taskObj.email = obj["collemail"]
+		taskObj.collstatus = obj["collstatus"]
+		taskObj.statusDateTime = obj["statusDateTime"]
+		task = bll.modifyCollStatus(taskObj)
+		data["collaborator"] = task.to_dict()
+		response["status"] = RESPONSE_SUCCESS
+		response["data"] = data
+	except Exception as e:
+		response["status"] = RESPONSE_FAILED
+		response["message"] = e.message
+	return response
