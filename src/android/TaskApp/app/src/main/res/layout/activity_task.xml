@@ -31,7 +31,7 @@
                 android:layout_height="64dp"
                 android:textColor="@color/lightText"
                 android:layout_marginLeft="@dimen/smallMargin_xhdp"
-                android:textSize="30dp"
+                android:textSize="26dp"
                 android:text="Ashwin Easo Zachariah"/>
 
         </LinearLayout>

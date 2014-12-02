@@ -20,4 +20,6 @@
     <color name="lightText">#FFFFFF</color>
     <color name="primaryText">#000000</color>
     <color name="secondaryText">#ABABAB</color>
+
+    <color name="emptyBackground">#8C8C8C</color>
 </resources>

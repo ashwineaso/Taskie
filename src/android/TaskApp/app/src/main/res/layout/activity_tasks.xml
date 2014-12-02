@@ -6,4 +6,20 @@
     android:layout_height="match_parent"
     tools:context="in.altersense.taskapp.TasksAtHand" >
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/emptyBackground">
+
+        <LinearLayout android:id="@+id/mainStageLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/emptyBackground"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
 </LinearLayout>

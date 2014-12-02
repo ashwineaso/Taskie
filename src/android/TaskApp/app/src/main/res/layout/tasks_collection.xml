@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView android:id="@+id/taskCollectionTitleTextView"
+        android:layout_marginLeft="@dimen/smallMargin_xhdp"
+        android:layout_height="@dimen/subHeaderHeight_xhdp"
+        android:textSize="@dimen/subHeader_xhdpi"
+        android:layout_width="wrap_content"
+        android:gravity="center_vertical"
+        android:textColor="@color/primaryText"
+        android:text="Today"/>
+
+    <LinearLayout android:id="@+id/taskListLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"></LinearLayout>
+
+</LinearLayout>

@@ -1,48 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/taskPanelLinearLayout"
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/taskPanelHeight_xhdp"
-    android:gravity="center_vertical" >
-    
-    <ImageView android:id="@+id/userImageView"
-        android:layout_marginLeft="@dimen/smallMargin_xhdp"
-        android:layout_width="@dimen/userImageSize_xhdp"
-        android:layout_height="@dimen/userImageSize_xhdp"
-        android:src="@drawable/user_pic"/>
-    
-    <LinearLayout android:id="@+id/taskContentLinearLayout"
-        android:orientation="vertical"
+android:id="@+id/taskPanelLinearLayout"
+android:orientation="horizontal"
+android:layout_width="match_parent"
+android:layout_height="@dimen/taskPanelHeight_xhdp"
+android:background="@color/lightText"
+android:layout_marginBottom="1dp"
+android:gravity="center_vertical" >
+
+<ImageView android:id="@+id/userImageView"
+    android:layout_marginLeft="@dimen/smallMargin_xhdp"
+    android:layout_width="@dimen/userImageSize_xhdp"
+    android:layout_height="@dimen/userImageSize_xhdp"
+    android:src="@drawable/user_pic"/>
+
+<LinearLayout android:id="@+id/taskContentLinearLayout"
+    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    android:layout_width="0dp"
+    android:layout_weight="1"
+    android:layout_marginLeft="@dimen/smallMargin_xhdp">
+
+    <TextView android:id="@+id/SenderNameTextView"
+        android:text="Sender Name Here"
         android:layout_height="wrap_content"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_marginLeft="@dimen/smallMargin_xhdp">
-        
-        <TextView android:id="@+id/SenderNameTextView"
-            android:text="Sender Name Here"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:textColor="@color/primaryText"
-            android:textSize="18dp"/>
-        
-        <TextView android:id="@+id/taskTitleTextView"
-            android:text="Task Title goes here - This is a task description in short terms!"
-            android:lines="2"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
-            android:textColor="@color/secondaryText"
-            android:textSize="14dp"/>
-        
-    </LinearLayout>
-    
-    <RelativeLayout android:id="@+id/taskStatusLinearLayout"
-        android:layout_width="@dimen/taskStatusStripWidth_xhdp"
-        android:layout_height="fill_parent"
-        android:layout_marginLeft="@dimen/smallMargin_xhdp"
-        android:background="#48BA1A"
-        ></RelativeLayout>
+        android:layout_width="wrap_content"
+        android:textColor="@color/primaryText"
+        android:textSize="18dp"/>
+
+    <TextView android:id="@+id/taskTitleTextView"
+        android:text="Task Title goes here - This is a task description in short terms!"
+        android:lines="2"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:textColor="@color/secondaryText"
+        android:textSize="14dp"/>
+
+</LinearLayout>
+
+<RelativeLayout android:id="@+id/taskStatusLinearLayout"
+    android:layout_width="@dimen/taskStatusStripWidth_xhdp"
+    android:layout_height="fill_parent"
+    android:layout_marginLeft="@dimen/smallMargin_xhdp"
+    android:background="#48BA1A"></RelativeLayout>
 
 </LinearLayout>
