@@ -39,8 +39,9 @@ public class TasksActivity extends ActionBarActivity {
                 View taskPanel = inflater.inflate(R.layout.task_panel, null);
                 taskListLinearLayout.addView(taskPanel);
             }
+            this.mainStageLinearLayout.addView(taskCollection);
         }
-        
+
     }
 
 
