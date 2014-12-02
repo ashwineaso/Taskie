@@ -2,6 +2,7 @@ __author__ = ["ashwineaso"]
 from apps.task.models import *
 from apps.users import bll as userbll
 from settings.altEngine import Collection
+from bson.objectid import ObjectId
 import datetime
 
 
@@ -84,3 +85,100 @@ def getTaskByID(taskObj):
 		return task
 	except DoesNotExist as e:
 		raise TaskwithIDNotFound
+
+
+def addCollaborators(taskObj):
+	"""
+	Add collaborators to an existing task
+
+	:type taskObj: object
+	:param taskObj: An instance with the following attributes
+			collaborators
+	:return An instance of the Task class
+
+	"""
+
+	my_objects = []
+	userObj = Collection()
+
+	#Assigning initial status to each collaborator
+	taskObj.status = Status(
+					status = 0,
+					dateTime = datetime.datetime.now()
+					)
+
+	#Get the user - collaborator id and add to list
+	for val in taskObj.collaborators:
+		userObj.email = val
+		my_objects.append(Collaborator(user = userbll.getUserByEmail(userObj),
+										status = taskObj.status))
+
+	task = Task.objects.get(id = taskObj.id)
+	Task.objects(id = task.id).update( push_all__collaborators = my_objects)
+	
+	task.reload()
+	return task
+
+
+def remCollaborators(taskObj):
+	"""
+	Remove collaborators from an existing task
+
+	:type taskObj: object
+	:param taskObj: An instance with the following attributes
+			collaborators
+	:return An instance of the Task class
+
+	"""
+
+	coll = Collaborator()
+	task = Task.objects(id = taskObj.id).get()
+	for coll in  task.collaborators:
+		if (coll.user.email == taskObj.collaborators):
+			Task.objects(id = task.id).update( pull__collaborators = coll)
+	task.reload()
+	return task
+
+
+def modifyTaskStatus(taskObj):
+	"""
+	Modfiy the status of the existing taskObj
+
+	type taskObj: object
+	:param taskObj: An instance with the following attributes
+			id
+			status
+	:return An instance of the Task class
+
+	"""
+
+	statusObj = Status()
+	statusObj = Status(status = taskObj.status,
+						dateTime = taskObj.dateTime)
+	task  = Task.objects(id = taskObj.id).get()
+	Task.objects(id = taskObj.id).update(set__status = statusObj)
+	task.reload()
+	return task
+
+
+def modifyCollStatus(taskObj):
+	"""
+	Modify the status of the collaborator
+
+	:type taskObj : object
+	:param taskObj : An instance with the following attributes
+					id - id of the task
+					collemail - email of the collaborator
+					collstatus - new status of the collaborator
+					statusDateTime - dateTime of status update
+	:return An instance of the Collaborator class
+	"""
+
+	task = Task.objects.get(id = taskObj.id)
+	userObj = userbll.getUserByEmail(taskObj)
+	for collaborator in task.collaborators:
+		if collaborator.user == userObj:
+			collaborator.status.status = taskObj.collstatus
+			collaborator.status.dateTime = taskObj.statusDateTime
+	task.save()
+	return task

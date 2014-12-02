@@ -1,6 +1,10 @@
 __author__ = ["ashwineaso"]
 from . import dal
 from settings.exceptions import TaskWithIDNotFound
+from apps.users import bll as userbll
+from settings.altEngine import Collection
+from datetime import datetime
+
 
 def addNewTask(taskObj):
 	"""
@@ -22,6 +26,7 @@ def addNewTask(taskObj):
 	#Add a task to the servers task list
 	task = dal.addNewTask(taskObj)
 	return task
+
 
 def editTask(taskObj):
 	"""
@@ -45,3 +50,70 @@ def editTask(taskObj):
 		return task
 	except TaskWithIDNotFound as e:
 		raise e
+
+
+def addCollaborators(taskObj):
+	"""
+	Add collaborator to a taskObj
+
+	:type taskObj : object
+	:para taskObj : An object with the following attributes
+			_id,
+			collaborators
+	:return : An object of task class
+	"""
+
+	task = dal.addCollaborators(taskObj)
+	return task
+
+
+def remCollaborators(taskObj):
+	"""
+	Add collaborator to a taskObj
+
+	:type taskObj : object
+	:para taskObj : An object with the following attributes
+			_id,
+			collaborators
+	:return : An object of task class
+	"""
+
+	task = dal.remCollaborators(taskObj)
+	return task
+
+
+def modifyTaskStatus(taskObj):
+	"""
+	Modfiy the status of the existing taskObj
+
+	type taskObj: object
+	:param taskObj: An instance with the following attributes
+			id
+			status
+	:return An instance of the Task class
+
+	"""
+
+	if (taskObj.dateTime == "0"):
+		taskObj.dateTime = datetime.now()
+	task = dal.modifyTaskStatus(taskObj)
+	return task
+
+
+def modifyCollStatus(taskObj):
+	"""
+	Modify the status of the collaborator
+
+	:type taskObj : object
+	:param taskObj : An instance with the following attributes
+					id - id of the task
+					collemail - email of the collaborator
+					collstatus - new status of the collaborator
+					statusDateTime - dateTime of status update
+	:return An instance of the Collaborator class
+	"""
+
+	if (taskObj.statusDateTime == "0"):
+		taskObj.statusDateTime = datetime.now()
+	task = dal.modifyCollStatus(taskObj)
+	return task

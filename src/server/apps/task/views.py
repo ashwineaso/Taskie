@@ -45,3 +45,66 @@ def editTask():
 		response["status"] = RESPONSE_FAILED
 		response["message"] = e.message
 	return response
+
+
+def addCollaborators():
+	obj = request.json
+	try:
+		taskObj.id = obj["id"]
+		taskObj.collaborators = obj["collaborators"]
+		task = bll.addCollaborators(taskObj)
+		data["task"] = task.to_dict()
+		response["status"] = RESPONSE_SUCCESS
+		response["data"] = data
+	except Exception as e:
+		response["status"] = RESPONSE_FAILED
+		response["message"] = e.message
+	return response
+
+
+def remCollaborators():
+	obj = request.json
+	try:
+		taskObj.id = obj["id"]
+		taskObj.collaborators = obj["collaborators"]
+		task = bll.remCollaborators(taskObj)
+		data["task"] = task.to_dict()
+		response["status"] = RESPONSE_SUCCESS
+		response["data"] = data
+	except Exception as e:
+		response["status"] = RESPONSE_FAILED
+		response["message"] = e.message
+	return response
+
+
+def modifyTaskStatus():
+	obj = request.json
+	try:
+		taskObj.id = obj["id"]
+		taskObj.status = obj["status"]
+		taskObj.dateTime = obj["dateTime"]
+		task = bll.modifyTaskStatus(taskObj)
+		data["task"] = task.to_dict()
+		response["status"] = RESPONSE_SUCCESS
+		response["data"] = data
+	except Exception as e:
+		response["status"] = RESPONSE_FAILED
+		response["message"] = e.message
+	return response
+
+
+def modifyCollStatus():
+	obj = request.json
+	try:
+		taskObj.id = obj["id"]
+		taskObj.email = obj["collemail"]
+		taskObj.collstatus = obj["collstatus"]
+		taskObj.statusDateTime = obj["statusDateTime"]
+		task = bll.modifyCollStatus(taskObj)
+		data["collaborator"] = task.to_dict()
+		response["status"] = RESPONSE_SUCCESS
+		response["data"] = data
+	except Exception as e:
+		response["status"] = RESPONSE_FAILED
+		response["message"] = e.message
+	return response
