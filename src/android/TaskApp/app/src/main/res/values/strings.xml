@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">TaskApp</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_create_task">CreateTaskActivity</string>
+    <string name="title_activity_task">TaskActivity</string>
+
+</resources>
