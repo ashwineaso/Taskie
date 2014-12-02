@@ -8,30 +8,39 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 
 public class TasksActivity extends ActionBarActivity {
 
-    private LinearLayout tasksAtHandLinearLayout;
+    private LinearLayout mainStageLinearLayout;  // For handling the main content area.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
 
-        this.tasksAtHandLinearLayout = (LinearLayout) findViewById(R.id.taskAtHandLinearLayout);
+
+        this.mainStageLinearLayout = (LinearLayout) findViewById(R.id.mainStageLinearLayout);
+//        Layout inflater for inflating the layouts.
         LayoutInflater inflater = (LayoutInflater) this.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-//        SubHeader
-        View subHeaderLayout = inflater.inflate(R.layout.sub_header_panel, null);
-        this.tasksAtHandLinearLayout.addView(subHeaderLayout);
-
-//        Tasks as list
-        for(int i=0; i<10; i++) {
-            View taskPanel = inflater.inflate(R.layout.task_panel, null);
-            this.tasksAtHandLinearLayout.addView(taskPanel);
+//        Inflate multiple list collections.
+        for(int listCollectionCtr = 0; listCollectionCtr<3; listCollectionCtr++) {
+            View taskCollection = inflater.inflate(R.layout.tasks_collection, null);
+//            Set ids for each list collections for identifying.
+            taskCollection.setId(listCollectionCtr + 1);
+//            Title each collections appropriately.
+            TextView taskCollectionTitle = (TextView) taskCollection.findViewById(R.id.taskCollectionTitleTextView);
+            taskCollectionTitle.setText("List Collection "+listCollectionCtr+1);
+//            Inflate multiple tasks in each collections.
+            LinearLayout taskListLinearLayout = (LinearLayout) taskCollection.findViewById(R.id.taskListLinearLayout);
+            for(int i=0; i<3; i++) {
+                View taskPanel = inflater.inflate(R.layout.task_panel, null);
+                taskListLinearLayout.addView(taskPanel);
+            }
         }
-
+        
     }
 
 
