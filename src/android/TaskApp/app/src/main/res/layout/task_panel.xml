@@ -8,12 +8,6 @@ android:background="@color/lightText"
 android:layout_marginBottom="1dp"
 android:gravity="center_vertical" >
 
-<ImageView android:id="@+id/userImageView"
-    android:layout_marginLeft="@dimen/smallMargin_xhdp"
-    android:layout_width="@dimen/userImageSize_xhdp"
-    android:layout_height="@dimen/userImageSize_xhdp"
-    android:src="@drawable/user_pic"/>
-
 <LinearLayout android:id="@+id/taskContentLinearLayout"
     android:orientation="vertical"
     android:layout_height="wrap_content"
@@ -21,14 +15,14 @@ android:gravity="center_vertical" >
     android:layout_weight="1"
     android:layout_marginLeft="@dimen/smallMargin_xhdp">
 
-    <TextView android:id="@+id/SenderNameTextView"
-        android:text="Sender Name Here"
+    <TextView android:id="@+id/taskTitleTextView"
+        android:text="Boil Eggs"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:textColor="@color/primaryText"
-        android:textSize="18dp"/>
+        android:textSize="@dimen/text_subHeader_xhdpi"/>
 
-    <TextView android:id="@+id/taskTitleTextView"
+    <TextView android:id="@+id/taskDescriptionTextView"
         android:text="Task Title goes here - This is a task description in short terms!"
         android:lines="2"
         android:maxLines="2"
@@ -36,7 +30,7 @@ android:gravity="center_vertical" >
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
         android:textColor="@color/secondaryText"
-        android:textSize="14dp"/>
+        android:textSize="@dimen/text_small_xhdpi"/>
 
 </LinearLayout>
 
