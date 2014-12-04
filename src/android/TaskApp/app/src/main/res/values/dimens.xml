@@ -10,7 +10,8 @@
     <dimen name="bigMargin_xhdp">72dp</dimen>
     <dimen name="subHeaderHeight_xhdp">48dp</dimen>
     <dimen name="taskPanelHeight_xhdp">96dp</dimen>
-    <dimen name="userImageSize_xhdp">48dp</dimen>
+    <dimen name="userImageHeight_xhdp">72dp</dimen>
+    <dimen name="userImageWidth_xhdp">48dp</dimen>
     <dimen name="smallTextHeight_xhdp">24dp</dimen>
     <dimen name="taskStatusStripWidth_xhdp">8dp</dimen>
 

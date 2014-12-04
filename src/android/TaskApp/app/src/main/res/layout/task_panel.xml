@@ -3,27 +3,39 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/taskPanelHeight_xhdp"
+    android:layout_height="wrap_content"
     android:background="@color/lightText"
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/taskPanelLinearLayout"
         android:orientation="horizontal"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/taskPanelHeight_xhdp"
         android:layout_width="match_parent"
         android:gravity="center_vertical">
 
         <LinearLayout
-            android:layout_width="@dimen/userImageSize_xhdp"
-            android:layout_height="@dimen/userImageSize_xhdp"
+            android:layout_width="@dimen/userImageWidth_xhdp"
+            android:layout_height="@dimen/userImageHeight_xhdp"
             android:orientation="vertical"
             android:layout_margin="@dimen/tinyMargin_xhdpi">
 
             <in.altersense.taskapp.customviews.CustomFontTextView
+                android:id="@+id/timeStatusCustomFontTextView"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                app:customFont="@string/font_textCondensed"
+                android:textColor="@color/positive"
+                android:textSize="@dimen/text_small_xhdpi"
+                android:text="DUE IN"/>
+
+            <in.altersense.taskapp.customviews.CustomFontTextView
+                android:id="@+id/timeMeasureCustomFontTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:lines="1"
                 android:gravity="center_horizontal|top"
                 app:customFont="@string/font_textCondensed"
                 android:text="123"
@@ -31,6 +43,7 @@
                 android:textSize="@dimen/text_dueDats_xhdpi"/>
 
             <in.altersense.taskapp.customviews.CustomFontTextView
+                android:id="@+id/timeUnitTextCustomFontTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="DAYS"
@@ -43,40 +56,71 @@
 
         <LinearLayout android:id="@+id/taskContentLinearLayout"
             android:orientation="vertical"
-            android:layout_height="@dimen/userImageSize_xhdp"
+            android:layout_height="@dimen/userImageHeight_xhdp"
             android:layout_width="0dp"
             android:layout_weight="1" >
 
-            <TextView android:id="@+id/taskTitleTextView"
+            <in.altersense.taskapp.customviews.CustomFontTextView android:id="@+id/taskTitleTextView"
                 android:text="Boil Eggs"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:textColor="@color/primaryText"
-                android:textSize="@dimen/text_subHeader_xhdpi"/>
+                app:customFont="@string/font_textRegular"
+                android:textSize="@dimen/text_header_xhdpi"/>
 
             <TextView android:id="@+id/taskDescriptionTextView"
-                android:text="Task Title goes here - This is a task description in short terms!"
-                android:lines="2"
-                android:maxLines="2"
+                android:text="This is a task description in short terms!"
+                android:singleLine="true"
+                android:maxLines="1"
                 android:ellipsize="end"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
                 android:textColor="@color/secondaryText"
                 android:textSize="@dimen/text_small_xhdpi"/>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView android:id="@+id/taskOwnerTextView"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:textColor="@color/primaryText"
+                    android:text="Mahesh Mohan" />
+
+                <LinearLayout android:id="@+id/taskIconsListLinearLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_gravity="right"
+                    android:gravity="right">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@android:drawable/ic_input_get"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
         </LinearLayout>
 
-        <RelativeLayout android:id="@+id/taskStatusLinearLayout"
+        <LinearLayout android:id="@+id/taskStatusLinearLayout"
             android:layout_width="@dimen/taskStatusStripWidth_xhdp"
             android:layout_height="fill_parent"
             android:layout_marginLeft="@dimen/smallMargin_xhdp"
-            android:background="#48BA1A"></RelativeLayout>
+            android:orientation="horizontal"
+            android:background="#48BA1A" />
 
     </LinearLayout>
-    
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:src="@drawable/line"/>
-    
+
 </LinearLayout>

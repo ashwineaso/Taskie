@@ -9,5 +9,6 @@
 
     <!-- Fonts -->
     <string name="font_textCondensed">steelfish_regular.ttf</string>
+    <string name="font_textRegular">kelson_regular.otf</string>
 
 </resources>
