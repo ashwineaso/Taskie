@@ -10,11 +10,12 @@
     <dimen name="bigMargin_xhdp">72dp</dimen>
     <dimen name="subHeaderHeight_xhdp">48dp</dimen>
     <dimen name="taskPanelHeight_xhdp">96dp</dimen>
-    <dimen name="userImageSize_xhdp">40dp</dimen>
+    <dimen name="userImageSize_xhdp">48dp</dimen>
     <dimen name="smallTextHeight_xhdp">24dp</dimen>
     <dimen name="taskStatusStripWidth_xhdp">8dp</dimen>
 
     <!-- Text Sizes for xHdpi -->
+    <dimen name="text_dueDats_xhdpi">30sp</dimen>
     <dimen name="text_header_xhdpi">22sp</dimen>
     <dimen name="text_subHeader_xhdpi">18sp</dimen>
     <dimen name="text_normal_xhdpi">14sp</dimen>

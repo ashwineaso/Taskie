@@ -22,4 +22,8 @@
     <color name="secondaryText">#ABABAB</color>
 
     <color name="emptyBackground">#D3D3D3</color>
+    <color name="lineColor">#ABABAB</color>
+
+    <color name="positive">#48BA1A</color>
+    <color name="negative">#E91D62</color>
 </resources>
