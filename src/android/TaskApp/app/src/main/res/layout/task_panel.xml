@@ -5,19 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/lightText"
+    android:gravity="center_vertical"
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/taskPanelLinearLayout"
         android:orientation="horizontal"
-        android:layout_height="@dimen/taskPanelHeight_xhdp"
-        android:layout_width="match_parent"
-        android:gravity="center_vertical">
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" >
 
         <LinearLayout
             android:layout_width="@dimen/userImageWidth_xhdp"
             android:layout_height="@dimen/userImageHeight_xhdp"
             android:orientation="vertical"
+            android:layout_gravity="center_vertical"
             android:layout_margin="@dimen/tinyMargin_xhdpi">
 
             <in.altersense.taskapp.customviews.CustomFontTextView
@@ -27,16 +28,17 @@
                 android:gravity="center_horizontal"
                 app:customFont="@string/font_textCondensed"
                 android:textColor="@color/positive"
-                android:textSize="@dimen/text_small_xhdpi"
+                android:textSize="@dimen/text_normal_xhdpi"
                 android:text="DUE IN"/>
 
             <in.altersense.taskapp.customviews.CustomFontTextView
                 android:id="@+id/timeMeasureCustomFontTextView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:singleLine="true"
                 android:lines="1"
-                android:gravity="center_horizontal|top"
+                android:gravity="center"
                 app:customFont="@string/font_textCondensed"
                 android:text="123"
                 android:textColor="@color/positive"
@@ -47,15 +49,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="DAYS"
-                android:gravity="center_horizontal"
+                android:gravity="center_horizontal|bottom"
                 app:customFont="@string/font_textCondensed"
                 android:textColor="@color/positive"
-                android:textSize="@dimen/text_small_xhdpi"/>
+                android:textSize="@dimen/text_normal_xhdpi"/>
 
         </LinearLayout>
 
         <LinearLayout android:id="@+id/taskContentLinearLayout"
             android:orientation="vertical"
+            android:layout_gravity="center_vertical"
             android:layout_height="@dimen/userImageHeight_xhdp"
             android:layout_width="0dp"
             android:layout_weight="1" >
@@ -70,49 +73,57 @@
 
             <TextView android:id="@+id/taskDescriptionTextView"
                 android:text="This is a task description in short terms!"
-                android:singleLine="true"
+                android:lines="1"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
                 android:textColor="@color/secondaryText"
-                android:textSize="@dimen/text_small_xhdpi"/>
+                android:textSize="@dimen/text_normal_xhdpi"/>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_weight="1">
 
-                <TextView android:id="@+id/taskOwnerTextView"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:textColor="@color/primaryText"
-                    android:text="Mahesh Mohan" />
+                    android:layout_alignParentBottom="true"
+                    android:orientation="horizontal">
 
-                <LinearLayout android:id="@+id/taskIconsListLinearLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_gravity="right"
-                    android:gravity="right">
+                    <TextView android:id="@+id/taskOwnerTextView"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:textColor="@color/primaryText"
+                        android:textSize="@dimen/text_normal_xhdpi"
+                        android:text="Mahesh Mohan" />
 
-                    <ImageView
+                    <LinearLayout android:id="@+id/taskIconsListLinearLayout"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:src="@android:drawable/ic_input_get"/>
+                        android:orientation="horizontal"
+                        android:layout_gravity="right"
+                        android:gravity="right">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:src="@android:drawable/ic_input_get"/>
+
+                        </LinearLayout>
 
                     </LinearLayout>
-
-                </LinearLayout>
+                </RelativeLayout>
 
         </LinearLayout>
 
         <LinearLayout android:id="@+id/taskStatusLinearLayout"
             android:layout_width="@dimen/taskStatusStripWidth_xhdp"
             android:layout_height="fill_parent"
-            android:layout_marginLeft="@dimen/smallMargin_xhdp"
+            android:layout_marginLeft="@dimen/tinyMargin_xhdpi"
             android:orientation="horizontal"
             android:background="#48BA1A" />
 
