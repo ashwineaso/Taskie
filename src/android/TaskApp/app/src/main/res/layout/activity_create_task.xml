@@ -6,27 +6,6 @@
     android:padding="@dimen/smallMargin_xhdp"
     tools:context="in.altersense.taskapp.CreateTaskActivity">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/subHeaderHeight_xhdp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:gravity="center"
-            android:text="To" />
-
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:singleLine="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="@dimen/bigMargin_xhdp"
-            android:gravity="center_vertical|left"/>
-
-        </RelativeLayout>
-
     <EditText android:id="@+id/taskTitleEditText"
         android:hint="Task Title"
         android:layout_width="match_parent"
@@ -35,37 +14,17 @@
 
     <EditText android:id="@+id/taskDescriptionEditText"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:maxHeight="@dimen/bigMargin_xhdp"
         android:gravity="top"
         android:inputType="textMultiLine"
-        android:hint="Task Description"
-        android:layout_weight="1"/>
+        android:hint="Task Description"/>
 
     <EditText android:id="@+id/dueDateEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Due Date and Time"
         android:enabled="false"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <EditText android:id="@+id/fileAttachmentEditText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:editable="false"
-            android:layout_weight="1"
-            android:hint="File Attachment"/>
-
-        <Button android:id="@+id/fileAttachmentButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+"
-            android:layout_gravity="center"
-            android:gravity="center"/>
-
-        </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -96,5 +55,30 @@
 
         </LinearLayout>
 
-    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@android:drawable/ic_btn_speak_now"
+            android:layout_weight="1" />
+
+        <ImageView android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@android:drawable/ic_btn_speak_now"
+            android:layout_weight="1" />
+
+        <ImageView android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@android:drawable/ic_btn_speak_now"
+            android:layout_weight="1" />
+
+        <ImageView android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@android:drawable/ic_btn_speak_now"
+            android:layout_weight="1" />
+
+        </LinearLayout>
 </LinearLayout>

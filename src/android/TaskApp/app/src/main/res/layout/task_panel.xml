@@ -63,12 +63,11 @@
             android:layout_width="0dp"
             android:layout_weight="1" >
 
-            <in.altersense.taskapp.customviews.CustomFontTextView android:id="@+id/taskTitleTextView"
+            <TextView android:id="@+id/taskTitleTextView"
                 android:text="Boil Eggs"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:textColor="@color/primaryText"
-                app:customFont="@string/font_textRegular"
                 android:textSize="@dimen/text_header_xhdpi"/>
 
             <TextView android:id="@+id/taskDescriptionTextView"

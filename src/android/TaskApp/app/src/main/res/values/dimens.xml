@@ -5,13 +5,13 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <!-- Dimensions for xHdpi -->
-    <dimen name="tinyMargin_xhdpi">8dp</dimen>
+    <dimen name="tinyMargin_xhdpi">4dp</dimen>
     <dimen name="smallMargin_xhdp">16dp</dimen>
     <dimen name="bigMargin_xhdp">72dp</dimen>
     <dimen name="subHeaderHeight_xhdp">48dp</dimen>
     <dimen name="taskPanelHeight_xhdp">96dp</dimen>
     <dimen name="userImageHeight_xhdp">72dp</dimen>
-    <dimen name="userImageWidth_xhdp">48dp</dimen>
+    <dimen name="userImageWidth_xhdp">36dp</dimen>
     <dimen name="smallTextHeight_xhdp">24dp</dimen>
     <dimen name="taskStatusStripWidth_xhdp">8dp</dimen>
 
