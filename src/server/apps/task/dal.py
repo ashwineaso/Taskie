@@ -21,6 +21,10 @@ def addNewTask(taskObj):
 	#Define an emptly list to include all the user objects
 	my_objects = []
 	userObj = Collection()
+
+	#for finding the user id of the owner
+	userObj.email = taskObj.owner
+	taskObj.owner = userbll.getUserByEmail(userObj)
 	
 	#Creating the list of collaborators
 	for val in taskObj.collaborators:
@@ -182,3 +186,25 @@ def modifyCollStatus(taskObj):
 			collaborator.status.dateTime = taskObj.statusDateTime
 	task.save()
 	return task
+
+
+def createGroup(groupObj):
+	"""
+
+	Create a new group
+	:type groupObj : object
+	:param groupObj : An instance with the following attributes
+						ownerId - userId of the creator/ member
+						title - name of the groupObj
+	:return An instance of the Group class
+	"""
+
+	userObj = Collection()
+
+	#for finding the user id of the owner
+	userObj.email = groupObj.owner
+	groupObj.owner = userbll.getUserByEmail(userObj)
+	group = Group(
+					owner = groupObj.owner,
+					title = groupObj.title).save()
+	return group

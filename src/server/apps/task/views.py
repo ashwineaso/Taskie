@@ -7,6 +7,7 @@ response = {}
 data = {}
 taskObj = Collection()
 userObj = Collection()
+groupObj = Collection()
 
 def addNewTask():
 	
@@ -102,6 +103,33 @@ def modifyCollStatus():
 		taskObj.statusDateTime = obj["statusDateTime"]
 		task = bll.modifyCollStatus(taskObj)
 		data["collaborator"] = task.to_dict()
+		response["status"] = RESPONSE_SUCCESS
+		response["data"] = data
+	except Exception as e:
+		response["status"] = RESPONSE_FAILED
+		response["message"] = e.message
+	return response
+
+def createGroup():
+	obj = request.json
+	try:
+		groupObj.owner = obj["ownerId"]
+		groupObj.title = obj["title"]
+		group = bll.createGroup(groupObj)
+		data["group"] = group.to_dict()
+		response["status"] = RESPONSE_SUCCESS
+		response["data"] = data
+	except Exception as e:
+		response["status"] = RESPONSE_FAILED
+		response["message"] = e.message
+	return response
+
+def addGroupMembers():
+	obj = request.json
+	try:
+		groupObj.id = obj["groupId"]
+		groupObj.member = obj["memberId"]
+		group = bll.addGroupMembers()
 		response["status"] = RESPONSE_SUCCESS
 		response["data"] = data
 	except Exception as e:
