@@ -22,7 +22,7 @@ def addNewTask(taskObj):
 			status
 	:return an object of the task class.
 	"""
-
+	taskObj.dueDateTime = datetime.now()
 	#Add a task to the servers task list
 	task = dal.addNewTask(taskObj)
 	return task
@@ -117,3 +117,17 @@ def modifyCollStatus(taskObj):
 		taskObj.statusDateTime = datetime.now()
 	task = dal.modifyCollStatus(taskObj)
 	return task
+
+def createGroup(groupObj):
+	"""
+
+	Create a new group
+	:type groupObj : object
+	:param groupObj : An instance with the following attributes
+						ownerId - userId of the creator/ member
+						title - name of the groupObj
+	:return An instance of the Group class
+	"""
+	group = dal.createGroup(groupObj)
+	return group 
+
