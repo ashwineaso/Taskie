@@ -24,7 +24,7 @@ class Collaborator(EmbeddedDocument):
 		return mongo_to_dict_helper(self)
 
 class Task(Document):
-	owner = StringField()
+	owner = EmbeddedDocumentField(Collaborator)
 	collaborators = ListField(EmbeddedDocumentField(Collaborator))
 	priority = IntField()
 	name = StringField()
