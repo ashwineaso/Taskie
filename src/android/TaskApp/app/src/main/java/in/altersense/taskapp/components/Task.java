@@ -18,6 +18,13 @@ public class Task {
 
     private View panelView;
 
+    /**
+     * Create Task with Title, Description and Owner Name.
+     * @param title Title of the task.
+     * @param descr Description of the task.
+     * @param ownerName Name of the owner of the task.
+     * @param inflater An inflator so that the TaskPanel could be infalted.
+     */
     public Task(
             String title,
             String descr,
