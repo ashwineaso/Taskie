@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import in.altersense.taskapp.components.Task;
+
 
 public class TasksActivity extends ActionBarActivity {
 
@@ -36,8 +38,13 @@ public class TasksActivity extends ActionBarActivity {
 //            Inflate multiple tasks in each collections.
             LinearLayout taskListLinearLayout = (LinearLayout) taskCollection.findViewById(R.id.taskListLinearLayout);
             for(int i=0; i<3; i++) {
-                View taskPanel = inflater.inflate(R.layout.task_panel, null);
-                taskListLinearLayout.addView(taskPanel);
+                Task task = new Task(
+                        "Boil Eggs",
+                        "Some kinda description goes here, I dont care actually. You can set it to anything.",
+                        "Mahesh Mohan",
+                        this.getLayoutInflater()
+                );
+                taskListLinearLayout.addView(task.getPanelView());
             }
             this.mainStageLinearLayout.addView(taskCollection);
         }
