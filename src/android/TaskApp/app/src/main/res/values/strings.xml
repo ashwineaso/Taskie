@@ -16,7 +16,6 @@
 
     <!-- Arrays -->
     <string-array name="array_sortBy">
-        <item>Sort By</item>
         <item>Due Date</item>
         <item>Owners</item>
         <item>Priority</item>
