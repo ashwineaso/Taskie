@@ -11,4 +11,14 @@
     <string name="font_textCondensed">steelfish_regular.ttf</string>
     <string name="font_textRegular">kelson_regular.otf</string>
 
+    <!-- Labels -->
+    <string name="label_sortby">Sort By</string>
+
+    <!-- Arrays -->
+    <string-array name="array_sortBy">
+        <item>Due Date</item>
+        <item>Owners</item>
+        <item>Priority</item>
+    </string-array>
+
 </resources>
