@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import in.altersense.taskapp.components.Task;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 public class TasksActivity extends ActionBarActivity {
@@ -20,6 +22,8 @@ public class TasksActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        Setting default font.
+        CalligraphyConfig.initDefault("fonts/roboto_slab_regular.ttf");
         setContentView(R.layout.activity_tasks);
 
 
@@ -51,6 +55,10 @@ public class TasksActivity extends ActionBarActivity {
 
     }
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(new CalligraphyContextWrapper(newBase));
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
