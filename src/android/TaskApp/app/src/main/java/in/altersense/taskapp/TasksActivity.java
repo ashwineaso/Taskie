@@ -22,10 +22,14 @@ public class TasksActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        Setting default font.
-        CalligraphyConfig.initDefault("fonts/roboto_slab_regular.ttf");
-        setContentView(R.layout.activity_tasks);
+//        Setting up calligraphy
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                        .setDefaultFontPath("fonts/roboto_slab_regular.ttf")
+                        .setFontAttrId(R.attr.fontPath)
+                        .build()
+        );
 
+        setContentView(R.layout.activity_tasks);
 
         this.mainStageLinearLayout = (LinearLayout) findViewById(R.id.mainStageLinearLayout);
 //        Layout inflater for inflating the layouts.
@@ -55,9 +59,13 @@ public class TasksActivity extends ActionBarActivity {
 
     }
 
+    /**
+     * Calligraphy attached to new
+     * @param newBase
+     */
     @Override
     protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(new CalligraphyContextWrapper(newBase));
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @Override

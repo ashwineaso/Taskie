@@ -49,4 +49,8 @@
         <item name="android:textSize">@dimen/text_subHeader_xhdpi</item>
     </style>
 
+    <style name="RobotoTextView" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="fontPath">fonts/roboto_slab_regular.ttf</item>
+    </style>
+
 </resources>

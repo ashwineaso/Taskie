@@ -61,13 +61,15 @@
             android:layout_gravity="center_vertical"
             android:layout_height="@dimen/userImageHeight_xhdp"
             android:layout_width="0dp"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            tools:ignore="MissingPrefix">
 
             <TextView android:id="@+id/taskTitleTextView"
                 android:text="Boil Eggs"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:textColor="@color/primaryText"
+                fontPath="fonts/roboto_slab_regular.ttf"
                 android:textSize="@dimen/text_header_xhdpi"/>
 
             <TextView android:id="@+id/taskDescriptionTextView"
