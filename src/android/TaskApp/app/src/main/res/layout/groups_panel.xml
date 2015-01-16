@@ -33,16 +33,14 @@
         <LinearLayout android:id="@+id/taskCountBackground"
             android:layout_width="@dimen/tasksCountSize_xhdpi"
             android:layout_height="@dimen/tasksCountSize_xhdpi"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:orientation="horizontal" >
 
             <TextView android:id="@+id/taskCountTextView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="@dimen/tinyMargin_xhdpi"
-                android:gravity="center"
                 android:textColor="@color/primaryText"
                 android:textSize="@dimen/text_header_xhdpi"
+                android:gravity="center"
                 android:text="2"/>
 
             </LinearLayout>
