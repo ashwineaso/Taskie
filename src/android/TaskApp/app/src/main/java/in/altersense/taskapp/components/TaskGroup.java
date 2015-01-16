@@ -1,6 +1,7 @@
 package in.altersense.taskapp.components;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -41,6 +42,11 @@ public class TaskGroup {
 
         groupTitle.setText(this.title);
         taskCount.setText(this.taskCount+"");
+
+        if (this.hasUnread) {
+            groupTaskCountLayout.setBackgroundResource(R.drawable.red_circle);
+            taskCount.setTextColor(Color.WHITE);
+        }
 
         return groupView;
     }

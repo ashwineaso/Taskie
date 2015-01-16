@@ -45,8 +45,16 @@ public class TasksActivity extends ActionBarActivity {
         LayoutInflater inflater = getLayoutInflater();
         LinearLayout taskCollection = (LinearLayout) inflater.inflate(R.layout.tasks_collection, mainStageLinearLayout);
 
-        for(int i=0; i<3; i++) {
-            TaskGroup taskGroup = new TaskGroup(
+        TaskGroup taskGroup = new TaskGroup(
+                "CREMID",
+                4,
+                true,
+                getLayoutInflater()
+        );
+        taskCollection.addView(taskGroup.getGroupView());
+
+        for(int i=0; i<2; i++) {
+            taskGroup = new TaskGroup(
                     "AlterSense",
                     3,
                     false,
