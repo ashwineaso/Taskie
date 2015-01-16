@@ -11,6 +11,7 @@
         android:orientation="horizontal"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:padding="@dimen/tinyMargin_xhdpi"
         android:gravity="center_vertical"
         tools:ignore="MissingPrefix">
 
