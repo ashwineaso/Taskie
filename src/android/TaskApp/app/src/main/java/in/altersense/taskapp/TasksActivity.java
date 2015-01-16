@@ -6,11 +6,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import in.altersense.taskapp.components.Task;
+import in.altersense.taskapp.components.TaskGroup;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -32,29 +31,28 @@ public class TasksActivity extends ActionBarActivity {
         setContentView(R.layout.activity_tasks);
 
         this.mainStageLinearLayout = (LinearLayout) findViewById(R.id.mainStageLinearLayout);
-//        Layout inflater for inflating the layouts.
-        LayoutInflater inflater = (LayoutInflater) this.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        Inflate tasks list collections.
+        for(int i=0; i<12; i++) {
+            Task task = new Task(
+                    "Boil Eggs",
+                    "Some kinda description goes here, I dont care actually. You can set it to anything.",
+                    "Mahesh Mohan",
+                    this.getLayoutInflater()
+            );
+            mainStageLinearLayout.addView(task.getPanelView());
+        }
 
-//        Inflate multiple list collections.
-        for(int listCollectionCtr = 0; listCollectionCtr<3; listCollectionCtr++) {
-            View taskCollection = inflater.inflate(R.layout.tasks_collection, null);
-//            Set ids for each list collections for identifying.
-            taskCollection.setId(listCollectionCtr + 1);
-//            Title each collections appropriately.
-            TextView taskCollectionTitle = (TextView) taskCollection.findViewById(R.id.taskCollectionTitleTextView);
-            taskCollectionTitle.setText("List Collection "+listCollectionCtr+1);
-//            Inflate multiple tasks in each collections.
-            LinearLayout taskListLinearLayout = (LinearLayout) taskCollection.findViewById(R.id.taskListLinearLayout);
-            for(int i=0; i<3; i++) {
-                Task task = new Task(
-                        "Boil Eggs",
-                        "Some kinda description goes here, I dont care actually. You can set it to anything.",
-                        "Mahesh Mohan",
-                        this.getLayoutInflater()
-                );
-                taskListLinearLayout.addView(task.getPanelView());
-            }
-            this.mainStageLinearLayout.addView(taskCollection);
+        LayoutInflater inflater = getLayoutInflater();
+        LinearLayout taskCollection = (LinearLayout) inflater.inflate(R.layout.tasks_collection, mainStageLinearLayout);
+
+        for(int i=0; i<3; i++) {
+            TaskGroup taskGroup = new TaskGroup(
+                    "AlterSense",
+                    3,
+                    false,
+                    getLayoutInflater()
+            );
+            taskCollection.addView(taskGroup.getGroupView());
         }
 
     }
