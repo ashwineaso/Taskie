@@ -8,6 +8,8 @@ connect()
 class User(Document):
 	email = EmailField()
 	name = StringField()
+	password_hash = StringField()
+	joinDate = DateField()
 
 	def to_dict(self):
 		return mongo_to_dict_helper(self)

@@ -2,17 +2,23 @@ __author__ = ["ashwineaso"]
 from models import User
 from mongoengine import DoesNotExist
 from settings.exceptions import UserNotFound
+import datetime
 
 def createUser(userObj):
 	"""
 	Create a new userObj
 	"""
 
+	if User.objects.get(email = userObj.email) is not None:
+		raise UserAlreadyExists
+
 	user = User(
 		email = userObj.email,
-		name = userObj.name
+		name = userObj.name,
+		joinDate = datetime.date(),
+		password_hash = userObj.password_hash
 		)
-	# try:
+	
 	user.save()
 	return user
 
