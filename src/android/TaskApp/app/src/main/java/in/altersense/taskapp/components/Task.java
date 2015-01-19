@@ -39,9 +39,9 @@ public class Task {
 
     private View createView(LayoutInflater inflater) {
         View taskView = inflater.inflate(R.layout.task_panel, null);
-        CustomFontTextView timeStatus = (CustomFontTextView) taskView.findViewById(R.id.timeStatusCustomFontTextView);
-        CustomFontTextView timeMeasure = (CustomFontTextView) taskView.findViewById(R.id.timeMeasureCustomFontTextView);
-        CustomFontTextView timeUnit = (CustomFontTextView) taskView.findViewById(R.id.timeUnitTextCustomFontTextView);
+        TextView timeStatus = (TextView) taskView.findViewById(R.id.timeStatusCustomFontTextView);
+        TextView timeMeasure = (TextView) taskView.findViewById(R.id.timeMeasureCustomFontTextView);
+        TextView timeUnit = (TextView) taskView.findViewById(R.id.timeUnitTextCustomFontTextView);
 
         TextView taskTitle = (TextView) taskView.findViewById(R.id.taskTitleTextView);
         TextView taskDescr = (TextView) taskView.findViewById(R.id.taskDescriptionTextView);

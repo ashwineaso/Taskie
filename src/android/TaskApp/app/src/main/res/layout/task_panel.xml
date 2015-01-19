@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/lightText"
@@ -19,38 +18,39 @@
             android:layout_height="@dimen/userImageHeight_xhdp"
             android:orientation="vertical"
             android:layout_gravity="center_vertical"
+            tools:ignore="MissingPrefix"
             android:layout_margin="@dimen/tinyMargin_xhdpi">
 
-            <in.altersense.taskapp.customviews.CustomFontTextView
+            <TextView
                 android:id="@+id/timeStatusCustomFontTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                app:customFont="@string/font_textCondensed"
+                fontPath="fonts/steelfish_regular.ttf"
                 android:textColor="@color/positive"
                 android:textSize="@dimen/text_normal_xhdpi"
                 android:text="DUE IN"/>
 
-            <in.altersense.taskapp.customviews.CustomFontTextView
+            <TextView
                 android:id="@+id/timeMeasureCustomFontTextView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:singleLine="true"
                 android:lines="1"
+                fontPath="fonts/steelfish_regular.ttf"
                 android:gravity="center"
-                app:customFont="@string/font_textCondensed"
                 android:text="123"
                 android:textColor="@color/positive"
                 android:textSize="@dimen/text_dueDats_xhdpi"/>
 
-            <in.altersense.taskapp.customviews.CustomFontTextView
+            <TextView
                 android:id="@+id/timeUnitTextCustomFontTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="DAYS"
                 android:gravity="center_horizontal|bottom"
-                app:customFont="@string/font_textCondensed"
+                fontPath="fonts/steelfish_regular.ttf"
                 android:textColor="@color/positive"
                 android:textSize="@dimen/text_normal_xhdpi"/>
 
@@ -61,13 +61,15 @@
             android:layout_gravity="center_vertical"
             android:layout_height="@dimen/userImageHeight_xhdp"
             android:layout_width="0dp"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            tools:ignore="MissingPrefix">
 
             <TextView android:id="@+id/taskTitleTextView"
                 android:text="Boil Eggs"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:textColor="@color/primaryText"
+                fontPath="fonts/roboto_slab_regular.ttf"
                 android:textSize="@dimen/text_header_xhdpi"/>
 
             <TextView android:id="@+id/taskDescriptionTextView"

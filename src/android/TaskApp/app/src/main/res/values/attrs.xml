@@ -3,4 +3,5 @@
     <declare-styleable name="CustomFontTextView">
         <attr name="customFont" format="string" />
     </declare-styleable>
+    <attr name="fontPath" forma="string" />
 </resources>

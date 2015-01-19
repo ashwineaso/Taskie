@@ -17,6 +17,27 @@
             android:background="@color/emptyBackground"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/smallMargin_xhdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_sortby"
+                    android:layout_gravity="left"
+                    android:textSize="@dimen/text_subHeader_xhdpi"/>
+
+                <Spinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/array_sortBy"
+                    android:layout_marginLeft="@dimen/smallMargin_xhdp"/>
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </ScrollView>
