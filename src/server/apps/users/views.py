@@ -104,4 +104,13 @@ def checkAccessToken(tokenObj):
 
 	try:
 		token = bll.checkAccessTokenValid(tokenObj)
-		
+		if token.flag:
+			response["status"] = RESPONSE_SUCCESS
+			response["message"] = "TOKEN_VALID"
+		else:
+			response["status"] = RESPONSE_FAILED
+			response["message"] = "TOKEN_INVALID"
+	except Exception as e:
+		response["status"] = RESPONSE_FAILED
+		response["message"] = e.message
+	return response
