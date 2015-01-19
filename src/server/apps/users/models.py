@@ -3,7 +3,7 @@ from settings.methods import connect
 from settings.altEngine import mongo_to_dict_helper
 from passlib.hash import sha512
 from uuid import uuid4
-import time
+import datetime
 from settings.constants import CLIENT_KEY_LENGTH, CLIENT_SECRET_LENGTH,\
     CODE_KEY_LENGTH, ACCESS_TOKEN_LENGTH, REFRESH_TOKEN_LENGTH, ACCESS_TOKEN_EXPIRATION
 
@@ -41,29 +41,28 @@ class KeyGenerator(object):
 class User(Document):
 	email = EmailField()
 	name = StringField()
-	createdOn = DateField()
-	key = StringField(default = KeyGenerator(CODE_KEY_LENGTH))
-	issuedAt = IntField(default = TimeStampGenerator())
-	expiresAt = IntField(default = TimeStampGenerator(ACCESS_TOKEN_EXPIRATION))
-	access_token = StringField(default = KeyGenerator(ACCESS_TOKEN_LENGTH))
-	refresh_token = StringField(default = KeyGenerator(REFRESH_TOKEN_LENGTH))
-
+	password = StringField()
+	createdOn = DateTimeField(default = datetime.datetime.now())
 
 	def to_dict(self):
 		return mongo_to_dict_helper(self)
 
 
-class Client(Document):
+class Token(Document):
 	"""
-	Stores the client authentication data
+	Stores the Token - access and refresh - information
 
 	**Args**
 	::name : Stores the name of the client
 	::user : References the user linked
 	"""
-	name = StringField(required = True)
-	key = StringField(default=KeyGenerator(CLIENT_KEY_LENGTH))
-	secret = StringField(default=KeyGenerator(CLIENT_SECRET_LENGTH))
+	user = ReferrenceField(User)
+    key = StringField(default = KeyGenerator(CODE_KEY_LENGTH))
+	issuedAt = IntField(default = TimeStampGenerator())
+	expiresAt = IntField(default = TimeStampGenerator(ACCESS_TOKEN_EXPIRATION))
+	access_token = StringField(default = KeyGenerator(ACCESS_TOKEN_LENGTH))
+	refresh_token = StringField(default = KeyGenerator(REFRESH_TOKEN_LENGTH))
+
 
 	def to_dict(self):
 		return mongo_to_dict_helper(self)
