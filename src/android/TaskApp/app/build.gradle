@@ -36,5 +36,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.2'
     compile "com.android.support:appcompat-v7:21.0.+"
     compile 'com.github.flavienlaurent.datetimepicker:library:0.0.2'
-    compile 'uk.co.chrisjenx:calligraphy:2.0.0-SNAPSHOT'
+    compile 'uk.co.chrisjenx:calligraphy:2.0.0'
 }

@@ -40,6 +40,8 @@ public class TasksActivity extends ActionBarActivity {
                     this.getLayoutInflater()
             );
             mainStageLinearLayout.addView(task.getPanelView());
+
+            
         }
 
         LayoutInflater inflater = getLayoutInflater();
