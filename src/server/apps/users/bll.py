@@ -1,5 +1,5 @@
 __author__ = ["ashwineaso"]
-from passlib.apps import custom_app_context as pwd_context
+from passlib.hash import sha256_crypt as pwd_context
 from . import dal
 
 def createUser(userObj):
@@ -24,7 +24,7 @@ def authorize_user(userObj):
 	"""
 	match_flag = True
 	user = getUserByEmail(userObj)
-	if not user.verify_password(userObj.password):
+	if not verify_password(userObj.password, user.password_hash):
 		match_flag = False
 	return match_flag
 
@@ -45,13 +45,17 @@ def refreshTokens(tokenObj):
 	return token
 
 
+def updatetoken(tokenObj):
+	dal.updatetoken(tokenObj)
+
+
 def hash_password(password):
-	self.password_hash = pwd_context.encrypt(password)
+	password_hash = pwd_context.encrypt(password)
 	return password_hash
 
 
-def verify_password(password):
-	return pwd_context.verify(password, self.password_hash)
+def verify_password(password, password_hash):
+	return pwd_context.verify(password, password_hash)
 
 
 def getUserByEmail(userObj):
@@ -66,6 +70,14 @@ def getUserByEmail(userObj):
 
 	user = dal.getUserByEmail(userObj)
 	return user
+
+
+def getTokenByUser(userObj):
+	"""
+	Find the user's token
+	"""
+	token = dal.getTokenByUser(userObj)
+	return token
 
 
 def checkAccessTokenValid(tokenObj):
