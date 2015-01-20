@@ -3,10 +3,15 @@ package in.altersense.taskapp;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import in.altersense.taskapp.components.Task;
 import in.altersense.taskapp.components.TaskGroup;
@@ -16,7 +21,10 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class TasksActivity extends ActionBarActivity {
 
+    private static final String TAG = "TasksActivity";
     private LinearLayout mainStageLinearLayout;  // For handling the main content area.
+    private List<Task> taskList = new ArrayList<Task>();  // Lists all tasks for traversing convenience.
+    private Task task;  // Task iterator.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,15 +41,18 @@ public class TasksActivity extends ActionBarActivity {
         this.mainStageLinearLayout = (LinearLayout) findViewById(R.id.mainStageLinearLayout);
 //        Inflate tasks list collections.
         for(int i=0; i<12; i++) {
-            Task task = new Task(
+            task = new Task(
                     "Boil Eggs",
                     "Some kinda description goes here, I dont care actually. You can set it to anything.",
                     "Mahesh Mohan",
                     this.getLayoutInflater()
             );
             mainStageLinearLayout.addView(task.getPanelView());
-
-            
+//            Adding an onClickListener to TaskPanel to show and hide task actions.
+            TaskPanelOnClickListener taskPanelOnClickListener = new TaskPanelOnClickListener(task);
+            task.getPanelView().setOnClickListener(taskPanelOnClickListener);
+//            Add each task to task list.
+            this.taskList.add(task);
         }
 
         LayoutInflater inflater = getLayoutInflater();
@@ -65,6 +76,21 @@ public class TasksActivity extends ActionBarActivity {
             taskCollection.addView(taskGroup.getGroupView());
         }
 
+    }
+
+    private void hideTaskActions(Task currentTask) {
+        currentTask.hideTaskActions(getLayoutInflater());
+    }
+
+    private void showTaskActions(Task currentTask) {
+//        Hides actions of all other tasks
+        for(Task task : this.taskList) {
+            if(task.isActionsDisplayed) {
+                task.hideTaskActions(getLayoutInflater());
+            }
+        }
+//        Displays actions for the task
+        currentTask.showTaskActions(getLayoutInflater());
     }
 
     /**
@@ -94,7 +120,26 @@ public class TasksActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    class TaskPanelOnClickListener implements View.OnClickListener {
+
+        private final Task task;
+
+        TaskPanelOnClickListener(Task task) {
+            this.task = task;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Log.i(TAG, "OnClick on TaskPanel recieved.");
+            Log.i(TAG, "isActionsDisplayed: "+task.isActionsDisplayed);
+            if(!task.isActionsDisplayed) {
+                showTaskActions(task);
+            } else {
+                hideTaskActions(task);
+            }
+        }
     }
 }
