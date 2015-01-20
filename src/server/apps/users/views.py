@@ -6,6 +6,7 @@ response = {}
 data = {}
 userObj = Collection()
 clientObj = Collection()
+tokenObj = Collection()
 
 
 def register():
@@ -13,21 +14,26 @@ def register():
 	View for user registration
 
 	"""
-	
-
 	obj = request.json
-	try:
-		userObj.email = obj["email"]
-		userObj.name = obj["name"]
-		userObj.password = obj["password"]
-		user = bll.createUser(userObj)
-		data['user'] = user.to_dict()
-		response['status'] = RESPONSE_SUCCESS
-		response['data'] = data
-	except Exception as e:
-	 	response['status'] = RESPONSE_FAILED
-	 	response['message'] = e.message
+	#try:
+	userObj.email = obj["email"]
+	userObj.name = obj["name"]
+	userObj.password = obj["password"]
+	user = bll.createUser(userObj)
+	data['user'] = user.to_dict()
+	response['status'] = RESPONSE_SUCCESS
+	response['data'] = data
+	# except Exception as e:
+	#  	response['status'] = RESPONSE_FAILED
+	#  	response['message'] = str(e)
 	return response
+
+
+def updateUser():
+	"""
+	Updating user information
+	"""
+
 
 
 def authorize_user():
@@ -41,8 +47,9 @@ def authorize_user():
 		userObj.password = obj["password"]
 		cred_valid_flag = bll.authorize_user(userObj)
 		if cred_valid_flag:
-			user = bll.getUserByEmail(userObj)
-			data["key"] = user.key
+			userObj.user = bll.getUserByEmail(userObj)
+			token = bll.getTokenByUser(userObj)
+			data["key"] = token.key
 			response["status"] = RESPONSE_SUCCESS
 			response["data"] = data
 		else:
@@ -50,7 +57,7 @@ def authorize_user():
 			response["status"] = RESPONSE_FAILED
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
-		response["message"] = e.message
+		response["message"] = str(e)
 	return response
 
 
@@ -60,10 +67,10 @@ def issueToken():
 	"""
 	obj = request.json
 	try:
-		userObj.user_key = obj["key"]
+		userObj.key = obj["key"]
 		tokenObj = bll.issueToken(userObj)
 		if tokenObj.flag:
-			data["acceess_token"] = tokenObj.acceess_token
+			data["access_token"] = tokenObj.access_token
 			data["refresh_token"] = tokenObj.refresh_token
 			response["status"] = RESPONSE_SUCCESS
 			response["data"] = data
@@ -72,8 +79,8 @@ def issueToken():
 			response["message"] = "Authentication Failed"
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
-		response["message"] = e.message
-	return data
+		response["message"] = str(e)
+	return response
 
 
 def refreshTokens():
@@ -83,16 +90,17 @@ def refreshTokens():
 	"""
 
 	obj = request.json
-	try:
-		tokenObj.refresh_token = obj["refresh_token"]
-		token = bll.refreshTokens(tokenObj)
-		data["refresh_token"] = token.refresh_token
-		data["expiresAt"] = token.expiresAt
-		response["data"] = data
-		response["message"] = RESPONSE_SUCCESS
-	except Exception as e:
-		response["status"] = RESPONSE_FAILED
-		response["message"] = e.message
+	# try:
+	tokenObj.refresh_token = obj["refresh_token"]
+	token = bll.refreshTokens(tokenObj)
+	bll.updatetoken(token)
+	data["refresh_token"] = token.refresh_token
+	data["expiresAt"] = token.expiresAt
+	response["data"] = data
+	response["message"] = RESPONSE_SUCCESS
+	# except Exception as e:
+	# 	response["status"] = RESPONSE_FAILED
+	# 	response["message"] = str(e)
 	return response
 
 
@@ -112,5 +120,5 @@ def checkAccessToken(tokenObj):
 			response["message"] = "TOKEN_INVALID"
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
-		response["message"] = e.message
+		response["message"] = e.arg
 	return response

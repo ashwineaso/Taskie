@@ -1,8 +1,11 @@
 __author__ = ["ashwineaso"]
 from models import *
 from mongoengine import DoesNotExist
-from settings.exceptions import UserNotFound
+from settings.exceptions import *
 import datetime
+from settings.constants import CLIENT_KEY_LENGTH, CLIENT_SECRET_LENGTH,\
+    CODE_KEY_LENGTH, ACCESS_TOKEN_LENGTH, REFRESH_TOKEN_LENGTH, ACCESS_TOKEN_EXPIRATION
+from settings.altEngine import Collection
 
 tokenObj = Collection()
 
@@ -11,17 +14,21 @@ def createUser(userObj):
 	Create a new User
 	"""
 
-	if User.objects.get(email = userObj.email) is not None:
-		raise UserAlreadyExists
+	
+	for users in User.objects:
+		if users.email == userObj.email:
+			raise UserAlreadyExists
 
 	user = User(
 		email = userObj.email,
 		name = userObj.name,
-		createdOn = datetime.date(),
+		createdOn = datetime.datetime.now(),
 		password_hash = userObj.password_hash
 		)
 	
 	user.save()
+	token = Token(user = user)
+	token.save()
 	return user
 
 
@@ -35,11 +42,25 @@ def getUserByEmail(userObj):
 	:return user: An instance of User class
 	"""
 
+
 	try:
-		user = User.objects(email = userObj.email).get()
+		user = User.objects.get(email = userObj.email)
+		print user.email
 		return user 
 	except DoesNotExist as e:
 		raise UserNotFound
+
+
+def getTokenByUser(userObj):
+	"""
+	Find a user's token
+	"""
+
+	try:
+		token = Token.objects.get(user = userObj.user)
+		return token
+	except Exception as e:
+		raise TokenNotFound
 
 
 def issueToken(userObj):
@@ -48,7 +69,7 @@ def issueToken(userObj):
 	"""
 
 	try:
-		token = Token.objects.get(key = userObj.user_key).first()
+		token = Token.objects.get(key = userObj.key)
 		tokenObj.flag = True
 		tokenObj.access_token = token.access_token
 		tokenObj.refresh_token = token.refresh_token
@@ -64,10 +85,18 @@ def refreshTokens(tokenObj):
 
 	token = Token.objects.get(refresh_token = tokenObj.refresh_token)
 	token.refresh_token = KeyGenerator(REFRESH_TOKEN_LENGTH)()
-	token.issuedAt = TimeStampGenerator()
+	# token.issuedAt = TimeStampGenerator(10)
 	token.expiresAt = TimeStampGenerator(ACCESS_TOKEN_EXPIRATION)()
-	token.save()
 	return token
+
+
+def updatetoken(tokenObj):
+
+	token = Token.objects.get(id = tokenObj.id)
+	token.refresh_token = tokenObj.refresh_token
+	# token.issuedAt = tokenObj.issuedAt
+	token.expiresAt = tokenObj.expiresAt
+	token.save()
 
 
 def checkAccessTokenValid(tokenObj):
