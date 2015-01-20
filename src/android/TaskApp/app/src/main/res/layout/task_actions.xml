@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:layout_gravity="center">
+
+    <LinearLayout android:id="@+id/action1"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/taskActionHeight_xhdpi"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="@dimen/tinyMargin_xhdpi">
+
+        <ImageView
+            android:layout_width="@dimen/taskActionIconHeight_xhdpi"
+            android:layout_height="@dimen/taskActionIconHeight_xhdpi"
+            android:src="@drawable/red_circle" />
+
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/action2"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/taskActionHeight_xhdpi"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="@dimen/tinyMargin_xhdpi">
+
+        <ImageView
+            android:layout_width="@dimen/taskActionIconHeight_xhdpi"
+            android:layout_height="@dimen/taskActionIconHeight_xhdpi"
+            android:src="@drawable/red_circle" />
+
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/action3"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/taskActionHeight_xhdpi"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="@dimen/tinyMargin_xhdpi">
+
+        <ImageView
+            android:layout_width="@dimen/taskActionIconHeight_xhdpi"
+            android:layout_height="@dimen/taskActionIconHeight_xhdpi"
+            android:src="@drawable/red_circle" />
+
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/action4"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/taskActionHeight_xhdpi"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="@dimen/tinyMargin_xhdpi">
+
+        <ImageView
+            android:layout_width="@dimen/taskActionIconHeight_xhdpi"
+            android:layout_height="@dimen/taskActionIconHeight_xhdpi"
+            android:src="@drawable/red_circle" />
+
+    </LinearLayout>
+
+</LinearLayout>

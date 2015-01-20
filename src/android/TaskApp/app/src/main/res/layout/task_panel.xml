@@ -7,8 +7,7 @@
     android:gravity="center_vertical"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/taskPanelLinearLayout"
+    <LinearLayout android:id="@+id/taskPanelLinearLayout"
         android:orientation="horizontal"
         android:layout_height="wrap_content"
         android:layout_width="match_parent" >
@@ -129,6 +128,12 @@
             android:background="#48BA1A" />
 
     </LinearLayout>
+
+    <LinearLayout android:id="@+id/actionsPlaceHolderLinearLayout"
+        android:animateLayoutChanges="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"/>
 
     <ImageView
         android:layout_width="match_parent"

@@ -16,6 +16,8 @@
     <dimen name="taskStatusStripWidth_xhdp">8dp</dimen>
     <dimen name="roundedRectangleCornerRadius_xhdpi">5dp</dimen>
     <dimen name="tasksCountSize_xhdpi">30dp</dimen>
+    <dimen name="taskActionIconHeight_xhdpi">32dp</dimen>
+    <dimen name="taskActionHeight_xhdpi">40dp</dimen>
 
     <!-- Text Sizes for xHdpi -->
     <dimen name="text_dueDats_xhdpi">30sp</dimen>
