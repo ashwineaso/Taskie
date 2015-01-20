@@ -21,4 +21,6 @@
         <item>Priority</item>
     </string-array>
 
+    <string name="title_activity_group">GroupActivity</string>
+
 </resources>

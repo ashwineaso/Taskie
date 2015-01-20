@@ -96,13 +96,13 @@ public class Task {
         return actionsPanel;
     }
 
-    public void showTaskActions(LayoutInflater inflater) {
+    public void showTaskActions() {
         Log.i(TAG, "Reached showTaskActions");
         this.taskActionsPlaceHolderView.addView(this.actionsView);
         this.isActionsDisplayed = true;
     }
 
-    public void hideTaskActions(LayoutInflater inflater) {
+    public void hideTaskActions() {
         this.taskActionsPlaceHolderView.removeAllViews();
         this.isActionsDisplayed = false;
     }

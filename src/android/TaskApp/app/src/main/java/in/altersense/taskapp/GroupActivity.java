@@ -1,28 +1,24 @@
 package in.altersense.taskapp;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import in.altersense.taskapp.components.Task;
-import in.altersense.taskapp.components.TaskGroup;
 import in.altersense.taskapp.components.TaskPanelOnClickListener;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
-public class TasksActivity extends ActionBarActivity {
+public class GroupActivity extends ActionBarActivity {
 
-    private static final String TAG = "TasksActivity";
+    private static final String TAG = "GroupActivity";
     private LinearLayout mainStageLinearLayout;  // For handling the main content area.
     private List<Task> taskList = new ArrayList<Task>();  // Lists all tasks for traversing convenience.
     private Task task;  // Task iterator.
@@ -30,18 +26,18 @@ public class TasksActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        Setting up calligraphy
+        //        Setting up calligraphy
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                         .setDefaultFontPath("fonts/roboto_slab_regular.ttf")
                         .setFontAttrId(R.attr.fontPath)
                         .build()
         );
 
-        setContentView(R.layout.activity_tasks);
+        setContentView(R.layout.activity_group);
 
         this.mainStageLinearLayout = (LinearLayout) findViewById(R.id.mainStageLinearLayout);
 //        Inflate tasks list collections.
-        for(int i=0; i<12; i++) {
+        for(int i=0; i<4; i++) {
             task = new Task(
                     "Boil Eggs",
                     "Some kinda description goes here, I dont care actually. You can set it to anything.",
@@ -56,30 +52,7 @@ public class TasksActivity extends ActionBarActivity {
             this.taskList.add(task);
         }
 
-        LayoutInflater inflater = getLayoutInflater();
-        LinearLayout taskCollection = (LinearLayout) inflater.inflate(R.layout.tasks_collection, mainStageLinearLayout);
-
-        TaskGroup taskGroup = new TaskGroup(
-                "CREMID",
-                4,
-                true,
-                getLayoutInflater()
-        );
-        taskCollection.addView(taskGroup.getGroupView());
-
-        for(int i=0; i<2; i++) {
-            taskGroup = new TaskGroup(
-                    "AlterSense",
-                    3,
-                    false,
-                    getLayoutInflater()
-            );
-            taskCollection.addView(taskGroup.getGroupView());
-        }
-
     }
-
-
 
     /**
      * Calligraphy attached to new
@@ -93,7 +66,7 @@ public class TasksActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_tasks, menu);
+        getMenuInflater().inflate(R.menu.menu_group, menu);
         return true;
     }
 
@@ -108,8 +81,7 @@ public class TasksActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
-
-
 }
