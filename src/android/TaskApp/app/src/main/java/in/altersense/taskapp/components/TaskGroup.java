@@ -16,7 +16,17 @@ import in.altersense.taskapp.R;
 public class TaskGroup {
     private final View groupsView;
     private String id;
+
+    public String getTitle() {
+        return title;
+    }
+
     private String title;
+
+    public int getTaskCount() {
+        return taskCount;
+    }
+
     private int taskCount;
     private boolean hasUnread;
 

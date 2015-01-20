@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import in.altersense.taskapp.components.GroupPanelOnClickListener;
 import in.altersense.taskapp.components.Task;
 import in.altersense.taskapp.components.TaskGroup;
 import in.altersense.taskapp.components.TaskPanelOnClickListener;
@@ -66,6 +67,7 @@ public class TasksActivity extends ActionBarActivity {
                 getLayoutInflater()
         );
         taskCollection.addView(taskGroup.getGroupView());
+        taskGroup.getGroupView().setOnClickListener(new GroupPanelOnClickListener(taskGroup, this));
 
         for(int i=0; i<2; i++) {
             taskGroup = new TaskGroup(
@@ -75,6 +77,7 @@ public class TasksActivity extends ActionBarActivity {
                     getLayoutInflater()
             );
             taskCollection.addView(taskGroup.getGroupView());
+            taskGroup.getGroupView().setOnClickListener(new GroupPanelOnClickListener(taskGroup, this));
         }
 
     }

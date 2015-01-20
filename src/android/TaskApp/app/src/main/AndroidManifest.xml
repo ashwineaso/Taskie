@@ -29,7 +29,8 @@
         </activity>
         <activity
             android:name=".GroupActivity"
-            android:label="@string/title_activity_group" >
+            android:label="@string/title_activity_group"
+            android:theme="@style/GroupActivityTheme">
         </activity>
     </application>
 

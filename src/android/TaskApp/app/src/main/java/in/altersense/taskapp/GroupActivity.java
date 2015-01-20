@@ -1,6 +1,7 @@
 package in.altersense.taskapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,7 +11,9 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import in.altersense.taskapp.components.GroupPanelOnClickListener;
 import in.altersense.taskapp.components.Task;
+import in.altersense.taskapp.components.TaskGroup;
 import in.altersense.taskapp.components.TaskPanelOnClickListener;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -19,9 +22,17 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class GroupActivity extends ActionBarActivity {
 
     private static final String TAG = "GroupActivity";
+    public static TaskGroup currentTaskGroup;
     private LinearLayout mainStageLinearLayout;  // For handling the main content area.
     private List<Task> taskList = new ArrayList<Task>();  // Lists all tasks for traversing convenience.
     private Task task;  // Task iterator.
+
+    public static final void startGroupActivity(Context context, TaskGroup taskGroup) {
+        Intent groupStarterIntent = new Intent(context, GroupActivity.class);
+        groupStarterIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        currentTaskGroup = taskGroup;
+        context.startActivity(groupStarterIntent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +45,11 @@ public class GroupActivity extends ActionBarActivity {
         );
 
         setContentView(R.layout.activity_group);
+        setTitle(currentTaskGroup.getTitle());
 
         this.mainStageLinearLayout = (LinearLayout) findViewById(R.id.mainStageLinearLayout);
 //        Inflate tasks list collections.
-        for(int i=0; i<4; i++) {
+        for(int i=0; i<currentTaskGroup.getTaskCount(); i++) {
             task = new Task(
                     "Boil Eggs",
                     "Some kinda description goes here, I dont care actually. You can set it to anything.",

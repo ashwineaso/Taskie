@@ -31,6 +31,20 @@
         </item>
     </style>
 
+    <style name="GroupActivityTheme"
+        parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/tasksAtHandPrimaryActionBar</item>
+        <!-- For the resting Spinner style -->
+        <item name="android:spinnerItemStyle">
+            @style/spinnerItemStyle
+        </item>
+
+        <!-- For each individual Spinner list item once clicked on -->
+        <item name="android:spinnerDropDownItemStyle">
+            @style/spinnerDropDownItemStyle
+        </item>
+    </style>
+
     <style name="CreateTasksTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/createTaskPrimaryActionBar</item>
     </style>
