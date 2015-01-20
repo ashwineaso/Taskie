@@ -23,6 +23,15 @@ class Collaborator(EmbeddedDocument):
 	def to_dict(self):
 		return mongo_to_dict_helper(self)
 
+
+class Group(Document):
+	owner = ReferenceField(User)
+	members = ListField(ReferenceField(User))
+	title = StringField()
+
+	def to_dict(self):
+		return mongo_to_dict_helper(self)
+
 class Task(Document):
 	owner = ReferenceField(User)
 	collaborators = ListField(EmbeddedDocumentField(Collaborator))
@@ -31,14 +40,8 @@ class Task(Document):
 	description = StringField()
 	dueDateTime = DateTimeField()
 	status = EmbeddedDocumentField(Status)
-
-	def to_dict(self):
-		return mongo_to_dict_helper(self)
-
-class Group(Document):
-	owner = ReferenceField(User)
-	members = ListField(ReferenceField(User))
-	title = StringField()
+	isgroup = BooleanField()
+	group = ReferenceField(Group)
 
 	def to_dict(self):
 		return mongo_to_dict_helper(self)

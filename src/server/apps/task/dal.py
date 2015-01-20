@@ -8,7 +8,7 @@ import datetime
 
 def addNewTask(taskObj):
 	"""
-	Creates a task
+	Creates a new task
 
 	"""
 
@@ -25,6 +25,9 @@ def addNewTask(taskObj):
 	#for finding the user id of the owner
 	userObj.email = taskObj.owner
 	taskObj.owner = userbll.getUserByEmail(userObj)
+
+	#For finding the group
+	taskObj.group = Group.objects.get( id = taskObj.group).select_related(1)
 	
 	#Creating the list of collaborators
 	for val in taskObj.collaborators:
@@ -40,7 +43,9 @@ def addNewTask(taskObj):
 		name = taskObj.name,
 		description = taskObj.description,
 		dueDateTime = taskObj.dueDateTime,
-		status = taskObj.status
+		status = taskObj.status,
+		isgroup = taskObj.isgroup,
+		group = taskObj.group
 		).save()
 	return task
 
