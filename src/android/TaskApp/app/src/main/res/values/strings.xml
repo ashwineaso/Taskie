@@ -22,5 +22,6 @@
     </string-array>
 
     <string name="title_activity_group">GroupActivity</string>
+    <string name="quickTaskCreate">Quick Task Creation</string>
 
 </resources>

@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import in.altersense.taskapp.components.GroupPanelOnClickListener;
 import in.altersense.taskapp.components.Task;
 import in.altersense.taskapp.components.TaskGroup;
 import in.altersense.taskapp.components.TaskPanelOnClickListener;

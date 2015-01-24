@@ -3,6 +3,9 @@ package in.altersense.taskapp.components;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -103,7 +106,18 @@ public class Task {
     }
 
     public void hideTaskActions() {
-        this.taskActionsPlaceHolderView.removeAllViews();
+//        Change the height of layout to 0 before clearing the actions panel.
+        taskActionsPlaceHolderView.setLayoutParams(
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1)
+        );
+//        Remove the actions panel
+        taskActionsPlaceHolderView.removeAllViews();
+//        Change the height of layout to WRAP_CONTENT after clearing the actions panel.
+        taskActionsPlaceHolderView.setLayoutParams(
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        );
+//        Unset the is actions displayed flag so that the parent views can check if panel
+//        is open
         this.isActionsDisplayed = false;
     }
 
