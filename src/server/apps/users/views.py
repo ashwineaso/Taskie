@@ -19,6 +19,7 @@ def register():
 	userObj.email = obj["email"]
 	userObj.name = obj["name"]
 	userObj.password = obj["password"]
+	userObj.serverPushId = obj["serverPushId"]
 	user = bll.createUser(userObj)
 	data['user'] = user.to_dict()
 	response['status'] = RESPONSE_SUCCESS
@@ -120,5 +121,5 @@ def checkAccessToken(tokenObj):
 			response["message"] = "TOKEN_INVALID"
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
-		response["message"] = e.arg
+		response["message"] = str(e)
 	return response

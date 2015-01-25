@@ -8,7 +8,22 @@ import datetime
 
 def addNewTask(taskObj):
 	"""
-	Creates a new task
+	Adds a new task to the task list
+
+	:type taskObj : object
+	:para. taskObj : An object with the following attributes
+			uuid,
+			owner,
+			collaborators,
+			priority,
+			name,
+			description,
+			dueDateTime,
+			status
+			isgroup
+			group
+
+	:return an object of the task class.
 
 	"""
 

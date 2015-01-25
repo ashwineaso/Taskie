@@ -13,6 +13,25 @@ ACCESS_TOKEN_EXPIRATION = 3600
 ACCESS_TOKEN_LENGTH = 10
 REFRESH_TOKEN_LENGTH = 10
 
+#GCM API Keys
+GCM_KEY = 'AIzaSyBhHrBolPT-AMAuIpEs6dm8VUbonQKyItA'
+
+#GCM 
+class GCMPost(object):
+	"""docstring for GCMPost"""
+	def __init__(
+				self,
+				payload = {}
+				url = 'https://android.googleapis.com/gcm/send'
+				contentType = "application/json"
+				authorization = GCM_KEY
+				):
+		self.url = url
+		self.headers = {}
+		self.headers['content-type'] = contentType
+		self.headers['authorization'] = authorization
+		self.payload = payload
+			
 
 #Current version of the API
 CURRENT_VERSION = 0.1

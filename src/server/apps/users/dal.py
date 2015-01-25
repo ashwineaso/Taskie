@@ -23,7 +23,8 @@ def createUser(userObj):
 		email = userObj.email,
 		name = userObj.name,
 		createdOn = datetime.datetime.now(),
-		password_hash = userObj.password_hash
+		password_hash = userObj.password_hash,
+		serverPushId = userObj.serverPushId
 		)
 	
 	user.save()

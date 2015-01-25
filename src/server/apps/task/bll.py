@@ -12,7 +12,6 @@ def addNewTask(taskObj):
 
 	:type taskObj : object
 	:para. taskObj : An object with the following attributes
-			uuid,
 			owner,
 			collaborators,
 			priority,
@@ -20,6 +19,8 @@ def addNewTask(taskObj):
 			description,
 			dueDateTime,
 			status
+			isgroup
+			group
 	:return an object of the task class.
 	"""
 	taskObj.dueDateTime = datetime.now()
@@ -131,3 +132,17 @@ def createGroup(groupObj):
 	group = dal.createGroup(groupObj)
 	return group 
 
+def pushSyncTaskNotification(taskObj):
+	"""
+	Initiates a server side push to all the collaborators
+	of the task
+	"""
+
+	#Create a GCMPost object for Android Push
+	androidPush = GCMPost()
+	#List to store GCM ids
+	androidPayload = []
+
+	#for each user
+	for coll in taskObj.collaborator:
+		
