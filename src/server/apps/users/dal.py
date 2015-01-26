@@ -12,6 +12,15 @@ tokenObj = Collection()
 def createUser(userObj):
 	"""
 	Create a new User
+
+	::type userObj : objects
+	::param userObj : An instance of Collection with the following attributes
+					email,
+					name,
+					serverPushId,
+					password_hash,
+					createdOn
+	::return user : An instance of user class
 	"""
 
 	
@@ -33,6 +42,27 @@ def createUser(userObj):
 	return user
 
 
+def updateUser(userObj):
+	"""
+	Updating User information with new values
+
+	type userObj : objects
+	::param userObj : An instance of Collection with the following attributes
+					email,
+					name,
+					serverPushId,
+	::return user : An instance of user class
+	"""
+	target_user = getUserByEmail(userObj)
+	user = User.objects(id = target_user.id).update(
+													set__email = userObj.email,
+													set__name = userObj.name,
+													set__serverPushId = userObj.serverPushId
+													)
+	user.save()
+	return user
+
+
 def getUserByEmail(userObj):
 	"""
 	Finds a user by their email
@@ -42,11 +72,8 @@ def getUserByEmail(userObj):
 		email
 	:return user: An instance of User class
 	"""
-
-
 	try:
 		user = User.objects.get(email = userObj.email)
-		print user.email
 		return user 
 	except DoesNotExist as e:
 		raise UserNotFound

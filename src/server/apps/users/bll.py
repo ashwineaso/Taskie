@@ -4,10 +4,34 @@ from . import dal
 
 def createUser(userObj):
 	"""
-	creating a new userObj
+	Creating a new User
+
+	:type userObj : objects
+	::param userObj : An instance of Collection with the following attributes
+					email,
+					name,
+					serverPushId,
+					password_hash,
+					createdOn
+	::return user : An instance of user class
 	"""
 	userObj.password_hash = hash_password(userObj.password)
 	user = dal.createUser(userObj)
+	return user
+
+
+def updateUser(userObj):
+	"""
+	Updating User information with new values
+
+	type userObj : objects
+	::param userObj : An instance of Collection with the following attributes
+					email,
+					name,
+					serverPushId,
+	::return user : An instance of user class
+	"""
+	user = dal.updateUser(userObj)
 	return user
 
 

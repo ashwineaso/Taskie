@@ -15,6 +15,7 @@ REFRESH_TOKEN_LENGTH = 10
 
 #GCM API Keys
 GCM_KEY = 'AIzaSyBhHrBolPT-AMAuIpEs6dm8VUbonQKyItA'
+TOKEN_GCM_REGISTRATION_IDS = 'registration_ids'
 
 #GCM 
 class GCMPost(object):

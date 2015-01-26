@@ -132,6 +132,7 @@ def createGroup(groupObj):
 	group = dal.createGroup(groupObj)
 	return group 
 
+
 def pushSyncTaskNotification(taskObj):
 	"""
 	Initiates a server side push to all the collaborators
@@ -145,4 +146,17 @@ def pushSyncTaskNotification(taskObj):
 
 	#for each user
 	for coll in taskObj.collaborator:
-		
+		if not coll.serverPushId in androidPayload:
+			androidPayload.append(str(coll.serverPushId))
+
+	if len(androidPayload) > 0:
+		androidPush.payload[TOKENTOKEN_GCM_REGISTRATION_IDS] = androidPayload
+		androidPush.payload["data"] = {"syncTask" : True, "taskId" : "taskObj.id"}
+
+		#Create UrlPoster Thread for GCM Push Start Thread
+		gcmPostThread = UrlPostThread(
+									threadID = 1,
+									name = 'gcmPostThread',
+									postObj = androidPush
+									)
+		gcmPostThread.start()
