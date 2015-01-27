@@ -3,6 +3,7 @@ from . import dal
 from settings.exceptions import TaskWithIDNotFound
 from apps.users import bll as userbll
 from settings.altEngine import Collection
+from settings.constants import GCMPost, TOKEN_GCM_REGISTRATION_IDS, UrlPostThread
 from datetime import datetime
 
 
@@ -26,6 +27,8 @@ def addNewTask(taskObj):
 	taskObj.dueDateTime = datetime.now()
 	#Add a task to the servers task list
 	task = dal.addNewTask(taskObj)
+	#Send message to GCM server to notify collaborators of task
+	pushSyncTaskNotification(taskObj)
 	return task
 
 
@@ -119,6 +122,7 @@ def modifyCollStatus(taskObj):
 	task = dal.modifyCollStatus(taskObj)
 	return task
 
+
 def createGroup(groupObj):
 	"""
 
@@ -150,7 +154,7 @@ def pushSyncTaskNotification(taskObj):
 			androidPayload.append(str(coll.serverPushId))
 
 	if len(androidPayload) > 0:
-		androidPush.payload[TOKENTOKEN_GCM_REGISTRATION_IDS] = androidPayload
+		androidPush.payload[TOKEN_GCM_REGISTRATION_IDS] = androidPayload
 		androidPush.payload["data"] = {"syncTask" : True, "taskId" : "taskObj.id"}
 
 		#Create UrlPoster Thread for GCM Push Start Thread

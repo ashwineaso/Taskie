@@ -49,6 +49,7 @@ class User(Document):
 	name = StringField()
 	password_hash = StringField()
 	serverPushId = StringField()
+	status = IntField() ## 1 - Active ## 0 - Not Verified ## -1 - Deactivated 
 	createdOn = DateTimeField(default = datetime.datetime.now())
 
 	def to_dict(self):

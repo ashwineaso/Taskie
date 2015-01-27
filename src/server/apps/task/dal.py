@@ -44,6 +44,12 @@ def addNewTask(taskObj):
 	#For finding the group
 	taskObj.group = Group.objects.get( id = taskObj.group).select_related(1)
 	
+	#Checking whether the collaborators is a user of the app
+	#If not - Create a new account for the user
+	for userObj.email in taskObj.collaborators:
+		if not userObj.email in User.objects.email:
+			userbll.createAndInvite(userObj)
+
 	#Creating the list of collaborators
 	for val in taskObj.collaborators:
 		userObj.email = val

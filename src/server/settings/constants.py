@@ -32,7 +32,28 @@ class GCMPost(object):
 		self.headers['content-type'] = contentType
 		self.headers['authorization'] = authorization
 		self.payload = payload
-			
+
+
+##################################
+## Defining a class and functions
+## to initiate a thread
+##################################
+
+class UrlPostThread(threading.Thread):
+    def __init__(self, threadID, name, postObj):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+        self.name = name
+        self.postObj = postObj
+
+    def run(self):
+        # Make a postRequest from the postObj
+        response = requests.post(
+            self.postObj.url,
+            data=json.dumps(self.postObj.payload),
+            headers=self.postObj.headers
+        )
+        self.response = response
 
 #Current version of the API
 CURRENT_VERSION = 0.1

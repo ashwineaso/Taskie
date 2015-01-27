@@ -2,11 +2,12 @@ __author__ = ["ashwineaso"]
 from passlib.hash import sha256_crypt as pwd_context
 from . import dal
 
+
 def createUser(userObj):
 	"""
 	Creating a new User
 
-	:type userObj : objects
+	::type userObj : object
 	::param userObj : An instance of Collection with the following attributes
 					email,
 					name,
@@ -18,6 +19,22 @@ def createUser(userObj):
 	userObj.password_hash = hash_password(userObj.password)
 	user = dal.createUser(userObj)
 	return user
+
+
+def createAndInvite(userObj):
+	"""
+	User creation by invite during task creation
+	::type userObj : object
+	::param userObj : An instance of Collection with the following attributes
+						email
+	::return user : An intance of the User class
+	"""
+
+	user = dal.createMinimalUser(userObj)
+	## Send a personalise invite to the user's email
+	sendInvite(user)
+	return user
+
 
 
 def updateUser(userObj):
