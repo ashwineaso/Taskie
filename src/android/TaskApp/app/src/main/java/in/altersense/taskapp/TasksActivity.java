@@ -164,20 +164,4 @@ public class TasksActivity extends ActionBarActivity {
             }
         });
     }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        Log.i(TAG, "OnTouchEventTriggered");
-        float touchPointX = event.getX();
-        float touchPointY = event.getY();
-        int[] coordinates = new int[2];
-        quickCreateStageLinearLayout.getLocationOnScreen(coordinates);
-        if(
-                touchPointX < coordinates[0] || touchPointX > coordinates[0] + quickCreateStageLinearLayout.getWidth() ||
-                        touchPointY < coordinates[1] || touchPointY > coordinates[1] + quickCreateStageLinearLayout.getHeight()
-                ) {
-            quickCreateStageLinearLayout.removeAllViews();
-        }
-        return true;
-    }
 }
