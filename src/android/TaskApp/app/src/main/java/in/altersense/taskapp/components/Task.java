@@ -3,15 +3,11 @@ package in.altersense.taskapp.components;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Transformation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import in.altersense.taskapp.R;
-import in.altersense.taskapp.customviews.CustomFontTextView;
 
 /**
  * Created by mahesmohan on 1/13/15.
@@ -19,7 +15,7 @@ import in.altersense.taskapp.customviews.CustomFontTextView;
 public class Task {
     private static final String TAG = "Task";
     private long id, deadline, ownerId;
-    private String title, descr, ownerName, deadlineText;
+    private String title, descr, ownerName, deadlineTimeMeasure;
     private boolean hasAttachment;
     public boolean isActionsDisplayed;
     private int priority;
@@ -39,16 +35,26 @@ public class Task {
             String title,
             String descr,
             String ownerName,
+            String deadlineTimeMeasure,
             final LayoutInflater inflater
     ) {
         this.title = title;
         this.descr = descr;
         this.ownerName = ownerName;
+        this.deadlineTimeMeasure = deadlineTimeMeasure;
         this.panelView = createView(inflater);
         this.actionsView = createActionsView(inflater);
         this.taskActionsPlaceHolderView =
                 (LinearLayout) this.panelView.findViewById(R.id.actionsPlaceHolderLinearLayout);
         this.isActionsDisplayed = false;
+    }
+
+    public Task(String title, String description, String ownerName, LayoutInflater layoutInflater) {
+        this(title, description, ownerName, "123", layoutInflater);
+    }
+
+    public Task(String title, String description, String ownerName, int deadlineTimeMeasure, LayoutInflater layoutInflater) {
+        this(title, description, ownerName, deadlineTimeMeasure+"", layoutInflater);
     }
 
     private View createActionsView(LayoutInflater inflater) {
@@ -134,6 +140,7 @@ public class Task {
         taskTitle.setText(this.title);
         taskDescr.setText(this.descr);
         taskOwner.setText(this.ownerName);
+        timeMeasure.setText(this.deadlineTimeMeasure);
 
         return taskView;
     }

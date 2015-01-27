@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.zip.Inflater;
 
 import in.altersense.taskapp.components.GroupPanelOnClickListener;
@@ -51,6 +52,7 @@ public class TasksActivity extends ActionBarActivity {
         this.quickCreateStageLinearLayout = (LinearLayout) findViewById(R.id.quickTaskCreation);
         this.mainStageLinearLayout = (LinearLayout) findViewById(R.id.mainStageLinearLayout);
         this.isQuickTaskCreationHidden = true;
+        Random random = new Random();
 
 //        Inflate tasks list collections.
         for(int i=0; i<12; i++) {
@@ -58,6 +60,7 @@ public class TasksActivity extends ActionBarActivity {
                     "Boil Eggs",
                     "Some kinda description goes here, I dont care actually. You can set it to anything.",
                     "Mahesh Mohan",
+                    random.nextInt(15),
                     this.getLayoutInflater()
             );
             mainStageLinearLayout.addView(task.getPanelView());
