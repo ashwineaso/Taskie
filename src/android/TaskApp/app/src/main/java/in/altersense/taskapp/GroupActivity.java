@@ -2,6 +2,7 @@ package in.altersense.taskapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -45,7 +46,13 @@ public class GroupActivity extends ActionBarActivity {
         );
 
         setContentView(R.layout.activity_group);
-        setTitle(currentTaskGroup.getTitle());
+
+//        Setting action bar title to signify that user is in a group and to display the name of the
+//        group
+        ActionBar ab = getSupportActionBar();
+        ab.setTitle(currentTaskGroup.getTitle());
+        ab.setSubtitle("TaskGroup");
+
 
         this.mainStageLinearLayout = (LinearLayout) findViewById(R.id.mainStageLinearLayout);
 //        Inflate tasks list collections.
