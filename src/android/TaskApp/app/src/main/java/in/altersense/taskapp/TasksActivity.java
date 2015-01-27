@@ -3,12 +3,10 @@ package in.altersense.taskapp;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -17,7 +15,6 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.zip.Inflater;
 
 import in.altersense.taskapp.components.GroupPanelOnClickListener;
 import in.altersense.taskapp.components.Task;
@@ -122,49 +119,55 @@ public class TasksActivity extends ActionBarActivity {
         // Catches every click on Menu
         switch (id) {
             case R.id.quickTaskCreate:
-                displayQuickTaskLayout();
+                toggleQuickTaskLayout();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public void displayQuickTaskLayout() {
+    public void toggleQuickTaskLayout() {
+//        Check whether task is displayed
+        if(this.isQuickTaskCreationHidden) {
 //        Setting up layout inflater
-        LayoutInflater inflater = getLayoutInflater();
-//        Inflatet task creation view
-        View taskCreationView = inflater.inflate(
-                R.layout.quick_task_creation,
-                null
-        );
+            LayoutInflater inflater = getLayoutInflater();
+//        Inflate task creation view
+            View taskCreationView = inflater.inflate(
+                    R.layout.quick_task_creation,
+                    null
+            );
 //        Add view to placeholder
-        this.quickCreateStageLinearLayout.addView(taskCreationView);
+            this.quickCreateStageLinearLayout.addView(taskCreationView);
 //        Identify edit text
-        final EditText newTaskTitle = (EditText) taskCreationView.findViewById(R.id.newTaskTitle);
+            final EditText newTaskTitle = (EditText) taskCreationView.findViewById(R.id.newTaskTitle);
 //        Request focus to edit text
-        newTaskTitle.requestFocus();
+            newTaskTitle.requestFocus();
 //        Display keyboard
-        InputMethodManager keyboardManager = (InputMethodManager) getSystemService(
-                Context.INPUT_METHOD_SERVICE
-        );
-        keyboardManager.showSoftInput(newTaskTitle, InputMethodManager.SHOW_IMPLICIT);
+            InputMethodManager keyboardManager = (InputMethodManager) getSystemService(
+                    Context.INPUT_METHOD_SERVICE
+            );
+            keyboardManager.showSoftInput(newTaskTitle, InputMethodManager.SHOW_IMPLICIT);
 //        Set flag to show the layout is open
-        this.isQuickTaskCreationHidden = false;
+            this.isQuickTaskCreationHidden = false;
 //        Set an on focus change listener
-        taskCreationView.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+            taskCreationView.setOnFocusChangeListener(new View.OnFocusChangeListener(){
 
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                Log.i(TAG, "FocusChange");
-                if(!hasFocus) {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    Log.i(TAG, "FocusChange");
+                    if(!hasFocus) {
 //                    check whether edit text is empty
-                    if(newTaskTitle.getText().length()==0) {
+                        if(newTaskTitle.getText().length()==0) {
 //                        if empty hide the create task layout
-                        quickCreateStageLinearLayout.removeAllViews();
+                            quickCreateStageLinearLayout.removeAllViews();
 //                        set flag to denote the view is hidden
-                        isQuickTaskCreationHidden = true;
+                            isQuickTaskCreationHidden = true;
+                        }
                     }
                 }
-            }
-        });
+            });
+        } else {
+            this.quickCreateStageLinearLayout.removeAllViews();
+            this.isQuickTaskCreationHidden = true;
+        }
     }
 }
