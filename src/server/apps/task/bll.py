@@ -28,7 +28,7 @@ def addNewTask(taskObj):
 	#Add a task to the servers task list
 	task = dal.addNewTask(taskObj)
 	#Send message to GCM server to notify collaborators of task
-	pushSyncTaskNotification(taskObj)
+	pushSyncTaskNotification(task)
 	return task
 
 
@@ -51,6 +51,7 @@ def editTask(taskObj):
 		taskObj.task = dal.getTaskByID(taskObj)
 		#Update database with task information
 		task = dal.editTask(taskObj)
+		pushSyncTaskNotification(task)
 		return task
 	except TaskWithIDNotFound as e:
 		raise e
@@ -68,6 +69,7 @@ def addCollaborators(taskObj):
 	"""
 
 	task = dal.addCollaborators(taskObj)
+	pushSyncTaskNotification(task)
 	return task
 
 
@@ -83,6 +85,7 @@ def remCollaborators(taskObj):
 	"""
 
 	task = dal.remCollaborators(taskObj)
+	pushSyncTaskNotification(task)
 	return task
 
 
@@ -101,6 +104,7 @@ def modifyTaskStatus(taskObj):
 	if (taskObj.dateTime == "0"):
 		taskObj.dateTime = datetime.now()
 	task = dal.modifyTaskStatus(taskObj)
+	pushSyncTaskNotification(task)
 	return task
 
 
@@ -148,10 +152,13 @@ def pushSyncTaskNotification(taskObj):
 	#List to store GCM ids
 	androidPayload = []
 
-	#for each user
+	#for each collaborator of the task
 	for coll in taskObj.collaborator:
 		if not coll.serverPushId in androidPayload:
 			androidPayload.append(str(coll.serverPushId))
+
+	#for the owner of the task
+	androidPayload.append(str(taskObj.owner.serverPushId))
 
 	if len(androidPayload) > 0:
 		androidPush.payload[TOKEN_GCM_REGISTRATION_IDS] = androidPayload
