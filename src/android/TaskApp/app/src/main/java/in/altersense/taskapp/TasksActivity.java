@@ -32,6 +32,8 @@ public class TasksActivity extends ActionBarActivity {
     private List<Task> taskList = new ArrayList<Task>();  // Lists all tasks for traversing convenience.
     private Task task;  // Task iterator.
     private boolean isQuickTaskCreationHidden;
+    private View taskCreationView;
+    private EditText newTaskTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,8 @@ public class TasksActivity extends ActionBarActivity {
 
 //        Initializing the layout.
         this.quickCreateStageLinearLayout = (LinearLayout) findViewById(R.id.quickTaskCreation);
+        this.quickCreateStageLinearLayout.setVisibility(View.GONE);
+        setUpQuickTaskLayout();
         this.mainStageLinearLayout = (LinearLayout) findViewById(R.id.mainStageLinearLayout);
         this.isQuickTaskCreationHidden = true;
         Random random = new Random();
@@ -126,48 +130,73 @@ public class TasksActivity extends ActionBarActivity {
     }
 
     public void toggleQuickTaskLayout() {
+
 //        Check whether task is displayed
         if(this.isQuickTaskCreationHidden) {
-//        Setting up layout inflater
-            LayoutInflater inflater = getLayoutInflater();
-//        Inflate task creation view
-            View taskCreationView = inflater.inflate(
-                    R.layout.quick_task_creation,
-                    null
-            );
-//        Add view to placeholder
-            this.quickCreateStageLinearLayout.addView(taskCreationView);
-//        Identify edit text
-            final EditText newTaskTitle = (EditText) taskCreationView.findViewById(R.id.newTaskTitle);
-//        Request focus to edit text
+//            Display quick task pane
+            this.quickCreateStageLinearLayout.setVisibility(View.VISIBLE);
+//            Request focus to edit text
             newTaskTitle.requestFocus();
-//        Display keyboard
-            InputMethodManager keyboardManager = (InputMethodManager) getSystemService(
-                    Context.INPUT_METHOD_SERVICE
-            );
-            keyboardManager.showSoftInput(newTaskTitle, InputMethodManager.SHOW_IMPLICIT);
-//        Set flag to show the layout is open
-            this.isQuickTaskCreationHidden = false;
-//        Set an on focus change listener
-            taskCreationView.setOnFocusChangeListener(new View.OnFocusChangeListener(){
 
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    Log.i(TAG, "FocusChange");
-                    if(!hasFocus) {
-//                    check whether edit text is empty
-                        if(newTaskTitle.getText().length()==0) {
-//                        if empty hide the create task layout
-                            quickCreateStageLinearLayout.removeAllViews();
-//                        set flag to denote the view is hidden
-                            isQuickTaskCreationHidden = true;
-                        }
-                    }
-                }
-            });
+//            Set flag to show the layout is open
+            this.isQuickTaskCreationHidden = false;
         } else {
-            this.quickCreateStageLinearLayout.removeAllViews();
+            this.quickCreateStageLinearLayout.setVisibility(View.GONE);
+            this.newTaskTitle.clearFocus();
+            this.mainStageLinearLayout.requestFocus();
+            this.mainStageLinearLayout.requestFocusFromTouch();
+            hideKeyBoard(
+                    getApplicationContext(),
+                    getCurrentFocus()
+            );
             this.isQuickTaskCreationHidden = true;
         }
+    }
+
+    private void setUpQuickTaskLayout() {
+//        Setting up layout inflater
+        LayoutInflater inflater = getLayoutInflater();
+//        Inflate task creation view
+        this.taskCreationView = inflater.inflate(
+                R.layout.quick_task_creation,
+                null
+        );
+//        Add view to placeholder
+        this.quickCreateStageLinearLayout.addView(taskCreationView);
+//        Identify edit text
+        this.newTaskTitle = (EditText) taskCreationView.findViewById(R.id.newTaskTitle);
+        this.newTaskTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+//                Set up input manager
+                InputMethodManager keyboardManager = (InputMethodManager) getApplicationContext()
+                        .getSystemService(
+                        Context.INPUT_METHOD_SERVICE
+                );
+                if(hasFocus) {
+                    Log.i(TAG,"hasFocus");
+//                    Display keyboard
+                    keyboardManager.showSoftInput(
+                            v,
+                            InputMethodManager.SHOW_IMPLICIT
+                    );
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(!this.isQuickTaskCreationHidden) {
+            toggleQuickTaskLayout();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private  void hideKeyBoard(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

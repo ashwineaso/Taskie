@@ -46,6 +46,8 @@ public class Task {
         this.actionsView = createActionsView(inflater);
         this.taskActionsPlaceHolderView =
                 (LinearLayout) this.panelView.findViewById(R.id.actionsPlaceHolderLinearLayout);
+        this.taskActionsPlaceHolderView.setVisibility(View.GONE);
+        this.taskActionsPlaceHolderView.addView(this.actionsView);
         this.isActionsDisplayed = false;
     }
 
@@ -107,21 +109,13 @@ public class Task {
 
     public void showTaskActions() {
         Log.i(TAG, "Reached showTaskActions");
-        this.taskActionsPlaceHolderView.addView(this.actionsView);
+        this.taskActionsPlaceHolderView.setVisibility(View.VISIBLE);
         this.isActionsDisplayed = true;
     }
 
     public void hideTaskActions() {
-//        Change the height of layout to 0 before clearing the actions panel.
-        taskActionsPlaceHolderView.setLayoutParams(
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1)
-        );
-//        Remove the actions panel
-        taskActionsPlaceHolderView.removeAllViews();
-//        Change the height of layout to WRAP_CONTENT after clearing the actions panel.
-        taskActionsPlaceHolderView.setLayoutParams(
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        );
+//        Hide task panel
+        this.taskActionsPlaceHolderView.setVisibility(View.GONE);
 //        Unset the is actions displayed flag so that the parent views can check if panel
 //        is open
         this.isActionsDisplayed = false;

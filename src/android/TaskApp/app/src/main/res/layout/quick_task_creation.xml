@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:padding="@dimen/tinyMargin_xhdpi"
-    android:layout_height="match_parent" android:background="@color/white">
+    android:layout_height="match_parent" android:background="@color/white" >
 
     <EditText android:id="@+id/newTaskTitle"
         android:hint="Task Title"
@@ -10,5 +10,26 @@
         android:focusableInTouchMode="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add to Group" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Participant Name"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Group Name"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="CREATE"/>
 
 </LinearLayout>
