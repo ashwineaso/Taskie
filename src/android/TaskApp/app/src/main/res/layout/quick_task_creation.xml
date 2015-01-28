@@ -23,23 +23,24 @@
             android:layout_height="wrap_content"
             android:text="Add to Group"/>
 
-        <CheckBox
+        <CheckBox android:id="@+id/isGroupTaskCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         </LinearLayout>
 
-    <EditText
+    <EditText android:id="@+id/quickTaskParticipantName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Participant Name"/>
 
-    <EditText
+    <EditText android:id="@+id/quickTaskGroupName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:hint="Group Name"/>
 
-    <Button
+    <Button android:id="@+id/createQuickTaskButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context="in.altersense.taskapp.TasksAtHand" >
 
-    <ScrollView
+    <ScrollView android:id="@+id/contenScroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/emptyBackground"

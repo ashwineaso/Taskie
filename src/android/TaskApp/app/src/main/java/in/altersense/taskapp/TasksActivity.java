@@ -9,8 +9,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +38,7 @@ public class TasksActivity extends ActionBarActivity {
     private boolean isQuickTaskCreationHidden;
     private View taskCreationView;
     private EditText newTaskTitle;
+    private ScrollView contentScroll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +53,7 @@ public class TasksActivity extends ActionBarActivity {
         setContentView(R.layout.activity_tasks);
 
 //        Initializing the layout.
+        this.contentScroll = (ScrollView) findViewById(R.id.contenScroll);
         this.quickCreateStageLinearLayout = (LinearLayout) findViewById(R.id.quickTaskCreation);
         this.quickCreateStageLinearLayout.setVisibility(View.GONE);
         setUpQuickTaskLayout();
@@ -183,6 +189,53 @@ public class TasksActivity extends ActionBarActivity {
                 }
             }
         });
+        final CheckBox isGroupTaskCB = (CheckBox) taskCreationView.findViewById(R.id.isGroupTaskCheckBox);
+        final EditText participantNameET = (EditText) taskCreationView.findViewById(R.id.quickTaskParticipantName);
+        final EditText groupNameET = (EditText) taskCreationView.findViewById(R.id.quickTaskGroupName);
+        isGroupTaskCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    // Hide participant edit text
+                    participantNameET.setVisibility(View.GONE);
+                    // Show Group Name edit text
+                    groupNameET.setVisibility(View.VISIBLE);
+                    // Request Focus to Group Name edit text
+                    groupNameET.requestFocus();
+                } else {
+                    // Hide Group Name edit text
+                    groupNameET.setVisibility(View.GONE);
+                    // Show participant edit text
+                    participantNameET.setVisibility(View.VISIBLE);
+                    // Request focus to participant edit text
+                    participantNameET.requestFocus();
+                }
+            }
+        });
+        final Button createQuickTask = (Button) taskCreationView.findViewById(R.id.createQuickTaskButton);
+        createQuickTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Task quickTask = new Task(
+                        newTaskTitle.getText().toString(),
+                        "",
+                        "Mahesh Mohan",
+                        0,
+                        getLayoutInflater()
+                );
+                quickTask = createQuickTask(quickTask);
+                newTaskTitle.setText("");
+                isGroupTaskCB.setChecked(false);
+                groupNameET.setText("");
+                participantNameET.setText("");
+                toggleQuickTaskLayout();
+                contentScroll.smoothScrollTo(
+                        0,
+                        quickTask.getPanelView().getBottom()
+                );
+
+            }
+        });
     }
 
     @Override
@@ -198,5 +251,21 @@ public class TasksActivity extends ActionBarActivity {
         InputMethodManager imm = (InputMethodManager) context
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    /**
+     * Creates a quick task and adds it to the main list of tasks.
+     * @param quickTask A task object which is created.
+     */
+    private Task createQuickTask(Task quickTask) {
+        // Add task to taskList
+        this.taskList.add(quickTask);
+        quickTask = this.taskList.get(this.taskList.size()-1);
+        // Add task to top of the linear layout
+        this.mainStageLinearLayout.addView(quickTask.getPanelView());
+        // Request focus to the new task.
+        quickTask.getPanelView().requestFocus();
+        quickTask.getPanelView().requestFocusFromTouch();
+        return quickTask;
     }
 }
