@@ -13,6 +13,47 @@ ACCESS_TOKEN_EXPIRATION = 3600
 ACCESS_TOKEN_LENGTH = 10
 REFRESH_TOKEN_LENGTH = 10
 
+#GCM API Keys
+GCM_KEY = 'AIzaSyBhHrBolPT-AMAuIpEs6dm8VUbonQKyItA'
+TOKEN_GCM_REGISTRATION_IDS = 'registration_ids'
+
+#GCM 
+class GCMPost(object):
+	"""docstring for GCMPost"""
+	def __init__(
+				self,
+				payload = {}
+				url = 'https://android.googleapis.com/gcm/send'
+				contentType = "application/json"
+				authorization = GCM_KEY
+				):
+		self.url = url
+		self.headers = {}
+		self.headers['content-type'] = contentType
+		self.headers['authorization'] = authorization
+		self.payload = payload
+
+
+##################################
+## Defining a class and functions
+## to initiate a thread
+##################################
+
+class UrlPostThread(threading.Thread):
+    def __init__(self, threadID, name, postObj):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+        self.name = name
+        self.postObj = postObj
+
+    def run(self):
+        # Make a postRequest from the postObj
+        response = requests.post(
+            self.postObj.url,
+            data=json.dumps(self.postObj.payload),
+            headers=self.postObj.headers
+        )
+        self.response = response
 
 #Current version of the API
 CURRENT_VERSION = 0.1

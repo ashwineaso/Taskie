@@ -12,6 +12,15 @@ tokenObj = Collection()
 def createUser(userObj):
 	"""
 	Create a new User
+
+	::type userObj : objects
+	::param userObj : An instance of Collection with the following attributes
+					email,
+					name,
+					serverPushId,
+					password_hash,
+					createdOn
+	::return user : An instance of user class
 	"""
 
 	
@@ -23,12 +32,54 @@ def createUser(userObj):
 		email = userObj.email,
 		name = userObj.name,
 		createdOn = datetime.datetime.now(),
-		password_hash = userObj.password_hash
+		password_hash = userObj.password_hash,
+		status = 1,
+		serverPushId = userObj.serverPushId
 		)
 	
 	user.save()
 	token = Token(user = user)
 	token.save()
+	return user
+
+
+
+def createMinimalUser(userObj):
+	"""
+	Create a minimal user for sending invites
+
+	::type userObj : object of Collection class
+	::parama userObj : object with attributes
+						email
+	::return user : An instance of User class
+	"""
+
+	user = User(
+				email = userObj.email,
+				status = 0
+				)
+	user.save()
+	return user
+
+
+def updateUser(userObj):
+	"""
+	Updating User information with new values
+
+	type userObj : objects
+	::param userObj : An instance of Collection with the following attributes
+					email,
+					name,
+					serverPushId,
+	::return user : An instance of user class
+	"""
+	target_user = getUserByEmail(userObj)
+	user = User.objects(id = target_user.id).update(
+													set__email = userObj.email,
+													set__name = userObj.name,
+													set__serverPushId = userObj.serverPushId
+													)
+	user.save()
 	return user
 
 
@@ -41,11 +92,8 @@ def getUserByEmail(userObj):
 		email
 	:return user: An instance of User class
 	"""
-
-
 	try:
 		user = User.objects.get(email = userObj.email)
-		print user.email
 		return user 
 	except DoesNotExist as e:
 		raise UserNotFound

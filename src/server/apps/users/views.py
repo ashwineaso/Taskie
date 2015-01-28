@@ -15,17 +15,21 @@ def register():
 
 	"""
 	obj = request.json
-	#try:
-	userObj.email = obj["email"]
-	userObj.name = obj["name"]
-	userObj.password = obj["password"]
-	user = bll.createUser(userObj)
-	data['user'] = user.to_dict()
-	response['status'] = RESPONSE_SUCCESS
-	response['data'] = data
-	# except Exception as e:
-	#  	response['status'] = RESPONSE_FAILED
-	#  	response['message'] = str(e)
+	try:
+		userObj.email = obj["email"]
+		userObj.name = obj["name"]
+		userObj.password = obj["password"]
+		try:
+			userObj.serverPushId = obj["serverPushId"]
+		except KeyError as e:
+			userObj.serverPushId = ''
+		user = bll.createUser(userObj)
+		data['user'] = user.to_dict()
+		response['status'] = RESPONSE_SUCCESS
+		response['data'] = data
+	except Exception as e:
+		response['status'] = RESPONSE_FAILED
+		response['message'] = str(e)
 	return response
 
 
@@ -33,6 +37,22 @@ def updateUser():
 	"""
 	Updating user information
 	"""
+	obj = request.json
+	try:
+		userObj.email = obj["email"]
+		userObj.email = obj["name"]
+		try:
+			userObj.serverPushId = obj["serverPushId"]
+		except KeyError as e:
+			userObj.serverPushId = ''
+		user = bll.updateUser(userObj)
+		data["user"] = user.to_dict()
+		response["status"] = RESPONSE_SUCCESS
+		response["data"] = data
+	except Exception as e:
+		response["status"] = RESPONSE_FAILED
+		response["message"] = str(e)
+	return response
 
 
 
@@ -120,5 +140,5 @@ def checkAccessToken(tokenObj):
 			response["message"] = "TOKEN_INVALID"
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
-		response["message"] = e.arg
+		response["message"] = str(e)
 	return response

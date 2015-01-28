@@ -41,9 +41,15 @@ class KeyGenerator(object):
 
 
 class User(Document):
+	"""
+	User Document
+	Holds all the essential information about the user
+	"""
 	email = StringField()
 	name = StringField()
 	password_hash = StringField()
+	serverPushId = StringField()
+	status = IntField() ## 1 - Active ## 0 - Not Verified ## -1 - Deactivated 
 	createdOn = DateTimeField(default = datetime.datetime.now())
 
 	def to_dict(self):
@@ -55,7 +61,10 @@ class User(Document):
 
 
 class Token(Document):
-
+	"""
+	Token Document
+	Holds all the information about the token of a particular user
+	"""
 	user = ReferenceField(User)
 	key = StringField(default = KeyGenerator(CODE_KEY_LENGTH))
 	issuedAt = IntField(default = TimeStampGenerator())
