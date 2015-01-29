@@ -101,8 +101,6 @@ def modifyTaskStatus(taskObj):
 
 	"""
 
-	if (taskObj.dateTime == "0"):
-		taskObj.dateTime = datetime.now()
 	task = dal.modifyTaskStatus(taskObj)
 	pushSyncTaskNotification(task)
 	return task
@@ -121,9 +119,8 @@ def modifyCollStatus(taskObj):
 	:return An instance of the Collaborator class
 	"""
 
-	if (taskObj.statusDateTime == "0"):
-		taskObj.statusDateTime = datetime.now()
 	task = dal.modifyCollStatus(taskObj)
+	pushSyncTaskNotification(task)
 	return task
 
 

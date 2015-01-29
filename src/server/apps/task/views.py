@@ -14,14 +14,25 @@ def addNewTask():
 	obj = request.json
 	try:
 		taskObj.owner = obj["owner"]
-		taskObj.priority = obj["priority"]
 		taskObj.name = obj["name"]
-		taskObj.description = obj["description"]
-		taskObj.dueDateTime = obj["dueDateTime"]
+		try:
+			taskObj.priority = obj["priority"]
+		except KeyError:
+			taskObj.priority = ''
+		try:
+			taskObj.description = obj["description"]
+		except KeyError:
+			taskObj.description = ''
+		try:
+			taskObj.dueDateTime = obj["dueDateTime"]
+		except KeyError:
+			taskObj.dueDateTime = ''
 		taskObj.collaborators = obj["collaborators"]
-		taskObj.status = obj["status"]
 		taskObj.isgroup = obj["isgroup"]
-		taskObj.group = obj["groupId"]
+		try:
+			taskObj.group = obj["groupId"]
+		except KeyError:
+			taskObj.group = ''
 		task = bll.addNewTask(taskObj)
 		data["task"] = task.to_dict()
 		response["status"] = RESPONSE_SUCCESS
@@ -38,8 +49,14 @@ def editTask():
 		taskObj.id = obj["id"]
 		taskObj.priority = obj["priority"]
 		taskObj.name = obj["name"]
-		taskObj.description = obj["description"]
-		taskObj.dueDateTime = obj["dueDateTime"]
+		try:
+			taskObj.description = obj["description"]
+		except KeyError:
+			taskObj.description = ''
+		try:
+			taskObj.dueDateTime = obj["dueDateTime"]
+		except Exception:
+			taskObj.dueDateTime = ''
 		task = bll.editTask(taskObj)
 		data["task"] = task.to_dict()
 		response["status"] = RESPONSE_SUCCESS
@@ -85,7 +102,6 @@ def modifyTaskStatus():
 	try:
 		taskObj.id = obj["id"]
 		taskObj.status = obj["status"]
-		taskObj.dateTime = obj["dateTime"]
 		task = bll.modifyTaskStatus(taskObj)
 		data["task"] = task.to_dict()
 		response["status"] = RESPONSE_SUCCESS
@@ -102,7 +118,6 @@ def modifyCollStatus():
 		taskObj.id = obj["id"]
 		taskObj.email = obj["collemail"]
 		taskObj.collstatus = obj["collstatus"]
-		taskObj.statusDateTime = obj["statusDateTime"]
 		task = bll.modifyCollStatus(taskObj)
 		data["collaborator"] = task.to_dict()
 		response["status"] = RESPONSE_SUCCESS
@@ -111,6 +126,7 @@ def modifyCollStatus():
 		response["status"] = RESPONSE_FAILED
 		response["message"] = e.message
 	return response
+
 
 def createGroup():
 	obj = request.json
@@ -125,6 +141,7 @@ def createGroup():
 		response["status"] = RESPONSE_FAILED
 		response["message"] = e.message
 	return response
+
 
 def addGroupMembers():
 	obj = request.json

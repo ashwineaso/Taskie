@@ -4,7 +4,6 @@ from settings.altEngine import mongo_to_dict_helper
 from passlib.hash import sha256_crypt
 from hashlib import sha512
 from uuid import uuid4
-import datetime
 import time
 from settings.constants import CLIENT_KEY_LENGTH, CLIENT_SECRET_LENGTH,\
 	CODE_KEY_LENGTH, ACCESS_TOKEN_LENGTH, REFRESH_TOKEN_LENGTH, ACCESS_TOKEN_EXPIRATION
@@ -46,11 +45,11 @@ class User(Document):
 	Holds all the essential information about the user
 	"""
 	email = StringField()
-	name = StringField()
-	password_hash = StringField()
-	serverPushId = StringField()
-	status = IntField() ## 1 - Active ## 0 - Not Verified ## -1 - Deactivated 
-	createdOn = DateTimeField(default = datetime.datetime.now())
+	name = StringField(required = False)
+	password_hash = StringField(required = False)
+	serverPushId = StringField(required = False)
+	status = IntField(default = 0) ## 1 - Active ## 0 - Not Verified ## -1 - Pending registration 
+	createdOn = LongField(default = time.time())
 
 	def to_dict(self):
 		return mongo_to_dict_helper(self)

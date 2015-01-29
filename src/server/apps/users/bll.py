@@ -16,6 +16,7 @@ def createUser(userObj):
 					createdOn
 	::return user : An instance of user class
 	"""
+
 	userObj.password_hash = hash_password(userObj.password)
 	user = dal.createUser(userObj)
 	return user

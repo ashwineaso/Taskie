@@ -4,7 +4,8 @@ from mongoengine import DoesNotExist
 from settings.exceptions import *
 import datetime
 from settings.constants import CLIENT_KEY_LENGTH, CLIENT_SECRET_LENGTH,\
-    CODE_KEY_LENGTH, ACCESS_TOKEN_LENGTH, REFRESH_TOKEN_LENGTH, ACCESS_TOKEN_EXPIRATION
+    CODE_KEY_LENGTH, ACCESS_TOKEN_LENGTH, REFRESH_TOKEN_LENGTH, ACCESS_TOKEN_EXPIRATION, \
+    ACCOUNT_NOT_VERIFIED, ACCOUNT_INVITED_UNREGISTERED, ACCOUNT_ACTIVE
 from settings.altEngine import Collection
 
 tokenObj = Collection()
@@ -23,21 +24,34 @@ def createUser(userObj):
 	::return user : An instance of user class
 	"""
 
-	
-	for users in User.objects:
-		if users.email == userObj.email:
-			raise UserAlreadyExists
+	#Check if the user already exists
+	for person in User.objects:
+		if person.email == userObj.email:
+			#If user's email is resitered check status
+			#If status = 1 - User already exists and active
+			if person.status == ACCOUNT_ACTIVE:
+				raise UserAlreadyExists
+			#If status = 0 : User already exists, pending verification
+			elif person.status == ACCOUNT_NOT_VERIFIED:
+				raise UserPendingConfirmation
+			#If status = -1 : User invited, but not registered
+			elif person.status == ACCOUNT_INVITED_UNREGISTERED:
+				user = dal.updateUser(userObj)
+				return user
 
+	#Create a new user object with the provided information
 	user = User(
 		email = userObj.email,
 		name = userObj.name,
 		createdOn = datetime.datetime.now(),
 		password_hash = userObj.password_hash,
-		status = 1,
+		status = ACCOUNT_ACTIVE,
 		serverPushId = userObj.serverPushId
 		)
 	
+	#Save new user to Database
 	user.save()
+	#Create a new token for the user
 	token = Token(user = user)
 	token.save()
 	return user
@@ -56,7 +70,8 @@ def createMinimalUser(userObj):
 
 	user = User(
 				email = userObj.email,
-				status = 0
+				status = ACCOUNT_INVITED_UNREGISTERED,
+				createdOn = datetime.datetime.now()
 				)
 	user.save()
 	return user
@@ -65,6 +80,8 @@ def createMinimalUser(userObj):
 def updateUser(userObj):
 	"""
 	Updating User information with new values
+	OR 
+	Updating Invited user with provided values
 
 	type userObj : objects
 	::param userObj : An instance of Collection with the following attributes
@@ -79,6 +96,17 @@ def updateUser(userObj):
 													set__name = userObj.name,
 													set__serverPushId = userObj.serverPushId
 													)
+	
+	###################################################
+	## If User is not yet marked registered, then user was created by invitation
+	## Token has to be created explicitly
+	###################################################
+	if user.status == ACCOUNT_INVITED_UNREGISTERED:
+		user.password_hash = userObj.password_hash
+		user.status = ACCOUNT_ACTIVE
+		token = Token(user = user)
+		token.save()
+
 	user.save()
 	return user
 

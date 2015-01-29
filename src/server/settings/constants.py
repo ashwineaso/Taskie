@@ -1,9 +1,33 @@
+__author__ = ['mahesmohan','ashwineaso']
+
+import os
+import threading
+import json
+from mongoengine import *
+
 #Database name
 def getDatabase():
 	if DEBUG :
 		return "taskappdebug" 
 	else:
 		return "taskapp"
+
+
+#Project Information
+PROJECT_ROOT = os.path.realpath(os.path.dirname(os.path.dirname(__file__)))
+PHOTOS_DEBUG_DIRECTORY = 'storage/photos_debug/'
+PHOTOS_DIRECTORY = 'storage/photos/'
+ATTACHMENT_DIRECTORY = 'storage/attachment/'
+
+#User Account status flags
+ACCOUNT_NOT_VERIFIED = 0
+ACCOUNT_INVITED_UNREGISTERED = -1
+ACCOUNT_ACTIVE = 1
+
+#Priority Flags
+LOW_PRIORITY = 0
+NORMAL_PRIORITY = 1
+HIGH_PRIORITY = 2
 
 #Variable required for OAuth2 2-Legged Verification
 CLIENT_KEY_LENGTH = 30
@@ -22,9 +46,9 @@ class GCMPost(object):
 	"""docstring for GCMPost"""
 	def __init__(
 				self,
-				payload = {}
-				url = 'https://android.googleapis.com/gcm/send'
-				contentType = "application/json"
+				payload = {},
+				url = 'https://android.googleapis.com/gcm/send',
+				contentType = "application/json",
 				authorization = GCM_KEY
 				):
 		self.url = url
@@ -60,5 +84,3 @@ CURRENT_VERSION = 0.1
 
 #Debig status of the API
 DEBUG = True
-
-__author__ = ['mahesmohan','ashwineaso']

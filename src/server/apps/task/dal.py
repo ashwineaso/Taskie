@@ -3,7 +3,7 @@ from apps.task.models import *
 from apps.users import bll as userbll
 from settings.altEngine import Collection
 from bson.objectid import ObjectId
-import datetime
+import time
 
 
 def addNewTask(taskObj):
@@ -30,7 +30,7 @@ def addNewTask(taskObj):
 	#Assigning initial status to each task
 	taskObj.status = Status(
 					status = 0,
-					dateTime = datetime.datetime.now()
+					dateTime = time.time()
 					)
 
 	#Define an emptly list to include all the user objects
@@ -137,9 +137,19 @@ def addCollaborators(taskObj):
 					dateTime = datetime.datetime.now()
 					)
 
+	#Check if new collaborators exist
+	for userObj.email in taskObj.collaborators:
+		flag = False
+		for person in User.objects:
+			#If user exists in Server, flag is marked true and continues
+			if person.email == userObj.email:
+				flag = True
+			#If flag is false, create a new user and send invite
+			if not flag:
+				userbll.createAndInvite(userObj)
+
 	#Get the user - collaborator id and add to list
-	for val in taskObj.collaborators:
-		userObj.email = val
+	for userObj.email in taskObj.collaborators:
 		my_objects.append(Collaborator(user = userbll.getUserByEmail(userObj),
 										status = taskObj.status))
 

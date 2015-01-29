@@ -3,13 +3,14 @@ from mongoengine import *
 from apps.users.models import User
 from settings.methods import connect
 from settings.altEngine import mongo_to_dict_helper
-import datetime
+from settings.constants import NORMAL_PRIORITY
+import time
 
 connect()
 
 class Status(EmbeddedDocument):
 	status = IntField()
-	dateTime = DateTimeField()
+	dateTime = LongField(default = time.time())
 
 	def to_dict(self):
 		return mongo_to_dict_helper(self)
@@ -17,8 +18,8 @@ class Status(EmbeddedDocument):
 class Collaborator(EmbeddedDocument):
 	user = ReferenceField(User)
 	status = EmbeddedDocumentField(Status)
-	startTime = DateTimeField(required = False)
-	endTime = DateTimeField(required = False)
+	startTime = LongField(required = False)
+	endTime = LongField(required = False)
 
 	def to_dict(self):
 		return mongo_to_dict_helper(self)
@@ -35,12 +36,12 @@ class Group(Document):
 class Task(Document):
 	owner = ReferenceField(User)
 	collaborators = ListField(EmbeddedDocumentField(Collaborator))
-	priority = IntField()
+	priority = IntField(default = NORMAL_PRIORITY)
 	name = StringField()
-	description = StringField()
-	dueDateTime = DateTimeField()
+	description = StringField(required = False)
+	dueDateTime = LongField(required = False)
 	status = EmbeddedDocumentField(Status)
-	isgroup = BooleanField()
+	isgroup = BooleanField(default = False)
 	group = ReferenceField(Group)
 
 	def to_dict(self):
