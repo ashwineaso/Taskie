@@ -1,0 +1,91 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/smallMargin_xhdp"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context="in.altersense.taskapp.UserLoginActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/hugeHeader_hdpi"
+        android:textColor="@color/createTaskPrimaryActionBar"
+        android:text="@string/app_name"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/label_Login"
+        android:textSize="@dimen/text_header_xhdpi"
+        android:layout_marginBottom="@dimen/smallMargin_xhdp"
+        android:textColor="@color/createTaskPrimaryActionBar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_email"
+            android:scaleType="center"
+            android:background="@color/transparent"/>
+
+        <EditText android:id="@+id/loginEmailET"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:hint="@string/hint_Email"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_key"
+            android:scaleType="center"
+            android:background="@color/transparent"/>
+
+        <EditText android:id="@+id/loginPasswordET"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:hint="@string/hint_Password"/>
+
+        <ImageButton android:id="@+id/loginShowPassButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_action_showpassword"
+            android:scaleType="center"
+            android:background="@color/transparent"/>
+
+    </LinearLayout>
+
+    <Button android:id="@+id/loginButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/createTaskPrimaryActionBar"
+        android:textColor="@color/white"
+        android:layout_marginTop="@dimen/smallMargin_xhdp"
+        android:text="@string/label_SignIn"/>
+
+    <Button android:id="@+id/regButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:background="@color/transparent"
+        android:layout_marginTop="@dimen/bigMargin_xhdp"
+        android:textColor="@color/createTaskPrimaryActionBar"
+        android:text="@string/label_CreateAccount"/>
+
+</LinearLayout>

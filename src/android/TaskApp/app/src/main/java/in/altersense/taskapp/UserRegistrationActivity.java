@@ -64,14 +64,6 @@ public class UserRegistrationActivity extends ActionBarActivity {
 
     }
 
-    /**
-     * Calligraphy attached to new
-     * @param newBase
-     */
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
