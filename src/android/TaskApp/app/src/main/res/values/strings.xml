@@ -23,5 +23,11 @@
 
     <string name="title_activity_group">GroupActivity</string>
     <string name="quickTaskCreate">Quick Task Creation</string>
+    <string name="title_activity_user_registration">UserRegistrationActivity</string>
+    <string name="label_SignUp">SignUp!</string>
+    <string name="hint_FullName">Your Name</string>
+    <string name="hint_Email">Your Email</string>
+    <string name="hint_PhoneNum">Your Phone Number</string>
+    <string name="hint_Password">Password</string>
 
 </resources>
