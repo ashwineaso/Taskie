@@ -29,7 +29,7 @@ def register():
 		response['data'] = data
 	except Exception as e:
 		response['status'] = RESPONSE_FAILED
-		response['message'] = str(e)
+		response['message'] = e.message
 	return response
 
 
@@ -101,6 +101,7 @@ def issueToken():
 		response["status"] = RESPONSE_FAILED
 		response["message"] = str(e)
 	return response
+
 
 
 def refreshTokens():
