@@ -6,16 +6,24 @@
     android:layout_height="match_parent"
     tools:context="in.altersense.taskapp.TasksAtHand" >
 
-    <ScrollView
+    <ScrollView android:id="@+id/contenScroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/emptyBackground">
+        android:background="@color/emptyBackground"
+        android:animateLayoutChanges="true">
 
         <LinearLayout android:id="@+id/mainStageLinearLayout"
+            android:animateLayoutChanges="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/emptyBackground"
             android:orientation="vertical">
+
+            <LinearLayout android:id="@+id/quickTaskCreation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/tinyMargin_xhdpi"
+                android:orientation="vertical" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -37,6 +45,16 @@
                     android:layout_marginLeft="@dimen/smallMargin_xhdp"/>
 
             </LinearLayout>
+
+            <LinearLayout android:id="@+id/taskListStage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
+
+            <LinearLayout android:id="@+id/groupListStage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
 
         </LinearLayout>
 

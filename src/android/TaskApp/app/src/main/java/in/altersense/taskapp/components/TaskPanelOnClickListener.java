@@ -22,8 +22,6 @@ public class TaskPanelOnClickListener implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        Log.i(TAG, "OnClick on TaskPanel recieved.");
-        Log.i(TAG, "isActionsDisplayed: "+task.isActionsDisplayed);
         if(!task.isActionsDisplayed) {
             showTaskActions(task);
         } else {

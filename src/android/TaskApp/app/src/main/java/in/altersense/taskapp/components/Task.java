@@ -8,7 +8,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import in.altersense.taskapp.R;
-import in.altersense.taskapp.customviews.CustomFontTextView;
 
 /**
  * Created by mahesmohan on 1/13/15.
@@ -16,7 +15,7 @@ import in.altersense.taskapp.customviews.CustomFontTextView;
 public class Task {
     private static final String TAG = "Task";
     private long id, deadline, ownerId;
-    private String title, descr, ownerName, deadlineText;
+    private String title, descr, ownerName, deadlineTimeMeasure;
     private boolean hasAttachment;
     public boolean isActionsDisplayed;
     private int priority;
@@ -36,16 +35,28 @@ public class Task {
             String title,
             String descr,
             String ownerName,
+            String deadlineTimeMeasure,
             final LayoutInflater inflater
     ) {
         this.title = title;
         this.descr = descr;
         this.ownerName = ownerName;
+        this.deadlineTimeMeasure = deadlineTimeMeasure;
         this.panelView = createView(inflater);
         this.actionsView = createActionsView(inflater);
         this.taskActionsPlaceHolderView =
                 (LinearLayout) this.panelView.findViewById(R.id.actionsPlaceHolderLinearLayout);
+        this.taskActionsPlaceHolderView.setVisibility(View.GONE);
+        this.taskActionsPlaceHolderView.addView(this.actionsView);
         this.isActionsDisplayed = false;
+    }
+
+    public Task(String title, String description, String ownerName, LayoutInflater layoutInflater) {
+        this(title, description, ownerName, "123", layoutInflater);
+    }
+
+    public Task(String title, String description, String ownerName, int deadlineTimeMeasure, LayoutInflater layoutInflater) {
+        this(title, description, ownerName, deadlineTimeMeasure+"", layoutInflater);
     }
 
     private View createActionsView(LayoutInflater inflater) {
@@ -98,12 +109,15 @@ public class Task {
 
     public void showTaskActions() {
         Log.i(TAG, "Reached showTaskActions");
-        this.taskActionsPlaceHolderView.addView(this.actionsView);
+        this.taskActionsPlaceHolderView.setVisibility(View.VISIBLE);
         this.isActionsDisplayed = true;
     }
 
     public void hideTaskActions() {
-        this.taskActionsPlaceHolderView.removeAllViews();
+//        Hide task panel
+        this.taskActionsPlaceHolderView.setVisibility(View.GONE);
+//        Unset the is actions displayed flag so that the parent views can check if panel
+//        is open
         this.isActionsDisplayed = false;
     }
 
@@ -120,6 +134,7 @@ public class Task {
         taskTitle.setText(this.title);
         taskDescr.setText(this.descr);
         taskOwner.setText(this.ownerName);
+        timeMeasure.setText(this.deadlineTimeMeasure);
 
         return taskView;
     }
