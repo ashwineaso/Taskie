@@ -31,7 +31,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class TasksActivity extends ActionBarActivity {
 
     private static final String TAG = "TasksActivity";
-    private LinearLayout mainStageLinearLayout;  // For handling the main content area.
+    private LinearLayout taskListStageLL;  // For handling the main content area.
     private LinearLayout quickCreateStageLinearLayout; // Quick task creation area
     private List<Task> taskList = new ArrayList<Task>();  // Lists all tasks for traversing convenience.
     private Task task;  // Task iterator.
@@ -39,6 +39,7 @@ public class TasksActivity extends ActionBarActivity {
     private View taskCreationView;
     private EditText newTaskTitle;
     private ScrollView contentScroll;
+    private LinearLayout groupListStageLL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,8 @@ public class TasksActivity extends ActionBarActivity {
         this.quickCreateStageLinearLayout = (LinearLayout) findViewById(R.id.quickTaskCreation);
         this.quickCreateStageLinearLayout.setVisibility(View.GONE);
         setUpQuickTaskLayout();
-        this.mainStageLinearLayout = (LinearLayout) findViewById(R.id.mainStageLinearLayout);
+        this.taskListStageLL = (LinearLayout) findViewById(R.id.taskListStage);
+        this.groupListStageLL = (LinearLayout) findViewById(R.id.groupListStage);
         this.isQuickTaskCreationHidden = true;
         Random random = new Random();
 
@@ -70,7 +72,7 @@ public class TasksActivity extends ActionBarActivity {
                     random.nextInt(15),
                     this.getLayoutInflater()
             );
-            mainStageLinearLayout.addView(task.getPanelView());
+            taskListStageLL.addView(task.getPanelView());
 //            Adding an onClickListener to TaskPanel to show and hide task actions.
             TaskPanelOnClickListener taskPanelOnClickListener = new TaskPanelOnClickListener(task, this.taskList);
             task.getPanelView().setOnClickListener(taskPanelOnClickListener);
@@ -79,7 +81,7 @@ public class TasksActivity extends ActionBarActivity {
         }
 
         LayoutInflater inflater = getLayoutInflater();
-        LinearLayout taskCollection = (LinearLayout) inflater.inflate(R.layout.tasks_collection, mainStageLinearLayout);
+        LinearLayout taskCollection = (LinearLayout) inflater.inflate(R.layout.task_group_collection, groupListStageLL);
 
         TaskGroup taskGroup = new TaskGroup(
                 "CREMID",
@@ -149,8 +151,8 @@ public class TasksActivity extends ActionBarActivity {
         } else {
             this.quickCreateStageLinearLayout.setVisibility(View.GONE);
             this.newTaskTitle.clearFocus();
-            this.mainStageLinearLayout.requestFocus();
-            this.mainStageLinearLayout.requestFocusFromTouch();
+            this.taskListStageLL.requestFocus();
+            this.taskListStageLL.requestFocusFromTouch();
             hideKeyBoard(
                     getApplicationContext(),
                     getCurrentFocus()
@@ -231,7 +233,7 @@ public class TasksActivity extends ActionBarActivity {
                 toggleQuickTaskLayout();
                 contentScroll.smoothScrollTo(
                         0,
-                        quickTask.getPanelView().getBottom()
+                        taskListStageLL.getBottom()
                 );
 
             }
@@ -262,7 +264,7 @@ public class TasksActivity extends ActionBarActivity {
         this.taskList.add(quickTask);
         quickTask = this.taskList.get(this.taskList.size()-1);
         // Add task to top of the linear layout
-        this.mainStageLinearLayout.addView(quickTask.getPanelView());
+        this.taskListStageLL.addView(quickTask.getPanelView());
         // Request focus to the new task.
         quickTask.getPanelView().requestFocus();
         quickTask.getPanelView().requestFocusFromTouch();
