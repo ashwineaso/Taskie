@@ -37,6 +37,23 @@ def createAndInvite(userObj):
 	return user
 
 
+def verifyUser(userObj):
+	"""
+	Verify the user account using the user id and key
+
+	::type userObj : object
+	::param userObj : An instance of Collection with the following attributes
+						email,
+						key,
+	::return flag : True if verified and False if not
+	"""
+	verified = False
+	user = dal.getUserByEmail(userObj)
+	token = Token.objects.get(user = user)
+	if token.key == userObj.key:
+		verified = True
+	return verified
+
 
 def updateUser(userObj):
 	"""

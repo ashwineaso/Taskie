@@ -29,7 +29,8 @@ def register():
 		response['data'] = data
 	except Exception as e:
 		response['status'] = RESPONSE_FAILED
-		response['message'] = e.message
+		response['message'] = str(e)
+		response['code'] = e.code
 	return response
 
 
@@ -139,6 +140,29 @@ def checkAccessToken(tokenObj):
 		else:
 			response["status"] = RESPONSE_FAILED
 			response["message"] = "TOKEN_INVALID"
+	except Exception as e:
+		response["status"] = RESPONSE_FAILED
+		response["message"] = str(e)
+	return response
+
+
+def verifyUser():
+	"""
+	Verifying the user from the confirmation mail sent
+
+	"""
+
+	obj = request.json
+	try:
+		userObj.email = obj["email"]
+		userObj.key = obj["key"]
+		flag = bll.verifyUser(userObj)
+		if flag:
+			response["status"] = RESPONSE_SUCCESS
+			response["message"] = "Verification Sucessful"
+		else:
+			response["status"] = RESPONSE_FAILED
+			response["message"] = "Verification Unsucessful"
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
 		response["message"] = str(e)

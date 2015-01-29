@@ -2,7 +2,7 @@ __author__ = ["ashwineaso"]
 from models import *
 from mongoengine import DoesNotExist
 from settings.exceptions import *
-import datetime
+import time
 from settings.constants import CLIENT_KEY_LENGTH, CLIENT_SECRET_LENGTH,\
     CODE_KEY_LENGTH, ACCESS_TOKEN_LENGTH, REFRESH_TOKEN_LENGTH, ACCESS_TOKEN_EXPIRATION, \
     ACCOUNT_NOT_VERIFIED, ACCOUNT_INVITED_UNREGISTERED, ACCOUNT_ACTIVE
@@ -43,9 +43,9 @@ def createUser(userObj):
 	user = User(
 		email = userObj.email,
 		name = userObj.name,
-		createdOn = datetime.datetime.now(),
+		createdOn = time.time(),
 		password_hash = userObj.password_hash,
-		status = ACCOUNT_ACTIVE,
+		status = ACCOUNT_NOT_VERIFIED,
 		serverPushId = userObj.serverPushId
 		)
 	
@@ -71,7 +71,7 @@ def createMinimalUser(userObj):
 	user = User(
 				email = userObj.email,
 				status = ACCOUNT_INVITED_UNREGISTERED,
-				createdOn = datetime.datetime.now()
+				createdOn = time.time()
 				)
 	user.save()
 	return user
