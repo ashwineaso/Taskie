@@ -34,6 +34,8 @@ public class UserRegistrationActivity extends ActionBarActivity {
         );
         setContentView(R.layout.activity_user_registration);
 
+        getSupportActionBar().hide();
+
         // Initializing views
         this.nameET = (EditText) findViewById(R.id.regNameET);
         this.emailET = (EditText) findViewById(R.id.regEmailET);
@@ -47,13 +49,13 @@ public class UserRegistrationActivity extends ActionBarActivity {
                 ImageButton imageButton = (ImageButton) v;
                 int inputType = regPasswordET.getInputType();
                 if (inputType == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
-                    regPasswordET.setRawInputType(
-                            InputType.TYPE_TEXT_VARIATION_PASSWORD
+                    regPasswordET.setInputType(
+                            InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
                     );
                     imageButton.setImageResource(R.drawable.ic_hide_password);
                 } else {
-                    regPasswordET.setRawInputType(
-                        InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                    regPasswordET.setInputType(
+                            InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
                     );
                     imageButton.setImageResource(R.drawable.ic_action_showpassword);
                 }

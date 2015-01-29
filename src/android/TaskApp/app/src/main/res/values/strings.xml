@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">TaskApp</string>
+    <string name="app_name">Taskie</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_create_task">CreateTaskActivity</string>
@@ -13,6 +13,7 @@
 
     <!-- Labels -->
     <string name="label_sortby">Sort By</string>
+    <string name="label_SignUp">Sign Up</string>
 
     <!-- Arrays -->
     <string-array name="array_sortBy">
@@ -24,10 +25,12 @@
     <string name="title_activity_group">GroupActivity</string>
     <string name="quickTaskCreate">Quick Task Creation</string>
     <string name="title_activity_user_registration">UserRegistrationActivity</string>
-    <string name="label_SignUp">SignUp!</string>
+
+    <!-- Hints -->
     <string name="hint_FullName">Your Name</string>
     <string name="hint_Email">Your Email</string>
     <string name="hint_PhoneNum">Your Phone Number</string>
     <string name="hint_Password">Password</string>
+    <string name="label_Register">REGISTER</string>
 
 </resources>

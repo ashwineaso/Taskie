@@ -8,11 +8,22 @@
     android:orientation="vertical"
     tools:context="in.altersense.taskapp.UserRegistrationActivity">
 
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/hugeHeader_hdpi"
+        android:textColor="@color/createTaskPrimaryActionBar"
+        android:text="@string/app_name"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="@string/label_SignUp"/>
+        android:text="@string/label_SignUp"
+        android:textSize="@dimen/text_header_xhdpi"
+        android:layout_marginBottom="@dimen/smallMargin_xhdp"
+        android:textColor="@color/createTaskPrimaryActionBar"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -83,9 +94,12 @@
         </LinearLayout>
 
     <Button android:id="@+id/regButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="@string/label_SignUp"/>
+        android:background="@color/createTaskPrimaryActionBar"
+        android:textColor="@color/white"
+        android:layout_marginTop="@dimen/smallMargin_xhdp"
+        android:text="@string/label_Register"/>
 
 </LinearLayout>
