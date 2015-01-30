@@ -42,7 +42,7 @@ def createUser(userObj):
 			raise UserPendingConfirmation
 		#If status = -1 : User invited, but not registered
 		if person.status == ACCOUNT_INVITED_UNREGISTERED:
-			user = dal.updateUser(userObj)
+			user = updateUser(userObj)
 			return user
 
 	#Save new user to Database
@@ -69,6 +69,7 @@ def createMinimalUser(userObj):
 				createdOn = time.time()
 				)
 	user.save()
+	user.reload()
 	return user
 
 
@@ -85,12 +86,12 @@ def updateUser(userObj):
 					serverPushId,
 	::return user : An instance of user class
 	"""
-	target_user = getUserByEmail(userObj)
-	user = User.objects(id = target_user.id).update(
-													set__email = userObj.email,
-													set__name = userObj.name,
-													set__serverPushId = userObj.serverPushId
-													)
+	user = getUserByEmail(userObj)
+	User.objects(id = user.id).update(
+										set__email = userObj.email,
+										set__name = userObj.name,
+										set__serverPushId = userObj.serverPushId
+										)
 	
 	###################################################
 	## If User is not yet marked registered, then user was created by invitation
@@ -103,6 +104,7 @@ def updateUser(userObj):
 		token.save()
 
 	user.save()
+	user.reload()
 	return user
 
 
@@ -140,7 +142,8 @@ def issueToken(userObj):
 	"""
 
 	try:
-		token = Token.objects.get(key = userObj.key)
+		user = getUserByEmail(userObj)
+		token = Token.objects.get(user = user)
 		tokenObj.flag = True
 		tokenObj.access_token = token.access_token
 		tokenObj.refresh_token = token.refresh_token
@@ -156,7 +159,6 @@ def refreshTokens(tokenObj):
 
 	token = Token.objects.get(refresh_token = tokenObj.refresh_token)
 	token.refresh_token = KeyGenerator(REFRESH_TOKEN_LENGTH)()
-	# token.issuedAt = TimeStampGenerator(10)
 	token.expiresAt = TimeStampGenerator(ACCESS_TOKEN_EXPIRATION)()
 	return token
 
@@ -165,7 +167,6 @@ def updatetoken(tokenObj):
 
 	token = Token.objects.get(id = tokenObj.id)
 	token.refresh_token = tokenObj.refresh_token
-	# token.issuedAt = tokenObj.issuedAt
 	token.expiresAt = tokenObj.expiresAt
 	token.save()
 
@@ -181,3 +182,16 @@ def checkAccessTokenValid(tokenObj):
 	if time_now > tokenObj.expiresAt:
 		tokenObj.flag = False
 	return tokenObj
+
+
+def verifyUser(userObj):
+	"""
+	Verify user by key matching 
+	"""
+	user = getUserByEmail(userObj)
+	token = Token.objects.get(user = user)
+	if token.key == userObj.key:
+		user.status = ACCOUNT_ACTIVE
+		user.save()
+		return True
+	return False

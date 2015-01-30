@@ -5,9 +5,10 @@ users_app = Bottle()
 
 users_app.route('/register', 'POST', register)
 users_app.route('/verifyUser', 'POST', verifyUser)
+users_app.route('/updateUser', 'POST', updateUser)
 users_app.route('/authorize', 'POST', authorize_user)
-users_app.route('/issuetoken', 'POST', issueToken)
-users_app.route('/refreshtoken', 'POST', refreshTokens)
+# users_app.route('/issuetoken', 'POST', issueToken)
+users_app.route('/refreshtokens', 'POST', refreshTokens)
 users_app.route('/checkaccesstoken', 'POST', checkAccessToken)
 
 __author__ = ["ashwineaso"]

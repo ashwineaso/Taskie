@@ -1,7 +1,6 @@
 from mongoengine import *
 from settings.methods import connect
 from settings.altEngine import mongo_to_dict_helper
-from settings.exceptions import *
 from passlib.hash import sha256_crypt
 from hashlib import sha512
 from uuid import uuid4
@@ -65,7 +64,7 @@ class Token(Document):
 	Token Document
 	Holds all the information about the token of a particular user
 	"""
-	user = ReferenceField(User)
+	user = ReferenceField(User, unique = True)
 	key = StringField(default = KeyGenerator(CODE_KEY_LENGTH))
 	issuedAt = IntField(default = TimeStampGenerator())
 	expiresAt = IntField(default = TimeStampGenerator(ACCESS_TOKEN_EXPIRATION))

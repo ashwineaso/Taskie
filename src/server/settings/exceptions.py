@@ -14,7 +14,7 @@ class UserNotFound(Exception):
 	def __init__(self):
 		super(UserNotFound, self).__init__()
 		self.msg = "User Not Found"
-		self.errcode = 1001 
+		self.code = 1001 
 
 	def __str__(self):
 		return self.msg
@@ -62,3 +62,15 @@ class TokenNotFound(Exception):
 
 	def __str__(self):
 		return self.msg
+
+
+class AuthenticationError(Exception):
+	"""docstring for AuthenticationError"""
+	def __init__(self):
+		super(AuthenticationError, self).__init__()
+		self.msg = "Authentication Failed"
+		self.code = 1005
+
+	def __str__(self):
+		return self.msg
+		
