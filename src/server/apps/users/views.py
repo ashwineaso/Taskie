@@ -167,3 +167,13 @@ def verifyUser():
 		response["status"] = RESPONSE_FAILED
 		response["message"] = str(e)
 	return response
+
+
+# def createInvite():
+# 	"""
+# 	Invie a new user to taskie
+# 	"""
+
+# 	obj = request.json
+# 	try:
+# 		userObj.email = obj["email"]		

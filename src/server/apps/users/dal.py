@@ -4,8 +4,7 @@ from mongoengine import DoesNotExist
 from settings.exceptions import *
 import time
 from settings.constants import CLIENT_KEY_LENGTH, CLIENT_SECRET_LENGTH,\
-    CODE_KEY_LENGTH, ACCESS_TOKEN_LENGTH, REFRESH_TOKEN_LENGTH, ACCESS_TOKEN_EXPIRATION, \
-    ACCOUNT_NOT_VERIFIED, ACCOUNT_INVITED_UNREGISTERED, ACCOUNT_ACTIVE
+    CODE_KEY_LENGTH, ACCESS_TOKEN_LENGTH, REFRESH_TOKEN_LENGTH, ACCESS_TOKEN_EXPIRATION, ACCOUNT_NOT_VERIFIED, ACCOUNT_INVITED_UNREGISTERED, ACCOUNT_ACTIVE
 from settings.altEngine import Collection
 
 tokenObj = Collection()
@@ -23,34 +22,30 @@ def createUser(userObj):
 					createdOn
 	::return user : An instance of user class
 	"""
+	try:
+		user = User(
+			email = userObj.email,
+			name = userObj.name,
+			createdOn = time.time(),
+			password_hash = userObj.password_hash,
+			status = ACCOUNT_NOT_VERIFIED,
+			serverPushId = userObj.serverPushId
+			)
+		user.save()
+	except Exception:
+		person = User.objects.get(email = userObj.email)
+		#If status = 1 - User already exists and active
+		if person.status == ACCOUNT_ACTIVE:
+			raise UserAlreadyExists
+		#If status = 0 : User already exists, pending verification
+		if person.status == ACCOUNT_NOT_VERIFIED:
+			raise UserPendingConfirmation
+		#If status = -1 : User invited, but not registered
+		if person.status == ACCOUNT_INVITED_UNREGISTERED:
+			user = dal.updateUser(userObj)
+			return user
 
-	#Check if the user already exists
-	for person in User.objects:
-		if person.email == userObj.email:
-			#If user's email is resitered check status
-			#If status = 1 - User already exists and active
-			if person.status == ACCOUNT_ACTIVE:
-				raise UserAlreadyExists
-			#If status = 0 : User already exists, pending verification
-			elif person.status == ACCOUNT_NOT_VERIFIED:
-				raise UserPendingConfirmation
-			#If status = -1 : User invited, but not registered
-			elif person.status == ACCOUNT_INVITED_UNREGISTERED:
-				user = dal.updateUser(userObj)
-				return user
-
-	#Create a new user object with the provided information
-	user = User(
-		email = userObj.email,
-		name = userObj.name,
-		createdOn = time.time(),
-		password_hash = userObj.password_hash,
-		status = ACCOUNT_NOT_VERIFIED,
-		serverPushId = userObj.serverPushId
-		)
-	
 	#Save new user to Database
-	user.save()
 	#Create a new token for the user
 	token = Token(user = user)
 	token.save()

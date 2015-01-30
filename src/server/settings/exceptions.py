@@ -55,7 +55,7 @@ class UserPendingConfirmation(Exception):
 
 class TokenNotFound(Exception):
 	"""docstring for TokenNotFound"""
-	def __init__(self, arg):
+	def __init__(self):
 		super(TokenNotFound, self).__init__()
 		self.msg = "Token Not Found"
 		self.code = 3001
