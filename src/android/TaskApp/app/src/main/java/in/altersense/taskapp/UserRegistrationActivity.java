@@ -50,12 +50,12 @@ public class UserRegistrationActivity extends ActionBarActivity {
                 int inputType = regPasswordET.getInputType();
                 if (inputType == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
                     regPasswordET.setInputType(
-                            InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                            InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
                     );
                     imageButton.setImageResource(R.drawable.ic_hide_password);
                 } else {
                     regPasswordET.setInputType(
-                            InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
+                            InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
                     );
                     imageButton.setImageResource(R.drawable.ic_action_showpassword);
                 }
