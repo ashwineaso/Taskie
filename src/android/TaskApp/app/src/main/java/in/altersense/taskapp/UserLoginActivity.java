@@ -1,6 +1,7 @@
 package in.altersense.taskapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.InputType;
@@ -21,8 +22,9 @@ public class UserLoginActivity extends ActionBarActivity {
     private static final String TAG = "UserLoginActivity";
     private EditText emailET;
     private EditText passwordET;
-    private Button regButton;
+    private Button loginButton;
     private ImageButton showPasswordButton;
+    private Button regButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +42,21 @@ public class UserLoginActivity extends ActionBarActivity {
         // Initializing views
         this.emailET = (EditText) findViewById(R.id.loginEmailET);
         this.passwordET = (EditText) findViewById(R.id.loginPasswordET);
-        this.regButton = (Button) findViewById(R.id.loginButton);
+        this.loginButton = (Button) findViewById(R.id.loginButton);
+        this.regButton = (Button) findViewById(R.id.regButton);
+
+        this.regButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent startRegistrationIntent = new Intent(
+                        getApplicationContext(),
+                        UserRegistrationActivity.class
+                );
+                startActivity(startRegistrationIntent);
+                finish();
+            }
+        });
+
         this.showPasswordButton = (ImageButton) findViewById(R.id.loginShowPassButton);
 
         this.showPasswordButton.setOnClickListener(new View.OnClickListener() {
