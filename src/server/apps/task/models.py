@@ -42,7 +42,7 @@ class Task(Document):
 	dueDateTime = LongField(required = False)
 	status = EmbeddedDocumentField(Status)
 	isgroup = BooleanField(default = False)
-	group = ReferenceField(Group)
+	group = ReferenceField(Group, required = False)
 
 	def to_dict(self):
 		return mongo_to_dict_helper(self)

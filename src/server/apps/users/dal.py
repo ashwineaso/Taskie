@@ -156,9 +156,12 @@ def refreshTokens(tokenObj):
 	"""
 	Generate new refresh token and expiration time for access_token
 	"""
-
-	token = Token.objects.get(refresh_token = tokenObj.refresh_token)
+	try:
+		token = Token.objects.get(refresh_token = tokenObj.refresh_token)
+	except Exception:
+		raise RefreshTokenInvalid
 	token.refresh_token = KeyGenerator(REFRESH_TOKEN_LENGTH)()
+	token.access_token = KeyGenerator(ACCESS_TOKEN_LENGTH)()
 	token.expiresAt = TimeStampGenerator(ACCESS_TOKEN_EXPIRATION)()
 	return token
 
@@ -167,8 +170,11 @@ def updatetoken(tokenObj):
 
 	token = Token.objects.get(id = tokenObj.id)
 	token.refresh_token = tokenObj.refresh_token
+	token.access_token = tokenObj.access_token
 	token.expiresAt = tokenObj.expiresAt
 	token.save()
+	token.reload()
+	return token
 
 
 def checkAccessTokenValid(tokenObj):
@@ -177,10 +183,10 @@ def checkAccessTokenValid(tokenObj):
 	"""
 
 	tokenObj.flag = True
-	token = Token.objects.get(access_token = tokenObj.access_token).first()
-	time_now = TimeStampGenerator()
-	if time_now > tokenObj.expiresAt:
-		tokenObj.flag = False
+	token = Token.objects.get(access_token = tokenObj.access_token)
+	time_now = time.time()
+	if time_now > token.expiresAt:
+		raise AccessTokenInvalid
 	return tokenObj
 
 

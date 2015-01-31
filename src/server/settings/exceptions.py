@@ -73,4 +73,26 @@ class AuthenticationError(Exception):
 
 	def __str__(self):
 		return self.msg
+
+
+class AccessTokenInvalid(Exception):
+	"""docstring for AccessTokenInvalid"""
+	def __init__(self):
+		super(AccessTokenInvalid, self).__init__()
+		self.msg = "Access Token Invalid"
+		self.code = 3002
+
+	def __str__(self):
+		return self.msg
+
+
+class RefreshTokenInvalid(Exception):
+	"""docstring for RefreshTokenInvalid"""
+	def __init__(self):
+		super(RefreshTokenInvalid, self).__init__()
+		self.msg = "Refresh Token Invalid"
+		self.msg = 3003
+
+	def __str__(self):
+		return self.msg
 		

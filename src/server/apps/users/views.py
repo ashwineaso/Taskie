@@ -119,15 +119,17 @@ def refreshTokens():
 	obj = request.json
 	try:
 		tokenObj.refresh_token = obj["refresh_token"]
-		token = bll.refreshTokens(tokenObj)
-		bll.updatetoken(token)
+		new_token = bll.refreshTokens(tokenObj)
+		token = bll.updatetoken(new_token)
 		data["refresh_token"] = token.refresh_token
+		data["access_token"] = token.access_token
 		data["expiresAt"] = token.expiresAt
 		response["data"] = data
 		response["message"] = RESPONSE_SUCCESS
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
 		response["message"] = str(e)
+		response["code"] = e.code
 	return response
 
 
@@ -148,6 +150,7 @@ def checkAccessToken(tokenObj):
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
 		response["message"] = str(e)
+		response["code"] = e.code
 	return response
 
 
@@ -172,13 +175,3 @@ def verifyUser():
 		response["status"] = RESPONSE_FAILED
 		response["message"] = str(e)
 	return response
-
-
-# def createInvite():
-# 	"""
-# 	Invie a new user to taskie
-# 	"""
-
-# 	obj = request.json
-# 	try:
-# 		userObj.email = obj["email"]		

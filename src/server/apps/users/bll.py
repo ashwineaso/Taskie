@@ -115,7 +115,8 @@ def refreshTokens(tokenObj):
 
 
 def updatetoken(tokenObj):
-	dal.updatetoken(tokenObj)
+	token = dal.updatetoken(tokenObj)
+	return token
 
 
 def hash_password(password):

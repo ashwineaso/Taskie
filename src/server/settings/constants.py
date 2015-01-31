@@ -4,6 +4,7 @@ import os
 import threading
 import json
 from mongoengine import *
+import requests
 
 #Database name
 def getDatabase():
@@ -33,12 +34,12 @@ HIGH_PRIORITY = 2
 CLIENT_KEY_LENGTH = 30
 CLIENT_SECRET_LENGTH = 30
 CODE_KEY_LENGTH = 30
-ACCESS_TOKEN_EXPIRATION = 3600
+ACCESS_TOKEN_EXPIRATION = 3600000
 ACCESS_TOKEN_LENGTH = 10
 REFRESH_TOKEN_LENGTH = 10
 
 #GCM API Keys
-GCM_KEY = 'AIzaSyBhHrBolPT-AMAuIpEs6dm8VUbonQKyItA'
+GCM_KEY = 'AIzaSyCNoXZ78VPIMmiGJ63N2j78zbtbPxB51w4'
 TOKEN_GCM_REGISTRATION_IDS = 'registration_ids'
 
 #GCM 
@@ -49,7 +50,7 @@ class GCMPost(object):
 				payload = {},
 				url = 'https://android.googleapis.com/gcm/send',
 				contentType = "application/json",
-				authorization = GCM_KEY
+				authorization = "key="+GCM_KEY
 				):
 		self.url = url
 		self.headers = {}
@@ -64,20 +65,27 @@ class GCMPost(object):
 ##################################
 
 class UrlPostThread(threading.Thread):
-    def __init__(self, threadID, name, postObj):
-        threading.Thread.__init__(self)
-        self.threadID = threadID
-        self.name = name
-        self.postObj = postObj
+	def __init__(self, threadID, name, postObj):
+		threading.Thread.__init__(self)
+		self.threadID = threadID
+		self.name = name
+		self.postObj = postObj
 
-    def run(self):
-        # Make a postRequest from the postObj
-        response = requests.post(
-            self.postObj.url,
-            data=json.dumps(self.postObj.payload),
-            headers=self.postObj.headers
-        )
-        self.response = response
+	def run(self):
+		# Make a postRequest from the postObj
+		response = requests.post(
+			self.postObj.url,
+			data=json.dumps(self.postObj.payload),
+			headers=self.postObj.headers
+		)
+		self.response = response
+		print(response.text)
+		if response.ok:
+			print 'request:', self.postObj.payload
+			print self.name+': POST is success.'
+			print 'content:', response.content
+		else:
+			print self.name+': POST failed.'
 
 #Current version of the API
 CURRENT_VERSION = 0.1

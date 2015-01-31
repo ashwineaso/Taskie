@@ -5,6 +5,7 @@ from apps.users import bll as userbll
 from settings.altEngine import Collection
 from settings.constants import GCMPost, TOKEN_GCM_REGISTRATION_IDS, UrlPostThread
 from datetime import datetime
+from bottle import request
 
 
 def addNewTask(taskObj):
@@ -24,7 +25,6 @@ def addNewTask(taskObj):
 			group
 	:return an object of the task class.
 	"""
-	taskObj.dueDateTime = datetime.now()
 	#Add a task to the servers task list
 	task = dal.addNewTask(taskObj)
 	#Send message to GCM server to notify collaborators of task
@@ -45,16 +45,11 @@ def editTask(taskObj):
 			priority
 	:return : an object of task class
 	"""
-
-	#Search task using id
-	try:
-		taskObj.task = dal.getTaskByID(taskObj)
-		#Update database with task information
-		task = dal.editTask(taskObj)
-		pushSyncTaskNotification(task)
-		return task
-	except TaskWithIDNotFound as e:
-		raise e
+	#Update database with task information
+	task = dal.editTask(taskObj)
+	#Send message to GCM server to notify collaborators of task	
+	pushSyncTaskNotification(task)
+	return task
 
 
 def addCollaborators(taskObj):
@@ -148,18 +143,22 @@ def pushSyncTaskNotification(taskObj):
 	androidPush = GCMPost()
 	#List to store GCM ids
 	androidPayload = []
+	userObj = Collection()
 
 	#for each collaborator of the task
-	for coll in taskObj.collaborator:
-		if not coll.serverPushId in androidPayload:
-			androidPayload.append(str(coll.serverPushId))
+	task = dal.getTaskById(taskObj)
+	for coll in task.collaborators:
+		if not coll.user.serverPushId in androidPayload:
+			androidPayload.append(str(coll.user.serverPushId))
 
 	#for the owner of the task
-	androidPayload.append(str(taskObj.owner.serverPushId))
+	androidPayload.append(str(task.owner.serverPushId))
+	
 
 	if len(androidPayload) > 0:
 		androidPush.payload[TOKEN_GCM_REGISTRATION_IDS] = androidPayload
-		androidPush.payload["data"] = {"syncTask" : True, "taskId" : "taskObj.id"}
+		androidPush.payload["data"] = {"syncTask" : True, "taskId" : str(taskObj.id)}
+		print androidPush.payload
 
 		#Create UrlPoster Thread for GCM Push Start Thread
 		gcmPostThread = UrlPostThread(

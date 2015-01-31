@@ -39,14 +39,13 @@ def addNewTask(taskObj):
 	#for finding the user id of the owner
 	userObj.email = taskObj.owner
 	taskObj.owner = userbll.getUserByEmail(userObj)
-
-	#For finding the group
-	taskObj.group = Group.objects.get( id = taskObj.group).select_related(1)
 	
 	#Checking whether the collaborators is a user of the app
 	#If not - Create a new account for the user
 	for userObj.email in taskObj.collaborators:
-		if not userObj.email in User.objects.email:
+		try:
+			User.objects.get(email = userObj.email)
+		except Exception:
 			userbll.createAndInvite(userObj)
 
 	#Creating the list of collaborators
@@ -57,16 +56,18 @@ def addNewTask(taskObj):
 	
 	#Create a task with the necessary data.
 	task = Task(
-		owner = taskObj.owner,
-		collaborators = my_objects,
-		priority = taskObj.priority,
-		name = taskObj.name,
-		description = taskObj.description,
-		dueDateTime = taskObj.dueDateTime,
-		status = taskObj.status,
-		isgroup = taskObj.isgroup,
-		group = taskObj.group
-		).save()
+				owner = taskObj.owner,
+				collaborators = my_objects,
+				priority = taskObj.priority,
+				name = taskObj.name,
+				description = taskObj.description,
+				dueDateTime = taskObj.dueDateTime,
+				status = taskObj.status,
+				isgroup = taskObj.isgroup
+				).save()
+	if taskObj.isgroup is True:
+		taskObj.group = Group.objects.get(id = taskObj.group)
+		Task.objects(id = task.id).update(set__group = taskObj.group)
 	return task
 
 
@@ -213,7 +214,7 @@ def modifyCollStatus(taskObj):
 	:return An instance of the Collaborator class
 	"""
 
-	task = Task.objects.get(id = taskObj.id)
+	task = Task.objects.get(id = taskObj.id).select_related(1)
 	userObj = userbll.getUserByEmail(taskObj)
 	for collaborator in task.collaborators:
 		if collaborator.user == userObj:
@@ -243,3 +244,15 @@ def createGroup(groupObj):
 					owner = groupObj.owner,
 					title = groupObj.title).save()
 	return group
+
+
+def getTaskById(taskObj):
+	"""
+	Retrieve task using task id
+	"""
+
+	try:
+		task = Task.objects.get(id = taskObj.id).select_related(1)
+		return task
+	except Exception:
+		raise TaskwithIDNotFound

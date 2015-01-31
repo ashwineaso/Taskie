@@ -2,6 +2,7 @@ __author__ = ["ashwineaso"]
 from bottle import request
 from settings.altEngine import Collection, RESPONSE_SUCCESS, RESPONSE_FAILED
 from . import bll
+from apps.users.bll import checkAccessTokenValid
 
 response = {}
 data = {}
@@ -12,34 +13,37 @@ groupObj = Collection()
 def addNewTask():
 	
 	obj = request.json
+	# try:
+	taskObj.access_token = obj["access_token"]
+	taskObj.owner = obj["owner"]
+	taskObj.name = obj["name"]
 	try:
-		taskObj.owner = obj["owner"]
-		taskObj.name = obj["name"]
-		try:
-			taskObj.priority = obj["priority"]
-		except KeyError:
-			taskObj.priority = ''
-		try:
-			taskObj.description = obj["description"]
-		except KeyError:
-			taskObj.description = ''
-		try:
-			taskObj.dueDateTime = obj["dueDateTime"]
-		except KeyError:
-			taskObj.dueDateTime = ''
-		taskObj.collaborators = obj["collaborators"]
-		taskObj.isgroup = obj["isgroup"]
-		try:
-			taskObj.group = obj["groupId"]
-		except KeyError:
-			taskObj.group = ''
+		taskObj.priority = obj["priority"]
+	except KeyError:
+		taskObj.priority = 1
+	try:
+		taskObj.description = obj["description"]
+	except KeyError:
+		taskObj.description = ''
+	try:
+		taskObj.dueDateTime = obj["dueDateTime"]
+	except KeyError:
+		taskObj.dueDateTime = 0
+	taskObj.collaborators = obj["collaborators"]
+	taskObj.isgroup = obj["isgroup"]
+	try:
+		taskObj.group = obj["groupId"]
+	except KeyError:
+		taskObj.group = ''
+	if (checkAccessTokenValid(taskObj)):
 		task = bll.addNewTask(taskObj)
-		data["task"] = task.to_dict()
-		response["status"] = RESPONSE_SUCCESS
-		response["data"] = data
-	except Exception as e:
-		response["status"] = RESPONSE_FAILED
-		response["message"] = e.message
+	data["task"] = task.to_dict()
+	response["status"] = RESPONSE_SUCCESS
+	response["data"] = data
+	# except Exception as e:
+	# 	response["status"] = RESPONSE_FAILED
+	# 	response["message"] = str(e)
+		# response["code"] = e.code
 	return response
 
 
