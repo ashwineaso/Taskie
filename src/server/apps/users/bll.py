@@ -1,6 +1,7 @@
 __author__ = ["ashwineaso"]
 from passlib.hash import sha256_crypt as pwd_context
 from . import dal
+from settings.exceptions import AuthenticationError
 
 
 def createUser(userObj):
@@ -37,6 +38,19 @@ def createAndInvite(userObj):
 	return user
 
 
+def verifyUser(userObj):
+	"""
+	Verify the user account using the user id and key
+
+	::type userObj : object
+	::param userObj : An instance of Collection with the following attributes
+						email,
+						key,
+	::return flag : True if verified and False if not
+	"""
+	verified = dal.verifyUser(userObj)
+	return verified
+
 
 def updateUser(userObj):
 	"""
@@ -49,7 +63,8 @@ def updateUser(userObj):
 					serverPushId,
 	::return user : An instance of user class
 	"""
-	user = dal.updateUser(userObj)
+	if (authenticate(userObj)):
+		user = dal.updateUser(userObj)
 	return user
 
 
@@ -69,6 +84,18 @@ def authorize_user(userObj):
 	if not verify_password(userObj.password, user.password_hash):
 		match_flag = False
 	return match_flag
+
+
+def authenticate(userObj):
+	"""
+	Authenticate user by email and key matching
+	"""
+	user = getUserByEmail(userObj)
+	userObj.user = user
+	token = getTokenByUser(userObj)
+	if token.key == userObj.key:
+		return True
+	raise AuthenticationError
 
 
 def issueToken(userObj):

@@ -2,10 +2,9 @@ __author__ = ["ashwineaso"]
 from models import *
 from mongoengine import DoesNotExist
 from settings.exceptions import *
-import datetime
+import time
 from settings.constants import CLIENT_KEY_LENGTH, CLIENT_SECRET_LENGTH,\
-    CODE_KEY_LENGTH, ACCESS_TOKEN_LENGTH, REFRESH_TOKEN_LENGTH, ACCESS_TOKEN_EXPIRATION, \
-    ACCOUNT_NOT_VERIFIED, ACCOUNT_INVITED_UNREGISTERED, ACCOUNT_ACTIVE
+    CODE_KEY_LENGTH, ACCESS_TOKEN_LENGTH, REFRESH_TOKEN_LENGTH, ACCESS_TOKEN_EXPIRATION, ACCOUNT_NOT_VERIFIED, ACCOUNT_INVITED_UNREGISTERED, ACCOUNT_ACTIVE
 from settings.altEngine import Collection
 
 tokenObj = Collection()
@@ -23,34 +22,30 @@ def createUser(userObj):
 					createdOn
 	::return user : An instance of user class
 	"""
+	try:
+		user = User(
+			email = userObj.email,
+			name = userObj.name,
+			createdOn = time.time(),
+			password_hash = userObj.password_hash,
+			status = ACCOUNT_NOT_VERIFIED,
+			serverPushId = userObj.serverPushId
+			)
+		user.save()
+	except Exception:
+		person = User.objects.get(email = userObj.email)
+		#If status = 1 - User already exists and active
+		if person.status == ACCOUNT_ACTIVE:
+			raise UserAlreadyExists
+		#If status = 0 : User already exists, pending verification
+		if person.status == ACCOUNT_NOT_VERIFIED:
+			raise UserPendingConfirmation
+		#If status = -1 : User invited, but not registered
+		if person.status == ACCOUNT_INVITED_UNREGISTERED:
+			user = updateUser(userObj)
+			return user
 
-	#Check if the user already exists
-	for person in User.objects:
-		if person.email == userObj.email:
-			#If user's email is resitered check status
-			#If status = 1 - User already exists and active
-			if person.status == ACCOUNT_ACTIVE:
-				raise UserAlreadyExists
-			#If status = 0 : User already exists, pending verification
-			elif person.status == ACCOUNT_NOT_VERIFIED:
-				raise UserPendingConfirmation
-			#If status = -1 : User invited, but not registered
-			elif person.status == ACCOUNT_INVITED_UNREGISTERED:
-				user = dal.updateUser(userObj)
-				return user
-
-	#Create a new user object with the provided information
-	user = User(
-		email = userObj.email,
-		name = userObj.name,
-		createdOn = datetime.datetime.now(),
-		password_hash = userObj.password_hash,
-		status = ACCOUNT_ACTIVE,
-		serverPushId = userObj.serverPushId
-		)
-	
 	#Save new user to Database
-	user.save()
 	#Create a new token for the user
 	token = Token(user = user)
 	token.save()
@@ -71,9 +66,10 @@ def createMinimalUser(userObj):
 	user = User(
 				email = userObj.email,
 				status = ACCOUNT_INVITED_UNREGISTERED,
-				createdOn = datetime.datetime.now()
+				createdOn = time.time()
 				)
 	user.save()
+	user.reload()
 	return user
 
 
@@ -90,12 +86,12 @@ def updateUser(userObj):
 					serverPushId,
 	::return user : An instance of user class
 	"""
-	target_user = getUserByEmail(userObj)
-	user = User.objects(id = target_user.id).update(
-													set__email = userObj.email,
-													set__name = userObj.name,
-													set__serverPushId = userObj.serverPushId
-													)
+	user = getUserByEmail(userObj)
+	User.objects(id = user.id).update(
+										set__email = userObj.email,
+										set__name = userObj.name,
+										set__serverPushId = userObj.serverPushId
+										)
 	
 	###################################################
 	## If User is not yet marked registered, then user was created by invitation
@@ -108,6 +104,7 @@ def updateUser(userObj):
 		token.save()
 
 	user.save()
+	user.reload()
 	return user
 
 
@@ -145,7 +142,8 @@ def issueToken(userObj):
 	"""
 
 	try:
-		token = Token.objects.get(key = userObj.key)
+		user = getUserByEmail(userObj)
+		token = Token.objects.get(user = user)
 		tokenObj.flag = True
 		tokenObj.access_token = token.access_token
 		tokenObj.refresh_token = token.refresh_token
@@ -161,7 +159,6 @@ def refreshTokens(tokenObj):
 
 	token = Token.objects.get(refresh_token = tokenObj.refresh_token)
 	token.refresh_token = KeyGenerator(REFRESH_TOKEN_LENGTH)()
-	# token.issuedAt = TimeStampGenerator(10)
 	token.expiresAt = TimeStampGenerator(ACCESS_TOKEN_EXPIRATION)()
 	return token
 
@@ -170,7 +167,6 @@ def updatetoken(tokenObj):
 
 	token = Token.objects.get(id = tokenObj.id)
 	token.refresh_token = tokenObj.refresh_token
-	# token.issuedAt = tokenObj.issuedAt
 	token.expiresAt = tokenObj.expiresAt
 	token.save()
 
@@ -186,3 +182,16 @@ def checkAccessTokenValid(tokenObj):
 	if time_now > tokenObj.expiresAt:
 		tokenObj.flag = False
 	return tokenObj
+
+
+def verifyUser(userObj):
+	"""
+	Verify user by key matching 
+	"""
+	user = getUserByEmail(userObj)
+	token = Token.objects.get(user = user)
+	if token.key == userObj.key:
+		user.status = ACCOUNT_ACTIVE
+		user.save()
+		return True
+	return False

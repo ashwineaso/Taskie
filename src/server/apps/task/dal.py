@@ -12,7 +12,6 @@ def addNewTask(taskObj):
 
 	:type taskObj : object
 	:para. taskObj : An object with the following attributes
-			uuid,
 			owner,
 			collaborators,
 			priority,

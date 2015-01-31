@@ -6,7 +6,7 @@ from hashlib import sha512
 from uuid import uuid4
 import time
 from settings.constants import CLIENT_KEY_LENGTH, CLIENT_SECRET_LENGTH,\
-	CODE_KEY_LENGTH, ACCESS_TOKEN_LENGTH, REFRESH_TOKEN_LENGTH, ACCESS_TOKEN_EXPIRATION
+	CODE_KEY_LENGTH, ACCESS_TOKEN_LENGTH, REFRESH_TOKEN_LENGTH, ACCESS_TOKEN_EXPIRATION, ACCOUNT_NOT_VERIFIED, ACCOUNT_INVITED_UNREGISTERED, ACCOUNT_ACTIVE
 
 connect()
 
@@ -44,7 +44,7 @@ class User(Document):
 	User Document
 	Holds all the essential information about the user
 	"""
-	email = StringField()
+	email = StringField(unique = True)
 	name = StringField(required = False)
 	password_hash = StringField(required = False)
 	serverPushId = StringField(required = False)
@@ -64,7 +64,7 @@ class Token(Document):
 	Token Document
 	Holds all the information about the token of a particular user
 	"""
-	user = ReferenceField(User)
+	user = ReferenceField(User, unique = True)
 	key = StringField(default = KeyGenerator(CODE_KEY_LENGTH))
 	issuedAt = IntField(default = TimeStampGenerator())
 	expiresAt = IntField(default = TimeStampGenerator(ACCESS_TOKEN_EXPIRATION))
