@@ -1,6 +1,7 @@
 package in.altersense.taskapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import in.altersense.taskapp.common.Config;
+import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.components.GroupPanelOnClickListener;
 import in.altersense.taskapp.components.Task;
 import in.altersense.taskapp.components.TaskGroup;
@@ -41,6 +44,10 @@ public class TasksActivity extends ActionBarActivity {
     private ScrollView contentScroll;
     private LinearLayout groupListStageLL;
 
+//    Authenticated user details.
+    private String ownerId;
+    private String ownerName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +57,9 @@ public class TasksActivity extends ActionBarActivity {
                         .setFontAttrId(R.attr.fontPath)
                         .build()
         );
+
+        // Authenticate user.
+        authenticateUser();
 
         setContentView(R.layout.activity_tasks);
 
@@ -64,11 +74,11 @@ public class TasksActivity extends ActionBarActivity {
         Random random = new Random();
 
 //        Inflate tasks list collections.
-        for(int i=0; i<12; i++) {
+        for(int i=0; i<5; i++) {
             task = new Task(
                     "Boil Eggs",
                     "Some kinda description goes here, I dont care actually. You can set it to anything.",
-                    "Mahesh Mohan",
+                    this.ownerName,
                     random.nextInt(15),
                     this.getLayoutInflater()
             );
@@ -103,6 +113,31 @@ public class TasksActivity extends ActionBarActivity {
             taskGroup.getGroupView().setOnClickListener(new GroupPanelOnClickListener(taskGroup, this));
         }
 
+    }
+
+    /**
+     * Checks for an authenticated user in the device.
+     * If it fails login activity is displayed.
+     */
+    private void authenticateUser() {
+        this.ownerId = AltEngine.readStringFromSharedPref(
+                getApplicationContext(),
+                Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
+                ""
+        );
+        this.ownerName = AltEngine.readStringFromSharedPref(
+                getApplicationContext(),
+                Config.SHARED_PREF_KEYS.OWNER_NAME.getKey(),
+                ""
+        );
+        if(ownerId.equals("")) {
+            Intent authenticateUserIntent = new Intent(
+                    getApplicationContext(),
+                    UserLoginActivity.class
+            );
+            startActivity(authenticateUserIntent);
+            finish();
+        }
     }
 
     /**
