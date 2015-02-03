@@ -6,6 +6,8 @@ package in.altersense.taskapp.common;
  */
 public class Config {
 
+    public static int DATABASE_VERSION = 1;
+
     /**
      * Shared preference keys for the app.
      */

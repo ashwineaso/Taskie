@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import in.altersense.taskapp.components.Task;
+import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.components.TaskGroup;
 import in.altersense.taskapp.components.TaskPanelOnClickListener;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;

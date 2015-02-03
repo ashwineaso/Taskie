@@ -1,4 +1,4 @@
-package in.altersense.taskapp.components;
+package in.altersense.taskapp.models;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,6 +7,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 import in.altersense.taskapp.R;
 
 /**
@@ -14,34 +16,146 @@ import in.altersense.taskapp.R;
  */
 public class Task {
     private static final String TAG = "Task";
-    private long id, deadline, ownerId;
-    private String title, descr, ownerName, deadlineTimeMeasure;
-    private boolean hasAttachment;
+    private long id;
+
+    public boolean isGroup() {
+        return isGroup;
+    }
+
+    private boolean isGroup;
+
+    public long getId() {
+        return id;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public long getDueDateTime() {
+        return dueDateTime;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    private User owner;
+    private String uuid;
+    private String name;
+    private String description;
+    private String deadlineTimeMeasure;
+    private String groupUUID;
+    private int deadline;
     public boolean isActionsDisplayed;
     private int priority;
+    private int status;
+    private List<User> collaborators;
 
     private View panelView, actionsView;
     private LinearLayout taskActionsPlaceHolderView;
     private LinearLayout action1, action2, action3, action4;
 
     /**
+     * Table name for Tasks
+     */
+    public static String TABLE_NAME = "TaskTable";
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public int getIntIsGroup() {
+        if(this.isGroup) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    public String getGroupUUID() {
+        return groupUUID;
+    }
+
+    /**
+     * Table Structure for Task
+     */
+    public static enum KEYS {
+
+        UUID("uuid", "TEXT"),
+        OWNER_UUID("owner_uuid", "TEXT"),
+        NAME("name", "TEXT"),
+        DESCRIPTION("description", "TEXT"),
+        PRIORITY("priority", "INT"),
+        DUE_DATE_TIME("due_date_time", "INT"),
+        STATUS("status", "INT"),
+        IS_GROUP("is_group", "INT"),
+        GROUP_UUID("group_uuid", "TEXT");
+
+        public String getName() {
+            return name;
+        }
+
+        private final String name;
+
+        public String getType() {
+            return type;
+        }
+
+        private final String type;
+
+        private KEYS(
+                String name,
+                String type
+        ) {
+            this.name = name;
+            this.type = type;
+        }
+    }
+
+    /**
      * Create Task with Title, Description and Owner Name.
-     * @param title Title of the task.
+     * @param name Title of the task.
      * @param descr Description of the task.
-     * @param ownerName Name of the owner of the task.
+     * @param owner Owner of the task.
      * @param inflater An inflater so that the TaskPanel could be inflated.
      */
     public Task(
-            String title,
-            String descr,
-            String ownerName,
-            String deadlineTimeMeasure,
+            String uuid,
+            String name,
+            String description,
+            User owner,
+            int priority,
+            int deadline,
+            int status,
+            boolean isGroup,
+            String groupUUID,
+            List<User> collaborators,
             final LayoutInflater inflater
     ) {
-        this.title = title;
-        this.descr = descr;
-        this.ownerName = ownerName;
-        this.deadlineTimeMeasure = deadlineTimeMeasure;
+        this.uuid = uuid;
+        this.name = name;
+        this.description = description;
+        this.owner = owner;
+        this.priority = priority;
+        this.deadline = deadline;
+        this.status = status;
+        this.isGroup = isGroup;
+        this.groupUUID = groupUUID;
+        this.collaborators = collaborators;
+
         this.panelView = createView(inflater);
         this.actionsView = createActionsView(inflater);
         this.taskActionsPlaceHolderView =
@@ -49,14 +163,6 @@ public class Task {
         this.taskActionsPlaceHolderView.setVisibility(View.GONE);
         this.taskActionsPlaceHolderView.addView(this.actionsView);
         this.isActionsDisplayed = false;
-    }
-
-    public Task(String title, String description, String ownerName, LayoutInflater layoutInflater) {
-        this(title, description, ownerName, "123", layoutInflater);
-    }
-
-    public Task(String title, String description, String ownerName, int deadlineTimeMeasure, LayoutInflater layoutInflater) {
-        this(title, description, ownerName, deadlineTimeMeasure+"", layoutInflater);
     }
 
     private View createActionsView(LayoutInflater inflater) {
@@ -131,9 +237,9 @@ public class Task {
         TextView taskDescr = (TextView) taskView.findViewById(R.id.taskDescriptionTextView);
         TextView taskOwner = (TextView) taskView.findViewById(R.id.taskOwnerTextView);
 
-        taskTitle.setText(this.title);
-        taskDescr.setText(this.descr);
-        taskOwner.setText(this.ownerName);
+        taskTitle.setText(this.name);
+        taskDescr.setText(this.description);
+        taskOwner.setText(this.owner.getName());
         timeMeasure.setText(this.deadlineTimeMeasure);
 
         return taskView;
