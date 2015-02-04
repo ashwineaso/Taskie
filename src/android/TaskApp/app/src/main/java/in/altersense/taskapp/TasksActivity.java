@@ -24,9 +24,9 @@ import java.util.Random;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.components.GroupPanelOnClickListener;
-import in.altersense.taskapp.models.Task;
-import in.altersense.taskapp.components.TaskGroup;
 import in.altersense.taskapp.components.TaskPanelOnClickListener;
+import in.altersense.taskapp.models.Task;
+import in.altersense.taskapp.models.TaskGroup;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 

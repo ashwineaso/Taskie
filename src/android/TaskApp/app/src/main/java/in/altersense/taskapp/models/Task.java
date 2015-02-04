@@ -1,5 +1,7 @@
 package in.altersense.taskapp.models;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,7 +59,7 @@ public class Task {
     private String name;
     private String description;
     private String deadlineTimeMeasure;
-    private String groupUUID;
+    private TaskGroup group;
     private int deadline;
     public boolean isActionsDisplayed;
     private int priority;
@@ -85,8 +87,8 @@ public class Task {
         }
     }
 
-    public String getGroupUUID() {
-        return groupUUID;
+    public TaskGroup getGroupUUID() {
+        return group;
     }
 
     /**
@@ -126,11 +128,18 @@ public class Task {
     }
 
     /**
-     * Create Task with Title, Description and Owner Name.
-     * @param name Title of the task.
-     * @param descr Description of the task.
-     * @param owner Owner of the task.
-     * @param inflater An inflater so that the TaskPanel could be inflated.
+     * Task Constructor
+     * @param uuid UUID
+     * @param name Name of the Task.
+     * @param description Task description.
+     * @param owner Owner user of the task
+     * @param priority Priority level of the task
+     * @param deadline Deadline of the task
+     * @param status Current status of the task
+     * @param isGroup Is task in a group
+     * @param group Task group
+     * @param collaborators List of collaborating users.
+     * @param inflater Layout inflater.
      */
     public Task(
             String uuid,
@@ -141,7 +150,7 @@ public class Task {
             int deadline,
             int status,
             boolean isGroup,
-            String groupUUID,
+            TaskGroup group,
             List<User> collaborators,
             final LayoutInflater inflater
     ) {
@@ -153,7 +162,7 @@ public class Task {
         this.deadline = deadline;
         this.status = status;
         this.isGroup = isGroup;
-        this.groupUUID = groupUUID;
+        this.group = group;
         this.collaborators = collaborators;
 
         this.panelView = createView(inflater);
@@ -163,6 +172,48 @@ public class Task {
         this.taskActionsPlaceHolderView.setVisibility(View.GONE);
         this.taskActionsPlaceHolderView.addView(this.actionsView);
         this.isActionsDisplayed = false;
+    }
+
+    /**
+     * Create a bare minimum task.
+     * @param name Name of the Task.
+     * @param description Task description.
+     * @param owner Owner user of the task
+     * @param inflater Layout inflater.
+     */
+    public Task(
+            String name,
+            String description,
+            User owner,
+            LayoutInflater inflater
+    ) {
+        this(
+                "",
+                name,
+                description,
+                owner,
+                0,
+                0,
+                0,
+                false,
+                null,
+                null,
+                inflater
+        );
+    }
+
+    public Task(Cursor cursor, Context context) {
+        this(
+                cursor.getString(0),
+                cursor.getString(1),
+                cursor.getString(2),
+                new User(cursor.getString(3), context),
+                cursor.getInt(4),
+                cursor.getInt(5),
+                cursor.getInt(6),
+                cursor.getInt(7),
+                new TaskGroup(cursor.getString(8), context)
+        );
     }
 
     private View createActionsView(LayoutInflater inflater) {
