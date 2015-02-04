@@ -25,6 +25,7 @@ import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.components.GroupPanelOnClickListener;
 import in.altersense.taskapp.components.TaskPanelOnClickListener;
+import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.TaskGroup;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -36,7 +37,8 @@ public class TasksActivity extends ActionBarActivity {
     private static final String TAG = "TasksActivity";
     private LinearLayout taskListStageLL;  // For handling the main content area.
     private LinearLayout quickCreateStageLinearLayout; // Quick task creation area
-    private List<Task> taskList = new ArrayList<Task>();  // Lists all tasks for traversing convenience.
+    private TaskDbHelper taskDbHelper;
+    private List<Task> taskList = new ArrayList<Task>();  // Lists all non group tasks for traversing convenience.
     private Task task;  // Task iterator.
     private boolean isQuickTaskCreationHidden;
     private View taskCreationView;
@@ -63,6 +65,10 @@ public class TasksActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_tasks);
 
+        // Initializing the fields.
+        this.taskDbHelper = new TaskDbHelper(this.getApplicationContext());
+        this.taskList = taskDbHelper.getAllNonGroupTasks(this);
+
 //        Initializing the layout.
         this.contentScroll = (ScrollView) findViewById(R.id.contenScroll);
         this.quickCreateStageLinearLayout = (LinearLayout) findViewById(R.id.quickTaskCreation);
@@ -74,10 +80,7 @@ public class TasksActivity extends ActionBarActivity {
         Random random = new Random();
 
 //        Inflate tasks list collections.
-        for(int i=0; i<5; i++) {
-            task = new Task(
-
-            )
+        for(Task task:taskList) {
             taskListStageLL.addView(task.getPanelView());
 //            Adding an onClickListener to TaskPanel to show and hide task actions.
             TaskPanelOnClickListener taskPanelOnClickListener = new TaskPanelOnClickListener(task, this.taskList);

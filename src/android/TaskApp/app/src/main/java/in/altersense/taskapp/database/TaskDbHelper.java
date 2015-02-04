@@ -8,6 +8,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.view.LayoutInflater;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.models.Task;
 
@@ -85,5 +88,31 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         );
         readableDb.close();
         return task;
+    }
+
+    /**
+     * Gets a list of all non group tasks.
+     * @param activity The current activity.
+     * @return A list of Task objects.
+     */
+    public List<Task> getAllNonGroupTasks(Activity activity) {
+        // Open database.
+        SQLiteDatabase readableDb = this.getReadableDatabase();
+        // Create a list of tasks.
+        List<Task> taskList = new ArrayList<Task>();
+        // List all the non group tasks.
+        String query = "SELECT * FROM "+ Task.TABLE_NAME+
+                " WHERE "+ Task.KEYS.IS_GROUP.getName()
+                +" = 0;";
+        Cursor resultCursor = readableDb.rawQuery(query, null);
+        if(resultCursor.moveToFirst()) {
+            do {
+                taskList.add(new Task(resultCursor, activity));
+            } while(resultCursor.moveToNext());
+        }
+        // Close database
+        readableDb.close();
+        // Return the list.
+        return taskList;
     }
 }
