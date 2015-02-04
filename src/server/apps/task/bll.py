@@ -14,7 +14,7 @@ def addNewTask(taskObj):
 
 	:type taskObj : object
 	:para. taskObj : An object with the following attributes
-			owner,
+			owner (objectId),
 			collaborators,
 			priority,
 			name,
@@ -131,6 +131,14 @@ def createGroup(groupObj):
 	"""
 	group = dal.createGroup(groupObj)
 	return group 
+
+
+def syncTask(taskObj):
+	"""
+	Sync / retrieve as task whose id is provided
+	"""
+	task = dal.syncTask(taskObj)
+	return task
 
 
 def pushSyncTaskNotification(taskObj):

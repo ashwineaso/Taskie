@@ -159,3 +159,21 @@ def addGroupMembers():
 		response["status"] = RESPONSE_FAILED
 		response["message"] = e.message
 	return response
+
+
+def syncTask():
+	obj = request.json
+	try:
+		taskObj.owner = obj["owner"]
+		taskObj.id = obj["id"]
+		tokenObj.access_token = obj["access_token"]
+		if checkAccessTokenValid(tokenObj) is True:
+			task = dal.syncTask(taskObj)
+		data["task"] = task.to_dict()
+		response["status"] = RESPONSE_SUCCESS
+		response["data"] = data
+	except Exception as e:
+		response["status"] = RESPONSE_FAILED
+		response["message"] = str(e)
+		response["code"] = e.code
+	return response

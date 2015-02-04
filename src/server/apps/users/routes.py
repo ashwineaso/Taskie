@@ -10,5 +10,6 @@ users_app.route('/authorize', 'POST', authorize_user)
 # users_app.route('/issuetoken', 'POST', issueToken)
 users_app.route('/refreshtokens', 'POST', refreshTokens)
 users_app.route('/checkaccesstoken', 'POST', checkAccessToken)
+users_app.route('/addProfilePic', 'POST', addProfilePic)
 
 __author__ = ["ashwineaso"]

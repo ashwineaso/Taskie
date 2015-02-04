@@ -1,6 +1,8 @@
-from bottle import request
+import os
+from bottle import request, static_file
 from settings.altEngine import Collection, RESPONSE_SUCCESS, RESPONSE_FAILED
 import bll
+import requests
 
 response = {}
 data = {}
@@ -57,6 +59,28 @@ def updateUser():
 		response["code"] = e.code
 	return response
 
+
+def addProfilePic():
+	"""
+	Add a profile pic to the user account
+	"""
+
+	photoObj = Collection()
+	img = request.files.get('upload')
+	print img
+	# try:
+	photoObj.filename, photoObj.extension = os.path.splitext(img.filename)
+	photoObj.image = img
+	photoObj.contentType = request.forms.get('contentType')
+	photoObj.acceess_token = requests.headers.get('Authorization')
+	photoObj.id = requests.headers.get('User-ID')
+	bll.addProfilePic(photoObj)
+	response["status"] = RESPONSE_SUCCESS
+	# except Exception as e:
+	# 	response["status"] = RESPONSE_FAILED
+	# 	response["message"] = str(e)
+	# 	response["code"] = e.code
+	return response
 
 
 def authorize_user():

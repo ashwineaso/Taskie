@@ -37,8 +37,8 @@ def addNewTask(taskObj):
 	userObj = Collection()
 
 	#for finding the user id of the owner
-	userObj.email = taskObj.owner
-	taskObj.owner = userbll.getUserByEmail(userObj)
+	userObj.id = taskObj.owner
+	taskObj.owner = userbll.getUserById(userObj)
 	
 	#Checking whether the collaborators is a user of the app
 	#If not - Create a new account for the user
@@ -85,7 +85,7 @@ def editTask(taskObj):
 	: return : an object of task class
 
 	"""
-	task = Task.objects.get(id = taskObj.id)
+	task = getTaskById(taskObj)
 	Task.objects(id = task.id).update(
 										set__name = taskObj.name,
 										set__description = taskObj.description,
@@ -93,28 +93,6 @@ def editTask(taskObj):
 										set__dueDateTime = taskObj.dueDateTime)
 	task.reload()
 	return task
-
-
-
-def getTaskByID(taskObj):
-	"""
-	Get the task using its id and return Task object
-
-	:type taskObj: object
-	:param taskObj: An instance with the following attributes
-			id,
-			name,
-			description,
-			priority,
-			dueDateTime
-	:return An instance of the Task class
-
-	"""
-	try:
-		task = Task.objects.get(id = taskObj.id)
-		return task
-	except DoesNotExist as e:
-		raise TaskwithIDNotFound
 
 
 def addCollaborators(taskObj):
@@ -153,9 +131,9 @@ def addCollaborators(taskObj):
 		my_objects.append(Collaborator(user = userbll.getUserByEmail(userObj),
 										status = taskObj.status))
 
-	task = Task.objects.get(id = taskObj.id)
+	task = getTaskById(taskObj)
 	Task.objects(id = task.id).update( push_all__collaborators = my_objects)
-	
+	task.save()
 	task.reload()
 	return task
 
@@ -232,7 +210,7 @@ def createGroup(groupObj):
 	:param groupObj : An instance with the following attributes
 						ownerId - userId of the creator/ member
 						title - name of the groupObj
-	:return An instance of the Group class
+	:return group : An instance of the Group class
 	"""
 
 	userObj = Collection()
@@ -246,9 +224,23 @@ def createGroup(groupObj):
 	return group
 
 
+def syncTask(taskObj):
+	"""
+	Sync / retrieve as task whose id is provided
+	"""
+	task = getTaskById(taskObj)
+	return task
+
+
 def getTaskById(taskObj):
 	"""
 	Retrieve task using task id
+	::type taskObj : object
+	::parm userObj : An instance of Collection with the following attributes
+					id
+					**kwargs
+	::return task : Instance of Task class
+
 	"""
 
 	try:

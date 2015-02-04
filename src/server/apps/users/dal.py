@@ -3,6 +3,7 @@ from models import *
 from mongoengine import DoesNotExist
 from settings.exceptions import *
 import time
+import os.path
 from settings.constants import CLIENT_KEY_LENGTH, CLIENT_SECRET_LENGTH,\
     CODE_KEY_LENGTH, ACCESS_TOKEN_LENGTH, REFRESH_TOKEN_LENGTH, ACCESS_TOKEN_EXPIRATION, ACCOUNT_NOT_VERIFIED, ACCOUNT_INVITED_UNREGISTERED, ACCOUNT_ACTIVE
 from settings.altEngine import Collection
@@ -108,6 +109,18 @@ def updateUser(userObj):
 	return user
 
 
+def addProfilePic(photoObj):
+	"""
+	Add a profile pic to the user account 
+	"""
+	image_name = str(photoObj.id)+photoObj.extension
+	savepath = os.path.join(PROJECT_ROOT, PHOTOS_DIRECTORY + image_name)
+	photoObj.image.save(savepath)
+	User.objects(id = photoObj.user).update(set__profilepic = photoObj.savepath)
+
+
+
+
 def getUserByEmail(userObj):
 	"""
 	Finds a user by their email
@@ -120,7 +133,23 @@ def getUserByEmail(userObj):
 	try:
 		user = User.objects.get(email = userObj.email)
 		return user 
-	except DoesNotExist as e:
+	except Exception:
+		raise UserNotFound
+
+
+def getUserById(userObj):
+	"""
+	Find a user by id
+	
+	::type userObj: object
+	::parm userObj: An instance with the following attributes
+					id
+	::return : An object of User class
+	"""
+	try:
+		user = User.objects.get(id = userObj.id)
+		return user
+	except Exception:
 		raise UserNotFound
 
 

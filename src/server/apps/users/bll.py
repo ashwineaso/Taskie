@@ -2,7 +2,7 @@ __author__ = ["ashwineaso"]
 from passlib.hash import sha256_crypt as pwd_context
 from . import dal
 from settings.exceptions import AuthenticationError
-
+from settings.constants import PROJECT_ROOT
 
 def createUser(userObj):
 	"""
@@ -50,6 +50,25 @@ def verifyUser(userObj):
 	"""
 	verified = dal.verifyUser(userObj)
 	return verified
+
+
+def addProfilePic(photoObj):
+	"""
+	Adds a profile pic to the user's account
+
+	::type photoObj: object
+	::param photoObj: An object with the following attributes
+					filename,
+					extension,
+					image,
+					uuid,
+	::return : An object of the photo class
+	"""
+	
+	# Get the user associated with 
+	photoObj.user = userBll.getUserById(photoObj)
+	# Save the photo to folder and add path to user'd db
+	dal.addProfilePic(photoObj)
 
 
 def updateUser(userObj):
@@ -139,6 +158,19 @@ def getUserByEmail(userObj):
 	"""
 
 	user = dal.getUserByEmail(userObj)
+	return user
+
+
+def getUserById(userObj):
+	"""
+	Find a user by id
+	
+	::type userObj: object
+	::parm userObj: An instance with the following attributes
+					id
+	::return : An object of User class
+	"""
+	user = dal.getUserById(userObj)
 	return user
 
 
