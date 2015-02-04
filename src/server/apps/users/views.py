@@ -66,7 +66,7 @@ def addProfilePic():
 	"""
 
 	photoObj = Collection()
-	img = request.files.get('upload')
+	img = request.files.get('image')
 	print img
 	# try:
 	photoObj.filename, photoObj.extension = os.path.splitext(img.filename)
