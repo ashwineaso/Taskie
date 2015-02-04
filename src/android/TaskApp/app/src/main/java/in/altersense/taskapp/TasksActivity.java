@@ -67,7 +67,6 @@ public class TasksActivity extends ActionBarActivity {
 
         // Initializing the fields.
         this.taskDbHelper = new TaskDbHelper(this.getApplicationContext());
-        this.taskList = taskDbHelper.getAllNonGroupTasks(this);
 
 //        Initializing the layout.
         this.contentScroll = (ScrollView) findViewById(R.id.contenScroll);
@@ -79,7 +78,8 @@ public class TasksActivity extends ActionBarActivity {
         this.isQuickTaskCreationHidden = true;
         Random random = new Random();
 
-//        Inflate tasks list collections.
+        // Inflate all the nonGroupTasks in the TasksListStage.
+        this.taskList = taskDbHelper.getAllNonGroupTasks(this);
         for(Task task:taskList) {
             taskListStageLL.addView(task.getPanelView());
 //            Adding an onClickListener to TaskPanel to show and hide task actions.
