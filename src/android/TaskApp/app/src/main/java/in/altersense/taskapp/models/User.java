@@ -1,5 +1,6 @@
 package in.altersense.taskapp.models;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 
@@ -55,8 +56,8 @@ public class User {
         );
     }
 
-    public User(String userUUID, Context context) {
-        UserDbHelper userDbHelper = new UserDbHelper(context);
+    public User(String userUUID, Activity activity) {
+        UserDbHelper userDbHelper = new UserDbHelper(activity.getApplicationContext());
         User newUser = userDbHelper.getUserByUUID(userUUID);
         this.id = newUser.getId();
         this.uuid = newUser.getUuid();

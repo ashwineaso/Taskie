@@ -1,5 +1,6 @@
 package in.altersense.taskapp.models;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import in.altersense.taskapp.R;
@@ -20,11 +22,31 @@ public class Task {
     private static final String TAG = "Task";
     private long id;
 
+    private boolean isGroup;
+
+    private User owner;
+
+    private String uuid;
+    private String name;
+    private String description;
+    private String deadlineTimeMeasure;
+    private TaskGroup group;
+    public boolean isActionsDisplayed;
+    private int priority;
+    private int status;
+    private List<User> collaborators;
+    private View panelView, actionsView;
+    private LinearLayout taskActionsPlaceHolderView;
+    private LinearLayout action1, action2, action3, action4;
+    private long dueDateTime;
+
     public boolean isGroup() {
         return isGroup;
     }
 
-    private boolean isGroup;
+    public TaskGroup getGroup() {
+        return group;
+    }
 
     public long getId() {
         return id;
@@ -35,7 +57,7 @@ public class Task {
     }
 
     public long getDueDateTime() {
-        return dueDateTime;
+        return this.dueDateTime;
     }
 
     public String getName() {
@@ -54,22 +76,6 @@ public class Task {
         return status;
     }
 
-    private User owner;
-    private String uuid;
-    private String name;
-    private String description;
-    private String deadlineTimeMeasure;
-    private TaskGroup group;
-    private int deadline;
-    public boolean isActionsDisplayed;
-    private int priority;
-    private int status;
-    private List<User> collaborators;
-
-    private View panelView, actionsView;
-    private LinearLayout taskActionsPlaceHolderView;
-    private LinearLayout action1, action2, action3, action4;
-
     /**
      * Table name for Tasks
      */
@@ -85,10 +91,6 @@ public class Task {
         } else {
             return 0;
         }
-    }
-
-    public TaskGroup getGroupUUID() {
-        return group;
     }
 
     /**
@@ -134,11 +136,10 @@ public class Task {
      * @param description Task description.
      * @param owner Owner user of the task
      * @param priority Priority level of the task
-     * @param deadline Deadline of the task
+     * @param dueDateTime Deadline of the task
      * @param status Current status of the task
      * @param isGroup Is task in a group
      * @param group Task group
-     * @param collaborators List of collaborating users.
      * @param inflater Layout inflater.
      */
     public Task(
@@ -147,11 +148,10 @@ public class Task {
             String description,
             User owner,
             int priority,
-            int deadline,
+            long dueDateTime,
             int status,
             boolean isGroup,
             TaskGroup group,
-            List<User> collaborators,
             final LayoutInflater inflater
     ) {
         this.uuid = uuid;
@@ -159,11 +159,11 @@ public class Task {
         this.description = description;
         this.owner = owner;
         this.priority = priority;
-        this.deadline = deadline;
+        this.dueDateTime = dueDateTime;
         this.status = status;
         this.isGroup = isGroup;
         this.group = group;
-        this.collaborators = collaborators;
+        this.collaborators = new ArrayList<User>();
 
         this.panelView = createView(inflater);
         this.actionsView = createActionsView(inflater);
@@ -197,22 +197,48 @@ public class Task {
                 0,
                 false,
                 null,
-                null,
                 inflater
         );
     }
 
-    public Task(Cursor cursor, Context context) {
+    public Task(
+            String uuid,
+            String name,
+            String description,
+            User owner,
+            int priority,
+            long dueDateTime,
+            int status,
+            int isGroup,
+            TaskGroup group,
+            final LayoutInflater inflater
+    ) {
+        this(
+                uuid,
+                name,
+                description,
+                owner,
+                priority,
+                dueDateTime,
+                status,
+                isGroup==1,
+                group,
+                inflater
+        );
+    }
+
+    public Task(Cursor cursor, Activity activity) {
         this(
                 cursor.getString(0),
                 cursor.getString(1),
                 cursor.getString(2),
-                new User(cursor.getString(3), context),
+                new User(cursor.getString(3), activity),
                 cursor.getInt(4),
-                cursor.getInt(5),
+                cursor.getLong(5),
                 cursor.getInt(6),
                 cursor.getInt(7),
-                new TaskGroup(cursor.getString(8), context)
+                new TaskGroup(cursor.getString(8), activity),
+                activity.getLayoutInflater()
         );
     }
 

@@ -1,10 +1,12 @@
 package in.altersense.taskapp.database;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.view.LayoutInflater;
 
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.models.Task;
@@ -43,7 +45,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         db.execSQL(CREATION_STATEMENT);
     }
 
-    public Task createTask(Task newTask) {
+    public Task createTask(Task newTask, Activity activity) {
         // Open a writable database
         SQLiteDatabase database = this.getWritableDatabase();
         // Setup data to be written
@@ -57,7 +59,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         values.put(Task.KEYS.STATUS.getName(), newTask.getStatus());
         values.put(Task.KEYS.IS_GROUP.getName(), newTask.getIntIsGroup());
         if(newTask.isGroup()) {
-            values.put(Task.KEYS.GROUP_UUID.getName(), newTask.getGroupUUID());
+            values.put(Task.KEYS.GROUP_UUID.getName(), newTask.getGroup().getUuid());
         }
         // Insert into database
         long rowId = database.insert(
@@ -66,18 +68,21 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 values
         );
         database.close();
-        Task Task = getTaskByRowId(rowId);
+        Task Task = getTaskByRowId(rowId, activity);
         return Task;
     }
 
-    private Task getTaskByRowId(long rowId) {
+    private Task getTaskByRowId(long rowId, Activity activity) {
         // Open database.
         SQLiteDatabase readableDb = this.getReadableDatabase();
         // Fetch Task with matching row Id.
         String query = "SELECT * FROM "+ Task.TABLE_NAME+" WHERE ROWID = "+rowId+";";
         Cursor selfCursor = readableDb.rawQuery(query, null);
         selfCursor.moveToFirst();
-        Task task = new Task(selfCursor);
+        Task task = new Task(
+                selfCursor,
+                activity
+        );
         readableDb.close();
         return task;
     }

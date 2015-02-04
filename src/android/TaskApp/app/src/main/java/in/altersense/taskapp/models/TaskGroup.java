@@ -1,5 +1,6 @@
 package in.altersense.taskapp.models;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -12,11 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.altersense.taskapp.R;
+import in.altersense.taskapp.database.TaskGroupDbHelper;
 
 /**
  * Created by mahesmohan on 2/2/15.
  */
 public class TaskGroup {
+
+
     private View groupView;
     private String uuid;
     private String title;
@@ -90,8 +94,53 @@ public class TaskGroup {
         );
     }
 
-    public TaskGroup(String uuid, Context context) {
+    public TaskGroup(
+            String uuid,
+            String title,
+            int taskCount,
+            int hasUpdates,
+            LayoutInflater inflater
+    ) {
+        this(
+                uuid,
+                title,
+                taskCount,
+                hasUpdates==1,
+                inflater
+        );
+    }
 
+    public TaskGroup(String uuid, Activity activity) {
+        TaskGroupDbHelper taskGroupDbHelper = new TaskGroupDbHelper(
+                activity.getApplicationContext()
+        );
+        taskGroupDbHelper.getTaskGroupByUUID(uuid, activity);
+    }
+
+    public TaskGroup(Cursor cursor, Activity activity) {
+        this(
+                cursor.getString(0),
+                cursor.getString(1),
+                0,
+                cursor.getInt(2),
+                activity.getLayoutInflater()
+        );
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public int getTaskCount() {
+        return taskCount;
+    }
+
+    public boolean isHasUpdates() {
+        return hasUpdates;
     }
 
     private View createView(LayoutInflater inflater) {

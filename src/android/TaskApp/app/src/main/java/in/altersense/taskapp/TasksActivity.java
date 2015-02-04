@@ -76,12 +76,8 @@ public class TasksActivity extends ActionBarActivity {
 //        Inflate tasks list collections.
         for(int i=0; i<5; i++) {
             task = new Task(
-                    "Boil Eggs",
-                    "Some kinda description goes here, I dont care actually. You can set it to anything.",
-                    this.ownerName,
-                    random.nextInt(15),
-                    this.getLayoutInflater()
-            );
+
+            )
             taskListStageLL.addView(task.getPanelView());
 //            Adding an onClickListener to TaskPanel to show and hide task actions.
             TaskPanelOnClickListener taskPanelOnClickListener = new TaskPanelOnClickListener(task, this.taskList);
