@@ -3,6 +3,7 @@ from models import *
 from mongoengine import DoesNotExist
 from settings.exceptions import *
 import time
+import os.path
 from settings.constants import CLIENT_KEY_LENGTH, CLIENT_SECRET_LENGTH,\
     CODE_KEY_LENGTH, ACCESS_TOKEN_LENGTH, REFRESH_TOKEN_LENGTH, ACCESS_TOKEN_EXPIRATION, ACCOUNT_NOT_VERIFIED, ACCOUNT_INVITED_UNREGISTERED, ACCOUNT_ACTIVE
 from settings.altEngine import Collection
@@ -108,6 +109,17 @@ def updateUser(userObj):
 	return user
 
 
+def modifyProfilePic(photoObj):
+	"""
+	Add a profile pic to the user account 
+	"""
+	image_name = str(photoObj.id)+photoObj.extension
+	savepath = os.path.join(PROJECT_ROOT, PHOTOS_DIRECTORY + image_name)
+	photoObj.image.save(savepath)
+	User.objects(id = photoObj.user).update(set__profilepic = photoObj.savepath)
+
+
+
 def getUserByEmail(userObj):
 	"""
 	Finds a user by their email
@@ -120,7 +132,23 @@ def getUserByEmail(userObj):
 	try:
 		user = User.objects.get(email = userObj.email)
 		return user 
-	except DoesNotExist as e:
+	except Exception:
+		raise UserNotFound
+
+
+def getUserById(userObj):
+	"""
+	Find a user by id
+	
+	::type userObj: object
+	::parm userObj: An instance with the following attributes
+					id
+	::return : An object of User class
+	"""
+	try:
+		user = User.objects.get(id = userObj.id)
+		return user
+	except Exception:
 		raise UserNotFound
 
 
@@ -156,9 +184,12 @@ def refreshTokens(tokenObj):
 	"""
 	Generate new refresh token and expiration time for access_token
 	"""
-
-	token = Token.objects.get(refresh_token = tokenObj.refresh_token)
+	try:
+		token = Token.objects.get(refresh_token = tokenObj.refresh_token)
+	except Exception:
+		raise RefreshTokenInvalid
 	token.refresh_token = KeyGenerator(REFRESH_TOKEN_LENGTH)()
+	token.access_token = KeyGenerator(ACCESS_TOKEN_LENGTH)()
 	token.expiresAt = TimeStampGenerator(ACCESS_TOKEN_EXPIRATION)()
 	return token
 
@@ -167,8 +198,11 @@ def updatetoken(tokenObj):
 
 	token = Token.objects.get(id = tokenObj.id)
 	token.refresh_token = tokenObj.refresh_token
+	token.access_token = tokenObj.access_token
 	token.expiresAt = tokenObj.expiresAt
 	token.save()
+	token.reload()
+	return token
 
 
 def checkAccessTokenValid(tokenObj):
@@ -177,10 +211,10 @@ def checkAccessTokenValid(tokenObj):
 	"""
 
 	tokenObj.flag = True
-	token = Token.objects.get(access_token = tokenObj.access_token).first()
-	time_now = TimeStampGenerator()
-	if time_now > tokenObj.expiresAt:
-		tokenObj.flag = False
+	token = Token.objects.get(access_token = tokenObj.access_token)
+	time_now = time.time()
+	if time_now > token.expiresAt:
+		raise AccessTokenInvalid
 	return tokenObj
 
 
@@ -195,3 +229,16 @@ def verifyUser(userObj):
 		user.save()
 		return True
 	return False
+
+
+def syncUserInfo(userObj):
+	"""
+	Sync minimal user information such as id, name, email and profile pic
+	"""
+	user = Collection()
+
+	person = User.objects.get(id = userObj)
+	user.name = person.name
+	user.email = person.email
+	user.profilepic = person.profilepic
+	return user

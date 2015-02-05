@@ -1,4 +1,7 @@
-bottle==0.12.7
+bottle==0.12.8
+httplib2==0.9
 mongoengine==0.8.7
+passlib==1.6.2
 pymongo==2.7.2
-wsgiref==0.1.2
+requests==2.5.1
+uuid==1.30

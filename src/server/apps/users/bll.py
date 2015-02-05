@@ -2,7 +2,7 @@ __author__ = ["ashwineaso"]
 from passlib.hash import sha256_crypt as pwd_context
 from . import dal
 from settings.exceptions import AuthenticationError
-
+from settings.constants import PROJECT_ROOT
 
 def createUser(userObj):
 	"""
@@ -52,6 +52,25 @@ def verifyUser(userObj):
 	return verified
 
 
+def modifyProfilePic(photoObj):
+	"""
+	Adds a profile pic to the user's account
+
+	::type photoObj: object
+	::param photoObj: An object with the following attributes
+					filename,
+					extension,
+					image,
+					uuid,
+	::return : An object of the photo class
+	"""
+	
+	# Get the user associated with 
+	photoObj.user = userBll.getUserById(photoObj)
+	# Save the photo to folder and add path to user'd db
+	dal.addProfilePic(photoObj)
+
+
 def updateUser(userObj):
 	"""
 	Updating User information with new values
@@ -98,6 +117,15 @@ def authenticate(userObj):
 	raise AuthenticationError
 
 
+def syncUserInfo(userObj):
+	"""
+	Sync minimal user information such as id, name, email and profile pic
+	"""
+
+	user = dal.syncUserInfo(userObj)
+	return user
+
+
 def issueToken(userObj):
 	"""
 	Issue access and refresh tokens by confirming user key
@@ -115,7 +143,8 @@ def refreshTokens(tokenObj):
 
 
 def updatetoken(tokenObj):
-	dal.updatetoken(tokenObj)
+	token = dal.updatetoken(tokenObj)
+	return token
 
 
 def hash_password(password):
@@ -138,6 +167,19 @@ def getUserByEmail(userObj):
 	"""
 
 	user = dal.getUserByEmail(userObj)
+	return user
+
+
+def getUserById(userObj):
+	"""
+	Find a user by id
+	
+	::type userObj: object
+	::parm userObj: An instance with the following attributes
+					id
+	::return : An object of User class
+	"""
+	user = dal.getUserById(userObj)
 	return user
 
 

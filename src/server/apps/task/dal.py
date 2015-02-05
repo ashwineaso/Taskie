@@ -37,16 +37,15 @@ def addNewTask(taskObj):
 	userObj = Collection()
 
 	#for finding the user id of the owner
-	userObj.email = taskObj.owner
-	taskObj.owner = userbll.getUserByEmail(userObj)
-
-	#For finding the group
-	taskObj.group = Group.objects.get( id = taskObj.group).select_related(1)
+	userObj.id = taskObj.owner
+	taskObj.owner = userbll.getUserById(userObj)
 	
 	#Checking whether the collaborators is a user of the app
 	#If not - Create a new account for the user
 	for userObj.email in taskObj.collaborators:
-		if not userObj.email in User.objects.email:
+		try:
+			User.objects.get(email = userObj.email)
+		except Exception:
 			userbll.createAndInvite(userObj)
 
 	#Creating the list of collaborators
@@ -57,16 +56,18 @@ def addNewTask(taskObj):
 	
 	#Create a task with the necessary data.
 	task = Task(
-		owner = taskObj.owner,
-		collaborators = my_objects,
-		priority = taskObj.priority,
-		name = taskObj.name,
-		description = taskObj.description,
-		dueDateTime = taskObj.dueDateTime,
-		status = taskObj.status,
-		isgroup = taskObj.isgroup,
-		group = taskObj.group
-		).save()
+				owner = taskObj.owner,
+				collaborators = my_objects,
+				priority = taskObj.priority,
+				name = taskObj.name,
+				description = taskObj.description,
+				dueDateTime = taskObj.dueDateTime,
+				status = taskObj.status,
+				isgroup = taskObj.isgroup
+				).save()
+	if taskObj.isgroup is True:
+		taskObj.group = Group.objects.get(id = taskObj.group)
+		Task.objects(id = task.id).update(set__group = taskObj.group)
 	return task
 
 
@@ -84,7 +85,7 @@ def editTask(taskObj):
 	: return : an object of task class
 
 	"""
-	task = Task.objects.get(id = taskObj.id)
+	task = getTaskById(taskObj)
 	Task.objects(id = task.id).update(
 										set__name = taskObj.name,
 										set__description = taskObj.description,
@@ -94,35 +95,13 @@ def editTask(taskObj):
 	return task
 
 
-
-def getTaskByID(taskObj):
-	"""
-	Get the task using its id and return Task object
-
-	:type taskObj: object
-	:param taskObj: An instance with the following attributes
-			id,
-			name,
-			description,
-			priority,
-			dueDateTime
-	:return An instance of the Task class
-
-	"""
-	try:
-		task = Task.objects.get(id = taskObj.id)
-		return task
-	except DoesNotExist as e:
-		raise TaskwithIDNotFound
-
-
 def addCollaborators(taskObj):
 	"""
 	Add collaborators to an existing task
 
 	:type taskObj: object
 	:param taskObj: An instance with the following attributes
-			collaborators
+					collaborators
 	:return An instance of the Task class
 
 	"""
@@ -152,9 +131,9 @@ def addCollaborators(taskObj):
 		my_objects.append(Collaborator(user = userbll.getUserByEmail(userObj),
 										status = taskObj.status))
 
-	task = Task.objects.get(id = taskObj.id)
+	task = getTaskById(taskObj)
 	Task.objects(id = task.id).update( push_all__collaborators = my_objects)
-	
+	task.save()
 	task.reload()
 	return task
 
@@ -165,7 +144,7 @@ def remCollaborators(taskObj):
 
 	:type taskObj: object
 	:param taskObj: An instance with the following attributes
-			collaborators
+					collaborators
 	:return An instance of the Task class
 
 	"""
@@ -183,10 +162,10 @@ def modifyTaskStatus(taskObj):
 	"""
 	Modfiy the status of the existing taskObj
 
-	type taskObj: object
-	:param taskObj: An instance with the following attributes
-			id
-			status
+	type taskObj:	object
+	:param taskObj:	An instance with the following attributes
+					id
+					status
 	:return An instance of the Task class
 
 	"""
@@ -205,7 +184,7 @@ def modifyCollStatus(taskObj):
 	Modify the status of the collaborator
 
 	:type taskObj : object
-	:param taskObj : An instance with the following attributes
+	:param taskObj :An instance with the following attributes
 					id - id of the task
 					collemail - email of the collaborator
 					collstatus - new status of the collaborator
@@ -213,7 +192,7 @@ def modifyCollStatus(taskObj):
 	:return An instance of the Collaborator class
 	"""
 
-	task = Task.objects.get(id = taskObj.id)
+	task = Task.objects.get(id = taskObj.id).select_related(1)
 	userObj = userbll.getUserByEmail(taskObj)
 	for collaborator in task.collaborators:
 		if collaborator.user == userObj:
@@ -231,7 +210,7 @@ def createGroup(groupObj):
 	:param groupObj : An instance with the following attributes
 						ownerId - userId of the creator/ member
 						title - name of the groupObj
-	:return An instance of the Group class
+	:return group : An instance of the Group class
 	"""
 
 	userObj = Collection()
@@ -243,3 +222,28 @@ def createGroup(groupObj):
 					owner = groupObj.owner,
 					title = groupObj.title).save()
 	return group
+
+
+def syncTask(taskObj):
+	"""
+	Sync / retrieve as task whose id is provided
+	"""
+	task = getTaskById(taskObj)
+	return task
+
+
+def getTaskById(taskObj):
+	"""
+	Retrieve task using task id
+	::type taskObj : object
+	::parm userObj : An instance of Collection with the following attributes
+					 id
+	::return task : Instance of Task class
+
+	"""
+
+	try:
+		task = Task.objects.get(id = taskObj.id).select_related(1)
+		return task
+	except Exception:
+		raise TaskwithIDNotFound

@@ -39,7 +39,7 @@ def mongo_to_dict_helper(obj):
             return_data.append((field_name, float(data)))
         elif isinstance(obj._fields[field_name], IntField):
             return_data.append((field_name, int(data)))
-        elif (field_name in ("syncStatus")):
+        elif (field_name in ("group")):
             pass
         elif isinstance(obj._fields[field_name], ListField):
             pass
