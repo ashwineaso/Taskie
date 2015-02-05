@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 
+import java.util.Random;
+
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.database.UserDbHelper;
@@ -12,6 +14,8 @@ import in.altersense.taskapp.database.UserDbHelper;
  * Created by mahesmohan on 1/31/15.
  */
 public class User {
+
+
     public int getId() {
         return id;
     }
@@ -107,6 +111,42 @@ public class User {
         this.email = email;
         this.name = name;
     }
+
+    public User() {
+        this.uuid = "";
+    }
+
+   public boolean registerUser(String name, String email, String password) {
+       // Set up the user object with name, email, password.
+       // Call the register user API.
+       // If user registered
+        // insert user to db.
+        // make user owner
+        // return true.
+       // If user cant be registered
+        // display error message.
+        // return false
+   }
+
+   public boolean loginUser(String email, String password) {
+       // Call the login user API
+       // If login success.
+        //refresh user and task database
+        // make user owner
+        // sync tasks.
+        // sync collaborators.
+        // return true
+       // If login fails.
+        // display message
+        // return false
+  }
+
+    public User(String name, String email) {
+        Random rand = new Random(1000);
+        int uuid = rand.nextInt();
+
+    }
+
 
     /**
      * Makes the user the device Owner.
