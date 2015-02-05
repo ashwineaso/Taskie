@@ -52,7 +52,7 @@ def verifyUser(userObj):
 	return verified
 
 
-def addProfilePic(photoObj):
+def modifyProfilePic(photoObj):
 	"""
 	Adds a profile pic to the user's account
 
@@ -115,6 +115,15 @@ def authenticate(userObj):
 	if token.key == userObj.key:
 		return True
 	raise AuthenticationError
+
+
+def syncUserInfo(userObj):
+	"""
+	Sync minimal user information such as id, name, email and profile pic
+	"""
+
+	user = dal.syncUserInfo(userObj)
+	return user
 
 
 def issueToken(userObj):

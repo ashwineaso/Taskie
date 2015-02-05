@@ -109,7 +109,7 @@ def updateUser(userObj):
 	return user
 
 
-def addProfilePic(photoObj):
+def modifyProfilePic(photoObj):
 	"""
 	Add a profile pic to the user account 
 	"""
@@ -117,7 +117,6 @@ def addProfilePic(photoObj):
 	savepath = os.path.join(PROJECT_ROOT, PHOTOS_DIRECTORY + image_name)
 	photoObj.image.save(savepath)
 	User.objects(id = photoObj.user).update(set__profilepic = photoObj.savepath)
-
 
 
 
@@ -230,3 +229,16 @@ def verifyUser(userObj):
 		user.save()
 		return True
 	return False
+
+
+def syncUserInfo(userObj):
+	"""
+	Sync minimal user information such as id, name, email and profile pic
+	"""
+	user = Collection()
+
+	person = User.objects.get(id = userObj)
+	user.name = person.name
+	user.email = person.email
+	user.profilepic = person.profilepic
+	return user

@@ -47,6 +47,7 @@ class User(Document):
 	email = StringField(unique = True)
 	name = StringField(required = False)
 	password_hash = StringField(required = False)
+	profilepic = StringField(required = False)
 	serverPushId = StringField(required = False)
 	status = IntField(default = 0) ## 1 - Active ## 0 - Not Verified ## -1 - Pending registration 
 	createdOn = LongField(default = time.time())

@@ -101,7 +101,7 @@ def addCollaborators(taskObj):
 
 	:type taskObj: object
 	:param taskObj: An instance with the following attributes
-			collaborators
+					collaborators
 	:return An instance of the Task class
 
 	"""
@@ -144,7 +144,7 @@ def remCollaborators(taskObj):
 
 	:type taskObj: object
 	:param taskObj: An instance with the following attributes
-			collaborators
+					collaborators
 	:return An instance of the Task class
 
 	"""
@@ -162,10 +162,10 @@ def modifyTaskStatus(taskObj):
 	"""
 	Modfiy the status of the existing taskObj
 
-	type taskObj: object
-	:param taskObj: An instance with the following attributes
-			id
-			status
+	type taskObj:	object
+	:param taskObj:	An instance with the following attributes
+					id
+					status
 	:return An instance of the Task class
 
 	"""
@@ -184,7 +184,7 @@ def modifyCollStatus(taskObj):
 	Modify the status of the collaborator
 
 	:type taskObj : object
-	:param taskObj : An instance with the following attributes
+	:param taskObj :An instance with the following attributes
 					id - id of the task
 					collemail - email of the collaborator
 					collstatus - new status of the collaborator
@@ -237,8 +237,7 @@ def getTaskById(taskObj):
 	Retrieve task using task id
 	::type taskObj : object
 	::parm userObj : An instance of Collection with the following attributes
-					id
-					**kwargs
+					 id
 	::return task : Instance of Task class
 
 	"""

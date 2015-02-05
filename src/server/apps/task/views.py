@@ -10,8 +10,8 @@ taskObj = Collection()
 userObj = Collection()
 groupObj = Collection()
 
+
 def addNewTask():
-	
 	obj = request.json
 	try:
 		taskObj.access_token = obj["access_token"]

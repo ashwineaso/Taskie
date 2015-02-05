@@ -60,7 +60,7 @@ def updateUser():
 	return response
 
 
-def addProfilePic():
+def modifyProfilePic():
 	"""
 	Add a profile pic to the user account
 	"""
@@ -68,18 +68,18 @@ def addProfilePic():
 	photoObj = Collection()
 	img = request.files.get('image')
 	print img
-	# try:
-	photoObj.filename, photoObj.extension = os.path.splitext(img.filename)
-	photoObj.image = img
-	photoObj.contentType = request.forms.get('contentType')
-	photoObj.acceess_token = requests.headers.get('Authorization')
-	photoObj.id = requests.headers.get('User-ID')
-	bll.addProfilePic(photoObj)
-	response["status"] = RESPONSE_SUCCESS
-	# except Exception as e:
-	# 	response["status"] = RESPONSE_FAILED
-	# 	response["message"] = str(e)
-	# 	response["code"] = e.code
+	try:
+		photoObj.filename, photoObj.extension = os.path.splitext(img.filename)
+		photoObj.image = img
+		photoObj.contentType = request.forms.get('contentType')
+		photoObj.acceess_token = requests.headers.get('Authorization')
+		photoObj.id = requests.headers.get('User-ID')
+		bll.addProfilePic(photoObj)
+		response["status"] = RESPONSE_SUCCESS
+	except Exception as e:
+		response["status"] = RESPONSE_FAILED
+		response["message"] = str(e)
+		response["code"] = e.code
 	return response
 
 
@@ -196,6 +196,25 @@ def verifyUser():
 			response["status"] = RESPONSE_FAILED
 			response["message"] = "Verification Unsucessful"
 	except Exception as e:
+		response["status"] = RESPONSE_FAILED
+		response["message"] = str(e)
+	return response
+
+
+def syncUserInfo():
+	"""
+	Suny the basic information of the user like:
+	id, name, email and addProfilePic
+	"""
+	obj = request.json
+	try:
+		userObj.access_token = ["acceess_token"]
+		userObj.id = obj["id"]
+		if dal.checkAccessTokenValid(userObj):
+			user = bll.syncUserInfo(userObj)
+		response["data"] = user.to_dict
+		response["status"] = RESPONSE_SUCCESS
+	except Exception, e:
 		response["status"] = RESPONSE_FAILED
 		response["message"] = str(e)
 	return response

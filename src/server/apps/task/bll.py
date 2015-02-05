@@ -121,8 +121,8 @@ def modifyCollStatus(taskObj):
 
 def createGroup(groupObj):
 	"""
-
 	Create a new group
+	
 	:type groupObj : object
 	:param groupObj : An instance with the following attributes
 						ownerId - userId of the creator/ member
