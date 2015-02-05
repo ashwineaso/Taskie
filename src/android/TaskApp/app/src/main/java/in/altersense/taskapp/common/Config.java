@@ -27,4 +27,21 @@ public class Config {
 
     }
 
+    public static enum REQUEST_KEYS {
+
+        EMAIL("email"),
+        NAME("name"),
+        PASSWORD("password");
+
+        private String key;
+
+        public String getKey() {
+            return key;
+        }
+
+        private REQUEST_KEYS(String key) {
+            this.key = key;
+        }
+    }
+
 }

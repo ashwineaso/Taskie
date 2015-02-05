@@ -15,6 +15,9 @@ import in.altersense.taskapp.database.UserDbHelper;
  */
 public class User {
 
+    public String getPassword() {
+        return password;
+    }
 
     public int getId() {
         return id;
@@ -37,10 +40,12 @@ public class User {
     }
 
     private int id;
+
     private String uuid;
     private String email;
     private String name;
     private boolean isDeviceOwner;
+    private String password;
 
     /**
      * Table name for Users
@@ -67,6 +72,7 @@ public class User {
         this.uuid = newUser.getUuid();
         this.email = newUser.getEmail();
         this.name = newUser.getEmail();
+        this.password = "";
         this.isDeviceOwner = newUser.isDeviceOwner();
     }
 
@@ -110,6 +116,7 @@ public class User {
         this.uuid = uuid;
         this.email = email;
         this.name = name;
+        this.password = "";
     }
 
     public User() {
@@ -118,6 +125,9 @@ public class User {
 
    public boolean registerUser(String name, String email, String password) {
        // Set up the user object with name, email, password.
+       this.name = name;
+       this.email = email;
+       this.password = password;
        // Call the register user API.
        // If user registered
         // insert user to db.
