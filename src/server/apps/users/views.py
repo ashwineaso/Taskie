@@ -141,19 +141,19 @@ def refreshTokens():
 	"""
 
 	obj = request.json
-	try:
-		tokenObj.refresh_token = obj["refresh_token"]
-		new_token = bll.refreshTokens(tokenObj)
-		token = bll.updatetoken(new_token)
-		data["refresh_token"] = token.refresh_token
-		data["access_token"] = token.access_token
-		data["expiresAt"] = token.expiresAt
-		response["data"] = data
-		response["message"] = RESPONSE_SUCCESS
-	except Exception as e:
-		response["status"] = RESPONSE_FAILED
-		response["message"] = str(e)
-		response["code"] = e.code
+	# try:
+	tokenObj.refresh_token = obj["refresh_token"]
+	new_token = bll.refreshTokens(tokenObj)
+	token = bll.updatetoken(new_token)
+	data["refresh_token"] = token.refresh_token
+	data["access_token"] = token.access_token
+	data["expiresAt"] = token.expiresAt
+	response["data"] = data
+	response["message"] = RESPONSE_SUCCESS
+	# except Exception as e:
+	# 	response["status"] = RESPONSE_FAILED
+	# 	response["message"] = str(e)
+	# 	response["code"] = e.code
 	return response
 
 

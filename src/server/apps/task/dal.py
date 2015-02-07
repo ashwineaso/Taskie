@@ -4,6 +4,7 @@ from apps.users import bll as userbll
 from settings.altEngine import Collection
 from bson.objectid import ObjectId
 import time
+from settings.exceptions import *
 
 
 def addNewTask(taskObj):
@@ -68,6 +69,7 @@ def addNewTask(taskObj):
 	if taskObj.isgroup is True:
 		taskObj.group = Group.objects.get(id = taskObj.group)
 		Task.objects(id = task.id).update(set__group = taskObj.group)
+		task.save()
 	return task
 
 
@@ -112,7 +114,7 @@ def addCollaborators(taskObj):
 	#Assigning initial status to each collaborator
 	taskObj.status = Status(
 					status = 0,
-					dateTime = datetime.datetime.now()
+					dateTime = time.time()
 					)
 
 	#Check if new collaborators exist
@@ -122,9 +124,9 @@ def addCollaborators(taskObj):
 			#If user exists in Server, flag is marked true and continues
 			if person.email == userObj.email:
 				flag = True
-			#If flag is false, create a new user and send invite
-			if not flag:
-				userbll.createAndInvite(userObj)
+		#If flag is false, create a new user and send invite
+		if flag is False:
+			userbll.createAndInvite(userObj)
 
 	#Get the user - collaborator id and add to list
 	for userObj.email in taskObj.collaborators:
@@ -132,9 +134,8 @@ def addCollaborators(taskObj):
 										status = taskObj.status))
 
 	task = getTaskById(taskObj)
-	Task.objects(id = task.id).update( push_all__collaborators = my_objects)
+	Task.objects(id = task.id).update( push__collaborators = my_objects)
 	task.save()
-	task.reload()
 	return task
 
 
@@ -246,4 +247,4 @@ def getTaskById(taskObj):
 		task = Task.objects.get(id = taskObj.id).select_related(1)
 		return task
 	except Exception:
-		raise TaskwithIDNotFound
+		raise TaskWithIDNotFound

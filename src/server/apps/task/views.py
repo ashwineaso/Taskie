@@ -30,20 +30,25 @@ def addNewTask():
 		except KeyError:
 			taskObj.dueDateTime = 0
 		taskObj.collaborators = obj["collaborators"]
-		taskObj.isgroup = obj["isgroup"]
+		try:
+			taskObj.isgroup = obj["isgroup"]
+		except Exception:
+			taskObj.isgroup = False
 		try:
 			taskObj.group = obj["groupId"]
 		except KeyError:
 			taskObj.group = ''
 		if checkAccessTokenValid(taskObj) is True:
 			task = bll.addNewTask(taskObj)
-		data["task"] = task.to_dict()
+		taskie = bll.taskToDictConverter(task)
+		data["task"] = taskie
 		response["status"] = RESPONSE_SUCCESS
 		response["data"] = data
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
 		response["message"] = str(e)
-		response["code"] = e.code
+		if hasattr(e, "code"):
+			response["code"] = e.code
 	return response
 
 
@@ -58,7 +63,8 @@ def editTask():
 		taskObj.dueDateTime = obj["dueDateTime"]
 		if checkAccessTokenValid(taskObj) is True:
 			task = bll.editTask(taskObj)
-		data["task"] = task.to_dict()
+		taskie = bll.taskToDictConverter(task)
+		data["task"] = taskie
 		response["status"] = RESPONSE_SUCCESS
 		response["data"] = data
 	except Exception as e:
@@ -75,7 +81,8 @@ def addCollaborators():
 		taskObj.collaborators = obj["collaborators"]
 		if checkAccessTokenValid(taskObj) is True:
 			task = bll.addCollaborators(taskObj)
-		data["task"] = task.to_dict()
+		taskie = bll.taskToDictConverter(task)
+		data["task"] = taskie
 		response["status"] = RESPONSE_SUCCESS
 		response["data"] = data
 	except Exception as e:
@@ -170,18 +177,20 @@ def addGroupMembers():
 
 
 def syncTask():
+	
 	obj = request.json
 	try:
-		taskObj.owner = obj["owner"]
 		taskObj.id = obj["id"]
 		taskObj.access_token = obj["access_token"]
 		if checkAccessTokenValid(taskObj) is True:
-			task = dal.syncTask(taskObj)
-		data["task"] = task.to_dict()
+			task = bll.syncTask(taskObj)
+		taskie = bll.taskToDictConverter(task)
+		#add entire task to response data
+		data["task"] = taskie
 		response["status"] = RESPONSE_SUCCESS
 		response["data"] = data
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
 		response["message"] = str(e)
-		response["code"] = e.code
+		# response["code"] = e.code
 	return response
