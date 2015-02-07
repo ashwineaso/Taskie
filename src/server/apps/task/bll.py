@@ -137,7 +137,9 @@ def syncTask(taskObj):
 	"""
 	Sync / retrieve as task whose id is provided
 	"""
+	
 	task = dal.syncTask(taskObj)
+	## Modify task to include only all essential details
 	return task
 
 
@@ -175,3 +177,41 @@ def pushSyncTaskNotification(taskObj):
 									postObj = androidPush
 									)
 		gcmPostThread.start()
+
+
+def taskToDictConverter(task):
+	"""
+	Convert the incoming Task object into JSON Serializable dict format
+	only including the essential details
+	"""
+	taskie = {}
+	coll = {}
+	status = {}
+
+	## Modify task to include only all essential details
+	taskie["id"] = str(task.id)
+	taskie["name"] = task.name
+	taskie["description"] = task.description
+	taskie["dueDateTime"] = task.dueDateTime
+	taskie["priority"] = task.priority
+	#Setting the status
+	status["status"] = task.status.status
+	status["dateTime"] = task.status.dateTime
+	taskie["status"] = status.copy()
+	taskie["isgroup"] = task.isgroup
+	taskie["group"] = task.group
+
+	#Retrieve owner information
+	taskie["owner"] = str(task.owner.id)
+	#Collaborator informaiton
+	taskie["collaborators"] = []
+	for each_user in task.collaborators:
+		status["status"] = each_user.status.status
+		status["dateTime"] = each_user.status.dateTime
+		coll["id"] = str(each_user.user.id)
+		coll["name"] = each_user.user.name
+		coll["status"] = status.copy()
+		coll["startTime"] = each_user.startTime
+		coll["endTime"] = each_user.endTime
+		taskie["collaborators"].append(coll.copy())
+	return taskie

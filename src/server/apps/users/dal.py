@@ -210,12 +210,15 @@ def checkAccessTokenValid(tokenObj):
 	Check whether the access_token is valid or not
 	"""
 
-	tokenObj.flag = True
-	token = Token.objects.get(access_token = tokenObj.access_token)
+	flag = True
+	try:
+		token = Token.objects.get(access_token = tokenObj.access_token)
+	except Exception:
+		raise AccessTokenInvalid
 	time_now = time.time()
 	if time_now > token.expiresAt:
-		raise AccessTokenInvalid
-	return tokenObj
+		raise AccessTokenExpired
+	return flag
 
 
 def verifyUser(userObj):

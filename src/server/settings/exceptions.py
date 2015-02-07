@@ -1,6 +1,6 @@
 class TaskWithIDNotFound(Exception):
 	"""docstring for TaskWithIDNotFound"""
-	def __init__(self, arg):
+	def __init__(self):
 		super(TaskWithIDNotFound, self).__init__()
 		self.msg = "Task With ID Not Found"
 		self.code = 2001
@@ -95,4 +95,14 @@ class RefreshTokenInvalid(Exception):
 
 	def __str__(self):
 		return self.msg
-		
+
+
+class AccessTokenExpired(object):
+	"""docstring for AccessTokenExpired"""
+	def __init__(self):
+		super(AccessTokenExpired, self).__init__()
+		self.msg = "Access Token Expired"
+		self.code = code
+
+	def __str__():
+		return self.msg	
