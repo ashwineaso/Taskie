@@ -183,6 +183,10 @@ def taskToDictConverter(task):
 	"""
 	Convert the incoming Task object into JSON Serializable dict format
 	only including the essential details
+
+	::type task : instance of Task class
+	::param task : attributes of Task, Collaborator, Status and User Classes
+	::return taskie : dictionary
 	"""
 	taskie = {}
 	coll = {}
