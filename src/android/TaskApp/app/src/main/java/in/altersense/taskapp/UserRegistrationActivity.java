@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import in.altersense.taskapp.models.User;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -40,7 +41,6 @@ public class UserRegistrationActivity extends ActionBarActivity {
         this.nameET = (EditText) findViewById(R.id.regNameET);
         this.emailET = (EditText) findViewById(R.id.regEmailET);
         this.regPasswordET = (EditText) findViewById(R.id.regPasswordET);
-        this.regButton = (Button) findViewById(R.id.regButton);
         this.showPasswordButton = (ImageButton) findViewById(R.id.regShowPassButton);
 
         this.showPasswordButton.setOnClickListener(new View.OnClickListener() {
@@ -62,6 +62,34 @@ public class UserRegistrationActivity extends ActionBarActivity {
             }
         });
 
+        this.regButton = (Button) findViewById(R.id.regButton);
+
+        this.regButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                registerUser();
+            }
+        });
+
+    }
+
+    private void registerUser() {
+        User newUser = new User();
+        newUser.registerUser(
+                nameET.getText().toString(),
+                emailET.getText().toString(),
+                regPasswordET.getText().toString(),
+                this
+        );
+    }
+
+    /**
+     * Calligraphy attached to new
+     * @param newBase
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
 

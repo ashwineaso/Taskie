@@ -1,9 +1,10 @@
 package in.altersense.taskapp.components;
 
-import android.util.Log;
 import android.view.View;
 
 import java.util.List;
+
+import in.altersense.taskapp.models.Task;
 
 /**
  * Created by mahesmohan on 1/20/15.

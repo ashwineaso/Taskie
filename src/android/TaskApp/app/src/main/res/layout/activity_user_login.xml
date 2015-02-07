@@ -74,8 +74,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:background="@color/createTaskPrimaryActionBar"
-        android:textColor="@color/white"
+        style="@style/primaryButton"
         android:layout_marginTop="@dimen/smallMargin_xhdp"
         android:text="@string/label_SignIn"/>
 
@@ -83,9 +82,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:background="@color/transparent"
+        style="@style/transparentButton"
         android:layout_marginTop="@dimen/bigMargin_xhdp"
-        android:textColor="@color/createTaskPrimaryActionBar"
         android:text="@string/label_CreateAccount"/>
 
 </LinearLayout>

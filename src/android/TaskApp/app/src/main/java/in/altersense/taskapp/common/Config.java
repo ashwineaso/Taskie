@@ -6,6 +6,16 @@ package in.altersense.taskapp.common;
  */
 public class Config {
 
+    public static int DATABASE_VERSION = 1;
+    public static int REQUEST_MAXOUT = 3;
+    public static String SERVER_ADDRESS = "localhost:8080";
+    public static String RESPONSE_STATUS_FAILED = "failed";
+    public static String TOKEN_EXPIRED_ERROR = "Access Token Invalid";
+    public static String APP_SECRET = "AppSecret";
+    public static String APP_KEY = "AppKey";
+    public static String REQUEST_TIMED_OUT_ERROR = "Request Timed Out";
+    public static int CONNECTION_TIMEOUT = 10000;
+
     /**
      * Shared preference keys for the app.
      */
@@ -23,6 +33,23 @@ public class Config {
             this.key = key;
         }
 
+    }
+
+    public static enum REQUEST_KEYS {
+
+        EMAIL("email"),
+        NAME("name"),
+        PASSWORD("password");
+
+        private String key;
+
+        public String getKey() {
+            return key;
+        }
+
+        private REQUEST_KEYS(String key) {
+            this.key = key;
+        }
     }
 
 }

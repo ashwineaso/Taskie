@@ -89,4 +89,13 @@ public class AltEngine {
         Log.i(TAG+" readStringFromSharedPref", "Success. ("+key+","+result+")");
         return result;
     }
+
+    /**
+     * Forms a URL for the API.
+     * @param api API to be called.
+     * @return URL
+     */
+    public static String formURL(String api) {
+        return "http://"+Config.SERVER_ADDRESS+"/"+api;
+    }
 }

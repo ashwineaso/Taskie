@@ -74,4 +74,14 @@
         <item name="fontPath">fonts/roboto_slab_regular.ttf</item>
     </style>
 
+    <style name="primaryButton">
+        <item name="android:background">@drawable/major_button</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="transparentButton">
+        <item name="android:background">@drawable/transparent_button</item>
+        <item name="android:textColor">@color/createTaskPrimaryActionBar</item>
+    </style>
+
 </resources>

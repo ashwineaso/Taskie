@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.View;
 
 import in.altersense.taskapp.GroupActivity;
+import in.altersense.taskapp.models.TaskGroup;
 
 /**
  * Created by mahesmohan on 1/21/15.

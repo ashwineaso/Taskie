@@ -28,4 +28,8 @@
     <color name="negative">#E91D62</color>
 
     <color name="transparent">#00000000</color>
+
+    <color name="button">#E91D62</color>
+    <color name="buttonPressed">#BA174E</color>
+    <color name="transparent_buttonPressed">#22000000</color>
 </resources>
