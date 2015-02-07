@@ -28,6 +28,7 @@ import in.altersense.taskapp.components.TaskPanelOnClickListener;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.TaskGroup;
+import in.altersense.taskapp.models.User;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -255,8 +256,14 @@ public class TasksActivity extends ActionBarActivity {
                 Task quickTask = new Task(
                         newTaskTitle.getText().toString(),
                         "",
-                        "Mahesh Mohan",
-                        0,
+                        new User(
+                                AltEngine.readStringFromSharedPref(
+                                        getApplicationContext(),
+                                        Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
+                                        ""
+                                ),
+                                TasksActivity.this
+                        ),
                         getLayoutInflater()
                 );
                 quickTask = createQuickTask(quickTask);

@@ -9,6 +9,7 @@ import java.util.Random;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.database.UserDbHelper;
+import in.altersense.taskapp.requests.RegisterUserRequest;
 
 /**
  * Created by mahesmohan on 1/31/15.
@@ -123,12 +124,22 @@ public class User {
         this.uuid = "";
     }
 
-   public boolean registerUser(String name, String email, String password) {
+   public boolean registerUser(
+           String name,
+           String email,
+           String password,
+           Activity activity
+   ) {
        // Set up the user object with name, email, password.
        this.name = name;
        this.email = email;
        this.password = password;
        // Call the register user API.
+       RegisterUserRequest registerUserRequest = new RegisterUserRequest(
+               this,
+               activity
+       );
+       registerUserRequest.execute();
        // If user registered
         // insert user to db.
         // make user owner
@@ -136,8 +147,10 @@ public class User {
        // If user cant be registered
         // display error message.
         // return false
+       return false;
    }
 
+    /*
    public boolean loginUser(String email, String password) {
        // Call the login user API
        // If login success.
@@ -150,7 +163,7 @@ public class User {
         // display message
         // return false
   }
-
+*/
     public User(String name, String email) {
         Random rand = new Random(1000);
         int uuid = rand.nextInt();

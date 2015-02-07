@@ -60,6 +60,7 @@
         <EditText android:id="@+id/regEmailET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
             android:layout_gravity="center_horizontal"
             android:hint="@string/hint_Email"/>
 

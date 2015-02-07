@@ -74,12 +74,22 @@ public class UserRegistrationActivity extends ActionBarActivity {
     }
 
     private void registerUser() {
-        // TODO: Register user with the server.
-        User newUser = new User(
-                this.nameET.getText().toString(),
-                this.emailET.getText().toString()
+        User newUser = new User();
+        newUser.registerUser(
+                nameET.getText().toString(),
+                emailET.getText().toString(),
+                regPasswordET.getText().toString(),
+                this
         );
-        newUser.makeDeviceOwner(this);
+    }
+
+    /**
+     * Calligraphy attached to new
+     * @param newBase
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
 

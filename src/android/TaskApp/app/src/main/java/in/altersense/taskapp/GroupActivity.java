@@ -12,9 +12,12 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import in.altersense.taskapp.common.Config;
+import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.models.Task;
-import in.altersense.taskapp.components.TaskGroup;
 import in.altersense.taskapp.components.TaskPanelOnClickListener;
+import in.altersense.taskapp.models.TaskGroup;
+import in.altersense.taskapp.models.User;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -58,8 +61,15 @@ public class GroupActivity extends ActionBarActivity {
         for(int i=0; i<currentTaskGroup.getTaskCount(); i++) {
             task = new Task(
                     "Boil Eggs",
-                    "Some kinda description goes here, I dont care actually. You can set it to anything.",
-                    "Mahesh Mohan",
+                    "Boil some eggs.",
+                    new User(
+                            AltEngine.readStringFromSharedPref(
+                                this,
+                                Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
+                                ""
+                            ),
+                            this
+                    ),
                     this.getLayoutInflater()
             );
             mainStageLinearLayout.addView(task.getPanelView());
