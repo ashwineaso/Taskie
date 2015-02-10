@@ -14,37 +14,46 @@ import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.models.User;
 
 /**
- * Created by mahesmohan on 2/5/15.
+ * Created by mahesmohan on 2/10/15.
  */
-public class RegisterUserRequest extends AsyncTask<Void, Integer, JSONObject> {
+public class UserLoginRequest extends AsyncTask<Void, Integer, JSONObject> {
 
-    private ProgressDialog dialog;
+    private boolean startActivity;
     private User user;
+    private ProgressDialog dialog;
     private JSONObject requestObject;
     private Activity activity;
-    private String TAG = "RegisterUserRequest";
+    private String TAG = "UserLoginRequest";
 
-    public RegisterUserRequest(User user, Activity activity) {
+    public UserLoginRequest(User user, Activity activity, boolean startActivity) {
         this.user = user;
+        this.activity = activity;
         this.dialog = new ProgressDialog(
                 activity
         );
         this.requestObject = new JSONObject();
         try {
-            requestObject.put(Config.REQUEST_RESPONSE_KEYS.EMAIL.getKey(),this.user.getEmail());
-            requestObject.put(Config.REQUEST_RESPONSE_KEYS.NAME.getKey(),this.user.getName());
-            requestObject.put(Config.REQUEST_RESPONSE_KEYS.PASSWORD.getKey(),this.user.getPassword());
+            this.requestObject.put(Config.REQUEST_RESPONSE_KEYS.EMAIL.getKey(),user.getEmail());
+            this.requestObject.put(Config.REQUEST_RESPONSE_KEYS.PASSWORD.getKey(),user.getPassword());
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        this.activity = activity;
+        this.startActivity = startActivity;
+    }
+
+    public UserLoginRequest(User user, Activity activity) {
+        this(
+                user,
+                activity,
+                true
+        );
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        if (!this.dialog.isShowing()) {
-            this.dialog.setMessage(Config.MESSAGES.REGISTRATION_REQUEST.getMessage());
+        if(!this.dialog.isShowing()) {
+            this.dialog.setMessage(Config.MESSAGES.LOGIN_REQUEST.getMessage());
             this.dialog.show();
         }
     }
@@ -54,8 +63,8 @@ public class RegisterUserRequest extends AsyncTask<Void, Integer, JSONObject> {
         // Create a response object.
         JSONObject response = new JSONObject();
         // Create a URL request
-        APIRequest apiRequest = new APIRequest(
-                AltEngine.formURL("user/register"),
+        APIRequest apiRequest= new APIRequest(
+                AltEngine.formURL("user/autorize"),
                 this.requestObject,
                 this.activity
         );
@@ -66,7 +75,7 @@ public class RegisterUserRequest extends AsyncTask<Void, Integer, JSONObject> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // Return response.
+        // Return response
         return response;
     }
 
@@ -75,19 +84,16 @@ public class RegisterUserRequest extends AsyncTask<Void, Integer, JSONObject> {
         super.onPostExecute(result);
         Log.i(TAG, result.toString());
         // Hide dialog
-        if(this.dialog.isShowing()) {
+        if (this.dialog.isShowing()) {
             this.dialog.hide();
         }
-        // Check whether the request was successful.
+        // Check whether the request was success
         try {
             String responseStatus = result.getString(Config.REQUEST_RESPONSE_KEYS.STATUS.getKey());
-            if(responseStatus.equals(Config.RESPONSE_STATUS_SUCCESS)) {
-                // If successful
-                // login user
-                // create a gcm request get gcm id.
-                // set access and refresh token
-                // push gcmid to server
-                // load TasksActivity.
+            if (responseStatus.equals(Config.RESPONSE_STATUS_SUCCESS)) {
+                // If success
+                // set access and refresh tokens
+                // load TasksActivity according to the the start activity flag
             } else {
                 // if not
                 // display error dialog
@@ -95,10 +101,9 @@ public class RegisterUserRequest extends AsyncTask<Void, Integer, JSONObject> {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
-    @Override
+        @Override
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
         if(values.equals(1)) {
