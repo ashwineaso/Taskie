@@ -37,6 +37,8 @@ public class Config {
      * Shared preference keys for the app.
      */
     public static enum SHARED_PREF_KEYS {
+        ACCESS_TOKEN("access_token"),
+        REFRESH_TOKEN("refresh_token"),
         OWNER_ID("ownerID"), // UUID of the owner.
         OWNER_NAME("ownerName"); // Name to be displayed for owner.
 
@@ -57,7 +59,9 @@ public class Config {
         EMAIL("email"),
         NAME("name"),
         PASSWORD("password"),
-        STATUS("status");
+        STATUS("status"),
+        REFRESH_TOKEN("refresh_token"),
+        ACCESS_TOKEN("acess_token");
 
         private String key;
 
