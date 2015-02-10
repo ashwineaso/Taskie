@@ -60,7 +60,7 @@ class User(Document):
 	serverPushId = StringField(required = False)
 	status = IntField(default = 0) ## 1 - Active ## 0 - Not Verified ## -1 - Pending registration 
 	createdOn = LongField(default = time.time())
-	invite = EmbeddedDocumentField(Invite)
+	invite = EmbeddedDocumentField(Invite, required = False)
 
 	def to_dict(self):
 		return mongo_to_dict_helper(self)

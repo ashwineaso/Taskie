@@ -24,13 +24,20 @@ def createUser(userObj):
 	::return user : An instance of user class
 	"""
 	try:
+
+		invite = Invite(
+					count = 0,
+					lastUpdate = time.time()
+					)
+
 		user = User(
 			email = userObj.email,
 			name = userObj.name,
 			createdOn = time.time(),
 			password_hash = userObj.password_hash,
 			status = ACCOUNT_NOT_VERIFIED,
-			serverPushId = userObj.serverPushId
+			serverPushId = userObj.serverPushId,
+			invite = invite
 			)
 		user.save()
 	except Exception:

@@ -3,7 +3,7 @@ from passlib.hash import sha256_crypt as pwd_context
 from . import dal
 from settings.exceptions import AuthenticationError
 from settings.constants import PROJECT_ROOT
-from . import invite
+from . import mailing
 
 def createUser(userObj):
 	"""
@@ -21,6 +21,7 @@ def createUser(userObj):
 
 	userObj.password_hash = hash_password(userObj.password)
 	user = dal.createUser(userObj)
+	mailing.sendVerification(user)
 	return user
 
 
@@ -35,7 +36,7 @@ def createAndInvite(userObj):
 
 	user = dal.createMinimalUser(userObj)
 	## Send a personalise invite to the user's email
-	invite.sendInvite(userObj)
+	mailing.sendInvite(userObj)
 	return user
 
 

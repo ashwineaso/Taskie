@@ -6,16 +6,18 @@ from . import dal
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+taskie_mail = "invites@taskie.me"
+HOST = "mail.taskie.me"
+PORT = "25"
+password = "wxqkqxr4$&$@"
+
 
 def sendInvite(userObj):
 	inviter = dal.getUserById(userObj)
 	invited_by = inviter.email
 	invite_to = userObj.email
 	token = Token.objects.get(user = inviter)
-	taskie_mail = "invites@taskie.me"
-	HOST = "mail.taskie.me"
-	PORT = "25"
-	password = "wxqkqxr4$&$@"
+	
 
 	# Create message container - the correct MIME type is multipart/alternative.
 	msg = MIMEMultipart('alternative')
@@ -39,6 +41,41 @@ def sendInvite(userObj):
 	"""
 
 	html_msg = MIMEText(html, 'html')
+	msg.attach(html_msg)
+
+	#Send the message via local smtp server
+	server = smtplib.SMTP()
+	server.connect(HOST, PORT)
+	server.starttls()
+	server.login(taskie_mail,password)
+	server.sendmail(taskie_mail,invite_to, msg.as_string())
+	server.close()
+
+
+def sendVerification(user):
+	"""
+	Send verification mail to the user and proide confirmation link for verification
+
+	::type userObj: object
+	::param userObj: instance of User class with the following attributes
+					email
+					name
+					**kwargs
+	"""
+	userObj.user = user
+	token = dal.getTokenByUser(userObj)
+	userObj.key = token.refresh_token
+
+	link = "http://taskie.me/user/verifyEmail/"+userObj.user.email+"/"+userObj.key
+	plain_text = "Please confirm your taskie account by clicking the following link "+link
+
+	# Create message container - the correct MIME type is multipart/alternative.
+	msg = MIMEMultipart('alternative')
+	msg['Subject'] = inviter.name+" has invited you to taskie"
+	msg['From'] = taskie_mail
+	msg['To'] = mail_to
+
+	html_msg = MIMEText(plain, 'plain_text')
 	msg.attach(html_msg)
 
 	#Send the message via local smtp server

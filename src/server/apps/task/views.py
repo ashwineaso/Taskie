@@ -13,42 +13,42 @@ groupObj = Collection()
 
 def addNewTask():
 	obj = request.json
-	# try:
-	taskObj.access_token = obj["access_token"]
-	taskObj.owner = obj["owner"]
-	taskObj.name = obj["name"]
 	try:
-		taskObj.priority = obj["priority"]
-	except KeyError:
-		taskObj.priority = 1
-	try:
-		taskObj.description = obj["description"]
-	except KeyError:
-		taskObj.description = ''
-	try:
-		taskObj.dueDateTime = obj["dueDateTime"]
-	except KeyError:
-		taskObj.dueDateTime = 0
-	taskObj.collaborators = obj["collaborators"]
-	try:
-		taskObj.isgroup = obj["isgroup"]
-	except Exception:
-		taskObj.isgroup = False
-	try:
-		taskObj.group = obj["groupId"]
-	except KeyError:
-		taskObj.group = ''
-	if checkAccessTokenValid(taskObj) is True:
-		task = bll.addNewTask(taskObj)
-	taskie = bll.taskToDictConverter(task)
-	data["task"] = taskie
-	response["status"] = RESPONSE_SUCCESS
-	response["data"] = data
-	# except Exception as e:
-	# 	response["status"] = RESPONSE_FAILED
-	# 	response["message"] = str(e)
-	# 	if hasattr(e, "code"):
-	# 		response["code"] = e.code
+		taskObj.access_token = obj["access_token"]
+		taskObj.owner = obj["owner"]
+		taskObj.name = obj["name"]
+		try:
+			taskObj.priority = obj["priority"]
+		except KeyError:
+			taskObj.priority = 1
+		try:
+			taskObj.description = obj["description"]
+		except KeyError:
+			taskObj.description = ''
+		try:
+			taskObj.dueDateTime = obj["dueDateTime"]
+		except KeyError:
+			taskObj.dueDateTime = 0
+		taskObj.collaborators = obj["collaborators"]
+		try:
+			taskObj.isgroup = obj["isgroup"]
+		except Exception:
+			taskObj.isgroup = False
+		try:
+			taskObj.group = obj["groupId"]
+		except KeyError:
+			taskObj.group = ''
+		if checkAccessTokenValid(taskObj) is True:
+			task = bll.addNewTask(taskObj)
+		taskie = bll.taskToDictConverter(task)
+		data["task"] = taskie
+		response["status"] = RESPONSE_SUCCESS
+		response["data"] = data
+	except Exception as e:
+		response["status"] = RESPONSE_FAILED
+		response["message"] = str(e)
+		if hasattr(e, "code"):
+			response["code"] = e.code
 	return response
 
 
