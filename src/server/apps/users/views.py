@@ -36,6 +36,13 @@ def register():
 	return response
 
 
+
+def verifyEmail(email, key):
+	userObj.email = email
+	userObj.key = key
+	bll.verifyEmail(userObj)
+
+
 def updateUser():
 	"""
 	Updating user information

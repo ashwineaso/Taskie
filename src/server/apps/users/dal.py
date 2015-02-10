@@ -71,7 +71,20 @@ def createMinimalUser(userObj):
 				)
 	user.save()
 	user.reload()
+	token  = Token(user  = user)
+	token.save()
 	return user
+
+
+def verifyEmail(userObj):
+	"""
+	verify a user's email and change status to registered
+	"""
+	userObj.user = getUserByEmail(userObj)
+	token = getTokenByUser(userObj)
+	if token.refresh_token == userObj.key:
+		User.objects(email = userObj.email).update(set__status = ACCOUNT_ACTIVE)
+		userObj.user.save()
 
 
 def updateUser(userObj):
