@@ -77,19 +77,14 @@ public class APIRequest {
                 AltEngine.readStringFromSharedPref(
                         _currentActivty.getApplicationContext(),
                         Config.SHARED_PREF_KEYS.ACCESS_TOKEN.getKey(),
-                        null
+                        ""
                 ),
                 AltEngine.readStringFromSharedPref(
                         _currentActivty.getApplicationContext(),
                         Config.SHARED_PREF_KEYS.REFRESH_TOKEN.getKey(),
-                        null
+                        ""
                 )
         );
-	}
-	
-	
-	public APIRequest(String _reqURL, JSONObject _content) {
-		this(_reqURL, _content, null);
 	}
 
 	private String contentToString() throws Exception {
@@ -152,18 +147,20 @@ public class APIRequest {
 		Log.d(LOG_TAG,"    -> getNewAccessToken reached.");
 		JSONObject refreshedTokenResponse = null;
 		int reqCounter = 0;
+        
 		JSONObject content = new JSONObject();
 		try {
-			content.put("refresh_token", this.refreshToken);
+			content.put(Config.REQUEST_RESPONSE_KEYS.REFRESH_TOKEN.getKey(), this.refreshToken);
 			
 			while(refreshedTokenResponse==null && reqCounter < Config.REQUEST_MAXOUT) {
 				Log.d(LOG_TAG,"    -> refreshToken API call #"+reqCounter+" ("+this.refreshToken+")");
 				
 				JSONObject tokenRequestContent = new JSONObject();
-				tokenRequestContent.put("refresh_token", this.refreshToken);
+				tokenRequestContent.put(Config.REQUEST_RESPONSE_KEYS.REFRESH_TOKEN.getKey(), this.refreshToken);
 				APIRequest tokenRequestAPI = new APIRequest(
-						"http://"+Config.SERVER_ADDRESS+"/users/token/refresh/",
-						tokenRequestContent
+						"http://"+Config.SERVER_ADDRESS+"/user/refreshtokens",
+						tokenRequestContent,
+                        this.activity
 						);
 				tokenRequestAPI.removeAccessTokenFromContent();
                 refreshedTokenResponse = tokenRequestAPI.request();
@@ -251,28 +248,43 @@ public class APIRequest {
 		JSONObject issueTokenContent = new JSONObject();
 		
 		try {
-			authorizeAPIContent.put("client_secret", Config.APP_SECRET);
-			authorizeAPIContent.put("client_key", Config.APP_KEY);
+			authorizeAPIContent.put(
+                    Config.REQUEST_RESPONSE_KEYS.PASSWORD.getKey(),
+                    AltEngine.readStringFromSharedPref(
+                            activity.getApplicationContext(),
+                            Config.SHARED_PREF_KEYS.APP_SECRET.getKey(),
+                            ""
+                    )
+            );
+			authorizeAPIContent.put(
+                    Config.REQUEST_RESPONSE_KEYS.EMAIL.getKey(),
+                    AltEngine.readStringFromSharedPref(
+                            activity.getApplicationContext(),
+                            Config.SHARED_PREF_KEYS.APP_KEY.getKey(),
+                            ""
+                    )
+            );
 			APIRequest authAPIRequest = new APIRequest(
-					"http://"+Config.SERVER_ADDRESS+"/users/authorize/",
-					authorizeAPIContent
+					"http://"+Config.SERVER_ADDRESS+"/user/authorize",
+					authorizeAPIContent,
+                    this.activity
 					);
 			
 			authAPIRequest.removeAccessTokenFromContent();
-			Log.d(LOG_TAG,"    -> Authorization code request ready with content "+authorizeAPIContent.toString());
+//			Log.d(LOG_TAG,"    -> Authorization code request ready with content "+authorizeAPIContent.toString());
 			authorizeAPIResponse = authAPIRequest.request();
 			
-			issueTokenContent.put("code", authorizeAPIResponse.getString("code"));
+			/*issueTokenContent.put("code", authorizeAPIResponse.getString("code"));
 			APIRequest issueTokenAPIRequest = new APIRequest(
 					"http://"+Config.SERVER_ADDRESS+"/users/token/issue/",
 					issueTokenContent
 					);
 			
 			authAPIRequest.removeAccessTokenFromContent();
-			issueTokenResponse = issueTokenAPIRequest.request();
+			issueTokenResponse = issueTokenAPIRequest.request();*/
 			
-			this.setAccessToken(issueTokenResponse.getString(Config.REQUEST_RESPONSE_KEYS.ACCESS_TOKEN.getKey()));
-            setUpNewTokens(issueTokenResponse);
+			this.setAccessToken(authorizeAPIResponse.getString(Config.REQUEST_RESPONSE_KEYS.ACCESS_TOKEN.getKey()));
+            setUpNewTokens(authorizeAPIResponse);
 			Log.d(LOG_TAG,"    -> issueToken completed. ("+this.accessToken+")");
 			
 		} catch (Exception e) {
@@ -315,4 +327,9 @@ public class APIRequest {
 		return apiReqResponse;
 		
 	}
+
+    public JSONObject requestWithoutTokens() throws Exception {
+        this.removeAccessTokenFromContent();
+        return this.request();
+    }
 }

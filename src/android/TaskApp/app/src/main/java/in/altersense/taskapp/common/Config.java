@@ -12,24 +12,23 @@ public class Config {
     public static String RESPONSE_STATUS_FAILED = "failed";
     public static String RESPONSE_STATUS_SUCCESS = "success";
     public static String TOKEN_EXPIRED_ERROR = "Access Token Invalid";
-    public static String APP_SECRET = "AppSecret";
-    public static String APP_KEY = "AppKey";
     public static String REQUEST_TIMED_OUT_ERROR = "Request Timed Out";
     public static int CONNECTION_TIMEOUT = 10000;
 
     public static enum MESSAGES {
 
         REGISTRATION_REQUEST("Registering user. Please wait."),
-        LOGIN_REQUEST("Signing in.");
+        LOGIN_REQUEST("Signing in."),
+        LOGIN_ERROR_TITLE("Oops");
 
-        private String messaage;
+        private String message;
 
         public String getMessage() {
-            return messaage;
+            return message;
         }
 
-        private MESSAGES(String messaage) {
-            this.messaage = messaage;
+        private MESSAGES(String message) {
+            this.message = message;
         }
     }
 
@@ -40,7 +39,9 @@ public class Config {
         ACCESS_TOKEN("access_token"),
         REFRESH_TOKEN("refresh_token"),
         OWNER_ID("ownerID"), // UUID of the owner.
-        OWNER_NAME("ownerName"); // Name to be displayed for owner.
+        OWNER_NAME("ownerName"),// Name to be displayed for owner.
+        APP_SECRET("devOwnerPassword"),
+        APP_KEY("devOwnerEmail");
 
         private String key;
 
@@ -61,7 +62,10 @@ public class Config {
         PASSWORD("password"),
         STATUS("status"),
         REFRESH_TOKEN("refresh_token"),
-        ACCESS_TOKEN("acess_token");
+        ACCESS_TOKEN("access_token"),
+        DATA("data"),
+        MESSAGE("message"),
+        UUID("id");
 
         private String key;
 

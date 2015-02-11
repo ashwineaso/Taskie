@@ -1,6 +1,7 @@
 package in.altersense.taskapp.requests;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -26,9 +27,8 @@ public class RegisterUserRequest extends AsyncTask<Void, Integer, JSONObject> {
 
     public RegisterUserRequest(User user, Activity activity) {
         this.user = user;
-        this.dialog = new ProgressDialog(
-                activity
-        );
+        this.activity = activity;
+        this.dialog = new ProgressDialog(activity);
         this.requestObject = new JSONObject();
         try {
             requestObject.put(Config.REQUEST_RESPONSE_KEYS.EMAIL.getKey(),this.user.getEmail());
@@ -37,7 +37,6 @@ public class RegisterUserRequest extends AsyncTask<Void, Integer, JSONObject> {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        this.activity = activity;
     }
 
     @Override
@@ -62,7 +61,7 @@ public class RegisterUserRequest extends AsyncTask<Void, Integer, JSONObject> {
         // Make request and fetch response.
         try {
             publishProgress(1);
-            response = apiRequest.request();
+            response = apiRequest.requestWithoutTokens();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -84,13 +83,24 @@ public class RegisterUserRequest extends AsyncTask<Void, Integer, JSONObject> {
             if(responseStatus.equals(Config.RESPONSE_STATUS_SUCCESS)) {
                 // If successful
                 // login user
-                // create a gcm request get gcm id.
-                // set access and refresh token
-                // push gcmid to server
+                UserLoginRequest loginRequest = new UserLoginRequest(
+                        this.user,
+                        this.activity
+                );
                 // load TasksActivity.
+                loginRequest.execute();
+
             } else {
                 // if not
                 // display error dialog
+                String message = result.getString(
+                        Config.REQUEST_RESPONSE_KEYS.MESSAGE.getKey()
+                );
+                AlertDialog.Builder builder = new AlertDialog.Builder(this.activity);
+                builder.setTitle(Config.MESSAGES.LOGIN_ERROR_TITLE.getMessage());
+                builder.setMessage(message);
+                builder.setNegativeButton("Ok", null);
+                builder.show();
             }
         } catch (JSONException e) {
             e.printStackTrace();

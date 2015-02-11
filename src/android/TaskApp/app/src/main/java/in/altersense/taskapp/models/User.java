@@ -124,7 +124,7 @@ public class User {
         this.uuid = "";
     }
 
-   public boolean registerUser(
+   public void registerUser(
            String name,
            String email,
            String password,
@@ -140,14 +140,6 @@ public class User {
                activity
        );
        registerUserRequest.execute();
-       // If user registered
-        // insert user to db.
-        // make user owner
-        // return true.
-       // If user cant be registered
-        // display error message.
-        // return false
-       return false;
    }
 
     /*
@@ -217,4 +209,7 @@ public class User {
         return deviceOwner;
     }
 
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 }

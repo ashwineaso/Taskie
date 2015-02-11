@@ -79,7 +79,7 @@ public class UserRegistrationActivity extends ActionBarActivity {
                 nameET.getText().toString(),
                 emailET.getText().toString(),
                 regPasswordET.getText().toString(),
-                this
+                UserRegistrationActivity.this
         );
     }
 

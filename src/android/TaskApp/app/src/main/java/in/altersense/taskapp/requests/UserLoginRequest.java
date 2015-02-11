@@ -1,16 +1,21 @@
 package in.altersense.taskapp.requests;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import in.altersense.taskapp.TasksActivity;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.APIRequest;
 import in.altersense.taskapp.components.AltEngine;
+import in.altersense.taskapp.database.UserDbHelper;
 import in.altersense.taskapp.models.User;
 
 /**
@@ -64,7 +69,7 @@ public class UserLoginRequest extends AsyncTask<Void, Integer, JSONObject> {
         JSONObject response = new JSONObject();
         // Create a URL request
         APIRequest apiRequest= new APIRequest(
-                AltEngine.formURL("user/autorize"),
+                AltEngine.formURL("user/authorize"),
                 this.requestObject,
                 this.activity
         );
@@ -92,11 +97,64 @@ public class UserLoginRequest extends AsyncTask<Void, Integer, JSONObject> {
             String responseStatus = result.getString(Config.REQUEST_RESPONSE_KEYS.STATUS.getKey());
             if (responseStatus.equals(Config.RESPONSE_STATUS_SUCCESS)) {
                 // If success
+                JSONObject data = result.getJSONObject(
+                        Config.REQUEST_RESPONSE_KEYS.DATA.getKey()
+                );
                 // set access and refresh tokens
+                String accessToken = data.getString(
+                        Config.REQUEST_RESPONSE_KEYS.ACCESS_TOKEN.getKey()
+                );
+                String refreshToken = data.getString(
+                        Config.REQUEST_RESPONSE_KEYS.REFRESH_TOKEN.getKey()
+                );
+                AltEngine.writeStringToSharedPref(
+                        this.activity.getApplicationContext(),
+                        Config.SHARED_PREF_KEYS.ACCESS_TOKEN.getKey(),
+                        accessToken
+                );
+                AltEngine.writeStringToSharedPref(
+                        this.activity.getApplicationContext(),
+                        Config.SHARED_PREF_KEYS.REFRESH_TOKEN.getKey(),
+                        refreshToken
+                );
+                String uuid = data.getString(
+                        Config.REQUEST_RESPONSE_KEYS.UUID.getKey()
+                );
+                this.user.setUuid(uuid);
+                // insert user to db.
+                UserDbHelper userDbHelper = new UserDbHelper(this.activity.getApplicationContext());
+                userDbHelper.createUser(this.user);
+                // make user owner
+                this.user.makeDeviceOwner(this.activity.getApplicationContext());
+
                 // load TasksActivity according to the the start activity flag
+                if(this.startActivity) {
+                    Intent tasksActivityStarterIntent = new Intent(
+                            this.activity.getApplicationContext(),
+                            TasksActivity.class
+                    );
+                    tasksActivityStarterIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    this.activity.startActivity(tasksActivityStarterIntent);
+                    this.activity.finish();
+                }
             } else {
                 // if not
                 // display error dialog
+                String message = result.getString(
+                        Config.REQUEST_RESPONSE_KEYS.MESSAGE.getKey()
+                );
+                if(this.startActivity) {
+                    AlertDialog alertDialog = new AlertDialog.Builder(this.activity).create();
+                    alertDialog.setTitle(Config.MESSAGES.LOGIN_ERROR_TITLE.getMessage());
+                    alertDialog.setMessage(message);
+                    alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    alertDialog.show();
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
