@@ -22,7 +22,7 @@ def createUser(userObj):
 
 	userObj.password_hash = hash_password(userObj.password)
 	user = dal.createUser(userObj)
-	#mailing.sendVerification(user)
+	mailing.sendVerification(user)
 	return user
 
 
