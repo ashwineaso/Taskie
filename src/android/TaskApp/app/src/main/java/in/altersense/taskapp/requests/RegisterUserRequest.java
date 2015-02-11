@@ -62,6 +62,7 @@ public class RegisterUserRequest extends AsyncTask<Void, Integer, JSONObject> {
         try {
             publishProgress(1);
             response = apiRequest.requestWithoutTokens();
+            Log.d(TAG, "Request sent");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -72,7 +73,7 @@ public class RegisterUserRequest extends AsyncTask<Void, Integer, JSONObject> {
     @Override
     protected void onPostExecute(JSONObject result) {
         super.onPostExecute(result);
-        Log.i(TAG, result.toString());
+        Log.i(TAG, "Response:" + result.toString());
         // Hide dialog
         if(this.dialog.isShowing()) {
             this.dialog.hide();
@@ -83,6 +84,7 @@ public class RegisterUserRequest extends AsyncTask<Void, Integer, JSONObject> {
             if(responseStatus.equals(Config.RESPONSE_STATUS_SUCCESS)) {
                 // If successful
                 // login user
+                Log.d(TAG, "Request success.");
                 UserLoginRequest loginRequest = new UserLoginRequest(
                         this.user,
                         this.activity
@@ -93,6 +95,7 @@ public class RegisterUserRequest extends AsyncTask<Void, Integer, JSONObject> {
             } else {
                 // if not
                 // display error dialog
+                Log.d(TAG, "Request failed.");
                 String message = result.getString(
                         Config.REQUEST_RESPONSE_KEYS.MESSAGE.getKey()
                 );

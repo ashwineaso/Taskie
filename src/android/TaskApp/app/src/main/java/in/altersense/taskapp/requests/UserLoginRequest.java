@@ -31,6 +31,7 @@ public class UserLoginRequest extends AsyncTask<Void, Integer, JSONObject> {
     private String TAG = "UserLoginRequest";
 
     public UserLoginRequest(User user, Activity activity, boolean startActivity) {
+        Log.d(TAG, "Creating login request");
         this.user = user;
         this.activity = activity;
         this.dialog = new ProgressDialog(
@@ -76,7 +77,8 @@ public class UserLoginRequest extends AsyncTask<Void, Integer, JSONObject> {
         // Make request and fetch response.
         try {
             publishProgress(1);
-            response = apiRequest.request();
+            Log.d(TAG, "Request sent.");
+            response = apiRequest.requestWithoutTokens();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -87,7 +89,7 @@ public class UserLoginRequest extends AsyncTask<Void, Integer, JSONObject> {
     @Override
     protected void onPostExecute(JSONObject result) {
         super.onPostExecute(result);
-        Log.i(TAG, result.toString());
+        Log.i(TAG, "Response: "+result.toString());
         // Hide dialog
         if (this.dialog.isShowing()) {
             this.dialog.hide();
@@ -97,6 +99,7 @@ public class UserLoginRequest extends AsyncTask<Void, Integer, JSONObject> {
             String responseStatus = result.getString(Config.REQUEST_RESPONSE_KEYS.STATUS.getKey());
             if (responseStatus.equals(Config.RESPONSE_STATUS_SUCCESS)) {
                 // If success
+                Log.d(TAG, "Request Success.");
                 JSONObject data = result.getJSONObject(
                         Config.REQUEST_RESPONSE_KEYS.DATA.getKey()
                 );
@@ -140,6 +143,7 @@ public class UserLoginRequest extends AsyncTask<Void, Integer, JSONObject> {
             } else {
                 // if not
                 // display error dialog
+                Log.d(TAG, "Request failed.");
                 String message = result.getString(
                         Config.REQUEST_RESPONSE_KEYS.MESSAGE.getKey()
                 );
