@@ -76,7 +76,7 @@ def updateUser():
 		except KeyError as e:
 			userObj.serverPushId = ''
 		user = bll.updateUser(userObj)
-		data["user"] = user.to_dict()
+		data["user"] = bll.convertUserToDict(user)
 		response["status"] = RESPONSE_SUCCESS
 		response["data"] = data
 	except Exception as e:
@@ -135,6 +135,7 @@ def authorize_user():
 		if cred_valid_flag:
 			userObj.user = bll.getUserByEmail(userObj)
 			token = bll.getTokenByUser(userObj)
+			data["id"] = str(token.user.id)
 			data["key"] = token.key
 			data["access_token"] = token.access_token
 			data["refresh_token"] = token.refresh_token
@@ -275,7 +276,7 @@ def syncUserInfo():
 		userObj.id = obj["id"]
 		if dal.checkAccessTokenValid(userObj):
 			user = bll.syncUserInfo(userObj)
-		response["data"] = user.to_dict
+		response["data"] = bll.convertUserToDict(user)
 		response["status"] = RESPONSE_SUCCESS
 	except Exception, e:
 		response["status"] = RESPONSE_FAILED
