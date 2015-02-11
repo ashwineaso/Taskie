@@ -47,7 +47,7 @@ def addNewTask(taskObj):
 		try:
 			User.objects.get(email = userObj.email)
 		except Exception:
-			userbll.createAndInvite(userObj)
+			userbll.createAndInvite(userObj) #contains _id = senders id and email = recievers email
 
 	#Creating the list of collaborators
 	for val in taskObj.collaborators:

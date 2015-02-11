@@ -4,6 +4,7 @@ from apps.users.views import *
 users_app = Bottle()
 
 users_app.route('/register', 'POST', register)
+users_app.route('/verifyEmail/<email>/<key>', 'GET', verifyEmail)
 users_app.route('/verifyUser', 'POST', verifyUser)
 users_app.route('/updateUser', 'POST', updateUser)
 users_app.route('/authorize', 'POST', authorize_user)
