@@ -1,6 +1,7 @@
 package in.altersense.taskapp.requests;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -26,24 +27,23 @@ public class RegisterUserRequest extends AsyncTask<Void, Integer, JSONObject> {
 
     public RegisterUserRequest(User user, Activity activity) {
         this.user = user;
-        this.dialog = new ProgressDialog(
-                activity
-        );
+        this.activity = activity;
+        this.dialog = new ProgressDialog(activity);
         this.requestObject = new JSONObject();
         try {
-            requestObject.put(Config.REQUEST_KEYS.EMAIL.getKey(),this.user.getEmail());
-            requestObject.put(Config.REQUEST_KEYS.NAME.getKey(),this.user.getName());
-            requestObject.put(Config.REQUEST_KEYS.PASSWORD.getKey(),this.user.getPassword());
+            requestObject.put(Config.REQUEST_RESPONSE_KEYS.EMAIL.getKey(),this.user.getEmail());
+            requestObject.put(Config.REQUEST_RESPONSE_KEYS.NAME.getKey(),this.user.getName());
+            requestObject.put(Config.REQUEST_RESPONSE_KEYS.PASSWORD.getKey(),this.user.getPassword());
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        this.activity = activity;
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
         if (!this.dialog.isShowing()) {
+            this.dialog.setMessage(Config.MESSAGES.REGISTRATION_REQUEST.getMessage());
             this.dialog.show();
         }
     }
@@ -61,7 +61,8 @@ public class RegisterUserRequest extends AsyncTask<Void, Integer, JSONObject> {
         // Make request and fetch response.
         try {
             publishProgress(1);
-            response = apiRequest.request();
+            response = apiRequest.requestWithoutTokens();
+            Log.d(TAG, "Request sent");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -72,10 +73,42 @@ public class RegisterUserRequest extends AsyncTask<Void, Integer, JSONObject> {
     @Override
     protected void onPostExecute(JSONObject result) {
         super.onPostExecute(result);
-        Log.i(TAG, result.toString());
+        Log.i(TAG, "Response:" + result.toString());
+        // Hide dialog
         if(this.dialog.isShowing()) {
             this.dialog.hide();
         }
+        // Check whether the request was successful.
+        try {
+            String responseStatus = result.getString(Config.REQUEST_RESPONSE_KEYS.STATUS.getKey());
+            if(responseStatus.equals(Config.RESPONSE_STATUS_SUCCESS)) {
+                // If successful
+                // login user
+                Log.d(TAG, "Request success.");
+                UserLoginRequest loginRequest = new UserLoginRequest(
+                        this.user,
+                        this.activity
+                );
+                // load TasksActivity.
+                loginRequest.execute();
+
+            } else {
+                // if not
+                // display error dialog
+                Log.d(TAG, "Request failed.");
+                String message = result.getString(
+                        Config.REQUEST_RESPONSE_KEYS.MESSAGE.getKey()
+                );
+                AlertDialog.Builder builder = new AlertDialog.Builder(this.activity);
+                builder.setTitle(Config.MESSAGES.LOGIN_ERROR_TITLE.getMessage());
+                builder.setMessage(message);
+                builder.setNegativeButton("Ok", null);
+                builder.show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override

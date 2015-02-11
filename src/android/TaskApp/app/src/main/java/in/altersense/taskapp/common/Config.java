@@ -8,20 +8,40 @@ public class Config {
 
     public static int DATABASE_VERSION = 1;
     public static int REQUEST_MAXOUT = 3;
-    public static String SERVER_ADDRESS = "192.168.1.5:8080";
+    public static String SERVER_ADDRESS = "172.16.11.31:8080";
     public static String RESPONSE_STATUS_FAILED = "failed";
+    public static String RESPONSE_STATUS_SUCCESS = "success";
     public static String TOKEN_EXPIRED_ERROR = "Access Token Invalid";
-    public static String APP_SECRET = "AppSecret";
-    public static String APP_KEY = "AppKey";
     public static String REQUEST_TIMED_OUT_ERROR = "Request Timed Out";
     public static int CONNECTION_TIMEOUT = 10000;
+
+    public static enum MESSAGES {
+
+        REGISTRATION_REQUEST("Registering user. Please wait."),
+        LOGIN_REQUEST("Signing in."),
+        LOGIN_ERROR_TITLE("Oops");
+
+        private String message;
+
+        public String getMessage() {
+            return message;
+        }
+
+        private MESSAGES(String message) {
+            this.message = message;
+        }
+    }
 
     /**
      * Shared preference keys for the app.
      */
     public static enum SHARED_PREF_KEYS {
+        ACCESS_TOKEN("access_token"),
+        REFRESH_TOKEN("refresh_token"),
         OWNER_ID("ownerID"), // UUID of the owner.
-        OWNER_NAME("ownerName"); // Name to be displayed for owner.
+        OWNER_NAME("ownerName"),// Name to be displayed for owner.
+        APP_SECRET("devOwnerPassword"),
+        APP_KEY("devOwnerEmail");
 
         private String key;
 
@@ -35,11 +55,17 @@ public class Config {
 
     }
 
-    public static enum REQUEST_KEYS {
+    public static enum REQUEST_RESPONSE_KEYS {
 
         EMAIL("email"),
         NAME("name"),
-        PASSWORD("password");
+        PASSWORD("password"),
+        STATUS("status"),
+        REFRESH_TOKEN("refresh_token"),
+        ACCESS_TOKEN("access_token"),
+        DATA("data"),
+        MESSAGE("message"),
+        UUID("id");
 
         private String key;
 
@@ -47,7 +73,7 @@ public class Config {
             return key;
         }
 
-        private REQUEST_KEYS(String key) {
+        private REQUEST_RESPONSE_KEYS(String key) {
             this.key = key;
         }
     }

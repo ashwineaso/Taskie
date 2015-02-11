@@ -34,7 +34,7 @@ public class APIRequest {
 	
 	private void addAccessTokenToContent() {
 		try {
-			this.content.put("token", accessToken);
+			this.content.put(Config.REQUEST_RESPONSE_KEYS.ACCESS_TOKEN.getKey(), accessToken);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -46,31 +46,47 @@ public class APIRequest {
 	}
 	
 	private void removeAccessTokenFromContent() {
-		this.content.remove("token");
+		this.content.remove(Config.REQUEST_RESPONSE_KEYS.ACCESS_TOKEN.getKey());
 	}
-	
-	// Constructor with activity.
-	public APIRequest(String _reqURL, JSONObject _content, Activity _currentActivty) {
-		
-		
-		this.reqCounter = 0;
-		
-		this.url = _reqURL;
-		this.content = _content;
-		this.accessToken = null;
-		this.refreshToken = null;
-		this.activity = _currentActivty;
-		
+
+    public APIRequest(
+            String _reqURL,
+            JSONObject _content,
+            Activity _currentActivity,
+            String accessToken,
+            String refreshToken) {
+
+        this.reqCounter = 0;
+
+        this.url = _reqURL;
+        this.content = _content;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        this.activity = _currentActivity;
+
         this.addAccessTokenToContent();
 
+    }
+
+	// Constructor with activity.
+	public APIRequest(String _reqURL, JSONObject _content, Activity _currentActivty) {
+        this(
+                _reqURL,
+                _content,
+                _currentActivty,
+                AltEngine.readStringFromSharedPref(
+                        _currentActivty.getApplicationContext(),
+                        Config.SHARED_PREF_KEYS.ACCESS_TOKEN.getKey(),
+                        ""
+                ),
+                AltEngine.readStringFromSharedPref(
+                        _currentActivty.getApplicationContext(),
+                        Config.SHARED_PREF_KEYS.REFRESH_TOKEN.getKey(),
+                        ""
+                )
+        );
 	}
-	
-	
-	public APIRequest(String _reqURL, JSONObject _content) {
-		this(_reqURL, _content, null);
-	}
-	
-	
+
 	private String contentToString() throws Exception {
 		try {
 			return this.content.toString();
@@ -124,43 +140,70 @@ public class APIRequest {
 	}
 	
 	
-	/*
+	/**
 	 * Function to generate new accessToken using refreshToken
 	 */
 	private void refreshAccessToken() throws Exception {
 		Log.d(LOG_TAG,"    -> getNewAccessToken reached.");
 		JSONObject refreshedTokenResponse = null;
 		int reqCounter = 0;
+        
 		JSONObject content = new JSONObject();
 		try {
-			content.put("refresh_token", this.refreshToken);
+			content.put(Config.REQUEST_RESPONSE_KEYS.REFRESH_TOKEN.getKey(), this.refreshToken);
 			
 			while(refreshedTokenResponse==null && reqCounter < Config.REQUEST_MAXOUT) {
 				Log.d(LOG_TAG,"    -> refreshToken API call #"+reqCounter+" ("+this.refreshToken+")");
 				
 				JSONObject tokenRequestContent = new JSONObject();
-				tokenRequestContent.put("refresh_token", this.refreshToken);
+				tokenRequestContent.put(Config.REQUEST_RESPONSE_KEYS.REFRESH_TOKEN.getKey(), this.refreshToken);
 				APIRequest tokenRequestAPI = new APIRequest(
-						"http://"+Config.SERVER_ADDRESS+"/users/token/refresh/", 
-						tokenRequestContent
+						"http://"+Config.SERVER_ADDRESS+"/user/refreshtokens",
+						tokenRequestContent,
+                        this.activity
 						);
 				tokenRequestAPI.removeAccessTokenFromContent();
-				JSONObject tokenRequestAPIResponse = tokenRequestAPI.request();
-				this.setAccessToken(tokenRequestAPIResponse.getString("token"));
+                refreshedTokenResponse = tokenRequestAPI.request();
+
+				this.setAccessToken(refreshedTokenResponse.getString(Config.REQUEST_RESPONSE_KEYS.ACCESS_TOKEN.getKey()));
 			}
-			
+
 			Log.d(LOG_TAG,"    -> refreshedTokenResponse recieved ("+this.accessToken+")");
+            setUpNewTokens(refreshedTokenResponse);
 			
 		} catch (Exception e) {
 			throw e;
 		}
 	}
-	
-	
-	/*
-	 * Function to make simple URLReq with Content.
-	 * eg. API Requests are made using this function.
-	 */
+
+    private void setUpNewTokens(JSONObject responseJSONObject) {
+        try {
+            this.refreshToken = responseJSONObject.getString(
+                    Config.REQUEST_RESPONSE_KEYS.REFRESH_TOKEN.getKey()
+            );
+            this.accessToken = responseJSONObject.getString(
+                    Config.REQUEST_RESPONSE_KEYS.ACCESS_TOKEN.getKey()
+            );
+            AltEngine.writeStringToSharedPref(
+                    activity.getApplicationContext(),
+                    Config.SHARED_PREF_KEYS.ACCESS_TOKEN.getKey(),
+                    this.accessToken
+            );
+            AltEngine.writeStringToSharedPref(
+                    activity.getApplicationContext(),
+                    Config.SHARED_PREF_KEYS.REFRESH_TOKEN.getKey(),
+                    this.refreshToken
+            );
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /*
+     * Function to make simple URLReq with Content.
+     * eg. API Requests are made using this function.
+     */
 	private JSONObject simpleURLReq() throws Exception {
 		Log.d(LOG_TAG,"SimpleURLReq called.");
 		JSONObject apiReqResponse = null;
@@ -205,28 +248,43 @@ public class APIRequest {
 		JSONObject issueTokenContent = new JSONObject();
 		
 		try {
-			authorizeAPIContent.put("client_secret", Config.APP_SECRET);
-			authorizeAPIContent.put("client_key", Config.APP_KEY);
+			authorizeAPIContent.put(
+                    Config.REQUEST_RESPONSE_KEYS.PASSWORD.getKey(),
+                    AltEngine.readStringFromSharedPref(
+                            activity.getApplicationContext(),
+                            Config.SHARED_PREF_KEYS.APP_SECRET.getKey(),
+                            ""
+                    )
+            );
+			authorizeAPIContent.put(
+                    Config.REQUEST_RESPONSE_KEYS.EMAIL.getKey(),
+                    AltEngine.readStringFromSharedPref(
+                            activity.getApplicationContext(),
+                            Config.SHARED_PREF_KEYS.APP_KEY.getKey(),
+                            ""
+                    )
+            );
 			APIRequest authAPIRequest = new APIRequest(
-					"http://"+Config.SERVER_ADDRESS+"/users/authorize/",
-					authorizeAPIContent
+					"http://"+Config.SERVER_ADDRESS+"/user/authorize",
+					authorizeAPIContent,
+                    this.activity
 					);
 			
 			authAPIRequest.removeAccessTokenFromContent();
-			Log.d(LOG_TAG,"    -> Authorization code request ready with content "+authorizeAPIContent.toString());
+//			Log.d(LOG_TAG,"    -> Authorization code request ready with content "+authorizeAPIContent.toString());
 			authorizeAPIResponse = authAPIRequest.request();
 			
-			issueTokenContent.put("code", authorizeAPIResponse.getString("code"));
+			/*issueTokenContent.put("code", authorizeAPIResponse.getString("code"));
 			APIRequest issueTokenAPIRequest = new APIRequest(
 					"http://"+Config.SERVER_ADDRESS+"/users/token/issue/",
 					issueTokenContent
 					);
 			
 			authAPIRequest.removeAccessTokenFromContent();
-			issueTokenResponse = issueTokenAPIRequest.request();
+			issueTokenResponse = issueTokenAPIRequest.request();*/
 			
-			this.setAccessToken(issueTokenResponse.getString("token"));
-			this.refreshToken = issueTokenResponse.getString("refresh_token");
+			this.setAccessToken(authorizeAPIResponse.getString(Config.REQUEST_RESPONSE_KEYS.ACCESS_TOKEN.getKey()));
+            setUpNewTokens(authorizeAPIResponse);
 			Log.d(LOG_TAG,"    -> issueToken completed. ("+this.accessToken+")");
 			
 		} catch (Exception e) {
@@ -235,7 +293,7 @@ public class APIRequest {
 	}
 	
 	
-	/*
+	/**
 	 * Function that makes up the complete APIRequest class.
 	 * Checks for Internet.
 	 * Fires the simpleURLRequest
@@ -269,4 +327,9 @@ public class APIRequest {
 		return apiReqResponse;
 		
 	}
+
+    public JSONObject requestWithoutTokens() throws Exception {
+        this.removeAccessTokenFromContent();
+        return this.request();
+    }
 }
