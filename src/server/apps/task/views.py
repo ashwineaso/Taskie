@@ -4,14 +4,15 @@ from settings.altEngine import Collection, RESPONSE_SUCCESS, RESPONSE_FAILED
 from . import bll
 from apps.users.bll import checkAccessTokenValid
 
-response = {}
-data = {}
+
 taskObj = Collection()
 userObj = Collection()
 groupObj = Collection()
 
 
 def addNewTask():
+	response = {}
+	data = {}
 	obj = request.json
 	try:
 		taskObj.access_token = obj["access_token"]
@@ -53,6 +54,8 @@ def addNewTask():
 
 
 def editTask():
+	response = {}
+	data = {}
 	obj = request.json
 	try:
 		taskObj.access_token = obj["access_token"]
@@ -74,6 +77,8 @@ def editTask():
 
 
 def addCollaborators():
+	response = {}
+	data = {}
 	obj = request.json
 	try:
 		taskObj.access_token = obj["access_token"]
@@ -92,6 +97,8 @@ def addCollaborators():
 
 
 def remCollaborators():
+	response = {}
+	data = {}
 	obj = request.json
 	try:
 		taskObj.access_token = obj["access_token"]
@@ -109,6 +116,8 @@ def remCollaborators():
 
 
 def modifyTaskStatus():
+	response = {}
+	data = {}
 	obj = request.json
 	try:
 		taskObj.access_token = obj["access_token"]
@@ -126,6 +135,8 @@ def modifyTaskStatus():
 
 
 def modifyCollStatus():
+	response = {}
+	data = {}
 	obj = request.json
 	try:
 		taskObj.access_token = obj["access_token"]
@@ -144,6 +155,8 @@ def modifyCollStatus():
 
 
 def createGroup():
+	response = {}
+	data = {}
 	obj = request.json
 	try:
 		groupObj.access_token = obj["access_token"]
@@ -161,6 +174,8 @@ def createGroup():
 
 
 def addGroupMembers():
+	response = {}
+	data = {}
 	obj = request.json
 	try:
 		groupObj.access_token = obj["access_token"]
@@ -177,6 +192,8 @@ def addGroupMembers():
 
 
 def syncTask():
+	response = {}
+	data = {}
 	
 	obj = request.json
 	try:

@@ -4,16 +4,12 @@ from settings.altEngine import Collection, RESPONSE_SUCCESS, RESPONSE_FAILED
 import bll
 import requests
 
-response = {}
-data = {}
-userObj = Collection()
-clientObj = Collection()
-tokenObj = Collection()
-
 
 def register():
 	"""
 	View for user registration
+
+	route(/user/register)
 
 	"""
 	response = {}
@@ -33,7 +29,7 @@ def register():
 			userObj.serverPushId = ''
 		user = bll.createUser(userObj)
 		response['status'] = RESPONSE_SUCCESS
-		response['data']  = user.to_dict()
+		response['data']  = bll.convertUserToDict(user)
 	except Exception as e:
 		response['status'] = RESPONSE_FAILED
 		response['message'] = str(e)
@@ -44,6 +40,11 @@ def register():
 
 
 def verifyEmail(email, key):
+	"""
+	Verify email of the user to confirm account
+
+	route(/user/verifyEmail/<email>/<key>)
+	"""
 	response = {}
 	data = {}
 	userObj = Collection()
@@ -57,6 +58,8 @@ def verifyEmail(email, key):
 def updateUser():
 	"""
 	Updating user information
+
+	route(/user/updateUser)
 	"""
 	response = {}
 	data = {}
@@ -113,7 +116,9 @@ def modifyProfilePic():
 
 def authorize_user():
 	"""
-	User login verfication
+	User Login using username and password is verified
+
+	route(/user/authorize)
 
 	"""
 	response = {}
@@ -172,6 +177,8 @@ def refreshTokens():
 	"""
 	Using the refresh_token to generate new acceess_token
 
+	route(/user/refreshTokens)
+
 	"""
 	response = {}
 	data = {}
@@ -180,19 +187,19 @@ def refreshTokens():
 	tokenObj = Collection()
 
 	obj = request.json
-	# try:
-	tokenObj.refresh_token = obj["refresh_token"]
-	new_token = bll.refreshTokens(tokenObj)
-	token = bll.updatetoken(new_token)
-	data["refresh_token"] = token.refresh_token
-	data["access_token"] = token.access_token
-	data["expiresAt"] = token.expiresAt
-	response["data"] = data
-	response["message"] = RESPONSE_SUCCESS
-	# except Exception as e:
-	# 	response["status"] = RESPONSE_FAILED
-	# 	response["message"] = str(e)
-	# 	response["code"] = e.code
+	try:
+		tokenObj.refresh_token = obj["refresh_token"]
+		new_token = bll.refreshTokens(tokenObj)
+		token = bll.updatetoken(new_token)
+		data["refresh_token"] = token.refresh_token
+		data["access_token"] = token.access_token
+		data["expiresAt"] = token.expiresAt
+		response["data"] = data
+		response["message"] = RESPONSE_SUCCESS
+	except Exception as e:
+		response["status"] = RESPONSE_FAILED
+		response["message"] = str(e)
+		response["code"] = e.code
 	return response
 
 
@@ -224,7 +231,8 @@ def checkAccessToken(tokenObj):
 
 def verifyUser():
 	"""
-	Verifying the user from the confirmation mail sent
+	REDUNDANT
+	Verifying the user from the confirmation mail sent using POST method
 
 	"""
 	response = {}

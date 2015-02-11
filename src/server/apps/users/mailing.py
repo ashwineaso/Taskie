@@ -5,6 +5,7 @@ from models import *
 from . import dal
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from settings.altEngine import Collection
 
 taskie_mail = "invites@taskie.me"
 HOST = "mail.taskie.me"
@@ -62,6 +63,7 @@ def sendVerification(user):
 					name
 					**kwargs
 	"""
+	userObj = Collection()
 	userObj.user = user
 	token = dal.getTokenByUser(userObj)
 	userObj.key = token.refresh_token
