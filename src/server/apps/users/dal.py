@@ -24,13 +24,20 @@ def createUser(userObj):
 	::return user : An instance of user class
 	"""
 	try:
+
+		invite = Invite(
+					count = 0,
+					lastUpdate = time.time()
+					)
+
 		user = User(
 			email = userObj.email,
 			name = userObj.name,
 			createdOn = time.time(),
 			password_hash = userObj.password_hash,
 			status = ACCOUNT_NOT_VERIFIED,
-			serverPushId = userObj.serverPushId
+			serverPushId = userObj.serverPushId,
+			invite = invite
 			)
 		user.save()
 	except Exception:
@@ -71,7 +78,20 @@ def createMinimalUser(userObj):
 				)
 	user.save()
 	user.reload()
+	token  = Token(user  = user)
+	token.save()
 	return user
+
+
+def verifyEmail(userObj):
+	"""
+	verify a user's email and change status to registered
+	"""
+	userObj.user = getUserByEmail(userObj)
+	token = getTokenByUser(userObj)
+	if token.refresh_token == userObj.key:
+		User.objects(email = userObj.email).update(set__status = ACCOUNT_ACTIVE)
+		userObj.user.save()
 
 
 def updateUser(userObj):

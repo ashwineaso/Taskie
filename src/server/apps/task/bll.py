@@ -28,7 +28,7 @@ def addNewTask(taskObj):
 	#Add a task to the servers task list
 	task = dal.addNewTask(taskObj)
 	#Send message to GCM server to notify collaborators of task
-	pushSyncTaskNotification(task)
+	# pushSyncTaskNotification(task)
 	return task
 
 
@@ -183,6 +183,10 @@ def taskToDictConverter(task):
 	"""
 	Convert the incoming Task object into JSON Serializable dict format
 	only including the essential details
+
+	::type task : instance of Task class
+	::param task : attributes of Task, Collaborator, Status and User Classes
+	::return taskie : dictionary
 	"""
 	taskie = {}
 	coll = {}
@@ -210,6 +214,7 @@ def taskToDictConverter(task):
 		status["dateTime"] = each_user.status.dateTime
 		coll["id"] = str(each_user.user.id)
 		coll["name"] = each_user.user.name
+		coll["email"] = each_user.user.email
 		coll["status"] = status.copy()
 		coll["startTime"] = each_user.startTime
 		coll["endTime"] = each_user.endTime

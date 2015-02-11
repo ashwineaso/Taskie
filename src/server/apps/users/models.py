@@ -39,6 +39,15 @@ class KeyGenerator(object):
 		return sha512(uuid4().hex).hexdigest()[0:self.length]
 
 
+class Invite(EmbeddedDocument):
+	"""
+	Invite document : to record all invites
+
+	"""
+	count = IntField(default = 0)
+	lastUpdate = LongField(default = time.time())
+		
+
 class User(Document):
 	"""
 	User Document
@@ -51,6 +60,7 @@ class User(Document):
 	serverPushId = StringField(required = False)
 	status = IntField(default = 0) ## 1 - Active ## 0 - Not Verified ## -1 - Pending registration 
 	createdOn = LongField(default = time.time())
+	invite = EmbeddedDocumentField(Invite, required = False)
 
 	def to_dict(self):
 		return mongo_to_dict_helper(self)

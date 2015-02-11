@@ -4,18 +4,20 @@ from settings.altEngine import Collection, RESPONSE_SUCCESS, RESPONSE_FAILED
 import bll
 import requests
 
-response = {}
-data = {}
-userObj = Collection()
-clientObj = Collection()
-tokenObj = Collection()
-
 
 def register():
 	"""
 	View for user registration
 
+	route(/user/register)
+
 	"""
+	response = {}
+	data = {}
+	userObj = Collection()
+	clientObj = Collection()
+	tokenObj = Collection()
+
 	obj = request.json
 	try:
 		userObj.email = obj["email"]
@@ -26,20 +28,44 @@ def register():
 		except KeyError as e:
 			userObj.serverPushId = ''
 		user = bll.createUser(userObj)
-		data['user'] = user.to_dict()
 		response['status'] = RESPONSE_SUCCESS
-		response['data'] = data
+		response['data']  = bll.convertUserToDict(user)
 	except Exception as e:
 		response['status'] = RESPONSE_FAILED
 		response['message'] = str(e)
-		response['code'] = e.code
+		if hasattr(e, "code"):
+			response["code"] = e.code
 	return response
+
+
+
+def verifyEmail(email, key):
+	"""
+	Verify email of the user to confirm account
+
+	route(/user/verifyEmail/<email>/<key>)
+	"""
+	response = {}
+	data = {}
+	userObj = Collection()
+	clientObj = Collection()
+	tokenObj = Collection()
+	userObj.email = email
+	userObj.key = key
+	bll.verifyEmail(userObj)
 
 
 def updateUser():
 	"""
 	Updating user information
+
+	route(/user/updateUser)
 	"""
+	response = {}
+	data = {}
+	userObj = Collection()
+	clientObj = Collection()
+	tokenObj = Collection()
 	obj = request.json
 	try:
 		userObj.email = obj["email"]
@@ -64,6 +90,11 @@ def modifyProfilePic():
 	"""
 	Add a profile pic to the user account
 	"""
+	response = {}
+	data = {}
+	userObj = Collection()
+	clientObj = Collection()
+	tokenObj = Collection()
 
 	photoObj = Collection()
 	img = request.files.get('image')
@@ -85,9 +116,17 @@ def modifyProfilePic():
 
 def authorize_user():
 	"""
-	User login verfication
+	User Login using username and password is verified
+
+	route(/user/authorize)
 
 	"""
+	response = {}
+	data = {}
+	userObj = Collection()
+	clientObj = Collection()
+	tokenObj = Collection()
+
 	obj = request.json
 	try:
 		userObj.email = obj["email"]
@@ -138,22 +177,29 @@ def refreshTokens():
 	"""
 	Using the refresh_token to generate new acceess_token
 
+	route(/user/refreshTokens)
+
 	"""
+	response = {}
+	data = {}
+	userObj = Collection()
+	clientObj = Collection()
+	tokenObj = Collection()
 
 	obj = request.json
-	# try:
-	tokenObj.refresh_token = obj["refresh_token"]
-	new_token = bll.refreshTokens(tokenObj)
-	token = bll.updatetoken(new_token)
-	data["refresh_token"] = token.refresh_token
-	data["access_token"] = token.access_token
-	data["expiresAt"] = token.expiresAt
-	response["data"] = data
-	response["message"] = RESPONSE_SUCCESS
-	# except Exception as e:
-	# 	response["status"] = RESPONSE_FAILED
-	# 	response["message"] = str(e)
-	# 	response["code"] = e.code
+	try:
+		tokenObj.refresh_token = obj["refresh_token"]
+		new_token = bll.refreshTokens(tokenObj)
+		token = bll.updatetoken(new_token)
+		data["refresh_token"] = token.refresh_token
+		data["access_token"] = token.access_token
+		data["expiresAt"] = token.expiresAt
+		response["data"] = data
+		response["message"] = RESPONSE_SUCCESS
+	except Exception as e:
+		response["status"] = RESPONSE_FAILED
+		response["message"] = str(e)
+		response["code"] = e.code
 	return response
 
 
@@ -162,6 +208,11 @@ def checkAccessToken(tokenObj):
 	Checking whether the given access_token is valid or not
 
 	"""
+	response = {}
+	data = {}
+	userObj = Collection()
+	clientObj = Collection()
+	tokenObj = Collection()
 
 	try:
 		token = bll.checkAccessTokenValid(tokenObj)
@@ -180,9 +231,15 @@ def checkAccessToken(tokenObj):
 
 def verifyUser():
 	"""
-	Verifying the user from the confirmation mail sent
+	REDUNDANT
+	Verifying the user from the confirmation mail sent using POST method
 
 	"""
+	response = {}
+	data = {}
+	userObj = Collection()
+	clientObj = Collection()
+	tokenObj = Collection()
 
 	obj = request.json
 	try:
@@ -206,6 +263,12 @@ def syncUserInfo():
 	Suny the basic information of the user like:
 	id, name, email and addProfilePic
 	"""
+	response = {}
+	data = {}
+	userObj = Collection()
+	clientObj = Collection()
+	tokenObj = Collection()
+	
 	obj = request.json
 	try:
 		userObj.access_token = ["acceess_token"]

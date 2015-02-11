@@ -3,6 +3,8 @@ from passlib.hash import sha256_crypt as pwd_context
 from . import dal
 from settings.exceptions import AuthenticationError
 from settings.constants import PROJECT_ROOT
+from . import mailing
+
 
 def createUser(userObj):
 	"""
@@ -20,6 +22,7 @@ def createUser(userObj):
 
 	userObj.password_hash = hash_password(userObj.password)
 	user = dal.createUser(userObj)
+	#mailing.sendVerification(user)
 	return user
 
 
@@ -34,8 +37,15 @@ def createAndInvite(userObj):
 
 	user = dal.createMinimalUser(userObj)
 	## Send a personalise invite to the user's email
-	sendInvite(user)
+	mailing.sendInvite(userObj)
 	return user
+
+
+def verifyEmail(userObj):
+	"""
+	verify a user's email and change status to registered
+	"""
+	dal.verifyEmail(userObj)
 
 
 def verifyUser(userObj):
@@ -197,3 +207,28 @@ def checkAccessTokenValid(tokenObj):
 	"""
 	token = dal.checkAccessTokenValid(tokenObj)
 	return token
+
+
+def convertUserToDict(userObj):
+	"""
+	Convert a User object into a dict with the necessary information
+
+	::type userObj : instance of User class
+	::param userObj : instance with following attributes
+						_id,
+						name,
+						email,
+						password_hash,
+						profilepic,
+						serverPushId,
+						status,
+						createdOn,
+						invite
+	::return taskie_user : A instance of Collection with necessary attributes
+	"""
+	taskie_user = {}
+
+	taskie_user["id"] = str(userObj.id)
+	taskie_user["name"] = userObj.name
+	taskie_user["email"] = userObj.email
+	return taskie_user
