@@ -8,7 +8,7 @@ public class Config {
 
     public static int DATABASE_VERSION = 1;
     public static int REQUEST_MAXOUT = 3;
-    public static String SERVER_ADDRESS = "172.16.11.31:8080";
+    public static String SERVER_ADDRESS = "192.168.0.102:8080";
     public static String RESPONSE_STATUS_FAILED = "failed";
     public static String RESPONSE_STATUS_SUCCESS = "success";
     public static String TOKEN_EXPIRED_ERROR = "Access Token Invalid";
