@@ -238,18 +238,27 @@ public class Task {
     }
 
     public Task(Cursor cursor, Activity activity) {
-        this(
-                cursor.getString(0),
-                cursor.getString(1),
-                cursor.getString(2),
-                new User(cursor.getString(3), activity),
-                cursor.getInt(4),
-                cursor.getLong(5),
-                cursor.getInt(6),
-                cursor.getInt(7)==1,
-                new TaskGroup(cursor.getString(8), activity),
-                activity.getLayoutInflater()
-        );
+        Log.d(TAG, " Constructor(cursor,activity)");
+        this.uuid = cursor.getString(0);
+        this.name = cursor.getString(2);
+        this.description = cursor.getString(3);
+        this.owner = new User(cursor.getString(1), activity);
+        this.priority = cursor.getInt(4);
+        this.dueDateTime = cursor.getLong(5);
+        this.status = cursor.getInt(6);
+        this.isGroup = cursor.getInt(7)==1;
+        if(this.isGroup) {
+            this.group = new TaskGroup(cursor.getString(8), activity);
+        } else {
+            this.group = null;
+        }
+        this.panelView = createView(activity.getLayoutInflater());
+        this.actionsView = createActionsView(activity.getLayoutInflater());
+        this.taskActionsPlaceHolderView =
+                (LinearLayout) this.panelView.findViewById(R.id.actionsPlaceHolderLinearLayout);
+        this.taskActionsPlaceHolderView.setVisibility(View.GONE);
+        this.taskActionsPlaceHolderView.addView(this.actionsView);
+        this.isActionsDisplayed = false;
     }
 
     private View createActionsView(LayoutInflater inflater) {
@@ -340,4 +349,11 @@ public class Task {
         return taskActionsPlaceHolderView;
     }
 
+    @Override
+    public String toString() {
+        String task ="";
+        task+=" name="+this.name;
+        task+=" owner="+this.owner.getUuid();
+        return task;
+    }
 }

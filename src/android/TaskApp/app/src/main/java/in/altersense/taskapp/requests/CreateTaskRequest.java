@@ -19,7 +19,7 @@ import in.altersense.taskapp.models.User;
  */
 public class CreateTaskRequest extends AsyncTask<Void, Integer, JSONObject> {
 
-    private static final String TAG = "CreateTaskRequest";
+    private static final String CLASS_TAG = "CreateTaskRequest ";
     private Task task;
     private Activity activity;
     private JSONObject requestObject;
@@ -32,11 +32,18 @@ public class CreateTaskRequest extends AsyncTask<Void, Integer, JSONObject> {
 
     @Override
     protected void onPreExecute() {
+        String TAG = CLASS_TAG+"onPreExecute";
         super.onPreExecute();
         this.requestObject = new JSONObject();
         this.collaborators = new JSONArray();
-        for(User collaborator : task.getCollaborators()) {
-            this.collaborators.put(collaborator.getEmail());
+        try {
+            if(this.task.getCollaborators().size()>0) {
+                for(User collaborator : task.getCollaborators()) {
+                    this.collaborators.put(collaborator.getEmail());
+                }
+            }
+        } catch (NullPointerException e) {
+            Log.d(TAG, "No collaborators.");
         }
         try {
             this.requestObject.put(
@@ -58,6 +65,7 @@ public class CreateTaskRequest extends AsyncTask<Void, Integer, JSONObject> {
 
     @Override
     protected JSONObject doInBackground(Void... params) {
+        String TAG = CLASS_TAG+"doInBackground";
         JSONObject responseObject = new JSONObject();
         APIRequest createTask = new APIRequest(
                 AltEngine.formURL("task/addNewTask"),
@@ -75,6 +83,7 @@ public class CreateTaskRequest extends AsyncTask<Void, Integer, JSONObject> {
 
     @Override
     protected void onPostExecute(JSONObject result) {
+        String TAG = CLASS_TAG+"onPostExecute";
         super.onPostExecute(result);
         Log.d(TAG, "Response received: " + result.toString());
         // @TODO Set UUID when task is created.

@@ -20,7 +20,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
             User.KEYS.UUID.getName() + " " + User.KEYS.UUID.getType() + ", " +
             User.KEYS.EMAIL.getName() + " " + User.KEYS.EMAIL.getType() + ", " +
             User.KEYS.NAME.getName() + " " + User.KEYS.NAME.getType() + ");";
-    private String TAG = "UserDBHelper";
+    private static String CLASS_TAG = "UserDbHelper ";
 
     public UserDbHelper(Context context) {
         super(context, User.TABLE_NAME, null, Config.DATABASE_VERSION);
@@ -46,6 +46,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
      * @return An instance of User
      */
     public User getUserByUUID(String uuid) {
+        String TAG = CLASS_TAG+"getUserByUUID";
         // Open database.
         Log.d(TAG, "Set up a readable database");
         SQLiteDatabase readableDb = this.getReadableDatabase();
@@ -57,6 +58,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
         String[] whereArgs = new String[] {
                 uuid
         };
+        Log.d(TAG, "Query set up with uuid: "+uuid);
         // Fetch the result of the query.
         Cursor selfCursor = readableDb.query(
                 User.TABLE_NAME,
@@ -67,7 +69,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
                 null,
                 null
         );
-        Log.d(TAG, "Query executed.");
+        Log.d(TAG, "Query executed. "+selfCursor.getCount()+" rows returned.");
         selfCursor.moveToFirst();
         // Create a User object from the cursor
         User user = new User(selfCursor);
@@ -82,6 +84,8 @@ public class UserDbHelper extends SQLiteOpenHelper {
      * @return An instance of User
      */
     public User createUser(User newUser) {
+        String TAG = CLASS_TAG+"createUser";
+        Log.d(TAG, "User: "+newUser.toString());
         // Open a writable database
         SQLiteDatabase database = this.getWritableDatabase();
         Log.d(TAG, "Set up a readable database");
@@ -109,6 +113,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
      * @return An instance of User type.
      */
     public User getUserByRowId(long rowId) {
+        String TAG = CLASS_TAG+"getUserByRowId";
         // Open database.
         Log.d(TAG, "Set up a readable database");
         SQLiteDatabase readableDb = this.getReadableDatabase();
