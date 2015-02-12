@@ -59,10 +59,9 @@ public class User {
      */
     public User(Cursor cursor) {
         this(
-                cursor.getInt(0),
+                cursor.getString(0),
                 cursor.getString(1),
-                cursor.getString(2),
-                cursor.getString(3)
+                cursor.getString(2)
         );
     }
 
@@ -108,12 +107,10 @@ public class User {
     }
 
     public User(
-            int id,
             String uuid,
             String email,
             String name
             ) {
-        this.id = id;
         this.uuid = uuid;
         this.email = email;
         this.name = name;

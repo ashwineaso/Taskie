@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.models.User;
@@ -19,6 +20,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
             User.KEYS.UUID.getName() + " " + User.KEYS.UUID.getType() + ", " +
             User.KEYS.EMAIL.getName() + " " + User.KEYS.EMAIL.getType() + ", " +
             User.KEYS.NAME.getName() + " " + User.KEYS.NAME.getType() + ");";
+    private String TAG = "UserDBHelper";
 
     public UserDbHelper(Context context) {
         super(context, User.TABLE_NAME, null, Config.DATABASE_VERSION);
@@ -45,6 +47,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
      */
     public User getUserByUUID(String uuid) {
         // Open database.
+        Log.d(TAG, "Set up a readable database");
         SQLiteDatabase readableDb = this.getReadableDatabase();
         // Fetch image with matching uuid.
         String[] columns = new String[] {
@@ -64,6 +67,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
                 null,
                 null
         );
+        Log.d(TAG, "Query executed.");
         selfCursor.moveToFirst();
         // Create a User object from the cursor
         User user = new User(selfCursor);
@@ -80,17 +84,20 @@ public class UserDbHelper extends SQLiteOpenHelper {
     public User createUser(User newUser) {
         // Open a writable database
         SQLiteDatabase database = this.getWritableDatabase();
+        Log.d(TAG, "Set up a readable database");
         // Setup data to be written
         ContentValues values = new ContentValues();
         values.put(User.KEYS.UUID.getName(), newUser.getUuid());
         values.put(User.KEYS.NAME.getName(), newUser.getName());
         values.put(User.KEYS.EMAIL.getName(), newUser.getEmail());
+        Log.d(TAG, "Set up a content values.");
         // Insert into database
         long rowId = database.insert(
                 User.TABLE_NAME,
                 null,
                 values
         );
+        Log.d(TAG, "Inserted to row: "+rowId);
         database.close();
         User user = getUserByRowId(rowId);
         return user;
@@ -103,13 +110,17 @@ public class UserDbHelper extends SQLiteOpenHelper {
      */
     public User getUserByRowId(long rowId) {
         // Open database.
+        Log.d(TAG, "Set up a readable database");
         SQLiteDatabase readableDb = this.getReadableDatabase();
         // Fetch user with matching row Id.
         String query = "SELECT * FROM "+User.TABLE_NAME+" WHERE ROWID = "+rowId+";";
+        Log.d(TAG, "Running query: "+query);
         Cursor selfCursor = readableDb.rawQuery(query, null);
         selfCursor.moveToFirst();
         User user = new User(selfCursor);
         readableDb.close();
         return user;
     }
+
+
 }

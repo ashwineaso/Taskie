@@ -65,7 +65,10 @@ public class Config {
         ACCESS_TOKEN("access_token"),
         DATA("data"),
         MESSAGE("message"),
-        UUID("id");
+        UUID("id"),
+        OWNER("owner"),
+        TASK_NAME("name"),
+        TASK_COLLABOATORS("collaborators");
 
         private String key;
 

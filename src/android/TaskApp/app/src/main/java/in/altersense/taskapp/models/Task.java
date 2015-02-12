@@ -20,6 +20,7 @@ import in.altersense.taskapp.R;
  */
 public class Task {
     private static final String TAG = "Task";
+
     private long id;
 
     private boolean isGroup;
@@ -46,6 +47,10 @@ public class Task {
 
     public TaskGroup getGroup() {
         return group;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public long getId() {
@@ -75,6 +80,11 @@ public class Task {
     public int getStatus() {
         return status;
     }
+
+    public List<User> getCollaborators() {
+        return collaborators;
+    }
+
 
     /**
      * Table name for Tasks
@@ -236,7 +246,7 @@ public class Task {
                 cursor.getInt(4),
                 cursor.getLong(5),
                 cursor.getInt(6),
-                cursor.getInt(7),
+                cursor.getInt(7)==1,
                 new TaskGroup(cursor.getString(8), activity),
                 activity.getLayoutInflater()
         );

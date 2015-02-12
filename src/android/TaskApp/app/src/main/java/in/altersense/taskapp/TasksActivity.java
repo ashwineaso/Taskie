@@ -29,6 +29,7 @@ import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.TaskGroup;
 import in.altersense.taskapp.models.User;
+import in.altersense.taskapp.requests.CreateTaskRequest;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -301,8 +302,21 @@ public class TasksActivity extends ActionBarActivity {
      * @param quickTask A task object which is created.
      */
     private Task createQuickTask(Task quickTask) {
+        TaskDbHelper taskDbHelper = new TaskDbHelper(this);
+        // Add task to database.
+        quickTask = taskDbHelper.createTask(
+                quickTask,
+                this
+        );
+        Log.d(TAG, "Task added to database");
         // Add task to taskList
         this.taskList.add(quickTask);
+        // Request to task creation API
+        CreateTaskRequest createTaskRequest = new CreateTaskRequest(
+                quickTask,
+                this
+        );
+        createTaskRequest.execute();
         quickTask = this.taskList.get(this.taskList.size()-1);
         // Add task to top of the linear layout
         this.taskListStageLL.addView(quickTask.getPanelView());

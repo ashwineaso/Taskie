@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import in.altersense.taskapp.models.Task;
  */
 public class TaskDbHelper extends SQLiteOpenHelper {
 
+    private static final String TAG = "TaskDbHelper";
     private static String CREATION_STATEMENT = "CREATE TABLE " + Task.TABLE_NAME + " ( " +
             Task.KEYS.UUID.getName() + " " + Task.KEYS.UUID.getType() + ", " +
             Task.KEYS.OWNER_UUID.getName() + " " + Task.KEYS.OWNER_UUID.getType() + ", " +
@@ -50,6 +52,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
 
     public Task createTask(Task newTask, Activity activity) {
         // Open a writable database
+        Log.d(TAG, "Writable database opened.");
         SQLiteDatabase database = this.getWritableDatabase();
         // Setup data to be written
         ContentValues values = new ContentValues();
@@ -64,15 +67,18 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         if(newTask.isGroup()) {
             values.put(Task.KEYS.GROUP_UUID.getName(), newTask.getGroup().getUuid());
         }
+        Log.d(TAG, "Content values set.");
         // Insert into database
         long rowId = database.insert(
                 Task.TABLE_NAME,
                 null,
                 values
         );
+        Log.d(TAG, "Query run db inserted to row "+rowId+".");
         database.close();
-        Task Task = getTaskByRowId(rowId, activity);
-        return Task;
+        Task task = getTaskByRowId(rowId, activity);
+        task.setId(rowId);
+        return task;
     }
 
     private Task getTaskByRowId(long rowId, Activity activity) {
