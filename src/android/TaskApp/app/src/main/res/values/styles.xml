@@ -47,6 +47,7 @@
 
     <style name="CreateTasksTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/createTaskPrimaryActionBar</item>
+        <item name="colorAccent">@color/createTaskPrimaryActionBar</item>
     </style>
 
     <style name="TaskTheme" parent="Theme.AppCompat.Light.DarkActionBar">

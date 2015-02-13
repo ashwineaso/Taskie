@@ -30,16 +30,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginLeft="@dimen/smallMargin_xhdp"
-        android:layout_marginRight="@dimen/smallMargin_xhdp">
+        android:layout_margin="@dimen/smallMargin_xhdp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/secondaryText"
+            android:layout_gravity="center_vertical"
             android:text="Priority"/>
 
-        <SeekBar
+        <SeekBar android:id="@+id/prioritySeekBar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -47,10 +47,11 @@
             android:thumb="@drawable/scrubber_control"
             android:max="3" />
 
-        <TextView
+        <TextView android:id="@+id/priorityTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/primaryText"
+            android:layout_gravity="center_vertical"
             android:text="Medium"/>
 
         </LinearLayout>
@@ -58,27 +59,20 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/smallMargin_xhdp">
 
-        <ImageView android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:src="@android:drawable/ic_btn_speak_now"
-            android:layout_weight="1" />
+        <Button android:id="@+id/createTaskButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/label_createTask"
+            style="@style/primaryButton"/>
 
-        <ImageView android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:src="@android:drawable/ic_btn_speak_now"
-            android:layout_weight="1" />
-
-        <ImageView android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:src="@android:drawable/ic_btn_speak_now"
-            android:layout_weight="1" />
-
-        <ImageView android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:src="@android:drawable/ic_btn_speak_now"
-            android:layout_weight="1" />
+        <Button android:id="@+id/updateTaskButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/labbel_updateTask"
+            style="@style/primaryButton"/>
 
         </LinearLayout>
 </LinearLayout>

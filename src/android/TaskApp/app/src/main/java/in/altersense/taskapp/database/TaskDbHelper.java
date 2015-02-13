@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import java.util.ArrayList;
 import java.util.List;
 
+import in.altersense.taskapp.CreateTaskActivity;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.models.Task;
 
@@ -176,5 +177,36 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         readableDb.close();
         // Return the list.
         return taskList;
+    }
+
+    public Task getTaskByUUID(String taskUUID, Activity activity) {
+        String TAG = CLASS_TAG+"getTaskByUUID";
+        // Open readable database.
+        SQLiteDatabase readableDb = this.getReadableDatabase();
+        Log.d(TAG, "Readable db opened.");
+        // Prepare columns list.
+        ArrayList<String> columnList = Task.getAllColumns();
+        String[] columns = new String[columnList.size()];
+        columns = columnList.toArray(columns);
+        Log.d(TAG, "Columns prepped..");
+        // Prepare and execute query.
+        Cursor cursor = readableDb.query(
+                Task.TABLE_NAME,
+                columns,
+                Task.KEYS.UUID.getName()+"=?",
+                new String[] { taskUUID },
+                null,
+                null,
+                null
+        );
+        Log.d(TAG, "Returned "+cursor.getCount()+" rows.");
+        // Close database.
+        readableDb.close();
+        // Fetch task from the cursor
+        cursor.moveToFirst();
+        Log.d(TAG, "Creating new task from the cursor.");
+        Task task = new Task(cursor, activity);
+        // Return the task.
+        return task;
     }
 }
