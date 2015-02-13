@@ -3,6 +3,7 @@ package in.altersense.taskapp.models;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import java.util.Random;
 
@@ -15,6 +16,8 @@ import in.altersense.taskapp.requests.RegisterUserRequest;
  * Created by mahesmohan on 1/31/15.
  */
 public class User {
+
+    private static String CLASS_TAG = "User";
 
     public String getPassword() {
         return password;
@@ -59,22 +62,25 @@ public class User {
      */
     public User(Cursor cursor) {
         this(
-                cursor.getInt(0),
+                cursor.getString(0),
                 cursor.getString(1),
-                cursor.getString(2),
-                cursor.getString(3)
+                cursor.getString(2)
         );
     }
 
     public User(String userUUID, Activity activity) {
+        String TAG = CLASS_TAG+" Constructor(uuid,activity)";
+        Log.d(TAG, "uuid: "+ userUUID);
         UserDbHelper userDbHelper = new UserDbHelper(activity.getApplicationContext());
         User newUser = userDbHelper.getUserByUUID(userUUID);
+        Log.d(TAG, "Fetched user.");
         this.id = newUser.getId();
         this.uuid = newUser.getUuid();
         this.email = newUser.getEmail();
         this.name = newUser.getEmail();
         this.password = "";
         this.isDeviceOwner = newUser.isDeviceOwner();
+        Log.d(TAG, "User setup complete.");
     }
 
     /**
@@ -108,12 +114,10 @@ public class User {
     }
 
     public User(
-            int id,
             String uuid,
             String email,
             String name
             ) {
-        this.id = id;
         this.uuid = uuid;
         this.email = email;
         this.name = name;
@@ -211,5 +215,14 @@ public class User {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    @Override
+    public String toString() {
+        String user = "";
+        user+=" name="+this.name;
+        user+=" uuid="+this.uuid;
+        user+=" email="+this.email;
+        return user;
     }
 }

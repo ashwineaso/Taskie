@@ -19,7 +19,6 @@ import android.widget.ScrollView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.AltEngine;
@@ -29,13 +28,14 @@ import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.TaskGroup;
 import in.altersense.taskapp.models.User;
+import in.altersense.taskapp.requests.CreateTaskRequest;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 public class TasksActivity extends ActionBarActivity {
 
-    private static final String TAG = "TasksActivity";
+    private static final String CLASS_TAG = "TasksActivity";
     private LinearLayout taskListStageLL;  // For handling the main content area.
     private LinearLayout quickCreateStageLinearLayout; // Quick task creation area
     private TaskDbHelper taskDbHelper;
@@ -77,17 +77,16 @@ public class TasksActivity extends ActionBarActivity {
         this.taskListStageLL = (LinearLayout) findViewById(R.id.taskListStage);
         this.groupListStageLL = (LinearLayout) findViewById(R.id.groupListStage);
         this.isQuickTaskCreationHidden = true;
-        Random random = new Random();
 
         // Inflate all the nonGroupTasks in the TasksListStage.
         this.taskList = taskDbHelper.getAllNonGroupTasks(this);
-        for(Task task:taskList) {
+        Log.d(CLASS_TAG, "Initialized task list.");
+        for(Task task:this.taskList) {
+            Log.d(CLASS_TAG, "Adding task view to task list stage linear layout.");
             taskListStageLL.addView(task.getPanelView());
 //            Adding an onClickListener to TaskPanel to show and hide task actions.
             TaskPanelOnClickListener taskPanelOnClickListener = new TaskPanelOnClickListener(task, this.taskList);
             task.getPanelView().setOnClickListener(taskPanelOnClickListener);
-//            Add each task to task list.
-            this.taskList.add(task);
         }
 
         LayoutInflater inflater = getLayoutInflater();
@@ -120,6 +119,7 @@ public class TasksActivity extends ActionBarActivity {
      * If it fails login activity is displayed.
      */
     private void authenticateUser() {
+        Log.d(CLASS_TAG, "Authenticating user.");
         this.ownerId = AltEngine.readStringFromSharedPref(
                 getApplicationContext(),
                 Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
@@ -138,6 +138,7 @@ public class TasksActivity extends ActionBarActivity {
             startActivity(authenticateUserIntent);
             finish();
         }
+        Log.d(CLASS_TAG, "Auth completed device owner identified");
     }
 
     /**
@@ -217,7 +218,7 @@ public class TasksActivity extends ActionBarActivity {
                         Context.INPUT_METHOD_SERVICE
                 );
                 if(hasFocus) {
-                    Log.i(TAG,"hasFocus");
+                    Log.i(CLASS_TAG,"hasFocus");
 //                    Display keyboard
                     keyboardManager.showSoftInput(
                             v,
@@ -253,6 +254,7 @@ public class TasksActivity extends ActionBarActivity {
         createQuickTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String TAG = CLASS_TAG+" creaeteQuickTask OnClickListener.";
                 Task quickTask = new Task(
                         newTaskTitle.getText().toString(),
                         "",
@@ -266,7 +268,9 @@ public class TasksActivity extends ActionBarActivity {
                         ),
                         getLayoutInflater()
                 );
-                quickTask = createQuickTask(quickTask);
+                Log.d(TAG, "QuickTask: "+quickTask.toString());
+                quickTask = addQuickTaskToDb(quickTask);
+
                 newTaskTitle.setText("");
                 isGroupTaskCB.setChecked(false);
                 groupNameET.setText("");
@@ -300,9 +304,27 @@ public class TasksActivity extends ActionBarActivity {
      * Creates a quick task and adds it to the main list of tasks.
      * @param quickTask A task object which is created.
      */
-    private Task createQuickTask(Task quickTask) {
+    private Task addQuickTaskToDb(Task quickTask) {
+        String TAG = CLASS_TAG+" addQuickTaskToDb";
+        Log.d(TAG, "adding QuickTask: "+quickTask.toString()+" to db,");
+        TaskDbHelper taskDbHelper = new TaskDbHelper(this);
+        // Add task to database.
+        quickTask = taskDbHelper.createTask(
+                quickTask,
+                this
+        );
+        Log.d(TAG, "Task added to database");
         // Add task to taskList
         this.taskList.add(quickTask);
+        Log.d(TAG, "Task added to taskList");
+        // Request to task creation API
+        CreateTaskRequest createTaskRequest = new CreateTaskRequest(
+                quickTask,
+                this
+        );
+        Log.d(TAG, "Task creation API Request called.");
+        createTaskRequest.execute();
+        // Fetching the task from taskList.
         quickTask = this.taskList.get(this.taskList.size()-1);
         // Add task to top of the linear layout
         this.taskListStageLL.addView(quickTask.getPanelView());

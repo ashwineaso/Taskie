@@ -14,12 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.altersense.taskapp.R;
+import in.altersense.taskapp.database.TaskDbHelper;
 
 /**
  * Created by mahesmohan on 1/13/15.
  */
 public class Task {
     private static final String TAG = "Task";
+
     private long id;
 
     private boolean isGroup;
@@ -46,6 +48,10 @@ public class Task {
 
     public TaskGroup getGroup() {
         return group;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public long getId() {
@@ -76,6 +82,11 @@ public class Task {
         return status;
     }
 
+    public List<User> getCollaborators() {
+        return collaborators;
+    }
+
+
     /**
      * Table name for Tasks
      */
@@ -83,6 +94,12 @@ public class Task {
 
     public String getUuid() {
         return uuid;
+    }
+
+    public void setUuid(String uuid, Activity activity) {
+        this.uuid = uuid;
+        TaskDbHelper taskDbHelper = new TaskDbHelper(activity);
+        taskDbHelper.updateUUID(this);
     }
 
     public int getIntIsGroup() {
@@ -127,6 +144,16 @@ public class Task {
             this.name = name;
             this.type = type;
         }
+    }
+
+    public static ArrayList<String> getAllColumns() {
+        ArrayList<String> columnsList = new ArrayList<String>();
+        for(KEYS key: KEYS.values()) {
+            columnsList.add(key.getName());
+        }
+        // Add row id to list of columns.
+        columnsList.add("ROWID");
+        return columnsList;
     }
 
     /**
@@ -228,18 +255,28 @@ public class Task {
     }
 
     public Task(Cursor cursor, Activity activity) {
-        this(
-                cursor.getString(0),
-                cursor.getString(1),
-                cursor.getString(2),
-                new User(cursor.getString(3), activity),
-                cursor.getInt(4),
-                cursor.getLong(5),
-                cursor.getInt(6),
-                cursor.getInt(7),
-                new TaskGroup(cursor.getString(8), activity),
-                activity.getLayoutInflater()
-        );
+        Log.d(TAG, " Constructor(cursor,activity)");
+        this.uuid = cursor.getString(0);
+        this.name = cursor.getString(2);
+        this.description = cursor.getString(3);
+        this.owner = new User(cursor.getString(1), activity);
+        this.priority = cursor.getInt(4);
+        this.dueDateTime = cursor.getLong(5);
+        this.status = cursor.getInt(6);
+        this.isGroup = cursor.getInt(7)==1;
+        if(this.isGroup) {
+            this.group = new TaskGroup(cursor.getString(8), activity);
+        } else {
+            this.group = null;
+        }
+        this.id = cursor.getLong(9);
+        this.panelView = createView(activity.getLayoutInflater());
+        this.actionsView = createActionsView(activity.getLayoutInflater());
+        this.taskActionsPlaceHolderView =
+                (LinearLayout) this.panelView.findViewById(R.id.actionsPlaceHolderLinearLayout);
+        this.taskActionsPlaceHolderView.setVisibility(View.GONE);
+        this.taskActionsPlaceHolderView.addView(this.actionsView);
+        this.isActionsDisplayed = false;
     }
 
     private View createActionsView(LayoutInflater inflater) {
@@ -330,4 +367,13 @@ public class Task {
         return taskActionsPlaceHolderView;
     }
 
+    @Override
+    public String toString() {
+        String task ="";
+        task+=" id="+this.id;
+        task+=" uuid="+this.uuid;
+        task+=" name="+this.name;
+        task+=" owner="+this.owner.getUuid();
+        return task;
+    }
 }

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import in.altersense.taskapp.models.Task;
  */
 public class TaskDbHelper extends SQLiteOpenHelper {
 
+    private static final String CLASS_TAG = "TaskDbHelper ";
     private static String CREATION_STATEMENT = "CREATE TABLE " + Task.TABLE_NAME + " ( " +
             Task.KEYS.UUID.getName() + " " + Task.KEYS.UUID.getType() + ", " +
             Task.KEYS.OWNER_UUID.getName() + " " + Task.KEYS.OWNER_UUID.getType() + ", " +
@@ -48,8 +50,31 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         db.execSQL(CREATION_STATEMENT);
     }
 
+    public void updateUUID(Task task) {
+        String TAG = CLASS_TAG+"updateUUID";
+        Log.d(TAG, "Setting UUID for task: "+task.toString());
+        // Open a writable database.
+        SQLiteDatabase writableDb = this.getWritableDatabase();
+        Log.d(TAG, "Writable database opened.");
+        // Setup data to be updated.
+        ContentValues values = new ContentValues();
+        values.put(Task.KEYS.UUID.getName(), task.getUuid());
+        // Update the record.
+        writableDb.update(
+                Task.TABLE_NAME,
+                values,
+                "ROWID ="+task.getId(),
+                null
+        );
+        Log.d(TAG, "Row updated with uuid "+task.getUuid());
+        // close the database.
+        writableDb.close();
+    }
+
     public Task createTask(Task newTask, Activity activity) {
+        String TAG = CLASS_TAG+"createTask";
         // Open a writable database
+        Log.d(TAG, "Writable database opened.");
         SQLiteDatabase database = this.getWritableDatabase();
         // Setup data to be written
         ContentValues values = new ContentValues();
@@ -64,28 +89,52 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         if(newTask.isGroup()) {
             values.put(Task.KEYS.GROUP_UUID.getName(), newTask.getGroup().getUuid());
         }
+        Log.d(TAG, "Content values set. "+ values.toString());
         // Insert into database
         long rowId = database.insert(
                 Task.TABLE_NAME,
                 null,
                 values
         );
+        Log.d(TAG, "Query run db inserted to row "+rowId+".");
         database.close();
-        Task Task = getTaskByRowId(rowId, activity);
-        return Task;
+        Task task = getTaskByRowId(rowId, activity);
+        task.setId(rowId);
+        return task;
     }
 
     private Task getTaskByRowId(long rowId, Activity activity) {
+        String TAG = CLASS_TAG+"getTaskByRowId";
         // Open database.
+        Log.d(TAG, "Readable database opened.");
         SQLiteDatabase readableDb = this.getReadableDatabase();
+        // Setup columns
+        ArrayList<String> columnList = Task.getAllColumns();
+        String[] columns = new String[columnList.size()];
+        columns = columnList.toArray(columns);
         // Fetch Task with matching row Id.
-        String query = "SELECT * FROM "+ Task.TABLE_NAME+" WHERE ROWID = "+rowId+";";
-        Cursor selfCursor = readableDb.rawQuery(query, null);
+        Cursor selfCursor = readableDb.query(
+                Task.TABLE_NAME,
+                columns,
+                "ROWID =?",
+                new String[] {
+                        rowId+""
+                },
+                null,
+                null,
+                null
+        );
         selfCursor.moveToFirst();
+        String cursorString = new String();
+        for(int i=0;i<selfCursor.getColumnCount();i++) {
+            cursorString+=i+":"+selfCursor.getString(i)+", ";
+        }
+        Log.d(TAG, "Cursor: "+cursorString);
         Task task = new Task(
                 selfCursor,
                 activity
         );
+        task.setId(rowId);
         readableDb.close();
         return task;
     }
@@ -96,18 +145,31 @@ public class TaskDbHelper extends SQLiteOpenHelper {
      * @return A list of Task objects.
      */
     public List<Task> getAllNonGroupTasks(Activity activity) {
+        String TAG = CLASS_TAG+"getAllNonGroupTasks";
         // Open database.
+        Log.d(TAG, "Readable database opened.");
         SQLiteDatabase readableDb = this.getReadableDatabase();
         // Create a list of tasks.
         List<Task> taskList = new ArrayList<Task>();
         // List all the non group tasks.
-        String query = "SELECT * FROM "+ Task.TABLE_NAME+
-                " WHERE "+ Task.KEYS.IS_GROUP.getName()
-                +" = 0;";
-        Cursor resultCursor = readableDb.rawQuery(query, null);
+        // Setup columns
+        ArrayList<String> columnList = Task.getAllColumns();
+        String[] columns = new String[columnList.size()];
+        columns = columnList.toArray(columns);
+        Cursor resultCursor = readableDb.query(
+                Task.TABLE_NAME,
+                columns,
+                Task.KEYS.IS_GROUP.getName()+"=?",
+                new String[] {"0"},
+                null,
+                null,
+                null
+        );
+        Log.d(TAG, "Returned "+resultCursor.getCount()+" rows.");
         if(resultCursor.moveToFirst()) {
             do {
                 taskList.add(new Task(resultCursor, activity));
+                Log.d(TAG, "Added task to list.");
             } while(resultCursor.moveToNext());
         }
         // Close database
