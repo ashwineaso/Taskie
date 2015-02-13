@@ -193,14 +193,27 @@ public class Task {
         this.isGroup = isGroup;
         this.group = group;
         this.collaborators = new ArrayList<User>();
+        Log.d(TAG, "Basic fields set.");
 
+        Log.d(TAG, "PanelView construction being called.");
         this.panelView = createView(activity.getLayoutInflater());
+        Log.d(TAG, "PanelView constructed.");
+
+        Log.d(TAG, "ActionsView constructions being called.");
         this.actionsView = createActionsView(activity);
+        Log.d(TAG, "ActionsView constructed.");
+
+
+        Log.d(TAG, "TaskActionsPlaceHolder being set up.");
         this.taskActionsPlaceHolderView =
                 (LinearLayout) this.panelView.findViewById(R.id.actionsPlaceHolderLinearLayout);
         this.taskActionsPlaceHolderView.setVisibility(View.GONE);
+        Log.d(TAG, "TaskActionsPlaceHolder visibility now set to GONE.");
         this.taskActionsPlaceHolderView.addView(this.actionsView);
+        Log.d(TAG, "TaskActionsPlaceHolder gets the addition of the ActionsView");
         this.isActionsDisplayed = false;
+        Log.d(TAG, "ActionsDisplayed is set to false.");
+
     }
 
     /**

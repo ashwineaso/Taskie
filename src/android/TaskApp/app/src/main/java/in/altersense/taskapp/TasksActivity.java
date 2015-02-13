@@ -328,6 +328,9 @@ public class TasksActivity extends ActionBarActivity {
         quickTask = this.taskList.get(this.taskList.size()-1);
         // Add task to top of the linear layout
         this.taskListStageLL.addView(quickTask.getPanelView());
+        // Adding an onClickListener to TaskPanel to show and hide task actions.
+        TaskPanelOnClickListener taskPanelOnClickListener = new TaskPanelOnClickListener(quickTask, this.taskList);
+        quickTask.getPanelView().setOnClickListener(taskPanelOnClickListener);
         // Request focus to the new task.
         quickTask.getPanelView().requestFocus();
         quickTask.getPanelView().requestFocusFromTouch();
