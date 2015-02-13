@@ -106,7 +106,8 @@ def remCollaborators():
 		taskObj.collaborators = obj["collaborators"]
 		if checkAccessTokenValid(taskObj) is True:
 			task = bll.remCollaborators(taskObj)
-		data["task"] = task.to_dict()
+		taskie = bll.taskToDictConverter(task)
+		data["task"] = taskie
 		response["status"] = RESPONSE_SUCCESS
 		response["data"] = data
 	except Exception as e:

@@ -134,8 +134,9 @@ def addCollaborators(taskObj):
 										status = taskObj.status))
 
 	task = getTaskById(taskObj)
-	Task.objects(id = task.id).update( push__collaborators = my_objects)
+	Task.objects(id = task.id).update( push_all__collaborators = my_objects)
 	task.save()
+	task.reload()
 	return task
 
 
@@ -149,12 +150,12 @@ def remCollaborators(taskObj):
 	:return An instance of the Task class
 
 	"""
-
-	coll = Collaborator()
-	task = Task.objects(id = taskObj.id).get()
-	for coll in  task.collaborators:
-		if (coll.user.email == taskObj.collaborators):
-			Task.objects(id = task.id).update( pull__collaborators = coll)
+	userObj = Collection()
+	task = getTaskById(taskObj)
+	for userObj.email in  taskObj.collaborators:
+		user = userbll.getUserByEmail(userObj)
+		Task.objects(id = taskObj.id).update_one( pull__collaborators__user = user)
+	task.save()
 	task.reload()
 	return task
 
