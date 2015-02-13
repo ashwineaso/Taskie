@@ -95,6 +95,10 @@ public class Task {
         return uuid;
     }
 
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
     public int getIntIsGroup() {
         if(this.isGroup) {
             return 1;
@@ -137,6 +141,14 @@ public class Task {
             this.name = name;
             this.type = type;
         }
+    }
+
+    public static ArrayList<String> getAllColumns() {
+        ArrayList<String> columnsList = new ArrayList<String>();
+        for(KEYS key: KEYS.values()) {
+            columnsList.add(key.getName());
+        }
+        return columnsList;
     }
 
     /**
@@ -252,6 +264,7 @@ public class Task {
         } else {
             this.group = null;
         }
+        this.id = cursor.getLong(9);
         this.panelView = createView(activity.getLayoutInflater());
         this.actionsView = createActionsView(activity.getLayoutInflater());
         this.taskActionsPlaceHolderView =
@@ -352,6 +365,7 @@ public class Task {
     @Override
     public String toString() {
         String task ="";
+        task+=" id="+this.id;
         task+=" name="+this.name;
         task+=" owner="+this.owner.getUuid();
         return task;

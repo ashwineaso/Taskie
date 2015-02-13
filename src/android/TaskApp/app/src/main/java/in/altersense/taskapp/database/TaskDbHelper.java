@@ -87,16 +87,37 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         // Open database.
         Log.d(TAG, "Readable database opened.");
         SQLiteDatabase readableDb = this.getReadableDatabase();
+        // Setup columns
+        ArrayList<String> columnList = Task.getAllColumns();
+        // Add row id to list of columns.
+        columnList.add("ROWID");
+        String[] columns = new String[columnList.size()];
+        columns = columnList.toArray(columns);
         // Fetch Task with matching row Id.
         String query = "SELECT * FROM "+ Task.TABLE_NAME+" WHERE ROWID = "+rowId+";";
         Log.d(TAG, "Query: "+query);
-        Cursor selfCursor = readableDb.rawQuery(query, null);
+        Cursor selfCursor = readableDb.query(
+                Task.TABLE_NAME,
+                columns,
+                "WHERE ROWID =?",
+                new String[] {
+                        rowId+""
+                },
+                null,
+                null,
+                null
+        );
         selfCursor.moveToFirst();
-        Log.d(TAG, "owner_uuid = "+selfCursor.getString(1));
+        String cursorString = new String();
+        for(int i=0;i<selfCursor.getColumnCount();i++) {
+            cursorString+=i+":"+selfCursor.getString(i)+", ";
+        }
+        Log.d(TAG, "Cursor: "+cursorString);
         Task task = new Task(
                 selfCursor,
                 activity
         );
+        task.setId(rowId);
         readableDb.close();
         return task;
     }
@@ -114,16 +135,24 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         // Create a list of tasks.
         List<Task> taskList = new ArrayList<Task>();
         // List all the non group tasks.
-        String query = "SELECT * FROM "+ Task.TABLE_NAME+
-                " WHERE "+ Task.KEYS.IS_GROUP.getName()
-                +" = 0;";
-        Log.d(TAG, "Query run: "+query);
-        Cursor resultCursor = readableDb.rawQuery(query, null);
+        // Setup columns
+        ArrayList<String> columnList = Task.getAllColumns();
+        // Add row id to list of columns.
+        columnList.add("ROWID");
+        String[] columns = new String[columnList.size()];
+        columns = columnList.toArray(columns);
+        Cursor resultCursor = readableDb.query(
+                Task.TABLE_NAME,
+                columns,
+                Task.KEYS.IS_GROUP.getName()+"=?",
+                new String[] {"0"},
+                null,
+                null,
+                null
+        );
         Log.d(TAG, "Returned "+resultCursor.getCount()+" rows.");
         if(resultCursor.moveToFirst()) {
             do {
-                Log.d(TAG, "task title = "+resultCursor.getString(2));
-                Log.d(TAG, "owner_uuid = "+resultCursor.getString(1));
                 taskList.add(new Task(resultCursor, activity));
                 Log.d(TAG, "Added task to list.");
             } while(resultCursor.moveToNext());

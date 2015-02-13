@@ -86,6 +86,19 @@ public class CreateTaskRequest extends AsyncTask<Void, Integer, JSONObject> {
         String TAG = CLASS_TAG+"onPostExecute";
         super.onPostExecute(result);
         Log.d(TAG, "Response received: " + result.toString());
-        // @TODO Set UUID when task is created.
+        try {
+            String status = result.getString(Config.REQUEST_RESPONSE_KEYS.STATUS.getKey());
+            // Check whether the request was success
+            if(status.equals(Config.RESPONSE_STATUS_SUCCESS)) {
+                // If success update uuid
+                JSONObject data = result.getJSONObject(Config.REQUEST_RESPONSE_KEYS.DATA.getKey())
+                        .getJSONObject("task");
+                this.task.setUuid(data.getString(Config.REQUEST_RESPONSE_KEYS.UUID.getKey()));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // if failed
+            // @TODO: Handle creation task request failure.
     }
 }
