@@ -1,7 +1,7 @@
 package in.altersense.taskapp.models;
 
 import android.app.Activity;
-import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +13,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import in.altersense.taskapp.CreateTaskActivity;
 import in.altersense.taskapp.R;
+import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.database.TaskDbHelper;
 
 /**
@@ -167,7 +169,7 @@ public class Task {
      * @param status Current status of the task
      * @param isGroup Is task in a group
      * @param group Task group
-     * @param inflater Layout inflater.
+     * @param activity Current activity
      */
     public Task(
             String uuid,
@@ -179,7 +181,7 @@ public class Task {
             int status,
             boolean isGroup,
             TaskGroup group,
-            final LayoutInflater inflater
+            Activity activity
     ) {
         this.uuid = uuid;
         this.name = name;
@@ -192,8 +194,8 @@ public class Task {
         this.group = group;
         this.collaborators = new ArrayList<User>();
 
-        this.panelView = createView(inflater);
-        this.actionsView = createActionsView(inflater);
+        this.panelView = createView(activity.getLayoutInflater());
+        this.actionsView = createActionsView(activity);
         this.taskActionsPlaceHolderView =
                 (LinearLayout) this.panelView.findViewById(R.id.actionsPlaceHolderLinearLayout);
         this.taskActionsPlaceHolderView.setVisibility(View.GONE);
@@ -206,13 +208,13 @@ public class Task {
      * @param name Name of the Task.
      * @param description Task description.
      * @param owner Owner user of the task
-     * @param inflater Layout inflater.
+     * @param activity Layout activity.
      */
     public Task(
             String name,
             String description,
             User owner,
-            LayoutInflater inflater
+            Activity activity
     ) {
         this(
                 "",
@@ -224,7 +226,7 @@ public class Task {
                 0,
                 false,
                 null,
-                inflater
+                activity
         );
     }
 
@@ -238,7 +240,7 @@ public class Task {
             int status,
             int isGroup,
             TaskGroup group,
-            final LayoutInflater inflater
+            Activity activity
     ) {
         this(
                 uuid,
@@ -250,7 +252,7 @@ public class Task {
                 status,
                 isGroup==1,
                 group,
-                inflater
+                activity
         );
     }
 
@@ -271,7 +273,7 @@ public class Task {
         }
         this.id = cursor.getLong(9);
         this.panelView = createView(activity.getLayoutInflater());
-        this.actionsView = createActionsView(activity.getLayoutInflater());
+        this.actionsView = createActionsView(activity);
         this.taskActionsPlaceHolderView =
                 (LinearLayout) this.panelView.findViewById(R.id.actionsPlaceHolderLinearLayout);
         this.taskActionsPlaceHolderView.setVisibility(View.GONE);
@@ -279,9 +281,9 @@ public class Task {
         this.isActionsDisplayed = false;
     }
 
-    private View createActionsView(LayoutInflater inflater) {
-        final LayoutInflater myInflater = inflater;
-        View actionsPanel = inflater.inflate(R.layout.task_actions, null);
+    private View createActionsView(final Activity activity) {
+        final LayoutInflater myInflater = activity.getLayoutInflater();
+        View actionsPanel = myInflater.inflate(R.layout.task_actions, null);
 
         action1 = (LinearLayout) actionsPanel.findViewById(R.id.action1);
         action2 = (LinearLayout) actionsPanel.findViewById(R.id.action2);
@@ -292,8 +294,20 @@ public class Task {
 
             @Override
             public void onClick(View v) {
-                Toast.makeText(myInflater.getContext(), "Action1", Toast.LENGTH_SHORT)
-                        .show();
+                // Create an intent to edit screen.
+                Intent editTaskIntent = new Intent(
+                        activity.getApplicationContext(),
+                        CreateTaskActivity.class
+                );
+                // Pass the task id to the intent.
+                editTaskIntent.putExtra(
+                        Config.REQUEST_RESPONSE_KEYS.UUID.getKey(),
+                        uuid
+                );
+                // Set flags for activity creation.
+                editTaskIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                // Start the activity.
+                activity.startActivity(editTaskIntent);
             }
         });
 

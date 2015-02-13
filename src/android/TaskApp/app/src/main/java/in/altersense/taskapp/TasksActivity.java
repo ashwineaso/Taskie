@@ -266,7 +266,7 @@ public class TasksActivity extends ActionBarActivity {
                                 ),
                                 TasksActivity.this
                         ),
-                        getLayoutInflater()
+                        TasksActivity.this
                 );
                 Log.d(TAG, "QuickTask: "+quickTask.toString());
                 quickTask = addQuickTaskToDb(quickTask);

@@ -70,7 +70,7 @@ public class GroupActivity extends ActionBarActivity {
                             ),
                             this
                     ),
-                    this.getLayoutInflater()
+                    GroupActivity.this
             );
             mainStageLinearLayout.addView(task.getPanelView());
 //            Adding an onClickListener to TaskPanel to show and hide task actions.
