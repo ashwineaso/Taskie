@@ -68,16 +68,16 @@ def sendVerification(user):
 	token = dal.getTokenByUser(userObj)
 	userObj.key = token.refresh_token
 
-	link = "http://taskie.me/user/verifyEmail/"+userObj.user.email+"/"+userObj.key
-	plain_text = "Please confirm your taskie account by clicking the following link "+link
+	link = """http://taskie.me/user/verifyEmail/%s/%s""" % (userObj.user.email,userObj.key)
+	html = """Please confirm your taskie account by clicking the following link %s""" %(link)
 
 	# Create message container - the correct MIME type is multipart/alternative.
 	msg = MIMEMultipart('alternative')
-	msg['Subject'] = inviter.name+" has invited you to taskie"
+	msg['Subject'] = " Taskie Account Verification"
 	msg['From'] = taskie_mail
-	msg['To'] = mail_to
+	msg['To'] = userObj.user.email
 
-	html_msg = MIMEText(plain, 'plain_text')
+	html_msg = MIMEText(html, 'html')
 	msg.attach(html_msg)
 
 	#Send the message via local smtp server
@@ -85,5 +85,5 @@ def sendVerification(user):
 	server.connect(HOST, PORT)
 	server.starttls()
 	server.login(taskie_mail,password)
-	server.sendmail(taskie_mail,invite_to, msg.as_string())
+	server.sendmail(taskie_mail,userObj.user.email, msg.as_string())
 	server.close()
