@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.altersense.taskapp.R;
+import in.altersense.taskapp.database.TaskDbHelper;
 
 /**
  * Created by mahesmohan on 1/13/15.
@@ -95,8 +96,10 @@ public class Task {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
+    public void setUuid(String uuid, Activity activity) {
         this.uuid = uuid;
+        TaskDbHelper taskDbHelper = new TaskDbHelper(activity);
+        taskDbHelper.updateUUID(this);
     }
 
     public int getIntIsGroup() {
@@ -148,6 +151,8 @@ public class Task {
         for(KEYS key: KEYS.values()) {
             columnsList.add(key.getName());
         }
+        // Add row id to list of columns.
+        columnsList.add("ROWID");
         return columnsList;
     }
 
@@ -366,6 +371,7 @@ public class Task {
     public String toString() {
         String task ="";
         task+=" id="+this.id;
+        task+=" uuid="+this.uuid;
         task+=" name="+this.name;
         task+=" owner="+this.owner.getUuid();
         return task;

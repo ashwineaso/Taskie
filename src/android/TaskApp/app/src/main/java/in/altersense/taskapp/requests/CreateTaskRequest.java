@@ -93,7 +93,7 @@ public class CreateTaskRequest extends AsyncTask<Void, Integer, JSONObject> {
                 // If success update uuid
                 JSONObject data = result.getJSONObject(Config.REQUEST_RESPONSE_KEYS.DATA.getKey())
                         .getJSONObject("task");
-                this.task.setUuid(data.getString(Config.REQUEST_RESPONSE_KEYS.UUID.getKey()));
+                this.task.setUuid(data.getString(Config.REQUEST_RESPONSE_KEYS.UUID.getKey()), this.activity);
             }
         } catch (JSONException e) {
             e.printStackTrace();

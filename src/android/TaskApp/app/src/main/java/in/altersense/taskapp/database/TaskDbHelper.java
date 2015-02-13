@@ -50,6 +50,27 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         db.execSQL(CREATION_STATEMENT);
     }
 
+    public void updateUUID(Task task) {
+        String TAG = CLASS_TAG+"updateUUID";
+        Log.d(TAG, "Setting UUID for task: "+task.toString());
+        // Open a writable database.
+        SQLiteDatabase writableDb = this.getWritableDatabase();
+        Log.d(TAG, "Writable database opened.");
+        // Setup data to be updated.
+        ContentValues values = new ContentValues();
+        values.put(Task.KEYS.UUID.getName(), task.getUuid());
+        // Update the record.
+        writableDb.update(
+                Task.TABLE_NAME,
+                values,
+                "ROWID ="+task.getId(),
+                null
+        );
+        Log.d(TAG, "Row updated with uuid "+task.getUuid());
+        // close the database.
+        writableDb.close();
+    }
+
     public Task createTask(Task newTask, Activity activity) {
         String TAG = CLASS_TAG+"createTask";
         // Open a writable database
@@ -89,17 +110,13 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase readableDb = this.getReadableDatabase();
         // Setup columns
         ArrayList<String> columnList = Task.getAllColumns();
-        // Add row id to list of columns.
-        columnList.add("ROWID");
         String[] columns = new String[columnList.size()];
         columns = columnList.toArray(columns);
         // Fetch Task with matching row Id.
-        String query = "SELECT * FROM "+ Task.TABLE_NAME+" WHERE ROWID = "+rowId+";";
-        Log.d(TAG, "Query: "+query);
         Cursor selfCursor = readableDb.query(
                 Task.TABLE_NAME,
                 columns,
-                "WHERE ROWID =?",
+                "ROWID =?",
                 new String[] {
                         rowId+""
                 },
@@ -137,8 +154,6 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         // List all the non group tasks.
         // Setup columns
         ArrayList<String> columnList = Task.getAllColumns();
-        // Add row id to list of columns.
-        columnList.add("ROWID");
         String[] columns = new String[columnList.size()];
         columns = columnList.toArray(columns);
         Cursor resultCursor = readableDb.query(
