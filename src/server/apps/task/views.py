@@ -68,8 +68,8 @@ def editTask():
 		response["data"] = bll.taskToDictConverter(task)
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
-		response["message"] = e.message
-		if hasatttr(e, "code"):
+		response["message"] = str(e)
+		if hasattr(e, "code"):
 			response["code"] = e.code
 	return response
 
@@ -88,8 +88,8 @@ def addCollaborators():
 		response["data"] = bll.taskToDictConverter(task)
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
-		response["message"] = e.message
-		if hasatttr(e, "code"):
+		response["message"] = str(e)
+		if hasattr(e, "code"):
 			response["code"] = e.code
 	return response
 
@@ -108,8 +108,8 @@ def remCollaborators():
 		response["data"] = bll.taskToDictConverter(task)
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
-		response["message"] = e.message
-		if hasatttr(e, "code"):
+		response["message"] = str(e)
+		if hasattr(e, "code"):
 			response["code"] = e.code
 	return response
 
@@ -128,8 +128,8 @@ def modifyTaskStatus():
 		response["data"] = bll.taskToDictConverter(task)
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
-		response["message"] = e.message
-		if hasatttr(e, "code"):
+		response["message"] = str(e)
+		if hasattr(e, "code"):
 			response["code"] = e.code
 	return response
 
@@ -149,8 +149,8 @@ def modifyCollStatus():
 		response["data"] = bll.taskToDictConverter(task)
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
-		response["message"] = e.message
-		if hasatttr(e, "code"):
+		response["message"] = str(e)
+		if hasattr(e, "code"):
 			response["code"] = e.code
 	return response
 
@@ -163,15 +163,15 @@ def createGroup():
 		groupObj.access_token = obj["access_token"]
 		groupObj.owner = obj["ownerId"]
 		groupObj.title = obj["title"]
-		if checkAccessTokenValid(taskObj) is True:
+		if checkAccessTokenValid(groupObj) is True:
 			group = bll.createGroup(groupObj)
 		data["group"] = group.to_dict()
 		response["status"] = RESPONSE_SUCCESS
 		response["data"] = data
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
-		response["message"] = e.message
-		if hasatttr(e, "code"):
+		response["message"] = str(e)
+		if hasattr(e, "code"):
 			response["code"] = e.code
 	return response
 
@@ -191,8 +191,8 @@ def addGroupMembers():
 		response["data"] = data
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
-		response["message"] = e.message
-		if hasatttr(e, "code"):
+		response["message"] = str(e)
+		if hasattr(e, "code"):
 			response["code"] = e.code
 	return response
 

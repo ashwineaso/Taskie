@@ -218,11 +218,13 @@ def createGroup(groupObj):
 	userObj = Collection()
 
 	#for finding the user id of the owner
-	userObj.email = groupObj.owner
-	groupObj.owner = userbll.getUserByEmail(userObj)
-	group = Group(
-					owner = groupObj.owner,
-					title = groupObj.title).save()
+	userObj.id = groupObj.owner
+	groupObj.user = userbll.getUserById(userObj)
+	group = TaskGroup(
+					owner = groupObj.user,
+					title = groupObj.title
+					)
+	group.save()
 	return group
 
 
