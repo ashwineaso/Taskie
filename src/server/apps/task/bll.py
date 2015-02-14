@@ -2,7 +2,7 @@ __author__ = ["ashwineaso"]
 from . import dal
 from settings.exceptions import TaskWithIDNotFound
 from apps.users import bll as userbll
-from settings.altEngine import Collection
+from settings.altEngine import Collection, SyncClass
 from settings.constants import GCMPost, TOKEN_GCM_REGISTRATION_IDS, UrlPostThread
 from datetime import datetime
 from bottle import request
@@ -28,7 +28,10 @@ def addNewTask(taskObj):
 	#Add a task to the servers task list
 	task = dal.addNewTask(taskObj)
 	#Send message to GCM server to notify collaborators of task
-	# pushSyncTaskNotification(task)
+	syncObj = SyncClass()
+	syncObj.datatype = "Task"
+	syncObj.id = str(task.id)
+	pushSyncNotification(syncObj)
 	return task
 
 
@@ -47,8 +50,11 @@ def editTask(taskObj):
 	"""
 	#Update database with task information
 	task = dal.editTask(taskObj)
-	#Send message to GCM server to notify collaborators of task	
-	pushSyncTaskNotification(task)
+	#Send message to GCM server to notify collaborators of task
+	syncObj = SyncClass()
+	syncObj.datatype = "Task"
+	syncObj.id = str(task.id)
+	pushSyncNotification(syncObj)
 	return task
 
 
@@ -64,7 +70,11 @@ def addCollaborators(taskObj):
 	"""
 
 	task = dal.addCollaborators(taskObj)
-	pushSyncTaskNotification(task)
+	#Send message to GCM server to notify collaborators of task
+	syncObj = SyncClass()
+	syncObj.datatype = "Task"
+	syncObj.id = str(task.id)
+	pushSyncNotification(syncObj)
 	return task
 
 
@@ -80,7 +90,11 @@ def remCollaborators(taskObj):
 	"""
 
 	task = dal.remCollaborators(taskObj)
-	pushSyncTaskNotification(task)
+	#Send message to GCM server to notify collaborators of task
+	syncObj = SyncClass()
+	syncObj.datatype = "Task"
+	syncObj.id = str(task.id)
+	pushSyncNotification(syncObj)
 	return task
 
 
@@ -97,7 +111,11 @@ def modifyTaskStatus(taskObj):
 	"""
 
 	task = dal.modifyTaskStatus(taskObj)
-	pushSyncTaskNotification(task)
+	#Send message to GCM server to notify collaborators of task
+	syncObj = SyncClass()
+	syncObj.datatype = "Task"
+	syncObj.id = str(task.id)
+	pushSyncNotification(syncObj)
 	return task
 
 
@@ -115,7 +133,11 @@ def modifyCollStatus(taskObj):
 	"""
 
 	task = dal.modifyCollStatus(taskObj)
-	pushSyncTaskNotification(task)
+	#Send message to GCM server to notify collaborators of task
+	syncObj = SyncClass()
+	syncObj.datatype = "Task"
+	syncObj.id = str(task.id)
+	pushSyncNotification(syncObj)
 	return task
 
 
@@ -130,6 +152,11 @@ def createGroup(groupObj):
 	:return An instance of the Group class
 	"""
 	group = dal.createGroup(groupObj)
+	#Send message to GCM server to notify collaborators of task
+	syncObj = SyncClass()
+	syncObj.datatype = "Group"
+	syncObj.id = str(group.id)
+	pushSyncNotification(syncObj)
 	return group
 
 
@@ -145,6 +172,11 @@ def addGroupMembers(groupObj):
 	"""
 
 	group = dal.addGroupMembers(groupObj)
+	#Send message to GCM server to notify collaborators of task
+	syncObj = SyncClass()
+	syncObj.datatype = "Group"
+	syncObj.id = str(group.id)
+	pushSyncNotification(syncObj)
 	return group
 
 
@@ -161,6 +193,11 @@ def remGroupMembers(groupObj):
 	"""
 
 	group = dal.remGroupMembers(groupObj)
+	#Send message to GCM server to notify collaborators of task
+	syncObj = SyncClass()
+	syncObj.datatype = "Group"
+	syncObj.id = str(group.id)
+	pushSyncNotification(syncObj)
 	return group
 
 
@@ -174,7 +211,7 @@ def syncTask(taskObj):
 	return task
 
 
-def pushSyncTaskNotification(taskObj):
+def pushSyncNotification(syncObj):
 	"""
 	Initiates a server side push to all the collaborators
 	of the task
@@ -198,7 +235,7 @@ def pushSyncTaskNotification(taskObj):
 
 	if len(androidPayload) > 0:
 		androidPush.payload[TOKEN_GCM_REGISTRATION_IDS] = androidPayload
-		androidPush.payload["data"] = {"syncTask" : True, "taskId" : str(taskObj.id)}
+		androidPush.payload["data"] = syncObj.to_dict()
 		print androidPush.payload
 
 		#Create UrlPoster Thread for GCM Push Start Thread
