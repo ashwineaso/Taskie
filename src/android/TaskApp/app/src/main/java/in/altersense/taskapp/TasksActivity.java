@@ -66,7 +66,7 @@ public class TasksActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_tasks);
 
-        // Initializing the fields.
+        // Initializing the dbhelper.
         this.taskDbHelper = new TaskDbHelper(this.getApplicationContext());
 
 //        Initializing the layout.
@@ -258,6 +258,7 @@ public class TasksActivity extends ActionBarActivity {
                 Task quickTask = new Task(
                         newTaskTitle.getText().toString(),
                         "",
+                        // TODO: Create user once and call pass that user instead of creating her everytime.
                         new User(
                                 AltEngine.readStringFromSharedPref(
                                         getApplicationContext(),
