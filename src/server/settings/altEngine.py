@@ -15,6 +15,17 @@ RESPONSE_FAILED = "failed"
 class Collection():
 	pass
 
+
+class SyncClass():
+    def __init__(self, datatype, type_id):
+        self.datatype = datatype
+        self.id = type_id
+
+        def to_dict(self):
+        return mongo_to_dict_helper(self)
+
+
+
 def mongo_to_dict_helper(obj):
     """
     Returns a serializable dictionary of the object.

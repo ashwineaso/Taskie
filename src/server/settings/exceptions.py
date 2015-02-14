@@ -9,6 +9,18 @@ class TaskWithIDNotFound(Exception):
 		return self.msg
 
 
+class GroupWithIDNotFound(Exception):
+	"""docstring for GroupWithIDNotFound"""
+	def __init__(self):
+		super(GroupWithIDNotFound, self).__init__()
+		self.msg = "Group With ID Not Found"
+		self.code = 2002
+
+	def __str__(self):
+		return self.msg
+		
+
+
 class UserNotFound(Exception):
 	"""docstring for UserNotFound"""
 	def __init__(self):
@@ -91,18 +103,18 @@ class RefreshTokenInvalid(Exception):
 	def __init__(self):
 		super(RefreshTokenInvalid, self).__init__()
 		self.msg = "Refresh Token Invalid"
-		self.msg = 3003
+		self.code = 3003
 
 	def __str__(self):
 		return self.msg
 
 
-class AccessTokenExpired(object):
+class AccessTokenExpired(Exception):
 	"""docstring for AccessTokenExpired"""
 	def __init__(self):
 		super(AccessTokenExpired, self).__init__()
 		self.msg = "Access Token Expired"
-		self.code = code
+		self.code = 3004
 
-	def __str__():
+	def __str__(self):
 		return self.msg	

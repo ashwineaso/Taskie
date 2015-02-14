@@ -228,6 +228,55 @@ def createGroup(groupObj):
 	return group
 
 
+
+def addGroupMembers(groupObj):
+	"""
+	Add members to a groupObj
+
+	:type groupObj : object
+	:param groupObj : An instance of Collection with the following attributes
+						id - id of the TaskGroup
+						member - list of members to be added to the group
+	:return : An instance of the Group class
+	"""
+
+	member_list = []
+	userObj = Collection
+
+	group = getGroupById(groupObj)
+	for userObj.id in groupObj.members:
+		userObj.user = userbll.getUserById(userObj)
+		member_list.append(userObj.user.id)
+	TaskGroup.objects(id = group.id).update(push_all__members = member_list)
+	group.save()
+	group.reload()
+	return group
+
+
+
+def remGroupMembers(groupObj):
+	"""
+	Remove memberd from a group
+
+	:type groupObj : object
+	:param groupObj : An instance of Collection with the following attributes
+						id - id of the TaskGroup
+						member - list of members to be added to the group
+	:return : An instance of the Group class
+	"""
+
+	userObj = Collection()
+
+	group = getGroupById(groupObj)
+	for userObj.id in groupObj.members:
+		user = userbll.getUserById(userObj)
+		TaskGroup.objects(id = group.id).update_one(pull__members = user)
+	group.save()
+	group.reload()
+	return group
+
+
+
 def syncTask(taskObj):
 	"""
 	Sync / retrieve as task whose id is provided
@@ -240,7 +289,7 @@ def getTaskById(taskObj):
 	"""
 	Retrieve task using task id
 	::type taskObj : object
-	::parm userObj : An instance of Collection with the following attributes
+	::parm taskObj : An instance of Collection with the following attributes
 					 id
 	::return task : Instance of Task class
 
@@ -251,3 +300,19 @@ def getTaskById(taskObj):
 		return task
 	except Exception:
 		raise TaskWithIDNotFound
+
+
+def getGroupById(groupObj):
+	"""
+	Retrieve group using id
+	::type groupObj : object
+	::param groupObj :Instance of Collection with the following attributes
+						id
+	::return group : Instance if TaskGroup class
+	"""
+
+	try:
+		group = TaskGroup.objects.get(id = groupObj.id).select_related(1)
+		return group 
+	except Exception as e:
+		raise GroupWithIDNotFound
