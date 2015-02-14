@@ -8,6 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.models.User;
 
@@ -50,7 +53,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
         // Open database.
         Log.d(TAG, "Set up a readable database");
         SQLiteDatabase readableDb = this.getReadableDatabase();
-        // Fetch image with matching uuid.
+        // Fetch user with matching uuid.
         String[] columns = new String[] {
                 "*"
         };
@@ -75,6 +78,94 @@ public class UserDbHelper extends SQLiteOpenHelper {
         User user = new User(selfCursor);
         // Close database
         readableDb.close();
+        return user;
+    }
+
+    public User[] listAllUsers() {
+        String TAG = CLASS_TAG+"listAllUsers";
+        // Open readable database.
+        SQLiteDatabase readableDb = this.getReadableDatabase();
+        Log.d(TAG, "Readable database opened");
+        // Create array list
+        List<User> userList = new ArrayList<User>();
+        // Setup columns
+        ArrayList<String> columnList = User.getAllColumns();
+        String[] columns = new String[columnList.size()];
+        columns = columnList.toArray(columns);
+        // Execute query
+        Cursor cursor = readableDb.query(
+                User.TABLE_NAME,
+                columns,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+        Log.d(TAG, "Query returned "+cursor.getCount()+" rows");
+        cursor.moveToFirst();
+        do {
+            // Add each user to the list
+            userList.add(new User(cursor));
+            String cursorString = "Cursor: ";
+            for(int i=0; i<cursor.getColumnCount();i++) {
+                cursorString+=i+"="+cursor.getString(i)+", ";
+            }
+            Log.d(TAG, cursorString);
+        } while (cursor.moveToNext());
+        Log.d(TAG, "Readable db closed.");
+        readableDb.close();
+        User[] usersArray = new User[userList.size()];
+        usersArray = userList.toArray(usersArray);
+        return usersArray;
+    }
+
+    /**
+     * Checks whether a user exist by the name or email and returns the user.
+     * @param nameEmail Name or email of the user.
+     * @return Instance of user object or null if no matching user found
+     */
+    public User getUserByNameEmail(String nameEmail) {
+        String TAG = CLASS_TAG+"getUserByNameEmail";
+        User user = null;
+        // Open a readable database.
+        SQLiteDatabase readableDb = this.getReadableDatabase();
+        // Setup columns.
+        ArrayList<String> columnList = User.getAllColumns();
+        String[] columns = new String[columnList.size()];
+        columns = columnList.toArray(columns);
+        // Make query with name
+        Cursor cursor = readableDb.query(
+                User.TABLE_NAME,
+                columns,
+                User.KEYS.NAME.getName()+"=?",
+                new String[] { nameEmail+"%" },
+                null,
+                null,
+                null
+        );
+        // Check cursor size if less than 1
+        if(cursor.getCount()<1) {
+            // Make query with email
+            cursor.moveToFirst();
+            cursor = readableDb.query(
+                    User.TABLE_NAME,
+                    columns,
+                    User.KEYS.EMAIL.getName()+"=?",
+                    new String[] { nameEmail+"%" },
+                    null,
+                    null,
+                    null
+            );
+        }
+        if(cursor.getCount()>0) {
+            // Create user from the cursor
+            cursor.moveToFirst();
+            user = new User(cursor);
+        }
+        // Close db
+        readableDb.close();
+        // Return user
         return user;
     }
 

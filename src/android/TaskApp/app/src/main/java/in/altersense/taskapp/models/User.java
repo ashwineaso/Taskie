@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import in.altersense.taskapp.common.Config;
@@ -81,6 +82,15 @@ public class User {
         this.password = "";
         this.isDeviceOwner = newUser.isDeviceOwner();
         Log.d(TAG, "User setup complete.");
+    }
+
+    public static ArrayList<String> getAllColumns() {
+        ArrayList<String> columnList = new ArrayList<String>();
+        for(KEYS key: KEYS.values()) {
+            columnList.add(key.getName());
+        }
+        columnList.add("ROWID");
+        return columnList;
     }
 
     /**
@@ -219,10 +229,6 @@ public class User {
 
     @Override
     public String toString() {
-        String user = "";
-        user+=" name="+this.name;
-        user+=" uuid="+this.uuid;
-        user+=" email="+this.email;
-        return user;
+        return this.email;
     }
 }

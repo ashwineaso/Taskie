@@ -7,14 +7,21 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.tokenautocomplete.FilteredArrayAdapter;
+
 import in.altersense.taskapp.common.Config;
+import in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText;
 import in.altersense.taskapp.database.TaskDbHelper;
+import in.altersense.taskapp.database.UserDbHelper;
 import in.altersense.taskapp.models.Task;
+import in.altersense.taskapp.models.User;
 
 
 public class CreateTaskActivity extends ActionBarActivity {
@@ -25,10 +32,14 @@ public class CreateTaskActivity extends ActionBarActivity {
     private EditText taskTitleET;
     private EditText taskDescriptionET;
     private EditText dueDateET;
+    private TokenCompleteCollaboratorsEditText collabboraatorsTCET;
     private SeekBar prioritySB;
     private TextView priorityTV;
     private Button createTaskBtn;
     private Button updateTaskBtn;
+
+    private User[] users;
+    private ArrayAdapter<User> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +64,32 @@ public class CreateTaskActivity extends ActionBarActivity {
         // Initialize the views.
         this.taskTitleET = (EditText) findViewById(R.id.taskTitleEditText);
         this.taskDescriptionET = (EditText) findViewById(R.id.taskDescriptionEditText);
+        this.collabboraatorsTCET = (TokenCompleteCollaboratorsEditText) findViewById(R.id.collaboratorsTCET);
         this.dueDateET = (EditText) findViewById(R.id.dueDateEditText);
         this.prioritySB = (SeekBar) findViewById(R.id.prioritySeekBar);
         this.priorityTV = (TextView) findViewById(R.id.priorityTextView);
         this.createTaskBtn = (Button) findViewById(R.id.createTaskButton);
         this.updateTaskBtn = (Button) findViewById(R.id.updateTaskButton);
+
+        UserDbHelper userDbHelper = new UserDbHelper(CreateTaskActivity.this);
+        this.users = userDbHelper.listAllUsers();
+
+        /*adapter = new ArrayAdapter<User>(
+                this,
+                android.R.layout.simple_list_item_1,
+                users
+        );*/
+
+        adapter = new FilteredArrayAdapter<User>(this, android.R.layout.simple_list_item_1, users) {
+            @Override
+            protected boolean keepObject(User user, String s) {
+                s = s.toLowerCase();
+                return user.getName().toLowerCase().startsWith(s) || user.getEmail().toLowerCase().startsWith(s);
+            }
+        };
+
+        collabboraatorsTCET.setAdapter(adapter);
+
         if(createEditIntent.hasExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey())) {
             // Populate the form with the data.
             populatetheForm();

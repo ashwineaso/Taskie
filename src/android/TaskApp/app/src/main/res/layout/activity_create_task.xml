@@ -20,6 +20,11 @@
         android:inputType="textMultiLine"
         android:hint="Task Description"/>
 
+    <in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText
+        android:id="@+id/collaboratorsTCET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <EditText android:id="@+id/dueDateEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -75,4 +80,5 @@
             style="@style/primaryButton"/>
 
         </LinearLayout>
+
 </LinearLayout>
