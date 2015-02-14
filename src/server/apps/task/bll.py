@@ -130,7 +130,38 @@ def createGroup(groupObj):
 	:return An instance of the Group class
 	"""
 	group = dal.createGroup(groupObj)
-	return group 
+	return group
+
+
+def addGroupMembers(groupObj):
+	"""
+	Add members to a groupObj
+
+	:type groupObj : object
+	:param groupObj : An instance of Collection with the following attributes
+						id - id of the TaskGroup
+						member - list of members to be added to the group
+	:return : An instance of the Group class
+	"""
+
+	group = dal.addGroupMembers(groupObj)
+	return group
+
+
+
+def remGroupMembers(groupObj):
+	"""
+	Remove memberd from a group
+
+	:type groupObj : object
+	:param groupObj : An instance of Collection with the following attributes
+						id - id of the TaskGroup
+						member - list of members to be added to the group
+	:return : An instance of the Group class
+	"""
+
+	group = dal.remGroupMembers(groupObj)
+	return group
 
 
 def syncTask(taskObj):
@@ -220,3 +251,20 @@ def taskToDictConverter(task):
 		coll["endTime"] = each_user.endTime
 		taskie["collaborators"].append(coll.copy())
 	return taskie
+
+
+def groupToDictConverter(groupObj):
+	"""
+	Convert the incoming TaskGroup object into JSON Serializable format
+	ony including the essential details
+	"""
+
+	group = {}
+
+	group["id"] = str(groupObj.id)
+	group["title"] = groupObj.title
+	group["owner"] = str(groupObj.owner.id)
+	group["members"] = []
+	for member in groupObj.members:
+		group["members"].append(str(member.id))
+	return group
