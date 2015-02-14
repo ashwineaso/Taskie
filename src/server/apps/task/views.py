@@ -41,10 +41,8 @@ def addNewTask():
 			taskObj.group = ''
 		if checkAccessTokenValid(taskObj) is True:
 			task = bll.addNewTask(taskObj)
-		taskie = bll.taskToDictConverter(task)
-		data["task"] = taskie
 		response["status"] = RESPONSE_SUCCESS
-		response["data"] = data
+		response["data"] = bll.taskToDictConverter(task)
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
 		response["message"] = str(e)
@@ -66,13 +64,13 @@ def editTask():
 		taskObj.dueDateTime = obj["dueDateTime"]
 		if checkAccessTokenValid(taskObj) is True:
 			task = bll.editTask(taskObj)
-		taskie = bll.taskToDictConverter(task)
-		data["task"] = taskie
 		response["status"] = RESPONSE_SUCCESS
-		response["data"] = data
+		response["data"] = bll.taskToDictConverter(task)
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
 		response["message"] = e.message
+		if hasatttr(e, "code"):
+			response["code"] = e.code
 	return response
 
 
@@ -86,13 +84,13 @@ def addCollaborators():
 		taskObj.collaborators = obj["collaborators"]
 		if checkAccessTokenValid(taskObj) is True:
 			task = bll.addCollaborators(taskObj)
-		taskie = bll.taskToDictConverter(task)
-		data["task"] = taskie
 		response["status"] = RESPONSE_SUCCESS
-		response["data"] = data
+		response["data"] = bll.taskToDictConverter(task)
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
 		response["message"] = e.message
+		if hasatttr(e, "code"):
+			response["code"] = e.code
 	return response
 
 
@@ -106,13 +104,13 @@ def remCollaborators():
 		taskObj.collaborators = obj["collaborators"]
 		if checkAccessTokenValid(taskObj) is True:
 			task = bll.remCollaborators(taskObj)
-		taskie = bll.taskToDictConverter(task)
-		data["task"] = taskie
 		response["status"] = RESPONSE_SUCCESS
-		response["data"] = data
+		response["data"] = bll.taskToDictConverter(task)
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
 		response["message"] = e.message
+		if hasatttr(e, "code"):
+			response["code"] = e.code
 	return response
 
 
@@ -126,12 +124,13 @@ def modifyTaskStatus():
 		taskObj.status = obj["status"]
 		if checkAccessTokenValid(taskObj) is True:
 			task = bll.modifyTaskStatus(taskObj)
-		data["task"] = task.to_dict()
 		response["status"] = RESPONSE_SUCCESS
-		response["data"] = data
+		response["data"] = bll.taskToDictConverter(task)
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
 		response["message"] = e.message
+		if hasatttr(e, "code"):
+			response["code"] = e.code
 	return response
 
 
@@ -146,12 +145,13 @@ def modifyCollStatus():
 		taskObj.collstatus = obj["collstatus"]
 		if checkAccessTokenValid(taskObj) is True:
 			task = bll.modifyCollStatus(taskObj)
-		data["collaborator"] = task.to_dict()
 		response["status"] = RESPONSE_SUCCESS
-		response["data"] = data
+		response["data"] = bll.taskToDictConverter(task)
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
 		response["message"] = e.message
+		if hasatttr(e, "code"):
+			response["code"] = e.code
 	return response
 
 
@@ -171,6 +171,8 @@ def createGroup():
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
 		response["message"] = e.message
+		if hasatttr(e, "code"):
+			response["code"] = e.code
 	return response
 
 
@@ -184,12 +186,16 @@ def addGroupMembers():
 		groupObj.member = obj["memberId"]
 		if checkAccessTokenValid(taskObj) is True:
 			group = bll.addGroupMembers()
+		data["group"] = group.to_dict()
 		response["status"] = RESPONSE_SUCCESS
 		response["data"] = data
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
 		response["message"] = e.message
+		if hasatttr(e, "code"):
+			response["code"] = e.code
 	return response
+
 
 
 def syncTask():
@@ -202,13 +208,11 @@ def syncTask():
 		taskObj.access_token = obj["access_token"]
 		if checkAccessTokenValid(taskObj) is True:
 			task = bll.syncTask(taskObj)
-		taskie = bll.taskToDictConverter(task)
-		#add entire task to response data
-		data["task"] = taskie
 		response["status"] = RESPONSE_SUCCESS
-		response["data"] = data
+		response["data"] = bll.taskToDictConverter(task)
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
 		response["message"] = str(e)
-		# response["code"] = e.code
+		if hasatttr(e, "code"):
+			response["code"] = e.code
 	return response
