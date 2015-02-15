@@ -223,14 +223,29 @@ def pushSyncNotification(syncObj):
 	androidPayload = []
 	userObj = Collection()
 
-	#for each collaborator of the task
-	task = dal.getTaskById(taskObj)
-	for coll in task.collaborators:
-		if not coll.user.serverPushId in androidPayload:
-			androidPayload.append(str(coll.user.serverPushId))
+	#Create a pseudo switch case
+	#Define a function to execute for each case
+	def caseTask():
+		""" Task is to be synced and message to be sent to owner and collaborators """
+		task = dal.getTaskById(syncObj)
+		for coll in task.collaborators:
+			if not coll.user.serverPushId in androidPayload:
+				androidPayload.append(str(coll.user.serverPushId))
+		androidPayload.append(str(task.owner.serverPushId))
 
-	#for the owner of the task
-	androidPayload.append(str(task.owner.serverPushId))
+	def caseGroup():
+		""" Group is to be synced and message to be sent to all group members"""
+		group = dal.getGroupById(syncObj)
+		for member in group.members:
+			if not member.serverPushId in androidPayload:
+				androidPayload.append(str(member.serverPushId))
+		androidPayload.append(str(group.owner.serverPushId))
+
+
+	#Define the lookup dictionary
+	choice = {"Task":caseTask, "Group":caseGroup}
+
+	choice[syncObj.datatype]() #to call appropriate case	
 	
 
 	if len(androidPayload) > 0:
