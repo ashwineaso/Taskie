@@ -234,6 +234,7 @@ def pushSyncNotification(syncObj):
 		androidPush.payload[TOKEN_GCM_REGISTRATION_IDS] = androidPayload
 		androidPush.payload["data"] = syncObj.to_dict()
 
+
 		#Create UrlPoster Thread for GCM Push Start Thread
 		gcmPostThread = UrlPostThread(
 									threadID = 1,
