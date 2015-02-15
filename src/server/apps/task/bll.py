@@ -28,9 +28,7 @@ def addNewTask(taskObj):
 	#Add a task to the servers task list
 	task = dal.addNewTask(taskObj)
 	#Send message to GCM server to notify collaborators of task
-	syncObj = SyncClass()
-	syncObj.datatype = "Task"
-	syncObj.id = str(task.id)
+	syncObj = SyncClass("Task", str(task.id))
 	pushSyncNotification(syncObj)
 	return task
 
@@ -51,9 +49,7 @@ def editTask(taskObj):
 	#Update database with task information
 	task = dal.editTask(taskObj)
 	#Send message to GCM server to notify collaborators of task
-	syncObj = SyncClass()
-	syncObj.datatype = "Task"
-	syncObj.id = str(task.id)
+	syncObj = SyncClass("Task", str(task.id))
 	pushSyncNotification(syncObj)
 	return task
 
@@ -71,9 +67,7 @@ def addCollaborators(taskObj):
 
 	task = dal.addCollaborators(taskObj)
 	#Send message to GCM server to notify collaborators of task
-	syncObj = SyncClass()
-	syncObj.datatype = "Task"
-	syncObj.id = str(task.id)
+	syncObj = SyncClass("Task", str(task.id))
 	pushSyncNotification(syncObj)
 	return task
 
@@ -91,9 +85,7 @@ def remCollaborators(taskObj):
 
 	task = dal.remCollaborators(taskObj)
 	#Send message to GCM server to notify collaborators of task
-	syncObj = SyncClass()
-	syncObj.datatype = "Task"
-	syncObj.id = str(task.id)
+	syncObj = SyncClass("Task", str(task.id))
 	pushSyncNotification(syncObj)
 	return task
 
@@ -112,9 +104,7 @@ def modifyTaskStatus(taskObj):
 
 	task = dal.modifyTaskStatus(taskObj)
 	#Send message to GCM server to notify collaborators of task
-	syncObj = SyncClass()
-	syncObj.datatype = "Task"
-	syncObj.id = str(task.id)
+	syncObj = SyncClass("Task", str(task.id))
 	pushSyncNotification(syncObj)
 	return task
 
@@ -134,9 +124,7 @@ def modifyCollStatus(taskObj):
 
 	task = dal.modifyCollStatus(taskObj)
 	#Send message to GCM server to notify collaborators of task
-	syncObj = SyncClass()
-	syncObj.datatype = "Task"
-	syncObj.id = str(task.id)
+	syncObj = SyncClass("Task", str(task.id))
 	pushSyncNotification(syncObj)
 	return task
 
@@ -153,9 +141,7 @@ def createGroup(groupObj):
 	"""
 	group = dal.createGroup(groupObj)
 	#Send message to GCM server to notify collaborators of task
-	syncObj = SyncClass()
-	syncObj.datatype = "Group"
-	syncObj.id = str(group.id)
+	syncObj = SyncClass("Group", str(group.id))
 	pushSyncNotification(syncObj)
 	return group
 
@@ -173,9 +159,7 @@ def addGroupMembers(groupObj):
 
 	group = dal.addGroupMembers(groupObj)
 	#Send message to GCM server to notify collaborators of task
-	syncObj = SyncClass()
-	syncObj.datatype = "Group"
-	syncObj.id = str(group.id)
+	syncObj = SyncClass("Group", str(group.id))
 	pushSyncNotification(syncObj)
 	return group
 
@@ -194,9 +178,7 @@ def remGroupMembers(groupObj):
 
 	group = dal.remGroupMembers(groupObj)
 	#Send message to GCM server to notify collaborators of task
-	syncObj = SyncClass()
-	syncObj.datatype = "Group"
-	syncObj.id = str(group.id)
+	syncObj = SyncClass("Group", str(group.id))
 	pushSyncNotification(syncObj)
 	return group
 
@@ -251,7 +233,6 @@ def pushSyncNotification(syncObj):
 	if len(androidPayload) > 0:
 		androidPush.payload[TOKEN_GCM_REGISTRATION_IDS] = androidPayload
 		androidPush.payload["data"] = syncObj.to_dict()
-		print androidPush.payload
 
 		#Create UrlPoster Thread for GCM Push Start Thread
 		gcmPostThread = UrlPostThread(
