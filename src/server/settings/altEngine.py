@@ -17,12 +17,12 @@ class Collection():
 
 
 class SyncClass():
-    def __init__(self, datatype, type_id):
+    def __init__(self, datatype = "", type_id = ""):
         self.datatype = datatype
         self.id = type_id
 
-        def to_dict(self):
-        return mongo_to_dict_helper(self)
+    def to_dict(self):
+        return {"datatype":self.datatype, "id":self.id}
 
 
 

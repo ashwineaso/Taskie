@@ -174,7 +174,7 @@ def modifyTaskStatus(taskObj):
 
 	statusObj = Status()
 	statusObj = Status(status = taskObj.status,
-						dateTime = taskObj.dateTime)
+						dateTime = time.time())
 	task  = Task.objects(id = taskObj.id).get()
 	Task.objects(id = taskObj.id).update(set__status = statusObj)
 	task.reload()

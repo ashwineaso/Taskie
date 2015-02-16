@@ -252,16 +252,3 @@ def verifyUser(userObj):
 		user.save()
 		return True
 	return False
-
-
-def syncUserInfo(userObj):
-	"""
-	Sync minimal user information such as id, name, email and profile pic
-	"""
-	user = Collection()
-
-	person = User.objects.get(id = userObj)
-	user.name = person.name
-	user.email = person.email
-	user.profilepic = person.profilepic
-	return user
