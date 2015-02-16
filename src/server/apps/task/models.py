@@ -34,5 +34,7 @@ class Task(Document):
 	dueDateTime = LongField(required = False)
 	status = EmbeddedDocumentField(Status)
 
+	meta = {'allow_inheritance': True}
+
 	def to_dict(self):
 		return mongo_to_dict_helper(self)

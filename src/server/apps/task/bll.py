@@ -21,8 +21,7 @@ def addNewTask(taskObj):
 			description,
 			dueDateTime,
 			status
-			isgroup
-			group
+
 	:return an object of the task class.
 	"""
 	#Add a task to the servers task list
@@ -129,59 +128,6 @@ def modifyCollStatus(taskObj):
 	return task
 
 
-def createGroup(groupObj):
-	"""
-	Create a new group
-	
-	:type groupObj : object
-	:param groupObj : An instance with the following attributes
-						ownerId - userId of the creator/ member
-						title - name of the groupObj
-	:return An instance of the Group class
-	"""
-	group = dal.createGroup(groupObj)
-	#Send message to GCM server to notify collaborators of task
-	syncObj = SyncClass("Group", str(group.id))
-	pushSyncNotification(syncObj)
-	return group
-
-
-def addGroupMembers(groupObj):
-	"""
-	Add members to a groupObj
-
-	:type groupObj : object
-	:param groupObj : An instance of Collection with the following attributes
-						id - id of the TaskGroup
-						member - list of members to be added to the group
-	:return : An instance of the Group class
-	"""
-
-	group = dal.addGroupMembers(groupObj)
-	#Send message to GCM server to notify collaborators of task
-	syncObj = SyncClass("Group", str(group.id))
-	pushSyncNotification(syncObj)
-	return group
-
-
-
-def remGroupMembers(groupObj):
-	"""
-	Remove memberd from a group
-
-	:type groupObj : object
-	:param groupObj : An instance of Collection with the following attributes
-						id - id of the TaskGroup
-						member - list of members to be added to the group
-	:return : An instance of the Group class
-	"""
-
-	group = dal.remGroupMembers(groupObj)
-	#Send message to GCM server to notify collaborators of task
-	syncObj = SyncClass("Group", str(group.id))
-	pushSyncNotification(syncObj)
-	return group
-
 
 def syncTask(taskObj):
 	"""
@@ -267,8 +213,6 @@ def taskToDictConverter(task):
 	status["status"] = task.status.status
 	status["dateTime"] = task.status.dateTime
 	taskie["status"] = status.copy()
-	taskie["isgroup"] = task.isgroup
-	taskie["group"] = task.group
 
 	#Retrieve owner information
 	taskie["owner"] = str(task.owner.id)
@@ -285,20 +229,3 @@ def taskToDictConverter(task):
 		coll["endTime"] = each_user.endTime
 		taskie["collaborators"].append(coll.copy())
 	return taskie
-
-
-def groupToDictConverter(groupObj):
-	"""
-	Convert the incoming TaskGroup object into JSON Serializable format
-	ony including the essential details
-	"""
-
-	group = {}
-
-	group["id"] = str(groupObj.id)
-	group["title"] = groupObj.title
-	group["owner"] = str(groupObj.owner.id)
-	group["members"] = []
-	for member in groupObj.members:
-		group["members"].append(str(member.id))
-	return group

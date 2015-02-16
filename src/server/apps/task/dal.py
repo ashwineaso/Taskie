@@ -20,8 +20,6 @@ def addNewTask(taskObj):
 			description,
 			dueDateTime,
 			status
-			isgroup
-			group
 
 	:return an object of the task class.
 
@@ -64,12 +62,7 @@ def addNewTask(taskObj):
 				description = taskObj.description,
 				dueDateTime = taskObj.dueDateTime,
 				status = taskObj.status,
-				isgroup = taskObj.isgroup
 				).save()
-	if taskObj.isgroup is True:
-		taskObj.group = Group.objects.get(id = taskObj.group)
-		Task.objects(id = task.id).update(set__group = taskObj.group)
-		task.save()
 	return task
 
 
@@ -204,79 +197,6 @@ def modifyCollStatus(taskObj):
 	return task
 
 
-def createGroup(groupObj):
-	"""
-
-	Create a new group
-	:type groupObj : object
-	:param groupObj : An instance with the following attributes
-						ownerId - userId of the creator/ member
-						title - name of the groupObj
-	:return group : An instance of the Group class
-	"""
-
-	userObj = Collection()
-
-	#for finding the user id of the owner
-	userObj.id = groupObj.owner
-	groupObj.user = userbll.getUserById(userObj)
-	group = TaskGroup(
-					owner = groupObj.user,
-					title = groupObj.title
-					)
-	group.save()
-	return group
-
-
-
-def addGroupMembers(groupObj):
-	"""
-	Add members to a groupObj
-
-	:type groupObj : object
-	:param groupObj : An instance of Collection with the following attributes
-						id - id of the TaskGroup
-						member - list of members to be added to the group
-	:return : An instance of the Group class
-	"""
-
-	member_list = []
-	userObj = Collection
-
-	group = getGroupById(groupObj)
-	for userObj.id in groupObj.members:
-		userObj.user = userbll.getUserById(userObj)
-		member_list.append(userObj.user.id)
-	TaskGroup.objects(id = group.id).update(push_all__members = member_list)
-	group.save()
-	group.reload()
-	return group
-
-
-
-def remGroupMembers(groupObj):
-	"""
-	Remove memberd from a group
-
-	:type groupObj : object
-	:param groupObj : An instance of Collection with the following attributes
-						id - id of the TaskGroup
-						member - list of members to be added to the group
-	:return : An instance of the Group class
-	"""
-
-	userObj = Collection()
-
-	group = getGroupById(groupObj)
-	for userObj.id in groupObj.members:
-		user = userbll.getUserById(userObj)
-		TaskGroup.objects(id = group.id).update_one(pull__members = user)
-	group.save()
-	group.reload()
-	return group
-
-
-
 def syncTask(taskObj):
 	"""
 	Sync / retrieve as task whose id is provided
@@ -300,19 +220,3 @@ def getTaskById(taskObj):
 		return task
 	except Exception:
 		raise TaskWithIDNotFound
-
-
-def getGroupById(groupObj):
-	"""
-	Retrieve group using id
-	::type groupObj : object
-	::param groupObj :Instance of Collection with the following attributes
-						id
-	::return group : Instance if TaskGroup class
-	"""
-
-	try:
-		group = TaskGroup.objects.get(id = groupObj.id).select_related(1)
-		return group 
-	except Exception as e:
-		raise GroupWithIDNotFound
