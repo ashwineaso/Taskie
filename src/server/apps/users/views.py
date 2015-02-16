@@ -273,7 +273,7 @@ def syncUserInfo():
 	obj = request.json
 	try:
 		userObj.access_token = ["acceess_token"]
-		userObj.id = obj["id"]
+		userObj.email = obj["email"]
 		if dal.checkAccessTokenValid(userObj):
 			user = bll.syncUserInfo(userObj)
 		response["data"] = bll.convertUserToDict(user)
