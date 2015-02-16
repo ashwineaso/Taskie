@@ -199,7 +199,7 @@ def modifyCollStatus(taskObj):
 	for collaborator in task.collaborators:
 		if collaborator.user == userObj:
 			collaborator.status.status = taskObj.collstatus
-			collaborator.status.dateTime = taskObj.statusDateTime
+			collaborator.status.dateTime = time.time()
 	task.save()
 	return task
 
