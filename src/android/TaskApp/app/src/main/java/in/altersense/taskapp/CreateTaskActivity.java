@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -15,6 +17,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.tokenautocomplete.FilteredArrayAdapter;
+import com.tokenautocomplete.TokenCompleteTextView;
 
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText;
@@ -24,7 +27,7 @@ import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.User;
 
 
-public class CreateTaskActivity extends ActionBarActivity {
+public class CreateTaskActivity extends ActionBarActivity implements TokenCompleteTextView.TokenListener{
 
     private static final String CLASS_TAG = "CreateTaskActivity";
     private Task task;
@@ -74,21 +77,42 @@ public class CreateTaskActivity extends ActionBarActivity {
         UserDbHelper userDbHelper = new UserDbHelper(CreateTaskActivity.this);
         this.users = userDbHelper.listAllUsers();
 
+        collabboraatorsTCET.setTokenListener(this);
         /*adapter = new ArrayAdapter<User>(
                 this,
                 android.R.layout.simple_list_item_1,
                 users
         );*/
 
-        adapter = new FilteredArrayAdapter<User>(this, android.R.layout.simple_list_item_1, users) {
+        // Setting a Filtered Array Adapter to autocomplete with users in db
+        adapter = new FilteredArrayAdapter<User>(this, R.layout.collaorator_list_layout, users) {
             @Override
             protected boolean keepObject(User user, String s) {
                 s = s.toLowerCase();
                 return user.getName().toLowerCase().startsWith(s) || user.getEmail().toLowerCase().startsWith(s);
             }
-        };
 
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                if(convertView==null) {
+                    LayoutInflater l = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                    convertView = l.inflate(R.layout.collaorator_list_layout, parent, false);
+                }
+
+                User u = getItem(position);
+                ((TextView)convertView.findViewById(R.id.name)).setText(u.getName());
+                ((TextView)convertView.findViewById(R.id.email)).setText(u.getEmail());
+
+                return convertView;
+            }
+        };
         collabboraatorsTCET.setAdapter(adapter);
+
+        // denying duplicate entries.
+        collabboraatorsTCET.allowDuplicates(false);
+
+        // setting what happens on clicking token
+        collabboraatorsTCET.setTokenClickStyle(TokenCompleteTextView.TokenClickStyle.Select);
 
         if(createEditIntent.hasExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey())) {
             // Populate the form with the data.
@@ -129,5 +153,16 @@ public class CreateTaskActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onTokenAdded(Object o) {
+        String TAG = CLASS_TAG+"onTokenAdded";
+        Log.d(TAG, "Added: "+o.toString());
+    }
+
+    @Override
+    public void onTokenRemoved(Object o) {
+
     }
 }

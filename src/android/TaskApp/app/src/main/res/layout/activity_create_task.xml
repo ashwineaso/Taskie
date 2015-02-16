@@ -23,7 +23,8 @@
     <in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText
         android:id="@+id/collaboratorsTCET"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        style="@style/tokenEditText" />
 
     <EditText android:id="@+id/dueDateEditText"
         android:layout_width="match_parent"
