@@ -19,6 +19,8 @@ import android.widget.TextView;
 import com.tokenautocomplete.FilteredArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView;
 
+import java.util.ArrayList;
+
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText;
 import in.altersense.taskapp.database.TaskDbHelper;
@@ -43,6 +45,7 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
 
     private User[] users;
     private ArrayAdapter<User> adapter;
+    private ArrayList<User> newCollaboratorList = new ArrayList<User>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +76,20 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
         this.priorityTV = (TextView) findViewById(R.id.priorityTextView);
         this.createTaskBtn = (Button) findViewById(R.id.createTaskButton);
         this.updateTaskBtn = (Button) findViewById(R.id.updateTaskButton);
+
+        this.updateTaskBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateTask();
+            }
+        });
+
+        this.createTaskBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createaTask();
+            }
+        });
 
         UserDbHelper userDbHelper = new UserDbHelper(CreateTaskActivity.this);
         this.users = userDbHelper.listAllUsers();
@@ -122,6 +139,12 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
         }
     }
 
+    private void createaTask() {
+    }
+
+    private void updateTask() {
+    }
+
     private void populatetheForm() {
         this.taskTitleET.setText(this.task.getName());
         this.taskDescriptionET.setText(this.task.getDescription());
@@ -158,11 +181,32 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
     @Override
     public void onTokenAdded(Object o) {
         String TAG = CLASS_TAG+"onTokenAdded";
-        Log.d(TAG, "Added: "+o.toString());
+        try{
+            this.newCollaboratorList.add((User) o);
+            Log.d(TAG, "Added: " + o.toString());
+            String listOfCollabs = "";
+            for(User user:this.newCollaboratorList) {
+                listOfCollabs+=user.getEmail()+",";
+            }
+            Log.d(TAG, "New List: "+listOfCollabs);
+        } catch (NullPointerException e) {
+            Log.d(TAG, "Nothing added.");
+        }
     }
 
     @Override
     public void onTokenRemoved(Object o) {
-
+        String TAG = CLASS_TAG+"onTokenRemoved";
+        try {
+            this.newCollaboratorList.remove(o);
+            Log.d(TAG, "Removed: "+o.toString());
+            String listOfCollabs = "";
+            for(User user:this.newCollaboratorList) {
+                listOfCollabs+=user.getEmail()+",";
+            }
+            Log.d(TAG, "New List: "+listOfCollabs);
+        } catch (NullPointerException e) {
+            Log.d(TAG, "Nothing removed.");
+        }
     }
 }

@@ -3,7 +3,7 @@
     <stroke
         android:width="1dp"
         android:color="#ffd4d4d4" />
-    <solid android:color="#ffafafaf" />
+    <solid android:color="@color/createTaskPrimaryActionBar" />
 
     <corners
         android:topLeftRadius="3dp"

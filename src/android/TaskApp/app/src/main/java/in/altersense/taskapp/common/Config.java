@@ -55,6 +55,23 @@ public class Config {
 
     }
 
+    public static enum REQUEST_ERROR_CODES {
+        TOKEN_NOT_FOUND(3001),
+        ACCESS_TOKEN_INVALID(3002),
+        REFRESH_TOKEN_INVALID(3003),
+        ACCESS_TOKEN_EXPIRED(3004);
+
+        public int getCode() {
+            return code;
+        }
+
+        private int code;
+
+        private REQUEST_ERROR_CODES(int errorCode) {
+            this.code = errorCode;
+        }
+    }
+
     public static enum REQUEST_RESPONSE_KEYS {
 
         EMAIL("email"),

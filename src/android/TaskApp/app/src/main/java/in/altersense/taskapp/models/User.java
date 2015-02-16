@@ -171,8 +171,8 @@ public class User {
   }
 */
     public User(String name, String email) {
-        Random rand = new Random(1000);
-        int uuid = rand.nextInt();
+        this.name = name;
+        this.email = email;
 
     }
 

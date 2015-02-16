@@ -215,13 +215,17 @@ public class APIRequest {
 			apiReqResponse = this.httpRequest();
 			
             if(apiReqResponse.getString("status").equalsIgnoreCase(Config.RESPONSE_STATUS_FAILED)) {
-                if(apiReqResponse.getString("message").equalsIgnoreCase(Config.TOKEN_EXPIRED_ERROR)) {
-                    Log.d(LOG_TAG,"    -> Token expired. refreshAccessToken() called. ("+apiReqResponse.getString("message")+")");
+                if(apiReqResponse.getInt("code")==Config.REQUEST_ERROR_CODES.ACCESS_TOKEN_EXPIRED.getCode()) {
+                    Log.d(LOG_TAG,"    -> Access Token expired. refreshAccessToken() called. ("+apiReqResponse.getString("message")+")");
                     this.refreshAccessToken();
 
                     apiReqResponse = this.httpRequest();
-                } else {
-                    Log.d(LOG_TAG,"    -> Unknown error. ("+apiReqResponse.getString("message")+")");
+                } else if(
+                        apiReqResponse.getInt("code")==Config.REQUEST_ERROR_CODES.TOKEN_NOT_FOUND.getCode() ||
+                        apiReqResponse.getInt("code")==Config.REQUEST_ERROR_CODES.ACCESS_TOKEN_INVALID.getCode() ||
+                        apiReqResponse.getInt("code")==Config.REQUEST_ERROR_CODES.REFRESH_TOKEN_INVALID.getCode()
+                        ) {
+                    Log.d(LOG_TAG,"    -> Unknown error. ("+apiReqResponse.getString("message")+","+apiReqResponse.getInt("code")+")");
                     this.issueNewToken();
                     Log.d(LOG_TAG,"    -> isssueNewToken() called.");
                     apiReqResponse = this.httpRequest();

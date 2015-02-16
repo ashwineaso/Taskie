@@ -47,6 +47,7 @@ public class TokenCompleteCollaboratorsEditText extends TokenCompleteTextView {
     protected Object defaultObject(String s) {
         String TAG = CLASS_TAG+"defaultObject";
         Log.d(TAG, "defaultObject called with string "+s);
+        // Create a new user object with email.
         return new User(s,s);
     }
 }
