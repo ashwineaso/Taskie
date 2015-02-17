@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,7 +44,9 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
 
     private User[] users;
     private ArrayAdapter<User> adapter;
-    private ArrayList<User> newCollaboratorList = new ArrayList<User>();
+    private ArrayList<User> collaboratorList = new ArrayList<User>();
+    private ArrayList<User> collaboratorAdditionList = new ArrayList<User>();
+    private ArrayList<User> collaboratorRemovalList = new ArrayList<User>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +144,25 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
     }
 
     private void updateTask() {
+        Task updatedTask = new Task(
+                this.task.getUuid(),
+                this.taskTitleET.getText().toString(),
+                this.taskDescriptionET.getText().toString(),
+                this.task.getOwner(),
+                Integer.parseInt(this.priorityTV.getText().toString()),
+                Long.parseLong(this.dueDateET.getText().toString()),
+                this.task.getStatus(),
+                this.task.getIntIsGroup(),
+                this.task.getGroup(),
+                CreateTaskActivity.this
+        );
+        updatedTask.setId(this.task.getId()); // Fallback if UUID was not yet set up.
+        updatedTask.updateCollaborators(
+                this.task.getCollaborators(),
+                collaboratorAdditionList,
+                collaboratorRemovalList,
+                this
+        );
     }
 
     private void populatetheForm() {
@@ -182,10 +202,10 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
     public void onTokenAdded(Object o) {
         String TAG = CLASS_TAG+"onTokenAdded";
         try{
-            this.newCollaboratorList.add((User) o);
+            this.collaboratorAdditionList.add((User) o);
             Log.d(TAG, "Added: " + o.toString());
             String listOfCollabs = "";
-            for(User user:this.newCollaboratorList) {
+            for(User user:this.collaboratorAdditionList) {
                 listOfCollabs+=user.getEmail()+",";
             }
             Log.d(TAG, "New List: "+listOfCollabs);
@@ -198,10 +218,10 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
     public void onTokenRemoved(Object o) {
         String TAG = CLASS_TAG+"onTokenRemoved";
         try {
-            this.newCollaboratorList.remove(o);
+            this.collaboratorRemovalList.remove(o);
             Log.d(TAG, "Removed: "+o.toString());
             String listOfCollabs = "";
-            for(User user:this.newCollaboratorList) {
+            for(User user:this.collaboratorRemovalList) {
                 listOfCollabs+=user.getEmail()+",";
             }
             Log.d(TAG, "New List: "+listOfCollabs);

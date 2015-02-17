@@ -16,13 +16,15 @@ import java.util.List;
 import in.altersense.taskapp.CreateTaskActivity;
 import in.altersense.taskapp.R;
 import in.altersense.taskapp.common.Config;
+import in.altersense.taskapp.database.CollaboratorDbHelper;
 import in.altersense.taskapp.database.TaskDbHelper;
+import in.altersense.taskapp.database.UserDbHelper;
 
 /**
  * Created by mahesmohan on 1/13/15.
  */
 public class Task {
-    private static final String TAG = "Task";
+    private static final String CLASS_TAG = "Task ";
 
     private long id;
 
@@ -112,6 +114,56 @@ public class Task {
         }
     }
 
+    public void setCollaborators(ArrayList<User> newCollaboratorList) {
+        this.collaborators = newCollaboratorList;
+    }
+
+    public void updateCollaborators(
+            List<User> oldCollaborators,
+            ArrayList<User> collaboratorAdditionList,
+            ArrayList<User> collaboratorRemovalList,
+            Activity activity
+    ) {
+        String TAG = CLASS_TAG+"updateCollaborators";
+        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity.getApplicationContext());
+        // Add each users to the list.
+        for(User addedCollaborator:collaboratorAdditionList) {
+            Log.d(TAG, "Collaborator addition: "+addedCollaborator.toString());
+            Log.d(TAG, "Collaborator ID:"+addedCollaborator.getId());
+            // Check if user is present in the database.
+            if(addedCollaborator.getId()<1) {
+                // If not add user to database.
+                Log.d(TAG, "Collaborator not found in User database. Adding to db.");
+                UserDbHelper userDbHelper = new UserDbHelper(activity.getApplicationContext());
+                addedCollaborator = userDbHelper.createUser(addedCollaborator);
+                Log.d(TAG, "Added collaborator to user database.");
+                // Sync user to get more information regarding the user.
+                SyncUserRequest syncUserRequest = new SyncUserRequest(addedCollaborator,activity);
+                Log.d(TAG, "Sending a sync user request to API to get user info.");
+                syncUserRequest.execute();
+            }
+            // Add the user as a collaborator of the task.
+            collaboratorDbHelper.addCollaborator(this, addedCollaborator);
+            Log.d(TAG, "User added to database as a collaborator of the task.");
+            // Add user to the oldCollaborator list.
+            oldCollaborators.add(addedCollaborator);
+            Log.d(TAG, "User added to oldCollaboratorList of the task.");
+        }
+        // Remove users from the removal list.
+        for(User removedCollaborator:collaboratorRemovalList) {
+            // Remove the user from the collaborator list database.
+            Log.d(TAG, "About to remove the collaborator from database.");
+            collaboratorDbHelper.removeCollaborator(this, removedCollaborator);
+            // Remove the removed collaborator from the oldCollaborators list.
+            oldCollaborators.remove(removedCollaborator);
+            Log.d(TAG, "User removed from oldCollaboratorList of the task.");
+
+        }
+
+        this.collaborators = oldCollaborators;
+        Log.d(TAG, "New list of collaborators set as this task's list of collaborators.");
+    }
+
     /**
      * Table Structure for Task
      */
@@ -193,26 +245,26 @@ public class Task {
         this.isGroup = isGroup;
         this.group = group;
         this.collaborators = new ArrayList<User>();
-        Log.d(TAG, "Basic fields set.");
+        Log.d(CLASS_TAG, "Basic fields set.");
 
-        Log.d(TAG, "PanelView construction being called.");
+        Log.d(CLASS_TAG, "PanelView construction being called.");
         this.panelView = createView(activity.getLayoutInflater());
-        Log.d(TAG, "PanelView constructed.");
+        Log.d(CLASS_TAG, "PanelView constructed.");
 
-        Log.d(TAG, "ActionsView constructions being called.");
+        Log.d(CLASS_TAG, "ActionsView constructions being called.");
         this.actionsView = createActionsView(activity);
-        Log.d(TAG, "ActionsView constructed.");
+        Log.d(CLASS_TAG, "ActionsView constructed.");
 
 
-        Log.d(TAG, "TaskActionsPlaceHolder being set up.");
+        Log.d(CLASS_TAG, "TaskActionsPlaceHolder being set up.");
         this.taskActionsPlaceHolderView =
                 (LinearLayout) this.panelView.findViewById(R.id.actionsPlaceHolderLinearLayout);
         this.taskActionsPlaceHolderView.setVisibility(View.GONE);
-        Log.d(TAG, "TaskActionsPlaceHolder visibility now set to GONE.");
+        Log.d(CLASS_TAG, "TaskActionsPlaceHolder visibility now set to GONE.");
         this.taskActionsPlaceHolderView.addView(this.actionsView);
-        Log.d(TAG, "TaskActionsPlaceHolder gets the addition of the ActionsView");
+        Log.d(CLASS_TAG, "TaskActionsPlaceHolder gets the addition of the ActionsView");
         this.isActionsDisplayed = false;
-        Log.d(TAG, "ActionsDisplayed is set to false.");
+        Log.d(CLASS_TAG, "ActionsDisplayed is set to false.");
 
     }
 
@@ -270,7 +322,7 @@ public class Task {
     }
 
     public Task(Cursor cursor, Activity activity) {
-        Log.d(TAG, " Constructor(cursor,activity)");
+        Log.d(CLASS_TAG, " Constructor(cursor,activity)");
         this.uuid = cursor.getString(0);
         this.name = cursor.getString(2);
         this.description = cursor.getString(3);
@@ -355,7 +407,7 @@ public class Task {
     }
 
     public void showTaskActions() {
-        Log.i(TAG, "Reached showTaskActions");
+        Log.i(CLASS_TAG, "Reached showTaskActions");
         this.taskActionsPlaceHolderView.setVisibility(View.VISIBLE);
         this.isActionsDisplayed = true;
     }
