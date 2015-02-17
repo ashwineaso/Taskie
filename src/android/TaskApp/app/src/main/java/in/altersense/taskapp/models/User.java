@@ -84,13 +84,15 @@ public class User {
         Log.d(TAG, "User setup complete.");
     }
 
-    public static ArrayList<String> getAllColumns() {
+    public static String[] getAllColumns() {
         ArrayList<String> columnList = new ArrayList<String>();
         for(KEYS key: KEYS.values()) {
             columnList.add(key.getName());
         }
         columnList.add("ROWID");
-        return columnList;
+        String[] columns = new String[columnList.size()];
+        columns = columnList.toArray(columns);
+        return columns;
     }
 
     /**

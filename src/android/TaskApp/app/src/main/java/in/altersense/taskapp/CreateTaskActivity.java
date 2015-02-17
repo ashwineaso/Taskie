@@ -19,11 +19,13 @@ import com.tokenautocomplete.FilteredArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
+import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.User;
 
@@ -44,9 +46,9 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
 
     private User[] users;
     private ArrayAdapter<User> adapter;
-    private ArrayList<User> collaboratorList = new ArrayList<User>();
-    private ArrayList<User> collaboratorAdditionList = new ArrayList<User>();
-    private ArrayList<User> collaboratorRemovalList = new ArrayList<User>();
+    private List<Collaborator> collaboratorList = new ArrayList<Collaborator>();
+    private List<Collaborator> collaboratorAdditionList = new ArrayList<Collaborator>();
+    private List<Collaborator> collaboratorRemovalList = new ArrayList<Collaborator>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -202,7 +204,7 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
     public void onTokenAdded(Object o) {
         String TAG = CLASS_TAG+"onTokenAdded";
         try{
-            this.collaboratorAdditionList.add((User) o);
+            this.collaboratorAdditionList.add((Collaborator) o);
             Log.d(TAG, "Added: " + o.toString());
             String listOfCollabs = "";
             for(User user:this.collaboratorAdditionList) {

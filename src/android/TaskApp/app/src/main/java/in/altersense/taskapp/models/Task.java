@@ -40,7 +40,7 @@ public class Task {
     public boolean isActionsDisplayed;
     private int priority;
     private int status;
-    private List<User> collaborators;
+    private List<Collaborator> collaborators;
     private View panelView, actionsView;
     private LinearLayout taskActionsPlaceHolderView;
     private LinearLayout action1, action2, action3, action4;
@@ -86,7 +86,7 @@ public class Task {
         return status;
     }
 
-    public List<User> getCollaborators() {
+    public List<Collaborator> getCollaborators() {
         return collaborators;
     }
 
@@ -114,20 +114,27 @@ public class Task {
         }
     }
 
-    public void setCollaborators(ArrayList<User> newCollaboratorList) {
+    public void setCollaborators(List<Collaborator> newCollaboratorList) {
         this.collaborators = newCollaboratorList;
     }
 
     public void updateCollaborators(
-            List<User> oldCollaborators,
-            ArrayList<User> collaboratorAdditionList,
-            ArrayList<User> collaboratorRemovalList,
+            List<Collaborator> oldCollaborators,
+            List<Collaborator> collaboratorAdditionList,
+            List<Collaborator> collaboratorRemovalList,
             Activity activity
     ) {
         String TAG = CLASS_TAG+"updateCollaborators";
         CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity.getApplicationContext());
+        // Remove duplicates from both lists.
+        for(Collaborator collaborator:collaboratorAdditionList) {
+            if(collaboratorRemovalList.contains(collaborator)) {
+                collaboratorAdditionList.remove(collaborator);
+                collaboratorRemovalList.remove(collaborator);
+            }
+        }
         // Add each users to the list.
-        for(User addedCollaborator:collaboratorAdditionList) {
+        for(Collaborator addedCollaborator:collaboratorAdditionList) {
             Log.d(TAG, "Collaborator addition: "+addedCollaborator.toString());
             Log.d(TAG, "Collaborator ID:"+addedCollaborator.getId());
             // Check if user is present in the database.
@@ -135,12 +142,18 @@ public class Task {
                 // If not add user to database.
                 Log.d(TAG, "Collaborator not found in User database. Adding to db.");
                 UserDbHelper userDbHelper = new UserDbHelper(activity.getApplicationContext());
-                addedCollaborator = userDbHelper.createUser(addedCollaborator);
+                addedCollaborator = (Collaborator) userDbHelper.createUser(addedCollaborator);
+                addedCollaborator.setStatus(0);
                 Log.d(TAG, "Added collaborator to user database.");
+                // TODO: Implement sync user request.
+/*
+
                 // Sync user to get more information regarding the user.
                 SyncUserRequest syncUserRequest = new SyncUserRequest(addedCollaborator,activity);
                 Log.d(TAG, "Sending a sync user request to API to get user info.");
                 syncUserRequest.execute();
+*/
+
             }
             // Add the user as a collaborator of the task.
             collaboratorDbHelper.addCollaborator(this, addedCollaborator);
@@ -244,7 +257,7 @@ public class Task {
         this.status = status;
         this.isGroup = isGroup;
         this.group = group;
-        this.collaborators = new ArrayList<User>();
+        this.collaborators = new ArrayList<Collaborator>();
         Log.d(CLASS_TAG, "Basic fields set.");
 
         Log.d(CLASS_TAG, "PanelView construction being called.");

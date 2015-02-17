@@ -89,9 +89,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
         // Create array list
         List<User> userList = new ArrayList<User>();
         // Setup columns
-        ArrayList<String> columnList = User.getAllColumns();
-        String[] columns = new String[columnList.size()];
-        columns = columnList.toArray(columns);
+        String[] columns = User.getAllColumns();
         // Execute query
         Cursor cursor = readableDb.query(
                 User.TABLE_NAME,
@@ -131,9 +129,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
         // Open a readable database.
         SQLiteDatabase readableDb = this.getReadableDatabase();
         // Setup columns.
-        ArrayList<String> columnList = User.getAllColumns();
-        String[] columns = new String[columnList.size()];
-        columns = columnList.toArray(columns);
+        String[] columns = User.getAllColumns();
         // Make query with name
         Cursor cursor = readableDb.query(
                 User.TABLE_NAME,

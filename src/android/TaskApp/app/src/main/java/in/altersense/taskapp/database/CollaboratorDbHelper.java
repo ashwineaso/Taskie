@@ -2,9 +2,13 @@ package in.altersense.taskapp.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.models.Collaborator;
@@ -22,7 +26,9 @@ public class CollaboratorDbHelper extends SQLiteOpenHelper {
             Collaborator.KEYS.TASK_ROWID.getName() + " " + Collaborator.KEYS.TASK_ROWID.getType() + ", " +
             Collaborator.KEYS.TASK_UUID.getName() + " " + Collaborator.KEYS.TASK_UUID.getType() + ", " +
             Collaborator.KEYS.USER_ROWID.getName() + " " + Collaborator.KEYS.USER_ROWID.getType() + ", " +
-            Collaborator.KEYS.USER_UUID.getName() + " " + Collaborator.KEYS.USER_UUID.getType() + ");";
+            Collaborator.KEYS.USER_UUID.getName() + " " + Collaborator.KEYS.USER_UUID.getType() + " , " +
+            Collaborator.KEYS.STATUS.getName() + " " + Collaborator.KEYS.STATUS.getType() + ");";
+    private Context context;
 
 
     @Override
@@ -39,9 +45,10 @@ public class CollaboratorDbHelper extends SQLiteOpenHelper {
 
     public CollaboratorDbHelper(Context context) {
         super(context, Collaborator.TABLE_NAME, null, Config.DATABASE_VERSION);
+        this.context = context;
     }
 
-    public boolean addCollaborator(Task task, User user) {
+    public boolean addCollaborator(Task task, Collaborator user) {
         String TAG = CLASS_TAG+"addCollaborator";
         // Open a writable database.
         SQLiteDatabase writableDatabase = this.getWritableDatabase();
@@ -52,6 +59,7 @@ public class CollaboratorDbHelper extends SQLiteOpenHelper {
         values.put(Collaborator.KEYS.TASK_ROWID.getName(),task.getId());
         values.put(Collaborator.KEYS.USER_UUID.getName(),user.getUuid());
         values.put(Collaborator.KEYS.USER_ROWID.getName(),user.getId());
+        values.put(Collaborator.KEYS.STATUS.getName(),user.getStatus());
         Log.d(TAG, "Content values to set :"+values);
         // Execute query.
         long result = writableDatabase.insert(
@@ -82,5 +90,42 @@ public class CollaboratorDbHelper extends SQLiteOpenHelper {
         writableDb.close();
         // Return action status.
         return (result>0);
+    }
+
+    public List<Collaborator> getAllCollaborators(Task task) {
+        String TAG = CLASS_TAG+"getAllCollaborators";
+        // Open readable db
+        SQLiteDatabase readableDb = this.getReadableDatabase();
+        Log.d(TAG, "Readable db opened.");
+        // Prepare query
+        String[] columns = Collaborator.getAllColumns();
+        // Execute query
+        Cursor result = readableDb.query(
+                Collaborator.TABLE_NAME,
+                columns,
+                Collaborator.KEYS.TASK_ROWID+"=?",
+                new String[] {task.getId()+""},
+                null,
+                null,
+                null
+        );
+        Log.d(TAG, "Returned "+result.getCount()+" rows.");
+        result.moveToFirst();
+        List<Collaborator> collaboratorList = new ArrayList<Collaborator>();
+        UserDbHelper userDbHelper = new UserDbHelper(this.context);
+        do {
+            // Fetch collaborator from db
+            Log.d(TAG, "Fetch collaborator from db.");
+            Collaborator collaborator = (Collaborator) userDbHelper.getUserByRowId(result.getLong(2));
+            // Set collaborator status
+            Log.d(TAG, "Set collaborator status.");
+            collaborator.setStatus(result.getInt(4));
+            // Make list
+            collaboratorList.add(collaborator);
+        }while (result.moveToNext());
+        // Close db
+        readableDb.close();
+        // Return list
+        return collaboratorList;
     }
 }
