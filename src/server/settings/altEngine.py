@@ -17,7 +17,7 @@ class Collection():
 
 
 class SyncClass():
-    def __init__(self, datatype = "", type_id = ""):
+    def __init__(self, datatype , type_id ):
         self.datatype = datatype
         self.id = type_id
 

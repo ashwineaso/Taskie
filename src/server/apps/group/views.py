@@ -4,9 +4,9 @@ from settings.altEngine import Collection, RESPONSE_SUCCESS, RESPONSE_FAILED
 from . import bll
 from apps.users.bll import checkAccessTokenValid
 
-groupObj = Collection()
 
 def createGroup():
+	groupObj = Collection()
 	response = {}
 	data = {}
 	obj = request.json
@@ -28,6 +28,7 @@ def createGroup():
 
 
 def addGroupMembers():
+	groupObj = Collection()
 	response = {}
 	data = {}
 	obj = request.json
@@ -50,6 +51,7 @@ def addGroupMembers():
 
 
 def remGroupMembers():
+	groupObj = Collection()
 	response = {}
 	data = {}
 	obj = request.json
@@ -72,6 +74,7 @@ def remGroupMembers():
 
 
 def addNewTask():
+	taskObj = Collection()
 	response = {}
 	data = {}
 	obj = request.json
@@ -100,6 +103,93 @@ def addNewTask():
 		#Validate access_token and continue process
 		if checkAccessTokenValid(taskObj) is True:
 			task = bll.addNewTask(taskObj)
+		response["status"] = RESPONSE_SUCCESS
+		response["data"] = bll.taskToDictConverter(task)
+	except Exception as e:
+		response["status"] = RESPONSE_FAILED
+		response["message"] = str(e)
+		if hasattr(e, "code"):
+			response["code"] = e.code
+	return response
+
+
+def editTask():
+	taskObj = Collection()
+	response = {}
+	data = {}
+	obj = request.json
+	try:
+		taskObj.access_token = obj["access_token"]
+		taskObj.id = obj["id"]
+		taskObj.priority = obj["priority"]
+		taskObj.name = obj["name"]
+		taskObj.description = obj["description"]
+		taskObj.dueDateTime = obj["dueDateTime"]
+		taskObj.collaborator_count = obj["collaborator_count"]
+		taskObj["group_id"] = obj["group_id"]
+		if checkAccessTokenValid(taskObj) is True:
+			task = bll.editTask(taskObj)
+		response["status"] = RESPONSE_SUCCESS
+		response["data"] = bll.taskToDictConverter(task)
+	except Exception as e:
+		response["status"] = RESPONSE_FAILED
+		response["message"] = str(e)
+		if hasattr(e, "code"):
+			response["code"] = e.code
+	return response
+
+
+def addCollaborators():
+	response = {}
+	data = {}
+	obj = request.json
+	try:
+		taskObj.access_token = obj["access_token"]
+		taskObj.id = obj["id"]
+		taskObj.collaborators = obj["collaborators"]
+		taskObj.group_id = obj["group_id"]
+		if checkAccessTokenValid(taskObj) is True:
+			task = bll.addCollaborators(taskObj)
+		response["status"] = RESPONSE_SUCCESS
+		response["data"] = bll.taskToDictConverter(task)
+	except Exception as e:
+		response["status"] = RESPONSE_FAILED
+		response["message"] = str(e)
+		if hasattr(e, "code"):
+			response["code"] = e.code
+	return response
+
+
+def remCollaborators():
+	response = {}
+	data = {}
+	obj = request.json
+	try:
+		taskObj.access_token = obj["access_token"]
+		taskObj.id = obj["id"]
+		taskObj.collaborators = obj["collaborators"]
+		if checkAccessTokenValid(taskObj) is True:
+			task = bll.remCollaborators(taskObj)
+		response["status"] = RESPONSE_SUCCESS
+		response["data"] = bll.taskToDictConverter(task)
+	except Exception as e:
+		response["status"] = RESPONSE_FAILED
+		response["message"] = str(e)
+		if hasattr(e, "code"):
+			response["code"] = e.code
+	return response
+
+
+def modifyTaskStatus():
+	response = {}
+	data = {}
+	obj = request.json
+	try:
+		taskObj.access_token = obj["access_token"]
+		taskObj.id = obj["id"]
+		taskObj.status = obj["status"]
+		if checkAccessTokenValid(taskObj) is True:
+			task = bll.modifyTaskStatus(taskObj)
 		response["status"] = RESPONSE_SUCCESS
 		response["data"] = bll.taskToDictConverter(task)
 	except Exception as e:

@@ -14,33 +14,33 @@ def addNewTask():
 	response = {}
 	data = {}
 	obj = request.json
+	# try:
+	taskObj.access_token = obj["access_token"]
+	taskObj.owner = obj["owner"]
+	taskObj.name = obj["name"]
 	try:
-		taskObj.access_token = obj["access_token"]
-		taskObj.owner = obj["owner"]
-		taskObj.name = obj["name"]
-		try:
-			taskObj.priority = obj["priority"]
-		except KeyError:
-			taskObj.priority = 1
-		try:
-			taskObj.description = obj["description"]
-		except KeyError:
-			taskObj.description = ''
-		try:
-			taskObj.dueDateTime = obj["dueDateTime"]
-		except KeyError:
-			taskObj.dueDateTime = 0
-		taskObj.collaborators = obj["collaborators"]
-		#Validate access_token and continue process
-		if checkAccessTokenValid(taskObj) is True:
-			task = bll.addNewTask(taskObj)
-		response["status"] = RESPONSE_SUCCESS
-		response["data"] = bll.taskToDictConverter(task)
-	except Exception as e:
-		response["status"] = RESPONSE_FAILED
-		response["message"] = str(e)
-		if hasattr(e, "code"):
-			response["code"] = e.code
+		taskObj.priority = obj["priority"]
+	except KeyError:
+		taskObj.priority = 1
+	try:
+		taskObj.description = obj["description"]
+	except KeyError:
+		taskObj.description = ''
+	try:
+		taskObj.dueDateTime = obj["dueDateTime"]
+	except KeyError:
+		taskObj.dueDateTime = 0
+	taskObj.collaborators = obj["collaborators"]
+	#Validate access_token and continue process
+	if checkAccessTokenValid(taskObj) is True:
+		task = bll.addNewTask(taskObj)
+	response["status"] = RESPONSE_SUCCESS
+	response["data"] = bll.taskToDictConverter(task)
+	# except Exception as e:
+	# 	response["status"] = RESPONSE_FAILED
+	# 	response["message"] = str(e)
+	# 	if hasattr(e, "code"):
+	# 		response["code"] = e.code
 	return response
 
 
@@ -163,6 +163,6 @@ def syncTask():
 	except Exception as e:
 		response["status"] = RESPONSE_FAILED
 		response["message"] = str(e)
-		if hasatttr(e, "code"):
+		if hasattr(e, "code"):
 			response["code"] = e.code
 	return response

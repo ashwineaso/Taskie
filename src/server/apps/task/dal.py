@@ -61,8 +61,9 @@ def addNewTask(taskObj):
 				name = taskObj.name,
 				description = taskObj.description,
 				dueDateTime = taskObj.dueDateTime,
-				status = taskObj.status,
-				).save()
+				status = taskObj.status
+				)
+	task.save()
 	return task
 
 
@@ -216,7 +217,7 @@ def getTaskById(taskObj):
 	"""
 
 	try:
-		task = Task.objects.get(id = taskObj.id).select_related(1)
+		task = Task.objects.get(id = taskObj.id)
 		return task
-	except Exception:
-		raise TaskWithIDNotFound
+	except Exception as e:
+		raise e

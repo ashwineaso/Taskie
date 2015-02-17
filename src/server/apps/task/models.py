@@ -34,7 +34,29 @@ class Task(Document):
 	dueDateTime = LongField(required = False)
 	status = EmbeddedDocumentField(Status)
 
-	meta = {'allow_inheritance': True}
+	meta = {'allow_inheritance': True,
+			'index_cls': False
+			} 
+
+	def __init__(self,
+				owner,
+				collaborators,
+				priority,
+				name,
+				description,
+				dueDateTime,
+				status,
+				*args,
+				**kwargs ):
+		super(Task, self).__init__(*args, **kwargs)
+		self.owner = owner
+		self.collaborators = collaborators
+		self.priority = priority
+		self.name = name
+		self.description = description
+		self.dueDateTime = dueDateTime
+		self.status = status
+
 
 	def to_dict(self):
 		return mongo_to_dict_helper(self)

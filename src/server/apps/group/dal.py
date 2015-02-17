@@ -1,5 +1,6 @@
 __author__ = ["ashwineaso"]
 from models import *
+from apps.task.models import * 
 from apps.users import bll as userbll
 from mongoengine import DoesNotExist
 from settings.exceptions import *
@@ -8,7 +9,6 @@ import os.path
 from settings.altEngine import Collection
 
 taskObj = Collection()
-userObj = Collection()
 groupObj = Collection()
 
 def createGroup(groupObj):
@@ -27,12 +27,12 @@ def createGroup(groupObj):
 	#for finding the user id of the owner
 	userObj.id = groupObj.owner
 	groupObj.user = userbll.getUserById(userObj)
-	group = TaskGroup(
+	taskgroup = TaskGroup(
 					owner = groupObj.user,
 					title = groupObj.title
 					)
-	group.save()
-	return group
+	taskgroup.save()
+	return taskgroup
 
 
 
@@ -50,14 +50,14 @@ def addGroupMembers(groupObj):
 	member_list = []
 	userObj = Collection
 
-	group = getGroupById(groupObj)
+	taskgroup = getGroupById(groupObj)
 	for userObj.id in groupObj.members:
 		userObj.user = userbll.getUserById(userObj)
 		member_list.append(userObj.user.id)
-	TaskGroup.objects(id = group.id).update(push_all__members = member_list)
-	group.save()
-	group.reload()
-	return group
+	TaskGroup.objects(id = taskgroup.id).update(push_all__members = member_list)
+	taskgroup.save()
+	taskgroup.reload()
+	return taskgroup
 
 
 
@@ -74,13 +74,13 @@ def remGroupMembers(groupObj):
 
 	userObj = Collection()
 
-	group = getGroupById(groupObj)
+	taskgroup = getGroupById(groupObj)
 	for userObj.id in groupObj.members:
 		user = userbll.getUserById(userObj)
-		TaskGroup.objects(id = group.id).update_one(pull__members = user)
-	group.save()
-	group.reload()
-	return group
+		TaskGroup.objects(id = taskgroup.id).update_one(pull__members = user)
+	taskgroup.save()
+	taskgroup.reload()
+	return taskgroup
 
 
 def addNewTask(taskObj):
@@ -129,6 +129,9 @@ def addNewTask(taskObj):
 		my_objects.append(Collaborator(user = userbll.getUserByEmail(userObj),
 										status = taskObj.status))
 	
+	#Find if the group exists. If Yes, get TaskGroup object
+	groupObj.id = taskObj.group_id
+	taskgroup = getGroupById(groupObj)
 	#Create a task with the necessary data.
 	task = GroupTask(
 				owner = taskObj.owner,
@@ -138,16 +141,98 @@ def addNewTask(taskObj):
 				description = taskObj.description,
 				dueDateTime = taskObj.dueDateTime,
 				status = taskObj.status,
-				collaborator_count = taskObj.Collaborator_count
-				)
+				collaborator_count = taskObj.collaborator_count
+				).save()
 
-	#Finding and assigning the group
-	groupObj.id = taskObj.group_id
-	group = getGroupById(groupObj)
 	#Add the GroupTask object to the TaskGroup's task_list list
-	TaskGroup.objects(id = group.id).update(push_all__task_list = task)
-	group.save()
+	try:
+		TaskGroup.objects(id = taskgroup.id).update(push__task_list = task.id)
+	except:
+		raise GroupWithIDNotFound
+	taskgroup.save()
 	return task
+
+
+def editTask(taskObj):
+	"""
+	Edits and existing taskObj
+
+	:type taskObj : object
+	:para taskObj : An object with the following attributes
+			_id,
+			name,
+			description,
+			dueDateTime,
+			priority
+	: return : an object of task class
+
+	"""
+	task = getTaskById(taskObj)
+	Task.objects(id = task.id).update(
+										set__name = taskObj.name,
+										set__description = taskObj.description,
+										set__priority = taskObj.priority,
+										set__dueDateTime = taskObj.dueDateTime,
+										set__collaborator_count = taskObj.collaborator_count)
+	task.reload()
+	return task
+
+
+def addCollaborators(taskObj):
+	"""
+	Add collaborators to an existing task
+
+	:type taskObj: object
+	:param An instance with the following attributes
+			collaborators
+	:return An instance of the Task class
+
+	"""
+	my_objects = []
+	userObj = Collection()
+	groupObj = Collection()
+
+	#Obtain the group using id
+	groupObj.id = taskObj.group_id
+	taskgroup = getGroupById(groupObj)
+
+	#Obtain the task using task is
+	task = getTaskById(taskObj)
+
+	#Create a Status object to assign to each collaborator
+	taskObj.status = Status(
+					status = 0,
+					dateTime = time.time()
+					)
+
+	#Checking existence of collaborators
+	for userObj.email in taskObj.collaborators:
+		try:
+			user = getUserByEmail(userObj)
+		except:
+			raise UserNotFound
+		if user not in group.members:
+			raise UserNotMember
+		my_objects.append(Collaborator(user = user,
+										status = taskObj.status))
+
+	GroupTask.objects(id = task.id).update(push_all__collaborators = my_objects)
+	task.save()
+	task.reload()
+	return task
+
+
+def remCollaborators(taskObj):
+	"""
+	Remove collaborators from an existing task
+
+	:type taskObj: object
+	:param taskObj: An instance with the following attributes
+					collaborators
+	:return An instance of the Task class
+
+	"""
+	pass
 
 
 
@@ -161,7 +246,7 @@ def getGroupById(groupObj):
 	"""
 
 	try:
-		group = TaskGroup.objects.get(id = groupObj.id).select_related(1)
+		group = TaskGroup.objects.get(id = groupObj.id)
 		return group 
 	except Exception as e:
 		raise GroupWithIDNotFound

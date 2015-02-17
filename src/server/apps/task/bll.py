@@ -13,7 +13,7 @@ def addNewTask(taskObj):
 	Adds a new task to the task list
 
 	:type taskObj : object
-	:para. taskObj : An object with the following attributes
+	:param taskObj : An object with the following attributes
 			owner (objectId),
 			collaborators,
 			priority,
