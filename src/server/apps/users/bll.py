@@ -132,7 +132,7 @@ def syncUserInfo(userObj):
 	Sync minimal user information such as id, name, email and profile pic
 	"""
 
-	user = dal.getUserByEmail(userObj)
+	user = getUserByEmail(userObj)
 	return user
 
 
