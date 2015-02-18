@@ -17,7 +17,7 @@ class Collection():
 
 
 class SyncClass():
-    def __init__(self, datatype = "", type_id = ""):
+    def __init__(self, datatype , type_id ):
         self.datatype = datatype
         self.id = type_id
 
@@ -67,5 +67,7 @@ def mongo_to_dict_helper(obj):
         else:
             pass
     return dict(return_data)
+
+
 
 __author__ = ['mahesmohan','ashwineaso']
