@@ -20,6 +20,7 @@ import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.database.CollaboratorDbHelper;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
+import in.altersense.taskapp.requests.TaskStatusChangeRequest;
 
 /**
  * Created by mahesmohan on 1/13/15.
@@ -478,18 +479,14 @@ public class Task {
         );
         // Check whether the device owner is the task owner.
         if(this.owner.getUuid().equals(ownerId)) {
-/*
             TaskStatusChangeRequest taskStatusChangeRequest = new TaskStatusChangeRequest(this, activity);
-*/
             // Set task status.
             this.status = status;
             // Update db
             TaskDbHelper taskDbHelper = new TaskDbHelper(activity);
             taskDbHelper.updateStatus(this, status);
             // Query API status change API
-/*
             taskStatusChangeRequest.execute();
-*/
             return true;
         } else {
             // Get all collaborators.
@@ -502,9 +499,13 @@ public class Task {
                     // Update database.
                     CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity);
                     collaboratorDbHelper.updateStatus(this, collaborator);
-/*
+                    // Make an APIRequest for setting task Request.
+                    TaskStatusChangeRequest taskStatusChangeRequest = new TaskStatusChangeRequest(
+                            this,
+                            collaborator,
+                            activity
+                    );
                     taskStatusChangeRequest.execute();
-*/
                     return true;
                 }
             }
