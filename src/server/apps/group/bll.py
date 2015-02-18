@@ -223,11 +223,12 @@ def groupToDictConverter(groupObj):
 	groupie["id"] = str(groupObj.id)
 	groupie["owner"] = str(groupObj.owner)
 	groupie["title"] = groupObj.title
+	groupie["members"] = []
 	#Group Member Information
 	for each_user in groupObj.members:
-		coll["id"] = str(each_user.user.id)
-		coll["name"] = each_user.user.name
-		coll["email"] = each_user.user.email
+		coll["id"] = str(each_user.id)
+		coll["name"] = each_user.name
+		coll["email"] = each_user.email
 		groupie["members"].append(coll.copy())
 	#Populate task_list with Task.GroupTask ids
 	groupie["task_list"] = []

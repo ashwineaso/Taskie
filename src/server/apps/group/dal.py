@@ -53,7 +53,7 @@ def addGroupMembers(groupObj):
 	taskgroup = getGroupById(groupObj)
 	for userObj.id in groupObj.members:
 		userObj.user = userbll.getUserById(userObj)
-		member_list.append(userObj.user.id)
+		member_list.append(userObj.user)
 	TaskGroup.objects(id = taskgroup.id).update(push_all__members = member_list)
 	taskgroup.save()
 	taskgroup.reload()
