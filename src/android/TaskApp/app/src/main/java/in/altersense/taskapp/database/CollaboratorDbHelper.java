@@ -128,4 +128,29 @@ public class CollaboratorDbHelper extends SQLiteOpenHelper {
         // Return list
         return collaboratorList;
     }
+
+    public boolean updateStatus(Task task, Collaborator collaborator) {
+        String TAG = CLASS_TAG+"updateStatus";
+        // Open writable database.
+        SQLiteDatabase writableDb = this.getWritableDatabase();
+        // Make query.
+        ContentValues values = new ContentValues();
+        values.put(Collaborator.KEYS.STATUS.getName(), collaborator.getStatus());
+        // Execute query
+        int affectedRows = writableDb.update(
+                Collaborator.TABLE_NAME,
+                values,
+                Collaborator.KEYS.TASK_ROWID.getName()+" =? " +
+                        Collaborator.KEYS.USER_ROWID.getName()+" =?",
+                new String[] {
+                        task.getId()+"",
+                        collaborator.getId()+""
+                }
+        );
+        // Close db.
+        writableDb.close();
+        // Return status.
+        return (affectedRows>0);
+    }
+
 }

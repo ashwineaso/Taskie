@@ -241,4 +241,24 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         writableDb.close();
         Log.d(TAG, "Db closed.");
     }
+
+    public boolean updateStatus(Task task, int status) {
+        String TAG = CLASS_TAG+"updateStatus";
+        // Open a writable database.
+        SQLiteDatabase writableDb = this.getWritableDatabase();
+        // make query
+        ContentValues values = new ContentValues();
+        values.put(Task.KEYS.STATUS.getName(),status);
+        // execute update
+        int affectedRows = writableDb.update(
+                Task.TABLE_NAME,
+                values,
+                "ROWID =?",
+                new String[] { task.getId()+"" }
+        );
+        // close db
+        writableDb.close();
+        // return status
+        return (affectedRows>0);
+    }
 }

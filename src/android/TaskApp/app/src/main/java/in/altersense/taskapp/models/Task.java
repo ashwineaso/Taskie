@@ -16,6 +16,7 @@ import java.util.List;
 import in.altersense.taskapp.CreateTaskActivity;
 import in.altersense.taskapp.R;
 import in.altersense.taskapp.common.Config;
+import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.database.CollaboratorDbHelper;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
@@ -90,92 +91,10 @@ public class Task {
         return collaborators;
     }
 
-
     /**
      * Table name for Tasks
      */
     public static String TABLE_NAME = "TaskTable";
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid, Activity activity) {
-        this.uuid = uuid;
-        TaskDbHelper taskDbHelper = new TaskDbHelper(activity);
-        taskDbHelper.updateUUID(this);
-    }
-
-    public int getIntIsGroup() {
-        if(this.isGroup) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-
-    public void setCollaborators(List<Collaborator> newCollaboratorList) {
-        this.collaborators = newCollaboratorList;
-    }
-
-    public void updateCollaborators(
-            List<Collaborator> oldCollaborators,
-            List<Collaborator> collaboratorAdditionList,
-            List<Collaborator> collaboratorRemovalList,
-            Activity activity
-    ) {
-        String TAG = CLASS_TAG+"updateCollaborators";
-        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity.getApplicationContext());
-        // Remove duplicates from both lists.
-        for(Collaborator collaborator:collaboratorAdditionList) {
-            if(collaboratorRemovalList.contains(collaborator)) {
-                collaboratorAdditionList.remove(collaborator);
-                collaboratorRemovalList.remove(collaborator);
-            }
-        }
-        // Add each users to the list.
-        for(Collaborator addedCollaborator:collaboratorAdditionList) {
-            Log.d(TAG, "Collaborator addition: "+addedCollaborator.toString());
-            Log.d(TAG, "Collaborator ID:"+addedCollaborator.getId());
-            // Check if user is present in the database.
-            if(addedCollaborator.getId()<1) {
-                // If not add user to database.
-                Log.d(TAG, "Collaborator not found in User database. Adding to db.");
-                UserDbHelper userDbHelper = new UserDbHelper(activity.getApplicationContext());
-                addedCollaborator = (Collaborator) userDbHelper.createUser(addedCollaborator);
-                addedCollaborator.setStatus(0);
-                Log.d(TAG, "Added collaborator to user database.");
-                // TODO: Implement sync user request.
-/*
-
-                // Sync user to get more information regarding the user.
-                SyncUserRequest syncUserRequest = new SyncUserRequest(addedCollaborator,activity);
-                Log.d(TAG, "Sending a sync user request to API to get user info.");
-                syncUserRequest.execute();
-*/
-
-            }
-            // Add the user as a collaborator of the task.
-            collaboratorDbHelper.addCollaborator(this, addedCollaborator);
-            Log.d(TAG, "User added to database as a collaborator of the task.");
-            // Add user to the oldCollaborator list.
-            oldCollaborators.add(addedCollaborator);
-            Log.d(TAG, "User added to oldCollaboratorList of the task.");
-        }
-        // Remove users from the removal list.
-        for(User removedCollaborator:collaboratorRemovalList) {
-            // Remove the user from the collaborator list database.
-            Log.d(TAG, "About to remove the collaborator from database.");
-            collaboratorDbHelper.removeCollaborator(this, removedCollaborator);
-            // Remove the removed collaborator from the oldCollaborators list.
-            oldCollaborators.remove(removedCollaborator);
-            Log.d(TAG, "User removed from oldCollaboratorList of the task.");
-
-        }
-
-        this.collaborators = oldCollaborators;
-        Log.d(TAG, "New list of collaborators set as this task's list of collaborators.");
-    }
 
     /**
      * Table Structure for Task
@@ -334,6 +253,87 @@ public class Task {
         );
     }
 
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid, Activity activity) {
+        this.uuid = uuid;
+        TaskDbHelper taskDbHelper = new TaskDbHelper(activity);
+        taskDbHelper.updateUUID(this);
+    }
+
+    public int getIntIsGroup() {
+        if(this.isGroup) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    public void setCollaborators(List<Collaborator> newCollaboratorList) {
+        this.collaborators = newCollaboratorList;
+    }
+
+    public void updateCollaborators(
+            List<Collaborator> oldCollaborators,
+            List<Collaborator> collaboratorAdditionList,
+            List<Collaborator> collaboratorRemovalList,
+            Activity activity
+    ) {
+        String TAG = CLASS_TAG+"updateCollaborators";
+        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity.getApplicationContext());
+        // Remove duplicates from both lists.
+        for(Collaborator collaborator:collaboratorAdditionList) {
+            if(collaboratorRemovalList.contains(collaborator)) {
+                collaboratorAdditionList.remove(collaborator);
+                collaboratorRemovalList.remove(collaborator);
+            }
+        }
+        // Add each users to the list.
+        for(Collaborator addedCollaborator:collaboratorAdditionList) {
+            Log.d(TAG, "Collaborator addition: "+addedCollaborator.toString());
+            Log.d(TAG, "Collaborator ID:"+addedCollaborator.getId());
+            // Check if user is present in the database.
+            if(addedCollaborator.getId()<1) {
+                // If not add user to database.
+                Log.d(TAG, "Collaborator not found in User database. Adding to db.");
+                UserDbHelper userDbHelper = new UserDbHelper(activity.getApplicationContext());
+                addedCollaborator = (Collaborator) userDbHelper.createUser(addedCollaborator);
+                addedCollaborator.setStatus(0);
+                Log.d(TAG, "Added collaborator to user database.");
+                // TODO: Implement sync user request.
+/*
+
+                // Sync user to get more information regarding the user.
+                SyncUserRequest syncUserRequest = new SyncUserRequest(addedCollaborator,activity);
+                Log.d(TAG, "Sending a sync user request to API to get user info.");
+                syncUserRequest.execute();
+*/
+
+            }
+            // Add the user as a collaborator of the task.
+            collaboratorDbHelper.addCollaborator(this, addedCollaborator);
+            Log.d(TAG, "User added to database as a collaborator of the task.");
+            // Add user to the oldCollaborator list.
+            oldCollaborators.add(addedCollaborator);
+            Log.d(TAG, "User added to oldCollaboratorList of the task.");
+        }
+        // Remove users from the removal list.
+        for(User removedCollaborator:collaboratorRemovalList) {
+            // Remove the user from the collaborator list database.
+            Log.d(TAG, "About to remove the collaborator from database.");
+            collaboratorDbHelper.removeCollaborator(this, removedCollaborator);
+            // Remove the removed collaborator from the oldCollaborators list.
+            oldCollaborators.remove(removedCollaborator);
+            Log.d(TAG, "User removed from oldCollaboratorList of the task.");
+
+        }
+
+        this.collaborators = oldCollaborators;
+        Log.d(TAG, "New list of collaborators set as this task's list of collaborators.");
+    }
+
     public Task(Cursor cursor, Activity activity) {
         Log.d(CLASS_TAG, " Constructor(cursor,activity)");
         this.uuid = cursor.getString(0);
@@ -467,5 +467,48 @@ public class Task {
         task+=" name="+this.name;
         task+=" owner="+this.owner.getUuid();
         return task;
+    }
+
+    public boolean setStatus(int status, Activity activity) {
+        // Fetch the device owner.
+        String ownerId = AltEngine.readStringFromSharedPref(
+                activity.getApplicationContext(),
+                Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
+                ""
+        );
+        // Check whether the device owner is the task owner.
+        if(this.owner.getUuid().equals(ownerId)) {
+/*
+            TaskStatusChangeRequest taskStatusChangeRequest = new TaskStatusChangeRequest(this, activity);
+*/
+            // Set task status.
+            this.status = status;
+            // Update db
+            TaskDbHelper taskDbHelper = new TaskDbHelper(activity);
+            taskDbHelper.updateStatus(this, status);
+            // Query API status change API
+/*
+            taskStatusChangeRequest.execute();
+*/
+            return true;
+        } else {
+            // Get all collaborators.
+            List<Collaborator> collaborators = this.getCollaborators();
+            // Check whether user is a collaborator.
+            for(Collaborator collaborator:collaborators) {
+                if(collaborator.getUuid().equals(ownerId)) {
+                    // Change status of the collaborator
+                    collaborator.setStatus(status);
+                    // Update database.
+                    CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity);
+                    collaboratorDbHelper.updateStatus(this, collaborator);
+/*
+                    taskStatusChangeRequest.execute();
+*/
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
