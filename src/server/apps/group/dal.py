@@ -23,6 +23,7 @@ def createGroup(groupObj):
 	"""
 
 	userObj = Collection()
+	members = []
 
 	#for finding the user id of the owner
 	userObj.id = groupObj.owner
@@ -32,6 +33,9 @@ def createGroup(groupObj):
 					title = groupObj.title
 					)
 	taskgroup.save()
+	members.append(groupObj.user)
+	TaskGroup.objects(id = taskgroup.id).update(push_all__members = members)
+	taskgroup.reload()
 	return taskgroup
 
 
@@ -54,6 +58,7 @@ def addGroupMembers(groupObj):
 	for userObj.id in groupObj.members:
 		userObj.user = userbll.getUserById(userObj)
 		member_list.append(userObj.user)
+
 	TaskGroup.objects(id = taskgroup.id).update(push_all__members = member_list)
 	taskgroup.save()
 	taskgroup.reload()
@@ -116,22 +121,22 @@ def addNewTask(taskObj):
 	userObj.id = taskObj.owner
 	taskObj.owner = userbll.getUserById(userObj)
 	
+	#Find if the group exists. If Yes, get TaskGroup object
+	groupObj.id = taskObj.group_id
+	taskgroup = getGroupById(groupObj)
+
 	#Checking whether the collaborators is a user of the app
-	#If not - Create a new account for the user
+	#If yes check whether he is a member of the group
 	for userObj.email in taskObj.collaborators:
-		try:
-			User.objects.get(email = userObj.email)
-		except Exception:
-			userbll.createAndInvite(userObj) #contains _id = senders id and email = recievers email
+		user = userbll.getUserByEmail(userObj)
+		if not [x for x in taskgroup.members if x.id == user.id]:
+			raise UserNotMember
 
 	#Creating the list of collaborators
 	for userObj.email in taskObj.collaborators:
 		my_objects.append(Collaborator(user = userbll.getUserByEmail(userObj),
 										status = taskObj.status))
 	
-	#Find if the group exists. If Yes, get TaskGroup object
-	groupObj.id = taskObj.group_id
-	taskgroup = getGroupById(groupObj)
 	#Create a task with the necessary data.
 	task = GroupTask(
 				owner = taskObj.owner,
@@ -207,11 +212,8 @@ def addCollaborators(taskObj):
 
 	#Checking existence of collaborators
 	for userObj.email in taskObj.collaborators:
-		try:
-			user = getUserByEmail(userObj)
-		except:
-			raise UserNotFound
-		if user not in group.members:
+		user = userbll.getUserByEmail(userObj)
+		if not [x for x in taskgroup.members if x.id == user.id]:
 			raise UserNotMember
 		my_objects.append(Collaborator(user = user,
 										status = taskObj.status))
@@ -250,3 +252,19 @@ def getGroupById(groupObj):
 		return group 
 	except Exception as e:
 		raise GroupWithIDNotFound
+
+
+
+def getTaskById(taskObj):
+	"""
+	Retrieve Task.GroupTask using id
+	::type taskObj : objecy
+	::param : id
+	::return task : Instance of Task.GroupTask class
+	"""
+
+	try:
+		task = GroupTask.objects.get(id = taskObj.id)
+		return task
+	except Exception as e:
+		raise e

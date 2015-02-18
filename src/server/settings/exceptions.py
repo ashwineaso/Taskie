@@ -14,7 +14,7 @@ class GroupWithIDNotFound(Exception):
 	def __init__(self):
 		super(GroupWithIDNotFound, self).__init__()
 		self.msg = "Group With ID Not Found"
-		self.code = 2002
+		self.code = 4001
 
 	def __str__(self):
 		return self.msg
@@ -117,4 +117,15 @@ class AccessTokenExpired(Exception):
 		self.code = 3004
 
 	def __str__(self):
-		return self.msg	
+		return self.msg
+
+
+class UserNotMember(Exception):
+	"""docstring for UserNotMember"""
+	def __init__(self):
+		super(UserNotMember, self).__init__()
+		self.msg = "User Not Member"
+		self.code = 4002
+
+	def __str__(self):
+		return self.msg		

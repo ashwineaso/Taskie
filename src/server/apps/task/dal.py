@@ -169,7 +169,7 @@ def modifyTaskStatus(taskObj):
 	statusObj = Status()
 	statusObj = Status(status = taskObj.status,
 						dateTime = time.time())
-	task  = Task.objects(id = taskObj.id).get()
+	task  = getTaskById(taskObj)
 	Task.objects(id = taskObj.id).update(set__status = statusObj)
 	task.reload()
 	return task
@@ -188,7 +188,7 @@ def modifyCollStatus(taskObj):
 	:return An instance of the Collaborator class
 	"""
 
-	task = Task.objects.get(id = taskObj.id).select_related(1)
+	task = getTaskById(taskObj)
 	userObj = userbll.getUserByEmail(taskObj)
 	for collaborator in task.collaborators:
 		if collaborator.user == userObj:
@@ -220,4 +220,4 @@ def getTaskById(taskObj):
 		task = Task.objects.get(id = taskObj.id)
 		return task
 	except Exception as e:
-		raise e
+		raise TaskWithIDNotFound

@@ -12,15 +12,29 @@ class GroupTask(Task):
 	collaborator_count = IntField(default = 1)
 	availability = BooleanField(default = True)
 
-	def __init__(self, owner, collaborators, priority, name, description, dueDateTime, status, collaborator_count):
+	def __init__(self, 
+		owner, 
+		collaborators, 
+		priority, 
+		name, 
+		description, 
+		dueDateTime, 
+		status, 
+		collaborator_count, 
+		availability = False,
+		*args,
+		**kwargs):
 		super(GroupTask, self).__init__(owner, 
 										collaborators, 
 										priority, 
 										name, 
 										description, 
 										dueDateTime, 
-										status)
+										status,
+										*args,
+										**kwargs)
 		self.collaborator_count = collaborator_count
+		self.availability = availability
 
 
 	def to_dict(self):

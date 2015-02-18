@@ -122,7 +122,7 @@ def addCollaborators(taskObj):
 	task = dal.addCollaborators(taskObj)
 	#Send message to GCM server to notify collaborators of task
 	syncObj = SyncClass("Task", str(task.id))
-	pushSyncNotification(syncObj)
+	#pushSyncNotification(syncObj)
 	return task
 
 
@@ -140,7 +140,7 @@ def remCollaborators(taskObj):
 	task = dal.remCollaborators(taskObj)
 	#Send message to GCM server to notify collaborators of task
 	syncObj = SyncClass("Task", str(task.id))
-	pushSyncNotification(syncObj)
+	#pushSyncNotification(syncObj)
 	return task
 
 
@@ -159,7 +159,7 @@ def modifyTaskStatus(taskObj):
 	task = dal.modifyTaskStatus(taskObj)
 	#Send message to GCM server to notify collaborators of task
 	syncObj = SyncClass("Task", str(task.id))
-	pushSyncNotification(syncObj)
+	#pushSyncNotification(syncObj)
 	return task
 
 
