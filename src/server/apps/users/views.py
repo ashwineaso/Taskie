@@ -80,9 +80,10 @@ def updateUser():
 		response["status"] = RESPONSE_SUCCESS
 		response["data"] = data
 	except Exception as e:
-		response["status"] = RESPONSE_FAILED
-		response["message"] = str(e)
-		response["code"] = e.code
+		response['status'] = RESPONSE_FAILED
+		response['message'] = str(e)
+		if hasattr(e, "code"):
+			response["code"] = e.code
 	return response
 
 
@@ -108,9 +109,10 @@ def modifyProfilePic():
 		bll.addProfilePic(photoObj)
 		response["status"] = RESPONSE_SUCCESS
 	except Exception as e:
-		response["status"] = RESPONSE_FAILED
-		response["message"] = str(e)
-		response["code"] = e.code
+		response['status'] = RESPONSE_FAILED
+		response['message'] = str(e)
+		if hasattr(e, "code"):
+			response["code"] = e.code
 	return response
 
 
@@ -145,8 +147,10 @@ def authorize_user():
 			response["message"] = "Authorization Failed"
 			response["status"] = RESPONSE_FAILED
 	except Exception as e:
-		response["status"] = RESPONSE_FAILED
-		response["message"] = str(e)
+		response['status'] = RESPONSE_FAILED
+		response['message'] = str(e)
+		if hasattr(e, "code"):
+			response["code"] = e.code
 	return response
 
 
@@ -198,9 +202,10 @@ def refreshTokens():
 		response["data"] = data
 		response["message"] = RESPONSE_SUCCESS
 	except Exception as e:
-		response["status"] = RESPONSE_FAILED
-		response["message"] = str(e)
-		response["code"] = e.code
+		response['status'] = RESPONSE_FAILED
+		response['message'] = str(e)
+		if hasattr(e, "code"):
+			response["code"] = e.code
 	return response
 
 
@@ -224,9 +229,10 @@ def checkAccessToken(tokenObj):
 			response["status"] = RESPONSE_FAILED
 			response["message"] = "TOKEN_INVALID"
 	except Exception as e:
-		response["status"] = RESPONSE_FAILED
-		response["message"] = str(e)
-		response["code"] = e.code
+		response['status'] = RESPONSE_FAILED
+		response['message'] = str(e)
+		if hasattr(e, "code"):
+			response["code"] = e.code
 	return response
 
 
@@ -254,8 +260,10 @@ def verifyUser():
 			response["status"] = RESPONSE_FAILED
 			response["message"] = "Verification Unsucessful"
 	except Exception as e:
-		response["status"] = RESPONSE_FAILED
-		response["message"] = str(e)
+		response['status'] = RESPONSE_FAILED
+		response['message'] = str(e)
+		if hasattr(e, "code"):
+			response["code"] = e.code
 	return response
 
 
@@ -272,13 +280,15 @@ def syncUserInfo():
 	
 	obj = request.json
 	try:
-		userObj.access_token = ["acceess_token"]
+		userObj.access_token = obj["access_token"]
 		userObj.email = obj["email"]
-		if dal.checkAccessTokenValid(userObj):
+		if bll.checkAccessTokenValid(userObj):
 			user = bll.syncUserInfo(userObj)
 		response["data"] = bll.convertUserToDict(user)
 		response["status"] = RESPONSE_SUCCESS
 	except Exception, e:
-		response["status"] = RESPONSE_FAILED
-		response["message"] = str(e)
+		response['status'] = RESPONSE_FAILED
+		response['message'] = str(e)
+		if hasattr(e, "code"):
+			response["code"] = e.code
 	return response
