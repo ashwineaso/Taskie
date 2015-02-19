@@ -152,9 +152,4 @@ public class CollaboratorDbHelper extends SQLiteOpenHelper {
         // Return status.
         return (affectedRows>0);
     }
-
-    public void updateCollaborator(Collaborator collaborator) {
-        // Open writable database
-        //
-    }
 }

@@ -20,6 +20,8 @@ import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.database.CollaboratorDbHelper;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
+import in.altersense.taskapp.requests.AddCollaboratorsRequest;
+import in.altersense.taskapp.requests.RemoveCollaboratorsRequest;
 import in.altersense.taskapp.requests.SyncUserRequest;
 import in.altersense.taskapp.requests.TaskStatusChangeRequest;
 
@@ -304,7 +306,6 @@ public class Task {
                 addedCollaborator = (Collaborator) userDbHelper.createUser(addedCollaborator);
                 addedCollaborator.setStatus(0);
                 Log.d(TAG, "Added collaborator to user database.");
-                // TODO: Implement sync user request.
                 // Sync user to get more information regarding the user.
                 SyncUserRequest syncUserRequest = new SyncUserRequest(addedCollaborator,activity);
                 Log.d(TAG, "Sending a sync user request to API to get user info.");
@@ -317,6 +318,12 @@ public class Task {
             oldCollaborators.add(addedCollaborator);
             Log.d(TAG, "User added to oldCollaboratorList of the task.");
         }
+        AddCollaboratorsRequest addCollaboratorsRequest = new AddCollaboratorsRequest(
+                this,
+                collaboratorAdditionList,
+                activity
+        );
+        addCollaboratorsRequest.execute();
         // Remove users from the removal list.
         for(User removedCollaborator:collaboratorRemovalList) {
             // Remove the user from the collaborator list database.
@@ -325,8 +332,12 @@ public class Task {
             // Remove the removed collaborator from the oldCollaborators list.
             oldCollaborators.remove(removedCollaborator);
             Log.d(TAG, "User removed from oldCollaboratorList of the task.");
-
         }
+        RemoveCollaboratorsRequest removeCollaboratorsRequest = new RemoveCollaboratorsRequest(
+                this,
+                collaboratorRemovalList,
+                activity
+        );
 
         this.collaborators = oldCollaborators;
         Log.d(TAG, "New list of collaborators set as this task's list of collaborators.");
