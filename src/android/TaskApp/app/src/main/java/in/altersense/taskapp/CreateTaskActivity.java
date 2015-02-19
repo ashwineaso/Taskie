@@ -47,8 +47,8 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
     private User[] users;
     private ArrayAdapter<User> adapter;
     private List<Collaborator> collaboratorList = new ArrayList<Collaborator>();
-    private List<Collaborator> collaboratorAdditionList = new ArrayList<Collaborator>();
-    private List<Collaborator> collaboratorRemovalList = new ArrayList<Collaborator>();
+    private List<User> collaboratorAdditionList = new ArrayList<>();
+    private List<User> collaboratorRemovalList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -6,6 +6,13 @@ import java.util.ArrayList;
  * Created by mahesmohan on 2/17/15.
  */
 public class Collaborator extends User {
+
+    public Collaborator(User user) {
+        this.setName(user.getName());
+        this.setEmail(user.getEmail());
+        this.setUuid(user.getUuid());
+    }
+
     public static String TABLE_NAME = "CollaboratorList";
     public static enum KEYS {
         TASK_ROWID("task_rowid", "INTEGER"),

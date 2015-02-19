@@ -281,10 +281,18 @@ public class Task {
 
     public void updateCollaborators(
             List<Collaborator> oldCollaborators,
-            List<Collaborator> collaboratorAdditionList,
-            List<Collaborator> collaboratorRemovalList,
+            List<User> userAdditionList,
+            List<User> userRemovalList,
             Activity activity
     ) {
+        List<Collaborator> collaboratorAdditionList = new ArrayList<Collaborator>();
+        List<Collaborator> collaboratorRemovalList = new ArrayList<Collaborator>();
+        for(User user:userAdditionList) {
+            collaboratorAdditionList.add(new Collaborator(user));
+        }
+        for(User user:userRemovalList) {
+            collaboratorRemovalList.add(new Collaborator(user));
+        }
         String TAG = CLASS_TAG+"updateCollaborators";
         CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity.getApplicationContext());
         // Remove duplicates from both lists.
