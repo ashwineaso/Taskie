@@ -20,6 +20,7 @@ import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.database.CollaboratorDbHelper;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
+import in.altersense.taskapp.requests.SyncUserRequest;
 import in.altersense.taskapp.requests.TaskStatusChangeRequest;
 
 /**
@@ -304,14 +305,10 @@ public class Task {
                 addedCollaborator.setStatus(0);
                 Log.d(TAG, "Added collaborator to user database.");
                 // TODO: Implement sync user request.
-/*
-
                 // Sync user to get more information regarding the user.
                 SyncUserRequest syncUserRequest = new SyncUserRequest(addedCollaborator,activity);
                 Log.d(TAG, "Sending a sync user request to API to get user info.");
                 syncUserRequest.execute();
-*/
-
             }
             // Add the user as a collaborator of the task.
             collaboratorDbHelper.addCollaborator(this, addedCollaborator);

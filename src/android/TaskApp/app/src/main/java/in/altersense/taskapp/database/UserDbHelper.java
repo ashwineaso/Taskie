@@ -215,4 +215,29 @@ public class UserDbHelper extends SQLiteOpenHelper {
     }
 
 
+    public boolean updateUser(User collaborator) {
+        String TAG = CLASS_TAG+"updateUser";
+        // Open writable db
+        Log.d(TAG, "Writable db opened.");
+        SQLiteDatabase writableDb = this.getWritableDatabase();
+        // Make query
+        ContentValues values = new ContentValues();
+        values.put(User.KEYS.NAME.getName(), collaborator.getName());
+        values.put(User.KEYS.UUID.getName(),collaborator.getUuid());
+        Log.d(TAG, "Content values: "+values);
+        // Execute query
+        int affectedRows = writableDb.update(
+                User.TABLE_NAME,
+                values,
+                User.KEYS.EMAIL.getName()+" =?",
+                new String[] {
+                        collaborator.getEmail()
+                }
+        );
+        Log.d(TAG, "Query executed and affected "+affectedRows+" row.");
+        // Close db.
+        writableDb.close();
+        // Return status.
+        return affectedRows>0;
+    }
 }
