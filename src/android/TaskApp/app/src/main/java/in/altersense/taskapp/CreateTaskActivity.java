@@ -23,6 +23,7 @@ import java.util.List;
 
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText;
+import in.altersense.taskapp.database.CollaboratorDbHelper;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
 import in.altersense.taskapp.models.Collaborator;
@@ -32,13 +33,13 @@ import in.altersense.taskapp.models.User;
 
 public class CreateTaskActivity extends ActionBarActivity implements TokenCompleteTextView.TokenListener{
 
-    private static final String CLASS_TAG = "CreateTaskActivity";
-    private Task task;
+    private static final String CLASS_TAG = "CreateTaskActivity ";
+    private Task task = new Task();
 
     private EditText taskTitleET;
     private EditText taskDescriptionET;
     private EditText dueDateET;
-    private TokenCompleteCollaboratorsEditText collabboraatorsTCET;
+    private TokenCompleteCollaboratorsEditText collaboratorsTCET;
     private SeekBar prioritySB;
     private TextView priorityTV;
     private Button createTaskBtn;
@@ -50,6 +51,8 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
     private List<User> collaboratorAdditionList = new ArrayList<>();
     private List<User> collaboratorRemovalList = new ArrayList<>();
 
+    private boolean isCreate = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         String TAG = CLASS_TAG+"onCreate";
@@ -58,6 +61,7 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
         long taskId;
         // Check whether there is an extra with the intent
         if(createEditIntent.hasExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey())) {
+            this.isCreate = false;
             Log.d(TAG, "Intent has taskID");
             taskId = createEditIntent.getExtras().getLong(
                     Task.ID
@@ -73,7 +77,7 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
         // Initialize the views.
         this.taskTitleET = (EditText) findViewById(R.id.taskTitleEditText);
         this.taskDescriptionET = (EditText) findViewById(R.id.taskDescriptionEditText);
-        this.collabboraatorsTCET = (TokenCompleteCollaboratorsEditText) findViewById(R.id.collaboratorsTCET);
+        this.collaboratorsTCET = (TokenCompleteCollaboratorsEditText) findViewById(R.id.collaboratorsTCET);
         this.dueDateET = (EditText) findViewById(R.id.dueDateEditText);
         this.prioritySB = (SeekBar) findViewById(R.id.prioritySeekBar);
         this.priorityTV = (TextView) findViewById(R.id.priorityTextView);
@@ -97,7 +101,7 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
         UserDbHelper userDbHelper = new UserDbHelper(CreateTaskActivity.this);
         this.users = userDbHelper.listAllUsers();
 
-        collabboraatorsTCET.setTokenListener(this);
+        collaboratorsTCET.setTokenListener(this);
         /*adapter = new ArrayAdapter<User>(
                 this,
                 android.R.layout.simple_list_item_1,
@@ -126,17 +130,17 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
                 return convertView;
             }
         };
-        collabboraatorsTCET.setAdapter(adapter);
+        collaboratorsTCET.setAdapter(adapter);
 
         // denying duplicate entries.
-        collabboraatorsTCET.allowDuplicates(false);
+        collaboratorsTCET.allowDuplicates(false);
 
         // setting what happens on clicking token
-        collabboraatorsTCET.setTokenClickStyle(TokenCompleteTextView.TokenClickStyle.Select);
+        collaboratorsTCET.setTokenClickStyle(TokenCompleteTextView.TokenClickStyle.Select);
 
-        if(createEditIntent.hasExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey())) {
+        if(!isCreate) {
             // Populate the form with the data.
-            populatetheForm();
+            populateTheForm();
         } else {
             this.updateTaskBtn.setVisibility(View.GONE);
         }
@@ -146,32 +150,30 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
     }
 
     private void updateTask() {
-        Task updatedTask = new Task(
-                this.task.getUuid(),
-                this.taskTitleET.getText().toString(),
-                this.taskDescriptionET.getText().toString(),
-                this.task.getOwner(),
-                Integer.parseInt(this.priorityTV.getText().toString()),
-                Long.parseLong(this.dueDateET.getText().toString()),
-                this.task.getStatus(),
-                this.task.getIntIsGroup(),
-                this.task.getGroup(),
-                CreateTaskActivity.this
-        );
-        updatedTask.updateCollaborators(
-                this.task.getCollaborators(),
+        String TAG = CLASS_TAG+"updateTask";
+        Log.d(TAG, "Task id in activity: "+this.task.getId());
+        this.task.updateCollaborators(
                 collaboratorAdditionList,
                 collaboratorRemovalList,
                 this
         );
     }
 
-    private void populatetheForm() {
+    private void populateTheForm() {
+        String TAG = CLASS_TAG+"populateTheForm";
         this.taskTitleET.setText(this.task.getName());
         this.taskDescriptionET.setText(this.task.getDescription());
         this.dueDateET.setText(this.task.getDueDateTime()+"");
         this.prioritySB.setProgress(this.task.getPriority());
         this.priorityTV.setText(this.task.getPriority()+"");
+
+        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(this);
+        this.task.setCollaborators(collaboratorDbHelper.getAllCollaborators(this.task));
+        Log.d(TAG, "Collaborators: "+task.getCollaborators());
+        for(Collaborator collaborator:task.getCollaborators()) {
+            this.collaboratorsTCET.addObject(collaborator);
+        }
+
         // Hide the CREATE Button and Show the Update button instead.
         this.createTaskBtn.setVisibility(View.GONE);
     }

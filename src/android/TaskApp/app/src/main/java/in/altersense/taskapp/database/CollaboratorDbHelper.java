@@ -3,6 +3,7 @@ package in.altersense.taskapp.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -50,6 +51,8 @@ public class CollaboratorDbHelper extends SQLiteOpenHelper {
 
     public boolean addCollaborator(Task task, Collaborator user) {
         String TAG = CLASS_TAG+"addCollaborator";
+        Log.d(TAG, "Task: "+task.toString());
+        Log.d(TAG, "User: "+user.getString());
         // Open a writable database.
         SQLiteDatabase writableDatabase = this.getWritableDatabase();
         Log.d(TAG, "Opened a writable database");
@@ -92,6 +95,11 @@ public class CollaboratorDbHelper extends SQLiteOpenHelper {
         return (result>0);
     }
 
+    /**
+     * Fetches all the collaborators of the task.
+     * @param task The seed task.
+     * @return List of Collaborator
+     */
     public List<Collaborator> getAllCollaborators(Task task) {
         String TAG = CLASS_TAG+"getAllCollaborators";
         // Open readable db
@@ -113,20 +121,24 @@ public class CollaboratorDbHelper extends SQLiteOpenHelper {
         result.moveToFirst();
         List<Collaborator> collaboratorList = new ArrayList<Collaborator>();
         UserDbHelper userDbHelper = new UserDbHelper(this.context);
-        do {
-            // Fetch collaborator from db
-            Log.d(TAG, "Fetch collaborator from db.");
-            Collaborator collaborator = (Collaborator) userDbHelper.getUserByRowId(result.getLong(2));
-            // Set collaborator status
-            Log.d(TAG, "Set collaborator status.");
-            collaborator.setStatus(result.getInt(4));
-            // Make list
-            collaboratorList.add(collaborator);
-        }while (result.moveToNext());
-        // Close db
-        readableDb.close();
-        // Return list
-        return collaboratorList;
+        try {
+            do {
+                // Fetch collaborator from db
+                Log.d(TAG, "Fetch collaborator from db.");
+                Collaborator collaborator = new Collaborator(userDbHelper.getUserByRowId(result.getLong(2)));
+                // Set collaborator status
+                Log.d(TAG, "Set collaborator status.");
+                collaborator.setStatus(result.getInt(4));
+                // Make list
+                collaboratorList.add(collaborator);
+            }while (result.moveToNext());
+            // Close db
+            readableDb.close();
+            // Return list
+            return collaboratorList;
+        } catch (CursorIndexOutOfBoundsException e) {
+            return collaboratorList;
+        }
     }
 
     public boolean updateStatus(Task task, Collaborator collaborator) {

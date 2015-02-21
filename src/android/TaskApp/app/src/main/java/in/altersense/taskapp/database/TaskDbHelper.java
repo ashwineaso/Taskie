@@ -135,7 +135,6 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 selfCursor,
                 activity
         );
-        task.setId(rowId);
         readableDb.close();
         return task;
     }

@@ -53,6 +53,11 @@ public class Task {
     private LinearLayout action1, action2, action3, action4;
     private long dueDateTime;
 
+    public Task() {
+        this.name="";
+        this.collaborators = new ArrayList<>();
+    }
+
     public boolean isGroup() {
         return isGroup;
     }
@@ -282,12 +287,12 @@ public class Task {
     }
 
     public void updateCollaborators(
-            List<Collaborator> oldCollaborators,
             List<User> userAdditionList,
             List<User> userRemovalList,
             Activity activity
     ) {
         String TAG = CLASS_TAG+"updateCollaborators";
+        Log.d(TAG, "Current task id: "+this.id);
         List<Collaborator> collaboratorAdditionList = new ArrayList<Collaborator>();
         List<Collaborator> collaboratorRemovalList = new ArrayList<Collaborator>();
         for(User user:userAdditionList) {
@@ -304,6 +309,11 @@ public class Task {
             if(collaboratorRemovalList.contains(collaborator)) {
                 collaboratorAdditionList.remove(collaborator);
                 collaboratorRemovalList.remove(collaborator);
+            }
+            // Check if collaborator added is already present in old collaborators
+            // and remove from addition list if found.
+            if(this.collaborators.contains(collaborator)) {
+                collaboratorAdditionList.remove(collaborator);
             }
         }
         Log.d(TAG,"Added collaborators: "+collaboratorAdditionList.toString());
@@ -330,10 +340,12 @@ public class Task {
             // Add the user as a collaborator of the task.
             collaboratorDbHelper.addCollaborator(this, addedCollaborator);
             Log.d(TAG, "User added to database as a collaborator of the task.");
+
             // Add user to the oldCollaborator list.
-            oldCollaborators.add(addedCollaborator);
+            this.collaborators.add(addedCollaborator);
             Log.d(TAG, "User added to oldCollaboratorList of the task.");
         }
+        Log.d(TAG, "Current task id: "+this.id);
         AddCollaboratorsRequest addCollaboratorsRequest = new AddCollaboratorsRequest(
                 this,
                 collaboratorAdditionList,
@@ -346,7 +358,7 @@ public class Task {
             Log.d(TAG, "About to remove the collaborator from database.");
             collaboratorDbHelper.removeCollaborator(this, removedCollaborator);
             // Remove the removed collaborator from the oldCollaborators list.
-            oldCollaborators.remove(removedCollaborator);
+            this.collaborators.remove(removedCollaborator);
             Log.d(TAG, "User removed from oldCollaboratorList of the task.");
         }
         RemoveCollaboratorsRequest removeCollaboratorsRequest = new RemoveCollaboratorsRequest(
@@ -355,7 +367,6 @@ public class Task {
                 activity
         );
 
-        this.collaborators = oldCollaborators;
         Log.d(TAG, "New list of collaborators set as this task's list of collaborators.");
     }
 
@@ -374,7 +385,7 @@ public class Task {
         } else {
             this.group = null;
         }
-        this.id = cursor.getInt(9);
+        this.id = cursor.getLong(9);
         this.panelView = createView(activity.getLayoutInflater());
         this.actionsView = createActionsView(activity);
         this.taskActionsPlaceHolderView =
