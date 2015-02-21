@@ -31,6 +31,8 @@ import in.altersense.taskapp.requests.TaskStatusChangeRequest;
 public class Task {
     private static final String CLASS_TAG = "Task ";
 
+    public static final String ID = "id";
+
     private long id;
 
     private boolean isGroup;
@@ -285,15 +287,17 @@ public class Task {
             List<User> userRemovalList,
             Activity activity
     ) {
+        String TAG = CLASS_TAG+"updateCollaborators";
         List<Collaborator> collaboratorAdditionList = new ArrayList<Collaborator>();
         List<Collaborator> collaboratorRemovalList = new ArrayList<Collaborator>();
         for(User user:userAdditionList) {
+            Log.d(TAG, "AdditionUser: "+user.getString());
             collaboratorAdditionList.add(new Collaborator(user));
         }
         for(User user:userRemovalList) {
+            Log.d(TAG, "RemovalUser: "+user.getString());
             collaboratorRemovalList.add(new Collaborator(user));
         }
-        String TAG = CLASS_TAG+"updateCollaborators";
         CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity.getApplicationContext());
         // Remove duplicates from both lists.
         for(Collaborator collaborator:collaboratorAdditionList) {
@@ -302,6 +306,8 @@ public class Task {
                 collaboratorRemovalList.remove(collaborator);
             }
         }
+        Log.d(TAG,"Added collaborators: "+collaboratorAdditionList.toString());
+        Log.d(TAG,"Removed collaborators: "+collaboratorRemovalList.toString());
         // Add each users to the list.
         for(Collaborator addedCollaborator:collaboratorAdditionList) {
             Log.d(TAG, "Collaborator addition: "+addedCollaborator.toString());
@@ -311,7 +317,9 @@ public class Task {
                 // If not add user to database.
                 Log.d(TAG, "Collaborator not found in User database. Adding to db.");
                 UserDbHelper userDbHelper = new UserDbHelper(activity.getApplicationContext());
-                addedCollaborator = (Collaborator) userDbHelper.createUser(addedCollaborator);
+                addedCollaborator = new Collaborator(
+                        userDbHelper.createUser(addedCollaborator)
+                );
                 addedCollaborator.setStatus(0);
                 Log.d(TAG, "Added collaborator to user database.");
                 // Sync user to get more information regarding the user.
@@ -366,7 +374,7 @@ public class Task {
         } else {
             this.group = null;
         }
-        this.id = cursor.getLong(9);
+        this.id = cursor.getInt(9);
         this.panelView = createView(activity.getLayoutInflater());
         this.actionsView = createActionsView(activity);
         this.taskActionsPlaceHolderView =
@@ -396,8 +404,8 @@ public class Task {
                 );
                 // Pass the task id to the intent.
                 editTaskIntent.putExtra(
-                        Config.REQUEST_RESPONSE_KEYS.UUID.getKey(),
-                        uuid
+                        Task.ID,
+                        id
                 );
                 // Set flags for activity creation.
                 editTaskIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

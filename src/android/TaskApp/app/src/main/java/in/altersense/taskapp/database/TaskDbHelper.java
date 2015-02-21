@@ -104,7 +104,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         return task;
     }
 
-    private Task getTaskByRowId(long rowId, Activity activity) {
+    public Task getTaskByRowId(long rowId, Activity activity) {
         String TAG = CLASS_TAG+"getTaskByRowId";
         // Open database.
         Log.d(TAG, "Readable database opened.");
@@ -200,6 +200,11 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 null
         );
         Log.d(TAG, "Returned "+cursor.getCount()+" rows.");
+        if(cursor.moveToFirst()) {
+            do {
+                Log.d(TAG, "Tasks with same UUID("+cursor.getString(0)+"): "+cursor.getString(2));
+            } while(cursor.moveToNext());
+        }
         // Close database.
         readableDb.close();
         // Fetch task from the cursor

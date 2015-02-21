@@ -55,18 +55,18 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
         String TAG = CLASS_TAG+"onCreate";
         // Get intent.
         Intent createEditIntent = getIntent();
-        String taskUUID;
+        long taskId;
         // Check whether there is an extra with the intent
         if(createEditIntent.hasExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey())) {
-            Log.d(TAG, "Intent has taskUUID");
-            taskUUID = createEditIntent.getExtras().getString(
-                    Config.REQUEST_RESPONSE_KEYS.UUID.getKey()
+            Log.d(TAG, "Intent has taskID");
+            taskId = createEditIntent.getExtras().getLong(
+                    Task.ID
             );
-            Log.d(TAG, "TaskUUID: "+taskUUID);
+            Log.d(TAG, "TaskID: "+taskId);
             TaskDbHelper taskDbHelper = new TaskDbHelper(CreateTaskActivity.this);
             // If yes fetch task from the uuid
             Log.d(TAG, "Fetching row from the db");
-            this.task = taskDbHelper.getTaskByUUID(taskUUID, CreateTaskActivity.this);
+            this.task = taskDbHelper.getTaskByRowId(taskId, CreateTaskActivity.this);
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_task);
@@ -158,7 +158,6 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
                 this.task.getGroup(),
                 CreateTaskActivity.this
         );
-        updatedTask.setId(this.task.getId()); // Fallback if UUID was not yet set up.
         updatedTask.updateCollaborators(
                 this.task.getCollaborators(),
                 collaboratorAdditionList,
@@ -204,7 +203,7 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
     public void onTokenAdded(Object o) {
         String TAG = CLASS_TAG+"onTokenAdded";
         try{
-            this.collaboratorAdditionList.add((Collaborator) o);
+            this.collaboratorAdditionList.add((User) o);
             Log.d(TAG, "Added: " + o.toString());
             String listOfCollabs = "";
             for(User user:this.collaboratorAdditionList) {

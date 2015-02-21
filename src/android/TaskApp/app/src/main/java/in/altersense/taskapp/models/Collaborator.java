@@ -1,5 +1,7 @@
 package in.altersense.taskapp.models;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 /**
@@ -7,13 +9,31 @@ import java.util.ArrayList;
  */
 public class Collaborator extends User {
 
+    private String CLASS_TAG = "Collaborator ";
+
     public Collaborator(User user) {
         this.setName(user.getName());
         this.setEmail(user.getEmail());
         this.setUuid(user.getUuid());
+        this.setId(user.getId());
+        String TAG = CLASS_TAG+"Constructor(User)";
+        Log.d(TAG, "Creates Collaborator from user: "+super.getString());
     }
 
     public static String TABLE_NAME = "CollaboratorList";
+
+    public User getUser() {
+        User user = new User(
+                this.getUuid(),
+                this.getEmail(),
+                this.getName(),
+                this.getId()
+        );
+        String TAG = CLASS_TAG+"getUser";
+        Log.d(TAG, "Returns Collaborator from user: "+super.getString());
+        return user;
+    }
+
     public static enum KEYS {
         TASK_ROWID("task_rowid", "INTEGER"),
         TASK_UUID("task_uuid", "TEXT"),

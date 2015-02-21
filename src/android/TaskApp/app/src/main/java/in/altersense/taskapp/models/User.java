@@ -20,6 +20,11 @@ public class User {
 
     private static String CLASS_TAG = "User";
 
+    public User(String uuid, String email, String name, int id) {
+        this(uuid,email,name);
+        this.id = id;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -75,6 +80,7 @@ public class User {
                 cursor.getString(1),
                 cursor.getString(2)
         );
+        this.id = cursor.getInt(3);
     }
 
     public User(String userUUID, Activity activity) {
@@ -101,6 +107,10 @@ public class User {
         String[] columns = new String[columnList.size()];
         columns = columnList.toArray(columns);
         return columns;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     /**
@@ -240,5 +250,14 @@ public class User {
     @Override
     public String toString() {
         return this.email;
+    }
+
+    public String getString() {
+        String string = "";
+        string+=" id="+this.id;
+        string+=" name="+this.name;
+        string+=" email="+this.email;
+        string+=" uuid="+this.uuid;
+        return string;
     }
 }

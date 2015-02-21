@@ -54,9 +54,6 @@ public class UserDbHelper extends SQLiteOpenHelper {
         Log.d(TAG, "Set up a readable database");
         SQLiteDatabase readableDb = this.getReadableDatabase();
         // Fetch user with matching uuid.
-        String[] columns = new String[] {
-                "*"
-        };
         String whereClause = User.KEYS.UUID.getName()+"=?";
         String[] whereArgs = new String[] {
                 uuid
@@ -65,7 +62,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
         // Fetch the result of the query.
         Cursor selfCursor = readableDb.query(
                 User.TABLE_NAME,
-                columns,
+                User.getAllColumns(),
                 whereClause,
                 whereArgs,
                 null,
@@ -73,6 +70,11 @@ public class UserDbHelper extends SQLiteOpenHelper {
                 null
         );
         Log.d(TAG, "Query executed. "+selfCursor.getCount()+" rows returned.");
+        if(selfCursor.moveToFirst()) {
+            do {
+                Log.d(TAG, "Users with same UUID("+selfCursor.getString(0)+"): "+selfCursor.getString(2));
+            } while(selfCursor.moveToNext());
+        }
         selfCursor.moveToFirst();
         // Create a User object from the cursor
         User user = new User(selfCursor);
@@ -205,10 +207,21 @@ public class UserDbHelper extends SQLiteOpenHelper {
         Log.d(TAG, "Set up a readable database");
         SQLiteDatabase readableDb = this.getReadableDatabase();
         // Fetch user with matching row Id.
-        String query = "SELECT * FROM "+User.TABLE_NAME+" WHERE ROWID = "+rowId+";";
-        Log.d(TAG, "Running query: "+query);
-        Cursor selfCursor = readableDb.rawQuery(query, null);
+        Cursor selfCursor = readableDb.query(
+                User.TABLE_NAME,
+                User.getAllColumns(),
+                "ROWID =?",
+                new String[] {rowId+""},
+                null,
+                null,
+                null
+        );
         selfCursor.moveToFirst();
+        String cursorString = "Cursor: ";
+        for(int i=0; i<selfCursor.getColumnCount();i++) {
+            cursorString+=i+"="+selfCursor.getString(i)+", ";
+        }
+        Log.d(TAG, "Running query: "+cursorString);
         User user = new User(selfCursor);
         readableDb.close();
         return user;
