@@ -82,4 +82,10 @@ public class Collaborator extends User {
         columns = columnList.toArray(columns);
         return columns;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        Collaborator colllaboratorObject = (Collaborator) o;
+        return this.getEmail().equals(colllaboratorObject.getEmail());
+    }
 }

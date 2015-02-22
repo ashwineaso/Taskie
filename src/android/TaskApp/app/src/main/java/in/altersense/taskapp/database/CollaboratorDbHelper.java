@@ -85,7 +85,7 @@ public class CollaboratorDbHelper extends SQLiteOpenHelper {
         // Delete row.
         int result = writableDb.delete(
                 Collaborator.TABLE_NAME,
-                "TASK_ROWID =? AND" + "USER_ROWID =?",
+                "TASK_ROWID =? AND " + "USER_ROWID =?",
                 new String[] {task.getId()+"", user.getId()+""}
         );
         Log.d(TAG, "Rows affected: "+result);

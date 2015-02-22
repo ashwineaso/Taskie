@@ -16,6 +16,7 @@ import java.util.List;
 import in.altersense.taskapp.CreateTaskActivity;
 import in.altersense.taskapp.R;
 import in.altersense.taskapp.common.Config;
+import in.altersense.taskapp.common.Methods;
 import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.database.CollaboratorDbHelper;
 import in.altersense.taskapp.database.TaskDbHelper;
@@ -295,27 +296,22 @@ public class Task {
         Log.d(TAG, "Current task id: "+this.id);
         List<Collaborator> collaboratorAdditionList = new ArrayList<Collaborator>();
         List<Collaborator> collaboratorRemovalList = new ArrayList<Collaborator>();
+        // Making list of collaborators for addition.
         for(User user:userAdditionList) {
             Log.d(TAG, "AdditionUser: "+user.getString());
             collaboratorAdditionList.add(new Collaborator(user));
         }
+        // Making list of collaborators for removal.
         for(User user:userRemovalList) {
             Log.d(TAG, "RemovalUser: "+user.getString());
             collaboratorRemovalList.add(new Collaborator(user));
         }
+
         CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity.getApplicationContext());
-        // Remove duplicates from both lists.
-        for(Collaborator collaborator:collaboratorAdditionList) {
-            if(collaboratorRemovalList.contains(collaborator)) {
-                collaboratorAdditionList.remove(collaborator);
-                collaboratorRemovalList.remove(collaborator);
-            }
-            // Check if collaborator added is already present in old collaborators
-            // and remove from addition list if found.
-            if(this.collaborators.contains(collaborator)) {
-                collaboratorAdditionList.remove(collaborator);
-            }
-        }
+        // Check if collaborator added is already present in old collaborators
+        // and remove from addition list if found.
+        collaboratorAdditionList = Methods.removeDuplicates(collaboratorAdditionList);
+
         Log.d(TAG,"Added collaborators: "+collaboratorAdditionList.toString());
         Log.d(TAG,"Removed collaborators: "+collaboratorRemovalList.toString());
         // Add each users to the list.
@@ -367,7 +363,8 @@ public class Task {
                 activity
         );
 
-        Log.d(TAG, "New list of collaborators set as this task's list of collaborators.");
+        Log.d(TAG, "New list of collaborators set as this tasks list of collaborators.");
+        Log.d(TAG,this.collaborators+"");
     }
 
     public Task(Cursor cursor, Activity activity) {
