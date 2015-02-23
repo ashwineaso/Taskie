@@ -217,11 +217,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
                 null
         );
         selfCursor.moveToFirst();
-        String cursorString = "Cursor: ";
-        for(int i=0; i<selfCursor.getColumnCount();i++) {
-            cursorString+=i+"="+selfCursor.getString(i)+", ";
-        }
-        Log.d(TAG, "Running query: "+cursorString);
+
         User user = new User(selfCursor);
         readableDb.close();
         return user;

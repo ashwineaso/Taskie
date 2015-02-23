@@ -293,6 +293,9 @@ public class Task {
             Activity activity
     ) {
         String TAG = CLASS_TAG+"updateCollaborators";
+        UserDbHelper userDbHelper = new UserDbHelper(activity.getApplicationContext());
+        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity.getApplicationContext());
+
         // Remove existing collaborators from added collaborators.
         for(Collaborator collaborator:this.getCollaborators()) {
             Log.d(TAG, "Checking collaborator "+collaborator.toString());
@@ -301,16 +304,22 @@ public class Task {
                 userAdditionList.remove(collaborator);
             }
         }
+
         // Convert both lists to list of collaborators
         List<Collaborator> collaboratorsAdded = new ArrayList<>();
         List<Collaborator> collaboratorsRemoved = new ArrayList<>();
-        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity.getApplicationContext());
-        // Remove pre existing collaborators from User Addition list.
-        for(Collaborator collaborator:this.collaborators) {
-            userAdditionList.remove(collaborator.getUser());
-            Log.d(TAG, "Removed: "+collaborator.getEmail());
-        }
         for(User user:userAdditionList) {
+            // Check if user does not exists in db.
+            if(user.getId()<1) {
+                Log.d(TAG, "User "+user.getString()+" not found in db. So adding the user.");
+                // Add user to db.
+                user = userDbHelper.createUser(user);
+                Log.d(TAG, "Added user to db.");
+                // Call user sync api
+                SyncUserRequest syncUserRequest = new SyncUserRequest(user, activity);
+                syncUserRequest.execute();
+                Log.d(TAG, "Called sync user for user "+user.getString());
+            }
             collaboratorsAdded.add(new Collaborator(user));
         }
         Log.d(TAG, "Added collaborators: "+collaboratorsAdded.toString());
@@ -351,6 +360,9 @@ public class Task {
                 activity
         );
         removeCollaboratorsRequest.execute();
+
+        Log.d(TAG, "All the collaborators.");
+        collaboratorDbHelper.listAllCollaborators();
     }
 
     public Task(Cursor cursor, Activity activity) {

@@ -119,6 +119,16 @@ public class CollaboratorDbHelper extends SQLiteOpenHelper {
         );
         Log.d(TAG, "Returned "+result.getCount()+" rows.");
         result.moveToFirst();
+
+        do {
+            String cursorString = "";
+            for(int i=0; i<result.getColumnCount();i++) {
+                cursorString+=i+"="+result.getString(i)+", ";
+            }
+            Log.d(TAG, "Collaborator: "+cursorString);
+
+        }while (result.moveToNext());
+        result.moveToFirst();
         List<Collaborator> collaboratorList = new ArrayList<Collaborator>();
         UserDbHelper userDbHelper = new UserDbHelper(this.context);
         try {
@@ -163,5 +173,35 @@ public class CollaboratorDbHelper extends SQLiteOpenHelper {
         writableDb.close();
         // Return status.
         return (affectedRows>0);
+    }
+
+    public void listAllCollaborators() {
+        String TAG = CLASS_TAG+"listAllCollaborators";
+        // Open readable database.
+        SQLiteDatabase readableDatabase = this.getReadableDatabase();
+        // Query the database.
+        Cursor result = readableDatabase.query(
+                Collaborator.TABLE_NAME,
+                Collaborator.getAllColumns(),
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+        Log.d(TAG, "Returned "+result.getCount()+" rows.");
+        // Print each result in log.
+        result.moveToFirst();
+        do {
+            String cursorString = "";
+            for(int i=0; i<result.getColumnCount();i++) {
+                cursorString+=i+"="+result.getString(i)+", ";
+            }
+            Log.d(TAG, "Collaborator: "+cursorString);
+
+        }while (result.moveToNext());
+        // Close database.
+        result.close();
+        readableDatabase.close();
     }
 }
