@@ -166,3 +166,26 @@ def syncTask():
 		if hasattr(e, "code"):
 			response["code"] = e.code
 	return response
+
+
+
+def syncAllTasks():
+	response = {}
+	data = {}
+
+	obj = request.json
+	try:
+		taskObj.id = obj["user_id"]
+		taskObj.access_token = obj["access_token"]
+		if checkAccessTokenValid(taskObj) is True:
+			task_list = bll.syncAllTasks(taskObj)
+		response["status"] = RESPONSE_SUCCESS
+		response["data"] = []
+		for each_task in task_list:
+			response["data"].append(bll.taskToDictConverter(each_task))
+	except Exception as e:
+		response["status"] = RESPONSE_FAILED
+		response["message"] = str(e)
+		if hasattr(e, "code"):
+			response["code"] = e.code
+	return response

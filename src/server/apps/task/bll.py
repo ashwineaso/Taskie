@@ -139,6 +139,14 @@ def syncTask(taskObj):
 	return task
 
 
+def syncAllTasks(taskObj):
+	"""
+	Sync all tasks of user of which is he owner and collaborator
+	"""
+	task_list = dal.syncAllTasks(taskObj)
+	return task_list
+
+
 def taskToDictConverter(task):
 	"""
 	Convert the incoming Task object into JSON Serializable dict format

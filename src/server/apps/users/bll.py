@@ -45,7 +45,8 @@ def verifyEmail(userObj):
 	"""
 	verify a user's email and change status to registered
 	"""
-	dal.verifyEmail(userObj)
+	flag = dal.verifyEmail(userObj)
+	return flag
 
 
 def verifyUser(userObj):

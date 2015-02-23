@@ -206,6 +206,17 @@ def syncTask(taskObj):
 	return task
 
 
+def syncAllTasks(taskObj):
+	"""
+	Sync all tasks of user of which is he owner and collaborator
+	"""
+	user = userbll.getUserById(taskObj)
+	owner_list = list(Task.objects(Q(owner = user) & Q(status__status = 0)))
+	collaborator_list = list(Task.objects(Q(collaborators__user = user) & Q(status__status = 0)))
+	task_list = owner_list + collaborator_list
+	return task_list
+
+
 def getTaskById(taskObj):
 	"""
 	Retrieve task using task id

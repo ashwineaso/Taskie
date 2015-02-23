@@ -6,7 +6,8 @@
     android:paddingBottom="@dimen/smallMargin_xhdp"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context="in.altersense.taskapp.UserRegistrationActivity">
+    tools:context="in.altersense.taskapp.UserRegistrationActivity"
+    android:background="@color/white">
 
 
     <TextView

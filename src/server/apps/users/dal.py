@@ -24,7 +24,6 @@ def createUser(userObj):
 	::return user : An instance of user class
 	"""
 	try:
-
 		invite = Invite(
 					count = 0,
 					lastUpdate = time.time()
@@ -40,8 +39,13 @@ def createUser(userObj):
 			invite = invite
 			)
 		user.save()
+		#Save new user to Database
+		#Create a new token for the user
+		token = Token(user = user)
+		token.save()
+		return user
 	except Exception:
-		person = User.objects.get(email = userObj.email)
+		person = getUserByEmail(userObj)
 		#If status = 1 - User already exists and active
 		if person.status == ACCOUNT_ACTIVE:
 			raise UserAlreadyExists
@@ -52,12 +56,6 @@ def createUser(userObj):
 		if person.status == ACCOUNT_INVITED_UNREGISTERED:
 			user = updateUser(userObj)
 			return user
-
-	#Save new user to Database
-	#Create a new token for the user
-	token = Token(user = user)
-	token.save()
-	return user
 
 
 
@@ -90,8 +88,10 @@ def verifyEmail(userObj):
 	userObj.user = getUserByEmail(userObj)
 	token = getTokenByUser(userObj)
 	if token.refresh_token == userObj.key:
-		User.objects(email = userObj.email).update(set__status = ACCOUNT_ACTIVE)
+		User.objects(id = userObj.user.id).update(set__status = ACCOUNT_ACTIVE)
 		userObj.user.save()
+		return True
+	return False
 
 
 def updateUser(userObj):
@@ -116,13 +116,11 @@ def updateUser(userObj):
 	
 	###################################################
 	## If User is not yet marked registered, then user was created by invitation
-	## Token has to be created explicitly
+	## Then password_hash has to be set && Account has to marked active
 	###################################################
 	if user.status == ACCOUNT_INVITED_UNREGISTERED:
 		user.password_hash = userObj.password_hash
 		user.status = ACCOUNT_ACTIVE
-		token = Token(user = user)
-		token.save()
 
 	user.save()
 	user.reload()

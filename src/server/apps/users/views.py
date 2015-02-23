@@ -48,11 +48,13 @@ def verifyEmail(email, key):
 	response = {}
 	data = {}
 	userObj = Collection()
-	clientObj = Collection()
-	tokenObj = Collection()
 	userObj.email = email
 	userObj.key = key
-	bll.verifyEmail(userObj)
+	flag = bll.verifyEmail(userObj)
+	if flag is True:
+		return "Account has been verified"
+	else:
+		return "Email and Key mismatch occured"
 
 
 def updateUser():
