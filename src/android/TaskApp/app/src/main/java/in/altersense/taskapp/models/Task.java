@@ -293,78 +293,64 @@ public class Task {
             Activity activity
     ) {
         String TAG = CLASS_TAG+"updateCollaborators";
-        Log.d(TAG, "Current task id: "+this.id);
-        List<Collaborator> collaboratorAdditionList = new ArrayList<Collaborator>();
-        List<Collaborator> collaboratorRemovalList = new ArrayList<Collaborator>();
-        // Making list of collaborators for addition.
-        for(User user:userAdditionList) {
-            Log.d(TAG, "AdditionUser: "+user.getString());
-            collaboratorAdditionList.add(new Collaborator(user));
-        }
-        // Making list of collaborators for removal.
-        for(User user:userRemovalList) {
-            Log.d(TAG, "RemovalUser: "+user.getString());
-            collaboratorRemovalList.add(new Collaborator(user));
-        }
-
-        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity.getApplicationContext());
-        // Check if collaborator added is already present in old collaborators
-        // and remove from addition list if found.
-        collaboratorAdditionList = Methods.removeDuplicates(collaboratorAdditionList);
-
-        Log.d(TAG,"Added collaborators: "+collaboratorAdditionList.toString());
-        Log.d(TAG,"Removed collaborators: "+collaboratorRemovalList.toString());
-        // Add each users to the list.
-        for(Collaborator addedCollaborator:collaboratorAdditionList) {
-            Log.d(TAG, "Collaborator addition: "+addedCollaborator.toString());
-            Log.d(TAG, "Collaborator ID:"+addedCollaborator.getId());
-            // Check if user is present in the database.
-            if(addedCollaborator.getId()<1) {
-                // If not add user to database.
-                Log.d(TAG, "Collaborator not found in User database. Adding to db.");
-                UserDbHelper userDbHelper = new UserDbHelper(activity.getApplicationContext());
-                addedCollaborator = new Collaborator(
-                        userDbHelper.createUser(addedCollaborator)
-                );
-                addedCollaborator.setStatus(0);
-                Log.d(TAG, "Added collaborator to user database.");
-                // Sync user to get more information regarding the user.
-                SyncUserRequest syncUserRequest = new SyncUserRequest(addedCollaborator,activity);
-                Log.d(TAG, "Sending a sync user request to API to get user info.");
-                syncUserRequest.execute();
+        // Remove existing collaborators from added collaborators.
+        for(Collaborator collaborator:this.getCollaborators()) {
+            Log.d(TAG, "Checking collaborator "+collaborator.toString());
+            if(userAdditionList.contains(collaborator)) {
+                Log.d(TAG, "Removing existing collaborator "+collaborator.toString());
+                userAdditionList.remove(collaborator);
             }
-            // Add the user as a collaborator of the task.
-            collaboratorDbHelper.addCollaborator(this, addedCollaborator);
-            Log.d(TAG, "User added to database as a collaborator of the task.");
-
-            // Add user to the oldCollaborator list.
-            this.collaborators.add(addedCollaborator);
-            Log.d(TAG, "User added to oldCollaboratorList of the task.");
         }
-        Log.d(TAG, "Current task id: "+this.id);
+        // Convert both lists to list of collaborators
+        List<Collaborator> collaboratorsAdded = new ArrayList<>();
+        List<Collaborator> collaboratorsRemoved = new ArrayList<>();
+        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity.getApplicationContext());
+        // Remove pre existing collaborators from User Addition list.
+        for(Collaborator collaborator:this.collaborators) {
+            userAdditionList.remove(collaborator.getUser());
+            Log.d(TAG, "Removed: "+collaborator.getEmail());
+        }
+        for(User user:userAdditionList) {
+            collaboratorsAdded.add(new Collaborator(user));
+        }
+        Log.d(TAG, "Added collaborators: "+collaboratorsAdded.toString());
+        for(User user:userRemovalList) {
+            collaboratorsRemoved.add(new Collaborator(user));
+        }
+        Log.d(TAG, "Removed collaborators: "+collaboratorsRemoved.toString());
+        // Find common collaborators in additionList and removalList
+        // Remove common collaborators
+        List<Collaborator> tempListOfAddedCollaborators = new ArrayList<>(collaboratorsAdded);
+        for(Collaborator collaborator:tempListOfAddedCollaborators) {
+            if (collaboratorsRemoved.contains(collaborator) &&
+                    collaboratorsAdded.contains(collaborator)) {
+                collaboratorsAdded.remove(collaborator);
+                collaboratorsRemoved.remove(collaborator);
+            }
+        }
+        Log.d(TAG, "Removed common.");
+        Log.d(TAG, "Added collaborators: "+collaboratorsAdded.toString());
+        Log.d(TAG, "Removed collaborators: "+collaboratorsRemoved.toString());
+        // Add all collaborators in additionList to db
+        for(Collaborator collaborator:collaboratorsAdded) {
+            collaboratorDbHelper.addCollaborator(this,collaborator);
+        }
         AddCollaboratorsRequest addCollaboratorsRequest = new AddCollaboratorsRequest(
                 this,
-                collaboratorAdditionList,
+                collaboratorsAdded,
                 activity
         );
         addCollaboratorsRequest.execute();
-        // Remove users from the removal list.
-        for(User removedCollaborator:collaboratorRemovalList) {
-            // Remove the user from the collaborator list database.
-            Log.d(TAG, "About to remove the collaborator from database.");
-            collaboratorDbHelper.removeCollaborator(this, removedCollaborator);
-            // Remove the removed collaborator from the oldCollaborators list.
-            this.collaborators.remove(removedCollaborator);
-            Log.d(TAG, "User removed from oldCollaboratorList of the task.");
+        // Remove all collaborators in removal list from db
+        for(Collaborator collaborator:collaboratorsRemoved) {
+            collaboratorDbHelper.removeCollaborator(this, collaborator);
         }
         RemoveCollaboratorsRequest removeCollaboratorsRequest = new RemoveCollaboratorsRequest(
                 this,
-                collaboratorRemovalList,
+                collaboratorsRemoved,
                 activity
         );
-
-        Log.d(TAG, "New list of collaborators set as this tasks list of collaborators.");
-        Log.d(TAG,this.collaborators+"");
+        removeCollaboratorsRequest.execute();
     }
 
     public Task(Cursor cursor, Activity activity) {

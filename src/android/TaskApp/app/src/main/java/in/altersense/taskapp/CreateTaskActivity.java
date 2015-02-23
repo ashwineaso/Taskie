@@ -172,10 +172,14 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
         Log.d(TAG, "Collaborators: "+task.getCollaborators());
         for(Collaborator collaborator:task.getCollaborators()) {
             this.collaboratorsTCET.addObject(collaborator);
+            Log.d(TAG, "Added collaborator: "+collaborator.getString());
         }
+        Log.d(TAG, "CollaboratorsTCET: "+collaboratorsTCET.getObjects().toString());
+        Log.d(TAG, "Collaborators added: "+collaboratorAdditionList.toString());
         // Clear additionList right after adding all existing collaborators.
         this.collaboratorAdditionList = new ArrayList<>();
         Log.d(TAG, "CollaboratorAdditionListCleared");
+        Log.d(TAG, "Collaborators added: "+collaboratorAdditionList.toString());
 
         // Hide the CREATE Button and Show the Update button instead.
         this.createTaskBtn.setVisibility(View.GONE);

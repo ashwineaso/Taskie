@@ -77,7 +77,7 @@ public class CollaboratorDbHelper extends SQLiteOpenHelper {
         return (result!=-1);
     }
 
-    public boolean removeCollaborator(Task task, User user) {
+    public boolean removeCollaborator(Task task, Collaborator user) {
         String TAG = CLASS_TAG+"removeCollaborator";
         // Open a writable database.
         SQLiteDatabase writableDb = this.getWritableDatabase();
