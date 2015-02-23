@@ -8,8 +8,8 @@
     <string name="title_activity_task">TaskActivity</string>
 
     <!-- Fonts -->
-    <string name="font_textCondensed">fonts/steelfish_regular.ttf</string>
-    <string name="font_textRegular">fonts/kelson_regular.otf</string>
+    <string name="font_textCondensed">fonts/Cabin-Regular-TTF.ttf</string>
+    <string name="font_textRegular">fonts/Cabin-Medium-TTF.ttf</string>
 
     <!-- Labels -->
     <string name="label_sortby">Sort By</string>

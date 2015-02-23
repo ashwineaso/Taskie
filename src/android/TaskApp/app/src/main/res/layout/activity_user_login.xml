@@ -4,7 +4,8 @@
     android:padding="@dimen/smallMargin_xhdp"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context="in.altersense.taskapp.UserLoginActivity">
+    tools:context="in.altersense.taskapp.UserLoginActivity"
+    android:background="@color/white">
 
     <TextView
         android:layout_width="wrap_content"

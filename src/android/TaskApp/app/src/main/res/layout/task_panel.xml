@@ -26,10 +26,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                fontPath="fonts/steelfish_regular.ttf"
-                android:textColor="@color/positive"
+                fontPath="fonts/Cabin-Regular-TTF.ttf"
+                android:textColor="@color/duedatetime"
                 android:textSize="@dimen/text_normal_xhdpi"
-                android:text="DUE IN"/>
+                android:text="Due In"/>
 
             <TextView
                 android:id="@+id/timeMeasureCustomFontTextView"
@@ -38,7 +38,7 @@
                 android:layout_weight="1"
                 android:singleLine="true"
                 android:lines="1"
-                fontPath="fonts/steelfish_regular.ttf"
+                fontPath="fonts/Cabin-Regular-TTF.ttf"
                 android:gravity="center"
                 android:text="123"
                 android:textColor="@color/positive"
@@ -48,10 +48,10 @@
                 android:id="@+id/timeUnitTextCustomFontTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="DAYS"
+                android:text="Days"
                 android:gravity="center_horizontal|bottom"
-                fontPath="fonts/steelfish_regular.ttf"
-                android:textColor="@color/positive"
+                fontPath="fonts/Cabin-Regular-TTF.ttf"
+                android:textColor="@color/duedatetime"
                 android:textSize="@dimen/text_normal_xhdpi"/>
 
         </LinearLayout>
@@ -62,14 +62,15 @@
             android:layout_height="@dimen/userImageHeight_xhdp"
             android:layout_width="0dp"
             android:layout_weight="1"
-            tools:ignore="MissingPrefix">
+            tools:ignore="MissingPrefix"
+            android:paddingLeft="5dp">
 
             <TextView android:id="@+id/taskTitleTextView"
                 android:text="Boil Eggs"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:textColor="@color/primaryText"
-                fontPath="fonts/roboto_slab_regular.ttf"
+                fontPath="fonts/Cabin-Regular-TTF.ttf"
                 android:textSize="@dimen/text_header_xhdpi"/>
 
             <TextView android:id="@+id/taskDescriptionTextView"

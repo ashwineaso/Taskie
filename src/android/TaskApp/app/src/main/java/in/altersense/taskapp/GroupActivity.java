@@ -42,7 +42,7 @@ public class GroupActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         //        Setting up calligraphy
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                        .setDefaultFontPath("fonts/roboto_slab_regular.ttf")
+                        .setDefaultFontPath("fonts/Cabin-Medium-TTF.ttf")
                         .setFontAttrId(R.attr.fontPath)
                         .build()
         );

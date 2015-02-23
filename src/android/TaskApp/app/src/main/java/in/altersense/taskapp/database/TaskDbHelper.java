@@ -136,6 +136,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 activity
         );
         task.setId(rowId);
+        selfCursor.close();
         readableDb.close();
         return task;
     }
@@ -174,6 +175,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
             } while(resultCursor.moveToNext());
         }
         // Close database
+        resultCursor.close();
         readableDb.close();
         // Return the list.
         return taskList;
@@ -207,6 +209,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         Log.d(TAG, "Creating new task from the cursor.");
         Task task = new Task(cursor, activity);
         // Return the task.
+        cursor.close();
         return task;
     }
 }
