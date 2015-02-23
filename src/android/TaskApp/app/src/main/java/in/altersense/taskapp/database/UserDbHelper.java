@@ -83,7 +83,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
         return user;
     }
 
-    public User[] listAllUsers() {
+    public List<User> listAllUsers() {
         String TAG = CLASS_TAG+"listAllUsers";
         // Open readable database.
         SQLiteDatabase readableDb = this.getReadableDatabase();
@@ -115,9 +115,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
         } while (cursor.moveToNext());
         Log.d(TAG, "Readable db closed.");
         readableDb.close();
-        User[] usersArray = new User[userList.size()];
-        usersArray = userList.toArray(usersArray);
-        return usersArray;
+        return userList;
     }
 
     /**
@@ -217,8 +215,8 @@ public class UserDbHelper extends SQLiteOpenHelper {
                 null
         );
         selfCursor.moveToFirst();
-
         User user = new User(selfCursor);
+        Log.d(TAG, "Fetched user: "+user.getString());
         readableDb.close();
         return user;
     }

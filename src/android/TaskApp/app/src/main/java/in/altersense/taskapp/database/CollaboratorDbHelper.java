@@ -120,35 +120,33 @@ public class CollaboratorDbHelper extends SQLiteOpenHelper {
         Log.d(TAG, "Returned "+result.getCount()+" rows.");
         result.moveToFirst();
 
-        do {
-            String cursorString = "";
-            for(int i=0; i<result.getColumnCount();i++) {
-                cursorString+=i+"="+result.getString(i)+", ";
-            }
-            Log.d(TAG, "Collaborator: "+cursorString);
-
-        }while (result.moveToNext());
         result.moveToFirst();
         List<Collaborator> collaboratorList = new ArrayList<Collaborator>();
         UserDbHelper userDbHelper = new UserDbHelper(this.context);
-        try {
-            do {
+        do {
+            try {
+                String cursorString = "";
+                for(int i=0; i<result.getColumnCount();i++) {
+                    cursorString+=i+"="+result.getString(i)+", ";
+                }
+                Log.d(TAG, "Collaborator: "+cursorString);
                 // Fetch collaborator from db
-                Log.d(TAG, "Fetch collaborator from db.");
-                Collaborator collaborator = new Collaborator(userDbHelper.getUserByRowId(result.getLong(2)));
+                Log.d(TAG, "Fetching collaborator from db.");
+                User user = userDbHelper.getUserByRowId(result.getLong(2));
+                Collaborator collaborator = new Collaborator(user);
                 // Set collaborator status
-                Log.d(TAG, "Set collaborator status.");
+                Log.d(TAG, "Setting collaborator status.");
                 collaborator.setStatus(result.getInt(4));
                 // Make list
                 collaboratorList.add(collaborator);
-            }while (result.moveToNext());
-            // Close db
-            readableDb.close();
-            // Return list
-            return collaboratorList;
-        } catch (CursorIndexOutOfBoundsException e) {
-            return collaboratorList;
-        }
+            } catch (CursorIndexOutOfBoundsException e) {
+                e.printStackTrace();
+            }
+        }while (result.moveToNext());
+        // Close db
+        readableDb.close();
+        // Return list
+        return collaboratorList;
     }
 
     public boolean updateStatus(Task task, Collaborator collaborator) {

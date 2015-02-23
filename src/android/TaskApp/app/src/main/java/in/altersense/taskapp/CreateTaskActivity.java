@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.altersense.taskapp.common.Config;
+import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText;
 import in.altersense.taskapp.database.CollaboratorDbHelper;
 import in.altersense.taskapp.database.TaskDbHelper;
@@ -45,7 +46,8 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
     private Button createTaskBtn;
     private Button updateTaskBtn;
 
-    private User[] users;
+    private List<User> users;
+
     private ArrayAdapter<User> adapter;
     private List<Collaborator> collaboratorList = new ArrayList<Collaborator>();
     private List<User> collaboratorAdditionList = new ArrayList<>();
@@ -100,6 +102,20 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
 
         UserDbHelper userDbHelper = new UserDbHelper(CreateTaskActivity.this);
         this.users = userDbHelper.listAllUsers();
+        User ownerUser = new User(
+                AltEngine.readStringFromSharedPref(
+                        getApplicationContext(),
+                        Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
+                        ""
+                ),
+                this
+        );
+
+        if(this.users.contains(ownerUser)) {
+            this.users.remove(ownerUser);
+            Log.d(TAG, "Removed owner from list of users.");
+        }
+
 
         collaboratorsTCET.setTokenListener(this);
         /*adapter = new ArrayAdapter<User>(

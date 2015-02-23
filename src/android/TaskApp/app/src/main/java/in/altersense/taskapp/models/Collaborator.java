@@ -85,7 +85,7 @@ public class Collaborator extends User {
 
     @Override
     public boolean equals(Object o) {
-        Collaborator colllaboratorObject = (Collaborator) o;
+        Collaborator colllaboratorObject = new Collaborator((User)o);
         return this.getEmail().equals(colllaboratorObject.getEmail());
     }
 }

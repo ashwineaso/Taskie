@@ -296,6 +296,24 @@ public class Task {
         UserDbHelper userDbHelper = new UserDbHelper(activity.getApplicationContext());
         CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity.getApplicationContext());
 
+        // Check whether task owner is present in addition or removal list.
+        User ownerUser = new User(
+                AltEngine.readStringFromSharedPref(
+                        activity.getApplicationContext(),
+                        Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
+                        ""
+                ),
+                activity
+        );
+        if(userAdditionList.contains(ownerUser)) {
+            userAdditionList.remove(ownerUser);
+            Log.d(TAG, "Removed owner from the list of collaborators to be added.");
+        }
+        if(userRemovalList.contains(ownerUser)) {
+            userRemovalList.remove(ownerUser);
+            Log.d(TAG, "Removed owner from the list of collaborators to be removed.");
+        }
+
         // Remove existing collaborators from added collaborators.
         for(Collaborator collaborator:this.getCollaborators()) {
             Log.d(TAG, "Checking collaborator "+collaborator.toString());
