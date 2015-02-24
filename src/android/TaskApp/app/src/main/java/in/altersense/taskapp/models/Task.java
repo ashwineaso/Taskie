@@ -11,7 +11,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import in.altersense.taskapp.CreateTaskActivity;
@@ -82,8 +84,22 @@ public class Task {
         return owner;
     }
 
-    public long getDueDateTime() {
-        return this.dueDateTime;
+    public String getDueDateTime() {
+        return dateToString(this.dueDateTime);
+    }
+
+    /**
+     * Converts the datetime from long to the format "Wed, Jun 6, 12:45 AM"
+     * @tempDateTime = gets long format of the dueDateTime
+     * @return dateTime - String format of dueDateTime
+     */
+    private String dateToString(long dueDateTime) {
+        String dateTime = null;
+        if (dueDateTime == 0) { return dateTime; }
+        Date date = new Date(dueDateTime*1000L);
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM d, h:mm a");
+        dateTime = sdf.format(date);
+        return dateTime;
     }
 
     public String getName() {
@@ -512,8 +528,8 @@ public class Task {
                 );
                 //Pass the task id to the intent.
                 viewTaskIntent.putExtra(
-                        Config.REQUEST_RESPONSE_KEYS.UUID.getKey(),
-                        uuid
+                        Task.ID,
+                        id
                 );
                 //Start the activity
                 activity.startActivity(viewTaskIntent);

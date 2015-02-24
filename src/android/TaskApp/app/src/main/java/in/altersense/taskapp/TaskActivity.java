@@ -39,18 +39,18 @@ public class TaskActivity extends ActionBarActivity {
         String TAG = CLASS_TAG+ " OnCreate";
         //Get the intent
         Intent createViewIntent = getIntent();
-        String taskUUID;
+        long taskId;
         //Check whether there is an EXTRA with the intent
         if (createViewIntent.hasExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey())) {
-            Log.d(TAG, "Intent has taskUUID");
-            taskUUID = createViewIntent.getExtras().getString(
-                    Config.REQUEST_RESPONSE_KEYS.UUID.getKey()
+            Log.d(TAG, "Intent has taskID");
+            taskId = createViewIntent.getExtras().getLong(
+                    Task.ID
             );
-            Log.d(TAG, "TaskUUID: "+taskUUID);
+            Log.d(TAG, "TaskID: "+taskId);
             TaskDbHelper taskDbHelper = new TaskDbHelper(TaskActivity.this);
             // If yes fetch task from the uuid
             Log.d(TAG, "Fetching row from the db");
-            this.task = taskDbHelper.getTaskByUUID(taskUUID, TaskActivity.this);
+            this.task = taskDbHelper.getTaskByRowId(taskId, TaskActivity.this);
         }
 
         //Initialize the views
@@ -62,22 +62,14 @@ public class TaskActivity extends ActionBarActivity {
 
         //Set the text views
         this.taskTitleTV.setText(this.task.getName());
-        this.taskDescriptionTV.setText(setDateTime());
-        this.dueDateTV.setText(setDateTime());
+        this.taskDescriptionTV.setText(this.task.getDescription());
+        this.dueDateTV.setText(this.task.getDueDateTime());
         this.taskPriorityTV.setText(this.task.getPriority()+"");
         this.taskStatusTV.setText(this.task.getStatus()+"");
 
 
-    }
 
-    private String setDateTime() {
-        long tempDateTime = this.task.getDueDateTime();
-        String dateTime = null;
-        if (tempDateTime == 0) { return dateTime; }
-        Date date = new Date(tempDateTime*1000L);
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM d, h:mm a");
-        dateTime = sdf.format(date);
-        return dateTime;
+
     }
 
     /**
