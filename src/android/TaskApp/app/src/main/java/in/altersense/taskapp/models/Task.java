@@ -286,7 +286,7 @@ public class Task {
         this.setCollaborators(collaboratorDbHelper.getAllCollaborators(this));
 
         Log.d(CLASS_TAG, "PanelView construction being called.");
-        this.panelView = createView(activity.getLayoutInflater());
+        this.panelView = createView(activity);
         Log.d(CLASS_TAG, "PanelView constructed.");
 
         Log.d(CLASS_TAG, "ActionsView constructions being called.");
@@ -499,7 +499,7 @@ public class Task {
         CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity);
         this.setCollaborators(collaboratorDbHelper.getAllCollaborators(this));
 
-        this.panelView = createView(activity.getLayoutInflater());
+        this.panelView = createView(activity);
         this.actionsView = createActionsView(activity);
         this.taskActionsPlaceHolderView =
                 (LinearLayout) this.panelView.findViewById(R.id.actionsPlaceHolderLinearLayout);
@@ -618,16 +618,20 @@ public class Task {
         this.isActionsDisplayed = false;
     }
 
-    private View createView(LayoutInflater inflater) {
+    private View createView(Activity activity) {
+        LayoutInflater inflater = activity.getLayoutInflater();
         View taskView = inflater.inflate(R.layout.task_panel, null);
         TextView timeStatus = (TextView) taskView.findViewById(R.id.timeStatusCustomFontTextView);
         TextView timeMeasure = (TextView) taskView.findViewById(R.id.timeMeasureCustomFontTextView);
         TextView timeUnit = (TextView) taskView.findViewById(R.id.timeUnitTextCustomFontTextView);
         TextView taskTitle = (TextView) taskView.findViewById(R.id.taskTitleTextView);
         LinearLayout collaboratorsLL = (LinearLayout) taskView.findViewById(R.id.collaboratorsList);
+        LinearLayout taskStatus = (LinearLayout) taskView.findViewById(R.id.taskStatusLinearLayout);
 
         taskTitle.setText(this.name);
         timeMeasure.setText(this.deadlineTimeMeasure);
+        taskStatus.setBackgroundResource(this.getStatusColor(this.getStatus(activity.getApplicationContext())));
+
 
         View collaboratorStatus = inflater.inflate(R.layout.collaborator_status_display, null);
         TextView collaboratorName = (TextView) collaboratorStatus.findViewById(R.id.name);
@@ -645,6 +649,20 @@ public class Task {
         }
 
         return taskView;
+    }
+
+    private int getStatusColor(int status) {
+        switch (status) {
+            case -1:
+                return R.color.status_declined;
+            case 0:
+                return R.color.status_pending;
+            case 1:
+                return R.color.status_accepted;
+            case 2:
+                return R.color.status_done;
+        }
+        return R.color.status_pending;
     }
 
     public View getPanelView() {
