@@ -50,7 +50,8 @@ public class Config {
 
         REGISTRATION_REQUEST("Registering user. Please wait."),
         LOGIN_REQUEST("Signing in."),
-        LOGIN_ERROR_TITLE("Oops");
+        LOGIN_ERROR_TITLE("Oops"),
+        TASK_TITLE_TOO_SHORT("Task title is too short.");
 
         private String message;
 
