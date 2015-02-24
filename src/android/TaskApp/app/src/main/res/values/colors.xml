@@ -33,4 +33,9 @@
     <color name="button">#E91D62</color>
     <color name="buttonPressed">#BA174E</color>
     <color name="transparent_buttonPressed">#22000000</color>
+
+    <color name="status_declined">#F14345</color>
+    <color name="status_pending">#FFBA1A</color>
+    <color name="status_accepted">#00BCD5</color>
+    <color name="status_done">#75EF44</color>
 </resources>

@@ -260,4 +260,14 @@ public class User {
         string+=" uuid="+this.uuid;
         return string;
     }
+
+    public String getInitials() {
+        String[] nameTerms = this.getName().split(" ");
+        String initials = "";
+        initials+=nameTerms[0].substring(0,1);
+        if(nameTerms.length>1) {
+            initials+=nameTerms[nameTerms.length-1].substring(0,1);
+        }
+        return initials.toUpperCase();
+    }
 }

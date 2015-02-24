@@ -54,7 +54,7 @@
             android:max="2" />
 
         <TextView android:id="@+id/priorityTextView"
-            android:layout_width="@dimen/priorityTextViewWidth"
+            android:layout_width="@dimen/priorityTextViewWidth_xhdpi"
             android:layout_height="wrap_content"
             android:textColor="@color/primaryText"
             android:layout_gravity="center"

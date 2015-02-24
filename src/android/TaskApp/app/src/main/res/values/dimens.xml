@@ -18,6 +18,8 @@
     <dimen name="tasksCountSize_xhdpi">30dp</dimen>
     <dimen name="taskActionIconHeight_xhdpi">32dp</dimen>
     <dimen name="taskActionHeight_xhdpi">40dp</dimen>
+    <dimen name="priorityTextViewWidth_xhdpi">80dp</dimen>
+    <dimen name="statusRingWidth_xhdpi">3dp</dimen>
 
     <!-- Text Sizes for xHdpi -->
     <dimen name="text_dueDats_xhdpi">30sp</dimen>
@@ -26,6 +28,5 @@
     <dimen name="text_normal_xhdpi">16sp</dimen>
     <dimen name="text_small_xhdpi">12sp</dimen>
     <dimen name="hugeHeader_hdpi">64dp</dimen>
-    <dimen name="priorityTextViewWidth">80dp</dimen>
 
 </resources>
