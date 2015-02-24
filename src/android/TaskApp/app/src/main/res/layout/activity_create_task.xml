@@ -23,7 +23,8 @@
     <in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText
         android:id="@+id/collaboratorsTCET"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        style="@style/tokenEditText" />
 
     <EditText android:id="@+id/dueDateEditText"
         android:layout_width="match_parent"
@@ -50,13 +51,13 @@
             android:layout_weight="1"
             android:progressDrawable="@drawable/scrubber_progress"
             android:thumb="@drawable/scrubber_control"
-            android:max="3" />
+            android:max="2" />
 
         <TextView android:id="@+id/priorityTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/priorityTextViewWidth"
             android:layout_height="wrap_content"
             android:textColor="@color/primaryText"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center"
             android:text="Medium"/>
 
         </LinearLayout>

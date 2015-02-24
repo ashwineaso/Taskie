@@ -104,7 +104,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         return task;
     }
 
-    private Task getTaskByRowId(long rowId, Activity activity) {
+    public Task getTaskByRowId(long rowId, Activity activity) {
         String TAG = CLASS_TAG+"getTaskByRowId";
         // Open database.
         Log.d(TAG, "Readable database opened.");
@@ -135,7 +135,6 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 selfCursor,
                 activity
         );
-        task.setId(rowId);
         selfCursor.close();
         readableDb.close();
         return task;
@@ -202,6 +201,11 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 null
         );
         Log.d(TAG, "Returned "+cursor.getCount()+" rows.");
+        if(cursor.moveToFirst()) {
+            do {
+                Log.d(TAG, "Tasks with same UUID("+cursor.getString(0)+"): "+cursor.getString(2));
+            } while(cursor.moveToNext());
+        }
         // Close database.
         readableDb.close();
         // Fetch task from the cursor
@@ -211,5 +215,56 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         // Return the task.
         cursor.close();
         return task;
+    }
+
+    public void updateTask(Task task) {
+        String TAG = CLASS_TAG+"updateTask";
+        // Open writable database.
+        SQLiteDatabase writableDb = this.getWritableDatabase();
+        Log.d(TAG, "Writable database opened.");
+        // Set up updation content value.
+        ContentValues values = new ContentValues();
+        values.put(Task.KEYS.NAME.getName(), task.getName());
+        values.put(Task.KEYS.DESCRIPTION.getName(), task.getDescription());
+        values.put(Task.KEYS.OWNER_UUID.getName(), task.getOwner().getUuid());
+        values.put(Task.KEYS.PRIORITY.getName(), task.getPriority());
+        values.put(Task.KEYS.DUE_DATE_TIME.getName(), task.getDueDateTime());
+        values.put(Task.KEYS.STATUS.getName(), task.getStatus());
+        values.put(Task.KEYS.IS_GROUP.getName(), task.getIntIsGroup());
+        if(task.isGroup()) {
+            values.put(Task.KEYS.GROUP_UUID.getName(), task.getGroup().getUuid());
+        }
+        Log.d(TAG, "Content values set. "+ values.toString());
+        // Call update query.
+        int affected = writableDb.update(
+                Task.TABLE_NAME,
+                values,
+                "ROWID =?",
+                new String[] { task.getId()+"" }
+        );
+        Log.d(TAG, "Update called and affected "+affected+" row.");
+        // Close database.
+        writableDb.close();
+        Log.d(TAG, "Db closed.");
+    }
+
+    public boolean updateStatus(Task task, int status) {
+        String TAG = CLASS_TAG+"updateStatus";
+        // Open a writable database.
+        SQLiteDatabase writableDb = this.getWritableDatabase();
+        // make query
+        ContentValues values = new ContentValues();
+        values.put(Task.KEYS.STATUS.getName(),status);
+        // execute update
+        int affectedRows = writableDb.update(
+                Task.TABLE_NAME,
+                values,
+                "ROWID =?",
+                new String[] { task.getId()+"" }
+        );
+        // close db
+        writableDb.close();
+        // return status
+        return (affectedRows>0);
     }
 }

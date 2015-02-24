@@ -85,4 +85,8 @@
         <item name="android:textColor">@color/createTaskPrimaryActionBar</item>
     </style>
 
+    <style name="tokenEditText" parent="Widget.AppCompat.EditText">
+        <item name="colorAccent">@color/createTaskPrimaryActionBar</item>
+    </style>
+
 </resources>

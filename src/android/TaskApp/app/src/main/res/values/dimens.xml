@@ -27,5 +27,6 @@
     <dimen name="text_normal_xhdpi">16sp</dimen>
     <dimen name="text_small_xhdpi">12sp</dimen>
     <dimen name="hugeHeader_hdpi">64dp</dimen>
+    <dimen name="priorityTextViewWidth">80dp</dimen>
 
 </resources>

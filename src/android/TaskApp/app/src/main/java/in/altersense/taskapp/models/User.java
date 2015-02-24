@@ -20,6 +20,11 @@ public class User {
 
     private static String CLASS_TAG = "User";
 
+    public User(String uuid, String email, String name, int id) {
+        this(uuid,email,name);
+        this.id = id;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -36,8 +41,16 @@ public class User {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public boolean isDeviceOwner() {
@@ -67,6 +80,7 @@ public class User {
                 cursor.getString(1),
                 cursor.getString(2)
         );
+        this.id = cursor.getInt(3);
     }
 
     public User(String userUUID, Activity activity) {
@@ -84,13 +98,19 @@ public class User {
         Log.d(TAG, "User setup complete.");
     }
 
-    public static ArrayList<String> getAllColumns() {
+    public static String[] getAllColumns() {
         ArrayList<String> columnList = new ArrayList<String>();
         for(KEYS key: KEYS.values()) {
             columnList.add(key.getName());
         }
         columnList.add("ROWID");
-        return columnList;
+        String[] columns = new String[columnList.size()];
+        columns = columnList.toArray(columns);
+        return columns;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     /**
@@ -171,8 +191,8 @@ public class User {
   }
 */
     public User(String name, String email) {
-        Random rand = new Random(1000);
-        int uuid = rand.nextInt();
+        this.name = name;
+        this.email = email;
 
     }
 
@@ -230,5 +250,14 @@ public class User {
     @Override
     public String toString() {
         return this.email;
+    }
+
+    public String getString() {
+        String string = "";
+        string+=" id="+this.id;
+        string+=" name="+this.name;
+        string+=" email="+this.email;
+        string+=" uuid="+this.uuid;
+        return string;
     }
 }

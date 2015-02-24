@@ -54,9 +54,6 @@ public class UserDbHelper extends SQLiteOpenHelper {
         Log.d(TAG, "Set up a readable database");
         SQLiteDatabase readableDb = this.getReadableDatabase();
         // Fetch user with matching uuid.
-        String[] columns = new String[] {
-                "*"
-        };
         String whereClause = User.KEYS.UUID.getName()+"=?";
         String[] whereArgs = new String[] {
                 uuid
@@ -65,7 +62,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
         // Fetch the result of the query.
         Cursor selfCursor = readableDb.query(
                 User.TABLE_NAME,
-                columns,
+                User.getAllColumns(),
                 whereClause,
                 whereArgs,
                 null,
@@ -73,6 +70,11 @@ public class UserDbHelper extends SQLiteOpenHelper {
                 null
         );
         Log.d(TAG, "Query executed. "+selfCursor.getCount()+" rows returned.");
+        if(selfCursor.moveToFirst()) {
+            do {
+                Log.d(TAG, "Users with same UUID("+selfCursor.getString(0)+"): "+selfCursor.getString(2));
+            } while(selfCursor.moveToNext());
+        }
         selfCursor.moveToFirst();
         // Create a User object from the cursor
         User user = new User(selfCursor);
@@ -81,7 +83,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
         return user;
     }
 
-    public User[] listAllUsers() {
+    public List<User> listAllUsers() {
         String TAG = CLASS_TAG+"listAllUsers";
         // Open readable database.
         SQLiteDatabase readableDb = this.getReadableDatabase();
@@ -89,9 +91,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
         // Create array list
         List<User> userList = new ArrayList<User>();
         // Setup columns
-        ArrayList<String> columnList = User.getAllColumns();
-        String[] columns = new String[columnList.size()];
-        columns = columnList.toArray(columns);
+        String[] columns = User.getAllColumns();
         // Execute query
         Cursor cursor = readableDb.query(
                 User.TABLE_NAME,
@@ -115,9 +115,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
         } while (cursor.moveToNext());
         Log.d(TAG, "Readable db closed.");
         readableDb.close();
-        User[] usersArray = new User[userList.size()];
-        usersArray = userList.toArray(usersArray);
-        return usersArray;
+        return userList;
     }
 
     /**
@@ -131,9 +129,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
         // Open a readable database.
         SQLiteDatabase readableDb = this.getReadableDatabase();
         // Setup columns.
-        ArrayList<String> columnList = User.getAllColumns();
-        String[] columns = new String[columnList.size()];
-        columns = columnList.toArray(columns);
+        String[] columns = User.getAllColumns();
         // Make query with name
         Cursor cursor = readableDb.query(
                 User.TABLE_NAME,
@@ -209,14 +205,46 @@ public class UserDbHelper extends SQLiteOpenHelper {
         Log.d(TAG, "Set up a readable database");
         SQLiteDatabase readableDb = this.getReadableDatabase();
         // Fetch user with matching row Id.
-        String query = "SELECT * FROM "+User.TABLE_NAME+" WHERE ROWID = "+rowId+";";
-        Log.d(TAG, "Running query: "+query);
-        Cursor selfCursor = readableDb.rawQuery(query, null);
+        Cursor selfCursor = readableDb.query(
+                User.TABLE_NAME,
+                User.getAllColumns(),
+                "ROWID =?",
+                new String[] {rowId+""},
+                null,
+                null,
+                null
+        );
         selfCursor.moveToFirst();
         User user = new User(selfCursor);
+        Log.d(TAG, "Fetched user: "+user.getString());
         readableDb.close();
         return user;
     }
 
 
+    public boolean updateUser(User collaborator) {
+        String TAG = CLASS_TAG+"updateUser";
+        // Open writable db
+        Log.d(TAG, "Writable db opened.");
+        SQLiteDatabase writableDb = this.getWritableDatabase();
+        // Make query
+        ContentValues values = new ContentValues();
+        values.put(User.KEYS.NAME.getName(), collaborator.getName());
+        values.put(User.KEYS.UUID.getName(),collaborator.getUuid());
+        Log.d(TAG, "Content values: "+values);
+        // Execute query
+        int affectedRows = writableDb.update(
+                User.TABLE_NAME,
+                values,
+                User.KEYS.EMAIL.getName()+" =?",
+                new String[] {
+                        collaborator.getEmail()
+                }
+        );
+        Log.d(TAG, "Query executed and affected "+affectedRows+" row.");
+        // Close db.
+        writableDb.close();
+        // Return status.
+        return affectedRows>0;
+    }
 }
