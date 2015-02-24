@@ -26,13 +26,15 @@
                     android:layout_height="wrap_content"
                     android:text="@string/label_sortby"
                     android:layout_gravity="left"
-                    android:textSize="@dimen/text_subHeader_xhdpi"/>
+                    android:textSize="@dimen/text_subHeader_xhdpi"
+                    android:textAlignment="center" />
 
                 <Spinner
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:entries="@array/array_sortBy"
-                    android:layout_marginLeft="@dimen/smallMargin_xhdp"/>
+                    android:layout_marginLeft="@dimen/smallMargin_xhdp"
+                    android:textAlignment="center" />
 
             </LinearLayout>
 

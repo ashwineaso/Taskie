@@ -13,6 +13,13 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent" >
 
+        <LinearLayout android:id="@+id/taskStatusLinearLayout"
+            android:layout_width="@dimen/taskStatusStripWidth_xhdp"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal"
+            android:background="#ff0fa0ae"
+            android:layout_marginRight="@dimen/tinyMargin_xhdpi" />
+
         <LinearLayout
             android:layout_width="@dimen/userImageWidth_xhdp"
             android:layout_height="@dimen/userImageHeight_xhdp"
@@ -41,7 +48,7 @@
                 fontPath="fonts/Cabin-Regular-TTF.ttf"
                 android:gravity="center"
                 android:text="123"
-                android:textColor="@color/positive"
+                android:textColor="@color/duedatetime"
                 android:textSize="@dimen/text_dueDats_xhdpi"/>
 
             <TextView
@@ -121,13 +128,6 @@
                 </RelativeLayout>
 
         </LinearLayout>
-
-        <LinearLayout android:id="@+id/taskStatusLinearLayout"
-            android:layout_width="@dimen/taskStatusStripWidth_xhdp"
-            android:layout_height="fill_parent"
-            android:layout_marginLeft="@dimen/tinyMargin_xhdpi"
-            android:orientation="horizontal"
-            android:background="#48BA1A" />
 
     </LinearLayout>
 

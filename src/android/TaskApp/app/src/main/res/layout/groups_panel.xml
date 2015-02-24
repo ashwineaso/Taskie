@@ -28,7 +28,7 @@
             android:layout_weight="1"
             android:padding="@dimen/smallMargin_xhdp"
             android:textColor="@color/primaryText"
-            fontPath="fonts/ropasans-regular.ttf"
+            fontPath="fonts/Cabin-Medium-TTF.ttf"
             android:textSize="@dimen/text_header_xhdpi"/>
 
         <LinearLayout android:id="@+id/taskCountBackground"

@@ -13,7 +13,8 @@
     <dimen name="userImageHeight_xhdp">72dp</dimen>
     <dimen name="userImageWidth_xhdp">36dp</dimen>
     <dimen name="smallTextHeight_xhdp">24dp</dimen>
-    <dimen name="taskStatusStripWidth_xhdp">8dp</dimen>
+    <dimen name="taskStatusStripWidth_xhdp">5dp</dimen>
+    <dimen name="statusCircleDiameter_xhdp">16dp</dimen>
     <dimen name="roundedRectangleCornerRadius_xhdpi">5dp</dimen>
     <dimen name="tasksCountSize_xhdpi">30dp</dimen>
     <dimen name="taskActionIconHeight_xhdpi">32dp</dimen>

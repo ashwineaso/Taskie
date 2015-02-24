@@ -9,12 +9,12 @@
     <TextView android:id="@+id/taskCollectionTitleTextView"
         android:layout_marginLeft="@dimen/smallMargin_xhdp"
         android:layout_height="@dimen/subHeaderHeight_xhdp"
-        android:textSize="@dimen/text_subHeader_xhdpi"
+        android:textSize="@dimen/text_header_xhdpi"
         android:layout_width="wrap_content"
         android:gravity="center_vertical"
-        android:textColor="@color/primaryText"
-        fontPath="fonts/roboto_slab_regular.ttf"
-        android:text="Groups"
+        android:textColor="@color/headerText"
+        fontPath="fonts/Cabin-SemiBold-TTF.ttf"
+        android:text="GROUPS"
         tools2:ignore="MissingPrefix" />
 
     <LinearLayout android:id="@+id/taskListLinearLayout"
