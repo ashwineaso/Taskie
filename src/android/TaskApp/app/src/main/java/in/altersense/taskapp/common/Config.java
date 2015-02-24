@@ -51,7 +51,8 @@ public class Config {
         REGISTRATION_REQUEST("Registering user. Please wait."),
         LOGIN_REQUEST("Signing in."),
         LOGIN_ERROR_TITLE("Oops"),
-        TASK_TITLE_TOO_SHORT("Task title is too short.");
+        TASK_TITLE_TOO_SHORT("Task title is too short."),
+        INVALID_EMAIL("Invalid email.");
 
         private String message;
 

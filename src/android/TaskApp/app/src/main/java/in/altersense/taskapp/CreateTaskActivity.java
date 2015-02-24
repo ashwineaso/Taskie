@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tokenautocomplete.FilteredArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView;
@@ -257,13 +258,28 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
     public void onTokenAdded(Object o) {
         String TAG = CLASS_TAG+"onTokenAdded";
         try{
-            this.collaboratorAdditionList.add((User) o);
-            Log.d(TAG, "Added: " + o.toString());
-            String listOfCollabs = "";
-            for(User user:this.collaboratorAdditionList) {
-                listOfCollabs+=user.getEmail()+",";
+            User userObject = (User) o;
+            if(AltEngine.verifyEmail(userObject.getEmail())) {
+                Log.d(TAG, "Valid email.");
+                this.collaboratorAdditionList.add((User) o);
+                Log.d(TAG, "Added: " + o.toString());
+                String listOfCollabs = "";
+                for(User user:this.collaboratorAdditionList) {
+                    listOfCollabs+=user.getEmail()+",";
+                }
+                Log.d(TAG, "New List: "+listOfCollabs);
+            } else {
+                Log.d(TAG, "Invalid email.");
+                collaboratorsTCET.removeObject(o);
+                Log.d(TAG, "Object removed.");
+                Toast.makeText(
+                        this,
+                        Config.MESSAGES.INVALID_EMAIL.getMessage(),
+                        Toast.LENGTH_SHORT
+                ).show();
+                this.collaboratorRemovalList.remove(this.collaboratorRemovalList.size()-1);
+                Log.d(TAG, "Object removed from removal list.");
             }
-            Log.d(TAG, "New List: "+listOfCollabs);
         } catch (NullPointerException e) {
             Log.d(TAG, "Nothing added.");
         }
