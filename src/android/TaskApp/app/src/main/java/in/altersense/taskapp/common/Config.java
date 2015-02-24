@@ -85,7 +85,10 @@ public class Config {
         UUID("id"),
         OWNER("owner"),
         TASK_NAME("name"),
-        TASK_COLLABOATORS("collaborators");
+        TASK_COLLABOATORS("collaborators"),
+        DESCRIPTION("description"),
+        DUE_DATE_TIME("dueDateTime"),
+        PRIORITY("priority");
 
         private String key;
 

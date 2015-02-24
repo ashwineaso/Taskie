@@ -103,6 +103,26 @@ public class Task {
         return collaborators;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public void setDueDateTime(long dueDateTime) {
+        this.dueDateTime = dueDateTime;
+    }
+
     /**
      * Table name for Tasks
      */
@@ -560,4 +580,10 @@ public class Task {
             return false;
         }
     }
+
+    public void updateTask(Activity activity) {
+        TaskDbHelper taskDbHelper = new TaskDbHelper(activity.getApplicationContext());
+        taskDbHelper.updateTask(this);
+    }
+
 }

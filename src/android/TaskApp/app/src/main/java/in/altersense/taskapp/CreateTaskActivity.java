@@ -30,6 +30,7 @@ import in.altersense.taskapp.database.UserDbHelper;
 import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.User;
+import in.altersense.taskapp.requests.UpdateTaskRequest;
 
 
 public class CreateTaskActivity extends ActionBarActivity implements TokenCompleteTextView.TokenListener{
@@ -173,6 +174,11 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
                 collaboratorRemovalList,
                 this
         );
+        this.task.setName(this.taskTitleET.getText().toString());
+        this.task.setDescription(this.taskDescriptionET.getText().toString());
+        this.task.setPriority(this.prioritySB.getProgress());
+        this.task.updateTask(this);
+        UpdateTaskRequest updateTaskRequest = new UpdateTaskRequest(task, this);
     }
 
     private void populateTheForm() {

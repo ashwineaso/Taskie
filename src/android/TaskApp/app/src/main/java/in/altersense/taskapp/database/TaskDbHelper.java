@@ -224,7 +224,6 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         Log.d(TAG, "Writable database opened.");
         // Set up updation content value.
         ContentValues values = new ContentValues();
-        values.put(Task.KEYS.UUID.getName(), task.getUuid());
         values.put(Task.KEYS.NAME.getName(), task.getName());
         values.put(Task.KEYS.DESCRIPTION.getName(), task.getDescription());
         values.put(Task.KEYS.OWNER_UUID.getName(), task.getOwner().getUuid());
