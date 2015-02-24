@@ -56,6 +56,7 @@ public class Task {
     private long dueDateTime;
 
     public Task() {
+        Log.d(CLASS_TAG, "Constructor1 called.");
         this.name="";
         this.collaborators = new ArrayList<>();
     }
@@ -250,6 +251,7 @@ public class Task {
             TaskGroup group,
             Activity activity
     ) {
+        Log.d(CLASS_TAG, "Constructor2 called.");
         this.uuid = uuid;
         this.name = name;
         this.description = description;
@@ -262,6 +264,10 @@ public class Task {
         this.collaborators = new ArrayList<Collaborator>();
         Log.d(CLASS_TAG, "Basic fields set.");
 
+        Log.d(CLASS_TAG, "Fetching collaborators.");
+        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity);
+        this.setCollaborators(collaboratorDbHelper.getAllCollaborators(this));
+
         Log.d(CLASS_TAG, "PanelView construction being called.");
         this.panelView = createView(activity.getLayoutInflater());
         Log.d(CLASS_TAG, "PanelView constructed.");
@@ -269,7 +275,6 @@ public class Task {
         Log.d(CLASS_TAG, "ActionsView constructions being called.");
         this.actionsView = createActionsView(activity);
         Log.d(CLASS_TAG, "ActionsView constructed.");
-
 
         Log.d(CLASS_TAG, "TaskActionsPlaceHolder being set up.");
         this.taskActionsPlaceHolderView =
@@ -280,10 +285,6 @@ public class Task {
         Log.d(CLASS_TAG, "TaskActionsPlaceHolder gets the addition of the ActionsView");
         this.isActionsDisplayed = false;
         Log.d(CLASS_TAG, "ActionsDisplayed is set to false.");
-
-        Log.d(CLASS_TAG, "Fetching collaborators.");
-        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity);
-        this.setCollaborators(collaboratorDbHelper.getAllCollaborators(this));
 
     }
 
@@ -312,6 +313,7 @@ public class Task {
                 null,
                 activity
         );
+        Log.d(CLASS_TAG, "Constructor3 called.");
     }
 
     public Task(
@@ -338,6 +340,7 @@ public class Task {
                 group,
                 activity
         );
+        Log.d(CLASS_TAG, "Constructor4 called.");
     }
 
     public String getUuid() {
@@ -474,6 +477,11 @@ public class Task {
             this.group = null;
         }
         this.id = cursor.getLong(9);
+
+        Log.d(CLASS_TAG, "Fetching collaborators.");
+        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity);
+        this.setCollaborators(collaboratorDbHelper.getAllCollaborators(this));
+
         this.panelView = createView(activity.getLayoutInflater());
         this.actionsView = createActionsView(activity);
         this.taskActionsPlaceHolderView =
@@ -587,15 +595,26 @@ public class Task {
         TextView timeStatus = (TextView) taskView.findViewById(R.id.timeStatusCustomFontTextView);
         TextView timeMeasure = (TextView) taskView.findViewById(R.id.timeMeasureCustomFontTextView);
         TextView timeUnit = (TextView) taskView.findViewById(R.id.timeUnitTextCustomFontTextView);
-
         TextView taskTitle = (TextView) taskView.findViewById(R.id.taskTitleTextView);
-        TextView taskDescr = (TextView) taskView.findViewById(R.id.taskDescriptionTextView);
-        TextView taskOwner = (TextView) taskView.findViewById(R.id.taskOwnerTextView);
+        LinearLayout collaboratorsLL = (LinearLayout) taskView.findViewById(R.id.collaboratorsList);
 
         taskTitle.setText(this.name);
-        taskDescr.setText(this.description);
-        taskOwner.setText(this.owner.getName());
         timeMeasure.setText(this.deadlineTimeMeasure);
+
+        View collaboratorStatus = inflater.inflate(R.layout.collaborator_status_display, null);
+        TextView collaboratorName = (TextView) collaboratorStatus.findViewById(R.id.name);
+        collaboratorName.setText(this.owner.getInitials());
+        collaboratorName.setBackgroundResource(this.collaboratorStatusBackground(this.status));
+
+        collaboratorsLL.addView(collaboratorStatus);
+
+        for(Collaborator collaborator:this.collaborators) {
+            collaboratorStatus = inflater.inflate(R.layout.collaborator_status_display, null);
+            collaboratorName = (TextView) collaboratorStatus.findViewById(R.id.name);
+            collaboratorName.setText(collaborator.getInitials());
+            collaboratorName.setBackgroundResource(collaboratorStatusBackground(collaborator.getStatus()));
+            collaboratorsLL.addView(collaboratorStatus);
+        }
 
         return taskView;
     }
@@ -693,6 +712,25 @@ public class Task {
                 ""
         );
         return this.getOwner().getUuid().equals(ownnerUUID);
+    }
+
+    private int collaboratorStatusBackground(int status) {
+        int backgroundResource = 0;
+        switch (status) {
+            case -1:
+                backgroundResource = R.drawable.collaborator_status_declined;
+                break;
+            case 0:
+                backgroundResource = R.drawable.collaborator_status_pending;
+                break;
+            case 1:
+                backgroundResource = R.drawable.collaborator_status_accepted;
+                break;
+            case 2:
+                backgroundResource = R.drawable.collaborator_status_done;
+                break;
+        }
+        return backgroundResource;
     }
 
 }
