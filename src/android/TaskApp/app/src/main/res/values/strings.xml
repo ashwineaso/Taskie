@@ -34,7 +34,7 @@
     <string name="label_Register">REGISTER</string>
     <string name="title_activity_user_login">UserLoginActivity</string>
     <string name="label_Login">Log In</string>
-    <string name="label_CreateAccount">START USING TASKIE</string>
+    <string name="label_CreateAccount">CREATE AN ACCOUNT</string>
     <string name="label_SignIn">SIGN IN</string>
     <string name="label_createTask">CREATE TASK</string>
     <string name="labbel_updateTask">UPDATE TASK</string>

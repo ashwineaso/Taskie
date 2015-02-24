@@ -1,17 +1,92 @@
 package in.altersense.taskapp;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import in.altersense.taskapp.common.Config;
+import in.altersense.taskapp.database.TaskDbHelper;
+import in.altersense.taskapp.models.Task;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 public class TaskActivity extends ActionBarActivity {
 
+    private static final String CLASS_TAG = "TaskActivity";
+    private Task task;
+    private TextView taskTitleTV, dueDateTV, taskDescriptionTV, taskPriorityTV, taskStatusTV;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //        Setting up calligraphy
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                        .setDefaultFontPath("fonts/Cabin-Medium-TTF.ttf")
+                        .setFontAttrId(R.attr.fontPath)
+                        .build()
+        );
         setContentView(R.layout.activity_task);
+
+        String TAG = CLASS_TAG+ " OnCreate";
+        //Get the intent
+        Intent createViewIntent = getIntent();
+        String taskUUID;
+        //Check whether there is an EXTRA with the intent
+        if (createViewIntent.hasExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey())) {
+            Log.d(TAG, "Intent has taskUUID");
+            taskUUID = createViewIntent.getExtras().getString(
+                    Config.REQUEST_RESPONSE_KEYS.UUID.getKey()
+            );
+            Log.d(TAG, "TaskUUID: "+taskUUID);
+            TaskDbHelper taskDbHelper = new TaskDbHelper(TaskActivity.this);
+            // If yes fetch task from the uuid
+            Log.d(TAG, "Fetching row from the db");
+            this.task = taskDbHelper.getTaskByUUID(taskUUID, TaskActivity.this);
+        }
+
+        //Initialize the views
+        this.taskTitleTV = (TextView)findViewById(R.id.taskTitleTextView);
+        this.taskDescriptionTV = (TextView)findViewById(R.id.taskDescriptionTextView);
+        this.dueDateTV = (TextView)findViewById(R.id.dueDateTextView);
+        this.taskPriorityTV = (TextView)findViewById(R.id.taskStatusTextView);
+        this.taskStatusTV = (TextView)findViewById(R.id.taskStatusTextView);
+
+        //Set the text views
+        this.taskTitleTV.setText(this.task.getName());
+        this.taskDescriptionTV.setText(setDateTime());
+        this.dueDateTV.setText(setDateTime());
+        this.taskPriorityTV.setText(this.task.getPriority()+"");
+        this.taskStatusTV.setText(this.task.getStatus()+"");
+
+
+    }
+
+    private String setDateTime() {
+        long tempDateTime = this.task.getDueDateTime();
+        String dateTime = null;
+        if (tempDateTime == 0) { return dateTime; }
+        Date date = new Date(tempDateTime*1000L);
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM d, h:mm a");
+        dateTime = sdf.format(date);
+        return dateTime;
+    }
+
+    /**
+     * Calligraphy attached to new
+     * @param newBase
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
 

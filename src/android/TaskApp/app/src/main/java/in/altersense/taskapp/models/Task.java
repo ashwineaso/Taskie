@@ -16,6 +16,7 @@ import java.util.List;
 
 import in.altersense.taskapp.CreateTaskActivity;
 import in.altersense.taskapp.R;
+import in.altersense.taskapp.TaskActivity;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.common.Methods;
 import in.altersense.taskapp.components.AltEngine;
@@ -504,6 +505,26 @@ public class Task {
 
             @Override
             public void onClick(View v) {
+                //Create an intent to view the task
+                Intent viewTaskIntent = new Intent(
+                        activity.getApplicationContext(),
+                        TaskActivity.class
+                );
+                //Pass the task id to the intent.
+                viewTaskIntent.putExtra(
+                        Config.REQUEST_RESPONSE_KEYS.UUID.getKey(),
+                        uuid
+                );
+                //Start the activity
+                activity.startActivity(viewTaskIntent);
+
+            }
+        });
+
+        action2.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
                 // Create an intent to edit screen.
                 Intent editTaskIntent = new Intent(
                         activity.getApplicationContext(),
@@ -518,15 +539,6 @@ public class Task {
                 editTaskIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 // Start the activity.
                 activity.startActivity(editTaskIntent);
-            }
-        });
-
-        action2.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(myInflater.getContext(), "Action2", Toast.LENGTH_SHORT)
-                        .show();
             }
         });
 

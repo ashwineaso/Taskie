@@ -5,7 +5,7 @@
 	<color name="tasksAtHandActionBarText">#FFFFFF</color>
 
     <color name="createTaskPrimaryActionBar">#fff50057</color>
-    <color name="createTaskTextWidgetsColor">#27A398</color>
+    <color name="createTaskTextWidgetsColor">#ff21bbae</color>
     <color name="createTaskSliderWidgetsColor">#0F9C57</color>
 
     <color name="taskPrimaryActionBar">#fff50057</color>
@@ -18,6 +18,7 @@
     <color name="taskDone">#0F9C57</color>
 
     <color name="lightText">#FFFFFF</color>
+    <color name="headerText">#fff50057</color>
     <color name="primaryText">#ff212121</color>
     <color name="secondaryText">#ABABAB</color>
 
