@@ -5,15 +5,20 @@ import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.database.TaskDbHelper;
+import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.Task;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -24,6 +29,9 @@ public class TaskActivity extends ActionBarActivity {
     private static final String CLASS_TAG = "TaskActivity";
     private Task task;
     private TextView taskTitleTV, dueDateTV, taskDescriptionTV, taskPriorityTV, taskStatusTV;
+    LinearLayout CollaboratorDetailsLL;
+    List<Collaborator> collaboratorList;
+    View CollaboratorDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +75,15 @@ public class TaskActivity extends ActionBarActivity {
         this.taskPriorityTV.setText(this.task.getPriority()+"");
         this.taskStatusTV.setText(this.task.getStatus()+"");
 
+        this.CollaboratorDetailsLL = (LinearLayout)findViewById(R.id.collaboratorsLL);
 
-
+        this.collaboratorList = task.getCollaborators();
+        for(Collaborator collaborator:this.collaboratorList) {
+            this.CollaboratorDetails = getLayoutInflater().inflate(R.layout.collaborator_details_layout, null);
+            TextView collaboratorName = (TextView) CollaboratorDetails.findViewById(R.id.collName);
+            collaboratorName.setText(collaborator.getName());
+            this.CollaboratorDetailsLL.addView(CollaboratorDetails);
+        }
 
     }
 
