@@ -15,6 +15,33 @@ public class Config {
     public static String REQUEST_TIMED_OUT_ERROR = "Request Timed Out";
     public static int CONNECTION_TIMEOUT = 10000;
 
+    public static final int MIN_STATUS = -1;  // Minimum status a task can have.
+    public static final int MAX_STATUS = 2;  // Maximum status a task can have.
+
+    public static enum TASK_STATUS {
+
+        DECLINED(-1,"Declined"),
+        PENDING(0,"Pending"),
+        ACCEPTED(1,"Accepted"),
+        COMPLETED(2,"Completed");
+
+        public String getStatusText() {
+            return statusText;
+        }
+
+        public int getStatus() {
+            return status;
+        }
+
+        private int status;
+        private String statusText;
+
+        private TASK_STATUS(int status, String statusText) {
+            this.status = status;
+            this.statusText = statusText;
+        }
+    }
+
     public static enum MESSAGES {
 
         REGISTRATION_REQUEST("Registering user. Please wait."),

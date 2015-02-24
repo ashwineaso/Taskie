@@ -189,8 +189,6 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
         this.prioritySB.setProgress(this.task.getPriority());
         this.priorityTV.setText(this.task.getPriority()+"");
 
-        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(this);
-        this.task.setCollaborators(collaboratorDbHelper.getAllCollaborators(this.task));
         Log.d(TAG, "Collaborators: "+task.getCollaborators());
         for(Collaborator collaborator:task.getCollaborators()) {
             this.collaboratorsTCET.addObject(collaborator);

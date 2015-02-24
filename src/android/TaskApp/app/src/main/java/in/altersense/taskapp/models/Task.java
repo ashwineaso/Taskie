@@ -1,6 +1,7 @@
 package in.altersense.taskapp.models;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.util.Log;
@@ -99,6 +100,25 @@ public class Task {
         return status;
     }
 
+    /**
+     * Gets the user's status in this task.
+     * @param context
+     * @return
+     */
+    public int getStatus(Context context) {
+        // Check if the user is the owner.
+        if(isOwnedyDeviceUser(context)) {
+            // Return the task status.
+            return this.status;
+        } else {
+            // Find collaborator.
+            Collaborator collaborator = new Collaborator(User.getDeviceOwner(context));
+            collaborator = this.getCollaborators().get(this.getCollaborators().indexOf(collaborator));
+            // Return collaborator status.
+            return collaborator.getStatus();
+        }
+    }
+
     public List<Collaborator> getCollaborators() {
         return collaborators;
     }
@@ -117,6 +137,37 @@ public class Task {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    /**
+     * Sets the status of the task or the collaborator's satus accordingly.
+     * @param status Status to be set.
+     * @param context Current context.
+     * @return Boolean if status update was a success.
+     */
+    public boolean setStatus(int status, Context context) {
+        String TAG = CLASS_TAG+"setStatus";
+        // Checks if the status to be set is outside limit.
+        if(status>Config.MAX_STATUS ||
+                status<0) {
+            Log.d(TAG, "Status out of bounds. Status is "+status);
+            // Returns false
+            return false;
+        }
+        // Checks whether the user is the owner.
+        if(isOwnedyDeviceUser(context)) {
+            // Updates the owners status
+            Log.d(TAG,"User is the owner of the task.");
+            this.status = status;
+        } else {
+            Log.d(TAG, "User is just a collaborator of the task.");
+            // Finds the collaborator with the device user UUID.
+            Collaborator collaborator = new Collaborator(User.getDeviceOwner(context));
+            CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
+            // Updates the status of the collaborator.
+            collaboratorDbHelper.updateStatus(this, collaborator);
+        }
+        return true;
     }
 
     public void setDueDateTime(long dueDateTime) {
@@ -229,6 +280,10 @@ public class Task {
         Log.d(CLASS_TAG, "TaskActionsPlaceHolder gets the addition of the ActionsView");
         this.isActionsDisplayed = false;
         Log.d(CLASS_TAG, "ActionsDisplayed is set to false.");
+
+        Log.d(CLASS_TAG, "Fetching collaborators.");
+        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity);
+        this.setCollaborators(collaboratorDbHelper.getAllCollaborators(this));
 
     }
 
@@ -480,12 +535,37 @@ public class Task {
 
             @Override
             public void onClick(View v) {
-                Toast.makeText(myInflater.getContext(), "Action4", Toast.LENGTH_SHORT)
-                        .show();
+                String TAG=CLASS_TAG+"statusToggle onClick";
+                toggleStatus(activity);
             }
         });
 
         return actionsPanel;
+    }
+
+    private void toggleStatus(Activity activity) {
+        String TAG = CLASS_TAG+"toggleStatus";
+        int currentStatus = getStatus(activity);
+        Log.d(TAG,"Current status "+currentStatus);
+        switch (currentStatus) {
+            case -1:
+                setStatus(0, activity);
+                break;
+            case 0:
+                setStatus(1, activity);
+                break;
+            case 1:
+                setStatus(2, activity);
+                break;
+            case 2:
+                setStatus(1, activity);
+                break;
+        }
+        // Make a TaskStatusChangeRequest.
+        Log.d(TAG, "Making TaskStatusChangeRequest");
+        TaskStatusChangeRequest taskStatusChangeRequest = new TaskStatusChangeRequest(Task.this, activity);
+        taskStatusChangeRequest.execute();
+        Log.d(TAG, "TaskStatusChangeRequest complete.");
     }
 
     public void showTaskActions() {
@@ -584,6 +664,20 @@ public class Task {
     public void updateTask(Activity activity) {
         TaskDbHelper taskDbHelper = new TaskDbHelper(activity.getApplicationContext());
         taskDbHelper.updateTask(this);
+    }
+
+    /**
+     * Checks whether the task is owned by the device user.
+     * @param context Current context.
+     * @return Boolean isOwnedByDeviceUser
+     */
+    public boolean isOwnedyDeviceUser(Context context) {
+        String ownnerUUID = AltEngine.readStringFromSharedPref(
+                context,
+                Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
+                ""
+        );
+        return this.getOwner().getUuid().equals(ownnerUUID);
     }
 
 }
