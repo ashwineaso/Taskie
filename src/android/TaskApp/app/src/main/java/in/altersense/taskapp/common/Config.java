@@ -1,5 +1,7 @@
 package in.altersense.taskapp.common;
 
+import android.util.Log;
+
 import java.util.List;
 
 /**
@@ -141,8 +143,12 @@ public class Config {
         }
 
         public static String getText(int value) {
+            String TAG = "PRIORITY getText";
+            Log.d(TAG, "Value: "+value);
             for(PRIORITY priority:PRIORITY.values()) {
+                Log.d(TAG, "Checking "+priority.getText()+"("+priority.getValue()+")");
                 if(priority.getValue()==value) {
+                    Log.d(TAG,"Found");
                     return priority.getText();
                 }
             }

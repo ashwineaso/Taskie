@@ -210,8 +210,10 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
         this.taskTitleET.setText(this.task.getName());
         this.taskDescriptionET.setText(this.task.getDescription());
         this.dueDateET.setText(this.task.getDueDateTime()+"");
-        this.prioritySB.setProgress(this.task.getPriority());
-        this.priorityTV.setText(this.task.getPriority()+"");
+        prioritySB.setProgress(this.task.getPriority());
+        String priority = Config.PRIORITY.getText(this.task.getPriority());
+        Log.d(TAG,"Priority: "+priority);
+        priorityTV.setText(priority);
 
         Log.d(CLASS_TAG, "Fetching collaborators.");
         CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(this);
