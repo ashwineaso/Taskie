@@ -101,6 +101,24 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
             }
         });
 
+        this.prioritySB.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                priorityTV.setText(Config.PRIORITY.getText(progress));
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
         UserDbHelper userDbHelper = new UserDbHelper(CreateTaskActivity.this);
         this.users = userDbHelper.listAllUsers();
         User ownerUser = new User(
@@ -177,8 +195,14 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
         this.task.setName(this.taskTitleET.getText().toString());
         this.task.setDescription(this.taskDescriptionET.getText().toString());
         this.task.setPriority(this.prioritySB.getProgress());
+        Log.d(TAG, "Values set.");
         this.task.updateTask(this);
+        Log.d(TAG, "Task update complete.");
         UpdateTaskRequest updateTaskRequest = new UpdateTaskRequest(task, this);
+        Log.d(TAG, "Request prepped.");
+        updateTaskRequest.execute();
+        Log.d(TAG, "Request initiated.");
+        this.finish();
     }
 
     private void populateTheForm() {
@@ -188,6 +212,10 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
         this.dueDateET.setText(this.task.getDueDateTime()+"");
         this.prioritySB.setProgress(this.task.getPriority());
         this.priorityTV.setText(this.task.getPriority()+"");
+
+        Log.d(CLASS_TAG, "Fetching collaborators.");
+        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(this);
+        this.task.setCollaborators(collaboratorDbHelper.getAllCollaborators(this.task));
 
         Log.d(TAG, "Collaborators: "+task.getCollaborators());
         for(Collaborator collaborator:task.getCollaborators()) {

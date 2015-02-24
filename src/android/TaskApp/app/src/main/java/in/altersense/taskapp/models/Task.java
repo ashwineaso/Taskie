@@ -619,34 +619,48 @@ public class Task {
     }
 
     public boolean setStatus(int status, Activity activity) {
+        String TAG = CLASS_TAG+"setStatus(status,activtiy)";
+        Log.d(TAG, "Started.");
+
         // Fetch the device owner.
         String ownerId = AltEngine.readStringFromSharedPref(
                 activity.getApplicationContext(),
                 Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
                 ""
         );
+        Log.d(TAG, "Fetched device user.");
         // Check whether the device owner is the task owner.
         if(this.owner.getUuid().equals(ownerId)) {
-            TaskStatusChangeRequest taskStatusChangeRequest = new TaskStatusChangeRequest(this, activity);
+            Log.d(TAG, "Fetched device user is the task owner.");
             // Set task status.
+            Log.d(TAG, "Setting status as "+status);
             this.status = status;
+            TaskStatusChangeRequest taskStatusChangeRequest = new TaskStatusChangeRequest(this, activity);
             // Update db
             TaskDbHelper taskDbHelper = new TaskDbHelper(activity);
             taskDbHelper.updateStatus(this, status);
+            Log.d(TAG, "Updated in db.");
             // Query API status change API
             taskStatusChangeRequest.execute();
+            Log.d(TAG, "API Request initiated.");
             return true;
         } else {
+            Log.d(TAG, "Fetched device user is the task collaborator.");
             // Get all collaborators.
             List<Collaborator> collaborators = this.getCollaborators();
+            Log.d(TAG, "All collaborators of the task listed.");
             // Check whether user is a collaborator.
             for(Collaborator collaborator:collaborators) {
+                Log.d(TAG, "Checking whether collaborator("+collaborator.getEmail()+") is the user...");
                 if(collaborator.getUuid().equals(ownerId)) {
+                    Log.d(TAG, "Found the collaborator!");
                     // Change status of the collaborator
+                    Log.d(TAG, "Setting status as "+status);
                     collaborator.setStatus(status);
                     // Update database.
                     CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity);
                     collaboratorDbHelper.updateStatus(this, collaborator);
+                    Log.d(TAG, "Updated in db.");
                     // Make an APIRequest for setting task Request.
                     TaskStatusChangeRequest taskStatusChangeRequest = new TaskStatusChangeRequest(
                             this,
@@ -654,6 +668,7 @@ public class Task {
                             activity
                     );
                     taskStatusChangeRequest.execute();
+                    Log.d(TAG, "API Request initiated.");
                     return true;
                 }
             }

@@ -1,5 +1,7 @@
 package in.altersense.taskapp.common;
 
+import java.util.List;
+
 /**
  * Holds most configuration of the app.
  * Created by mahesmohan on 1/29/15.
@@ -128,4 +130,35 @@ public class Config {
         }
     }
 
+    public static enum PRIORITY {
+
+        LOW(0,"Low"),
+        MEDIUM(1,"Medium"),
+        HIGH(2,"High");
+
+        public String getText() {
+            return text;
+        }
+
+        public static String getText(int value) {
+            for(PRIORITY priority:PRIORITY.values()) {
+                if(priority.getValue()==value) {
+                    return priority.getText();
+                }
+            }
+            return "";
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        private int value;
+        private String text;
+
+        private PRIORITY(int value, String text) {
+            this.value = value;
+            this.text = text;
+        }
+    }
 }
