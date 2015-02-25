@@ -20,10 +20,12 @@ public class AltEngine {
 
     private static String CLASS_TAG = "AltEngine ";
 
+    public final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+
     /**
      * SharedPreference Name for the app.
      */
-    private static String SHARED_PREFERENCE = "SharedPref";
+    public static String SHARED_PREFERENCE = "SharedPref";
 
     /**
      * Write String to SharedPreferences.
@@ -119,24 +121,4 @@ public class AltEngine {
         return matcher.matches();
     }
 
-    /**
-     * Checks whether Google Play Services are active in the device.
-     * @param activity Activity Current activity.
-     * @return Boolean Whether Google Play Services are active or not.
-     */
-    public static boolean checkPlayServices(Activity activity) {
-        String TAG = CLASS_TAG+"checkPlayServices";
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, activity,
-                        9000).show();
-            } else {
-                Log.i(TAG, "This device is not supported as there is no Play Store Services Active.");
-                activity.finish();
-            }
-            return false;
-        }
-        return true;
-    }
 }

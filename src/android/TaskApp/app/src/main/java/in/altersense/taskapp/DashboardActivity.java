@@ -18,11 +18,15 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import in.altersense.taskapp.common.Config;
+import in.altersense.taskapp.common.Methods;
 import in.altersense.taskapp.components.AltEngine;
+import in.altersense.taskapp.components.GCMHandler;
 import in.altersense.taskapp.components.GroupPanelOnClickListener;
 import in.altersense.taskapp.components.TaskPanelOnClickListener;
 import in.altersense.taskapp.database.TaskDbHelper;
@@ -36,7 +40,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class DashboardActivity extends ActionBarActivity {
 
-    private static final String CLASS_TAG = "TasksActivity";
+    private static final String CLASS_TAG = "DashboardActivity ";
     private LinearLayout taskListStageLL;  // For handling the main content area.
     private LinearLayout quickCreateStageLinearLayout; // Quick task creation area
     private TaskDbHelper taskDbHelper;
@@ -47,6 +51,8 @@ public class DashboardActivity extends ActionBarActivity {
     private EditText newTaskTitle;
     private ScrollView contentScroll;
     private LinearLayout groupListStageLL;
+
+    private GCMHandler gcmHandler;
 
 //    Authenticated user details.
     private String ownerId;
@@ -122,7 +128,6 @@ public class DashboardActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
         // Check whether the apk is from play store and google play services are active on the deivice.
-        AltEngine.checkPlayServices(this);
     }
 
     /**
@@ -130,7 +135,8 @@ public class DashboardActivity extends ActionBarActivity {
      * If it fails login activity is displayed.
      */
     private void authenticateUser() {
-        Log.d(CLASS_TAG, "Authenticating user.");
+        String TAG = CLASS_TAG+"authenticateUser";
+        Log.d(TAG, "Authenticating user.");
         this.ownerId = AltEngine.readStringFromSharedPref(
                 getApplicationContext(),
                 Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
@@ -141,6 +147,15 @@ public class DashboardActivity extends ActionBarActivity {
                 Config.SHARED_PREF_KEYS.OWNER_NAME.getKey(),
                 ""
         );
+
+        Log.d(TAG, "Creatig new GCMHandler.");
+        gcmHandler = new GCMHandler(
+                Config.getGCMSenderId(),
+                AltEngine.SHARED_PREFERENCE,
+                Config.SHARED_PREF_KEYS.GCM_REG_ID.getKey(),
+                this
+        );
+
         if(ownerId.equals("")) {
             Intent authenticateUserIntent = new Intent(
                     getApplicationContext(),
