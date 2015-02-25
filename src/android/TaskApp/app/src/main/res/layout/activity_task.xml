@@ -3,15 +3,16 @@
     xmlns:tools2="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:layout_height="match_parent"
+    android:layout_height="fill_parent"
     android:background="@color/secondaryText"
     tools:context="in.altersense.taskapp.TaskActivity"
-    tools2:ignore="MissingPrefix">
+    tools2:ignore="MissingPrefix"
+    android:id="@+id/detailsScrollView">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/scrollHolder"
             android:paddingLeft="@dimen/tinyMargin_xhdpi"
             android:paddingRight="@dimen/tinyMargin_xhdpi"
@@ -148,13 +149,10 @@
                 android:textColor="@color/headerText"
                 android:id="@+id/headingCollaborators" />
 
-            <LinearLayout
-                android:orientation="vertical"
+            <ListView
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/collaboratorsLL">
-
-                </LinearLayout>
+                android:layout_height="wrap_content"
+                android:id="@+id/collListView" />
 
         </LinearLayout>
 

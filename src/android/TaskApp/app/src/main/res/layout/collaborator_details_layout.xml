@@ -29,6 +29,6 @@
         android:layout_height="@dimen/statusCircleDiameter_xhdp"
         android:src="@drawable/done_notif"
         android:layout_marginRight="8dp"
-        android:id="@+id/statuscircle1" />
+        android:id="@+id/statusCircle" />
 
 </LinearLayout>
