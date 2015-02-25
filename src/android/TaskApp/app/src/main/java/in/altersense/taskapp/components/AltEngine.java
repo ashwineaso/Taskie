@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import in.altersense.taskapp.common.Config;
 
 /**
@@ -97,5 +100,18 @@ public class AltEngine {
      */
     public static String formURL(String api) {
         return "http://"+Config.SERVER_ADDRESS+"/"+api;
+    }
+
+    /**
+     * Validates email with regular expression.
+     * @param email Email String
+     * @return Boolean validation result of email.
+     */
+    public static boolean verifyEmail(String email) {
+        String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                        + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 }

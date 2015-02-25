@@ -16,6 +16,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
-public class TasksActivity extends ActionBarActivity {
+public class DashboardActivity extends ActionBarActivity {
 
     private static final String CLASS_TAG = "TasksActivity";
     private LinearLayout taskListStageLL;  // For handling the main content area.
@@ -254,34 +255,43 @@ public class TasksActivity extends ActionBarActivity {
         createQuickTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String TAG = CLASS_TAG+" creaeteQuickTask OnClickListener.";
-                Task quickTask = new Task(
-                        newTaskTitle.getText().toString(),
-                        "",
-                        // TODO: Create user once and call pass that user instead of creating her everytime.
-                        new User(
-                                AltEngine.readStringFromSharedPref(
-                                        getApplicationContext(),
-                                        Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
-                                        ""
-                                ),
-                                TasksActivity.this
-                        ),
-                        TasksActivity.this
-                );
-                Log.d(TAG, "QuickTask: "+quickTask.toString());
-                quickTask = addQuickTaskToDb(quickTask);
+                String TAG = CLASS_TAG+" createQuickTask OnClickListener.";
+                String taskName = newTaskTitle.getText().toString();
+                taskName = taskName.trim();
+                if(!(taskName.length() <1)) {
+                    Task quickTask = new Task(
+                            taskName,
+                            "",
+                            // TODO: Create user once and call pass that user instead of creating her everytime.
+                            new User(
+                                    AltEngine.readStringFromSharedPref(
+                                            getApplicationContext(),
+                                            Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
+                                            ""
+                                    ),
+                                    DashboardActivity.this
+                            ),
+                            DashboardActivity.this
+                    );
+                    Log.d(TAG, "QuickTask: "+quickTask.toString());
+                    quickTask = addQuickTaskToDb(quickTask);
 
-                newTaskTitle.setText("");
-                isGroupTaskCB.setChecked(false);
-                groupNameET.setText("");
-                participantNameET.setText("");
-                toggleQuickTaskLayout();
-                contentScroll.smoothScrollTo(
-                        0,
-                        taskListStageLL.getBottom()
-                );
-
+                    newTaskTitle.setText("");
+                    isGroupTaskCB.setChecked(false);
+                    groupNameET.setText("");
+                    participantNameET.setText("");
+                    toggleQuickTaskLayout();
+                    contentScroll.smoothScrollTo(
+                            0,
+                            taskListStageLL.getBottom()
+                    );
+                } else {
+                    Toast.makeText(
+                            getApplicationContext(),
+                            Config.MESSAGES.TASK_TITLE_TOO_SHORT.getMessage(),
+                            Toast.LENGTH_SHORT
+                    ).show();
+                }
             }
         });
     }

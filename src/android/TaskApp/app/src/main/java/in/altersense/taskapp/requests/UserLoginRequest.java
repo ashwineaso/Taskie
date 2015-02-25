@@ -11,7 +11,7 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import in.altersense.taskapp.TasksActivity;
+import in.altersense.taskapp.DashboardActivity;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.APIRequest;
 import in.altersense.taskapp.components.AltEngine;
@@ -134,7 +134,7 @@ public class UserLoginRequest extends AsyncTask<Void, Integer, JSONObject> {
                 if(this.startActivity) {
                     Intent tasksActivityStarterIntent = new Intent(
                             this.activity.getApplicationContext(),
-                            TasksActivity.class
+                            DashboardActivity.class
                     );
                     tasksActivityStarterIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     this.activity.startActivity(tasksActivityStarterIntent);
