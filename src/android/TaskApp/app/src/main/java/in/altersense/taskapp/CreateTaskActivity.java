@@ -277,8 +277,6 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
                         Config.MESSAGES.INVALID_EMAIL.getMessage(),
                         Toast.LENGTH_SHORT
                 ).show();
-                this.collaboratorRemovalList.remove(this.collaboratorRemovalList.size()-1);
-                Log.d(TAG, "Object removed from removal list.");
             }
         } catch (NullPointerException e) {
             Log.d(TAG, "Nothing added.");
@@ -289,13 +287,20 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
     public void onTokenRemoved(Object o) {
         String TAG = CLASS_TAG+"onTokenRemoved";
         try {
-            this.collaboratorRemovalList.add((User)o);
-            Log.d(TAG, "Removed: "+o.toString());
-            String listOfCollabs = "";
-            for(User user:this.collaboratorRemovalList) {
-                listOfCollabs+=user.getEmail()+",";
+            User userObject = (User) o;
+            if(AltEngine.verifyEmail(userObject.getEmail())) {
+                Log.d(TAG, "Valid email.");
+                this.collaboratorRemovalList.add(userObject);
+                Log.d(TAG, "Removed: "+userObject.toString());
+                String listOfCollabs = "";
+                for(User user:this.collaboratorRemovalList) {
+                    listOfCollabs+=user.getEmail()+",";
+                }
+                Log.d(TAG, "New List: "+listOfCollabs);
+            } else {
+                Log.d(TAG, "Invalid email.");
+                Log.d(TAG, "Nothing removed.");
             }
-            Log.d(TAG, "New List: "+listOfCollabs);
         } catch (NullPointerException e) {
             Log.d(TAG, "Nothing removed.");
         }
