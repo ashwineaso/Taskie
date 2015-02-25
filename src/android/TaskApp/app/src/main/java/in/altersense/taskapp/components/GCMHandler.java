@@ -32,16 +32,20 @@ public class GCMHandler {
     private String senderID;
     private String registrationID;
 
+    private int maxCount;
+
     public GCMHandler(
             String senderID,
             String sharedPreferenceIdentifier,
             String sharedPreferenceKey,
-            Activity activity
+            Activity activity,
+            int maxCount
             ) {
         this.senderID = senderID;
         this.sharedPreferenceIdentifier = sharedPreferenceIdentifier;
         this.sharedPreferenceKey = sharedPreferenceKey;
         this.activity = activity;
+        this.maxCount = maxCount;
 
         this.gcmInstance = GoogleCloudMessaging.getInstance(activity.getApplicationContext());
 
@@ -51,7 +55,21 @@ public class GCMHandler {
                 this.registerInBackground();
             }
         }
+    }
 
+    public GCMHandler(
+            String senderID,
+            String sharedPreferenceIdentifier,
+            String sharedPreferenceKey,
+            Activity activity
+    ) {
+        this(
+                senderID,
+                sharedPreferenceIdentifier,
+                sharedPreferenceKey,
+                activity,
+                10
+        );
     }
 
     public GoogleCloudMessaging getGcmInstance() {
@@ -140,37 +158,48 @@ public class GCMHandler {
 
                 String regId = "";
                 int callCtr = 0;
-                try {
-                    do {
-                        regId = gcmInstance.register(senderID);
-                        Log.d(SUB_TAG, "Made GCM registration call #"+(++callCtr));
-                    } while (regId.isEmpty());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return regId;
+                do {
+                    callCtr++;
+                    if(callCtr>=maxCount) {
+                        Log.d(SUB_TAG, "Made GCM registration call #"+callCtr);
+                        this.cancel(true);
+                        break;
+                    }
+                } while (!registerGCM());
+                return null;
             }
 
             @Override
             protected void onPostExecute(Object o) {
-                super.onPostExecute(o);
                 String SUB_TAG = TAG+" onPostExecute";
-                String regId = (String) o;
-                Log.i(SUB_TAG, "regId fetched: "+regId);
-
-                writeStringToSharedPref(
-                        activity.getApplicationContext(),
-                        sharedPreferenceKey,
-                        regId
-                );
-                registrationID = regId;
-                writeIntToSharedPref(
-                        activity.getApplicationContext(),
-                        CURRENT_APP_VERSION,
-                        getAppVersion()
-                );
+                Log.i(SUB_TAG, "regId fetched: "+registrationID);
+                if(!registrationID.isEmpty()) {
+                    writeStringToSharedPref(
+                            activity.getApplicationContext(),
+                            sharedPreferenceKey,
+                            registrationID
+                    );
+                    writeIntToSharedPref(
+                            activity.getApplicationContext(),
+                            CURRENT_APP_VERSION,
+                            getAppVersion()
+                    );
+                } else {
+                    Log.d(TAG, "No registration id yet...");
+                }
             }
         }.execute();
+    }
+
+    private boolean registerGCM(){
+        try {
+            this.registrationID = gcmInstance.register(senderID);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
     }
 
     /**

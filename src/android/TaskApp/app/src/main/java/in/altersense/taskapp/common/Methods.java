@@ -37,27 +37,4 @@ public class Methods {
         return distinctList;
     }
 
-    public static String getGCMRegistrationId(Activity activity) {
-        String TAG = CLASS_TAG+"getGCMRegistrationId";
-        String devRegId = AltEngine.readStringFromSharedPref(
-                activity.getApplicationContext(),
-                Config.SHARED_PREF_KEYS.GCM_REG_ID.getKey(),
-                ""
-        );
-        if (devRegId.isEmpty()) {
-            Log.d(TAG,"GCM Registration ID is empty. Device is not registered.");
-            Methods.registerGCM();
-        }
-        return devRegId;
-    }
-
-    private static void registerGCM() {
-        new AsyncTask() {
-
-            @Override
-            protected Object doInBackground(Object[] params) {
-                return null;
-            }
-        }
-    }
 }

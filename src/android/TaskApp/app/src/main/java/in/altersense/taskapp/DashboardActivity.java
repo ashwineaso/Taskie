@@ -73,9 +73,6 @@ public class DashboardActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_tasks);
 
-        // Check whether the apk is from play store and google play services are active on the deivice.
-        AltEngine.checkPlayServices(this);
-
         // Initializing the dbhelper.
         this.taskDbHelper = new TaskDbHelper(this.getApplicationContext());
 
@@ -127,7 +124,7 @@ public class DashboardActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Check whether the apk is from play store and google play services are active on the deivice.
+        this.gcmHandler.checkPlayServices();
     }
 
     /**
