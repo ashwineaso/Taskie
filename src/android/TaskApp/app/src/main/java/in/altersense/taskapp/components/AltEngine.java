@@ -1,8 +1,12 @@
 package in.altersense.taskapp.components;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,7 +18,7 @@ import in.altersense.taskapp.common.Config;
  */
 public class AltEngine {
 
-    private static String TAG = "Methods";
+    private static String CLASS_TAG = "AltEngine ";
 
     /**
      * SharedPreference Name for the app.
@@ -36,7 +40,7 @@ public class AltEngine {
         prefEditor.putString(key, value);
 
         prefEditor.commit();
-        Log.i(TAG+" writeStringToSharedPref", "Success. ("+key+","+value+")");
+        Log.i(CLASS_TAG +" writeStringToSharedPref", "Success. ("+key+","+value+")");
     }
 
     /**
@@ -53,7 +57,7 @@ public class AltEngine {
         );
 
         String result = radioRemotePrefs.getString(key, defaultValue);
-        Log.i(TAG + " readStringFromSharedPref", "Success. (" + key + "," + result + ")");
+        Log.i(CLASS_TAG + " readStringFromSharedPref", "Success. (" + key + "," + result + ")");
         return result;
     }
 
@@ -72,7 +76,7 @@ public class AltEngine {
         prefEditor.putBoolean(key, value);
 
         prefEditor.commit();
-        Log.i(TAG+" writeStringToSharedPref", "Success. ("+key+","+value+")");
+        Log.i(CLASS_TAG +" writeStringToSharedPref", "Success. ("+key+","+value+")");
     }
 
     /**
@@ -89,7 +93,7 @@ public class AltEngine {
         );
 
         boolean result = radioRemotePrefs.getBoolean(key, defaultValue);
-        Log.i(TAG+" readStringFromSharedPref", "Success. ("+key+","+result+")");
+        Log.i(CLASS_TAG +" readStringFromSharedPref", "Success. ("+key+","+result+")");
         return result;
     }
 
@@ -113,5 +117,26 @@ public class AltEngine {
         Pattern pattern = Pattern.compile(EMAIL_PATTERN);
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
+    }
+
+    /**
+     * Checks whether Google Play Services are active in the device.
+     * @param activity Activity Current activity.
+     * @return Boolean Whether Google Play Services are active or not.
+     */
+    public static boolean checkPlayServices(Activity activity) {
+        String TAG = CLASS_TAG+"checkPlayServices";
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, activity,
+                        9000).show();
+            } else {
+                Log.i(TAG, "This device is not supported as there is no Play Store Services Active.");
+                activity.finish();
+            }
+            return false;
+        }
+        return true;
     }
 }
