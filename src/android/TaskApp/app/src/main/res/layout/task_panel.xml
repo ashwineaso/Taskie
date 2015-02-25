@@ -20,53 +20,10 @@
             android:background="#ff0fa0ae"
             android:layout_marginRight="@dimen/tinyMargin_xhdpi" />
 
-        <LinearLayout
-            android:layout_width="@dimen/userImageWidth_xhdp"
-            android:layout_height="@dimen/userImageHeight_xhdp"
-            android:orientation="vertical"
-            android:layout_gravity="center_vertical"
-            tools:ignore="MissingPrefix"
-            android:layout_margin="@dimen/tinyMargin_xhdpi">
-
-            <TextView
-                android:id="@+id/timeStatusCustomFontTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                fontPath="fonts/Cabin-Regular-TTF.ttf"
-                android:textColor="@color/duedatetime"
-                android:textSize="@dimen/text_normal_xhdpi"
-                android:text="Due In"/>
-
-            <TextView
-                android:id="@+id/timeMeasureCustomFontTextView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:singleLine="true"
-                android:lines="1"
-                fontPath="fonts/Cabin-Regular-TTF.ttf"
-                android:gravity="center"
-                android:text="123"
-                android:textColor="@color/duedatetime"
-                android:textSize="@dimen/text_dueDats_xhdpi"/>
-
-            <TextView
-                android:id="@+id/timeUnitTextCustomFontTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Days"
-                android:gravity="center_horizontal|bottom"
-                fontPath="fonts/Cabin-Regular-TTF.ttf"
-                android:textColor="@color/duedatetime"
-                android:textSize="@dimen/text_normal_xhdpi"/>
-
-        </LinearLayout>
-
         <LinearLayout android:id="@+id/taskContentLinearLayout"
             android:orientation="vertical"
             android:layout_gravity="center_vertical"
-            android:layout_height="@dimen/userImageHeight_xhdp"
+            android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"
             tools:ignore="MissingPrefix"
@@ -83,7 +40,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/tinyMargin_xhdpi">
 
                 <HorizontalScrollView
                     android:layout_width="fill_parent"
@@ -114,6 +72,42 @@
                         </LinearLayout>
 
                 </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                tools:ignore="MissingPrefix"
+                android:layout_margin="@dimen/tinyMargin_xhdpi">
+
+                <TextView
+                    android:id="@+id/timeStatusCustomFontTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    fontPath="fonts/Cabin-Regular-TTF.ttf"
+                    android:textColor="@color/duedatetime"
+                    android:textSize="@dimen/text_normal_xhdpi"
+                    android:text="Due In"/>
+
+                <TextView
+                    android:id="@+id/timeMeasureCustomFontTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    fontPath="fonts/Cabin-Regular-TTF.ttf"
+                    android:text="123"
+                    android:textColor="@color/duedatetime"
+                    android:textSize="@dimen/text_normal_xhdpi"/>
+
+                <TextView
+                    android:id="@+id/timeUnitTextCustomFontTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Days"
+                    fontPath="fonts/Cabin-Regular-TTF.ttf"
+                    android:textColor="@color/duedatetime"
+                    android:textSize="@dimen/text_normal_xhdpi"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

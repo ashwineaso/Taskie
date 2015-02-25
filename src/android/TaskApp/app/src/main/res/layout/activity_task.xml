@@ -43,10 +43,11 @@
 
                 </LinearLayout>
 
-                <RelativeLayout android:id="@+id/taskDetailsRelativeLayout"
+                <LinearLayout android:id="@+id/taskDetailsRelativeLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/lightText">
+                    android:background="@color/lightText"
+                    android:orientation="vertical">
 
                     <LinearLayout android:id="@+id/taskMainLinearLayout"
                         android:layout_width="match_parent"
@@ -92,19 +93,18 @@
                         android:textColor="@color/taskSecondaryAccent"
                         android:text="High Priority"/>
 
-                    <TextView android:id="@+id/taskAttachmentTextView"
+                    <!--<TextView android:id="@+id/taskAttachmentTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/smallMargin_xhdp"
                         android:textSize="16dp"
                         android:layout_below="@id/taskPriorityTextView"
                         android:textColor="@color/taskAccentColor"
-                        android:text="Attatchment: Profile_Picture.jpg"/>
+                        android:text="Attatchment: Profile_Picture.jpg"/>-->
 
                     <LinearLayout android:id="@+id/taskStatusLinearLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/taskAttachmentTextView"
                         android:padding="@dimen/smallMargin_xhdp"
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
@@ -131,7 +131,7 @@
 
                     </LinearLayout>
 
-                    </RelativeLayout>
+                    </LinearLayout>
 
             </LinearLayout>
 
