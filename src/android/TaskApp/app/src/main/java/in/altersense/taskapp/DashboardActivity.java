@@ -27,6 +27,7 @@ import java.util.concurrent.Callable;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.common.Methods;
 import in.altersense.taskapp.components.AltEngine;
+import in.altersense.taskapp.components.CallableGCMPushRequest;
 import in.altersense.taskapp.components.GCMHandler;
 import in.altersense.taskapp.components.GroupPanelOnClickListener;
 import in.altersense.taskapp.components.TaskPanelOnClickListener;
@@ -54,6 +55,7 @@ public class DashboardActivity extends ActionBarActivity {
     private LinearLayout groupListStageLL;
 
     private GCMHandler gcmHandler;
+    private CallableGCMPushRequest callableGCMPushRequest;
 
 //    Authenticated user details.
     private String ownerId;
@@ -151,7 +153,8 @@ public class DashboardActivity extends ActionBarActivity {
                 Config.getGCMSenderId(),
                 AltEngine.SHARED_PREFERENCE,
                 Config.SHARED_PREF_KEYS.GCM_REG_ID.getKey(),
-                this
+                this,
+                callableGCMPushRequest
         );
 
         if(ownerId.equals("")) {

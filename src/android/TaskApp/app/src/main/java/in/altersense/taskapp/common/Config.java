@@ -135,7 +135,8 @@ public class Config {
         TASK_COLLABOATORS("collaborators"),
         DESCRIPTION("description"),
         DUE_DATE_TIME("dueDateTime"),
-        PRIORITY("priority");
+        PRIORITY("priority"),
+        SERVER_PUSH_ID("serverPushId");
 
         private String key;
 
