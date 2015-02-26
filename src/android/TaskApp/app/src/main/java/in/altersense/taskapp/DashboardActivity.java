@@ -22,6 +22,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.common.Methods;
@@ -369,4 +370,5 @@ public class DashboardActivity extends ActionBarActivity {
         quickTask.getPanelView().requestFocusFromTouch();
         return quickTask;
     }
+
 }

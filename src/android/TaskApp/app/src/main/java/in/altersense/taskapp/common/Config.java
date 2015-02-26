@@ -16,7 +16,7 @@ public class Config {
 
     public static String getGCMSenderId() {
         if(Config.DEBUG) {
-            return "AIzaSyCNoXZ78VPIMmiGJ63N2j78zbtbPxB51w4";
+            return "475977412823";
         } else {
             return "";
         }
