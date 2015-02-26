@@ -37,7 +37,8 @@
                     android:text="@string/label_sortby"
                     android:layout_gravity="left"
                     android:textAlignment="center"
-                    android:textSize="@dimen/text_subHeader_xhdpi"/>
+                    android:textSize="@dimen/text_subHeader_xhdpi"
+                    android:textColor="@color/primaryText" />
 
                 <Spinner
                     android:layout_width="wrap_content"

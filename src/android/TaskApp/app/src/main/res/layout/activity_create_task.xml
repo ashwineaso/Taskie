@@ -4,13 +4,33 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="@dimen/smallMargin_xhdp"
-    tools:context="in.altersense.taskapp.CreateTaskActivity">
+    tools:context="in.altersense.taskapp.CreateTaskActivity"
+    android:background="#fffbfaff">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Task Title"
+        android:id="@+id/lbl_title"
+        android:layout_margin="@dimen/tinyMargin_xhdpi"
+        android:textSize="@dimen/text_normal_xhdpi"
+        android:textColor="@color/headerText" />
 
     <EditText android:id="@+id/taskTitleEditText"
         android:hint="Task Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:singleLine="true"/>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Task Description"
+        android:id="@+id/lbl_desc"
+        android:layout_margin="@dimen/tinyMargin_xhdpi"
+        android:paddingTop="@dimen/smallMargin_xhdp"
+        android:textColor="@color/headerText"
+        android:textSize="@dimen/text_normal_xhdpi" />
 
     <EditText android:id="@+id/taskDescriptionEditText"
         android:layout_width="match_parent"
@@ -19,6 +39,16 @@
         android:gravity="top"
         android:inputType="textMultiLine"
         android:hint="Task Description"/>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Collaborators"
+        android:id="@+id/lbl_colls"
+        android:layout_margin="@dimen/tinyMargin_xhdpi"
+        android:paddingTop="@dimen/smallMargin_xhdp"
+        android:textColor="@color/headerText"
+        android:textSize="@dimen/text_normal_xhdpi" />
 
     <in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText
         android:id="@+id/collaboratorsTCET"
@@ -32,18 +62,27 @@
         android:hint="Due Date and Time"
         android:enabled="false"/>
 
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/headerText"
+        android:layout_gravity="center_vertical"
+        android:text="Priority"
+        android:id="@+id/lbl_priority"
+        android:layout_margin="@dimen/tinyMargin_xhdpi"
+        android:paddingTop="@dimen/smallMargin_xhdp"
+        android:textSize="@dimen/text_normal_xhdpi" />
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBar" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_margin="@dimen/tinyMargin_xhdpi">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/secondaryText"
-            android:layout_gravity="center_vertical"
-            android:text="Priority"/>
 
         <SeekBar android:id="@+id/prioritySeekBar"
             android:layout_width="0dp"
@@ -72,7 +111,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/label_createTask"
-            style="@style/primaryButton"/>
+            style="@style/primaryButton"
+            android:textSize="@dimen/text_subHeader_xhdpi" />
 
         <Button android:id="@+id/updateTaskButton"
             android:layout_width="match_parent"
