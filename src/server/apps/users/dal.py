@@ -127,6 +127,24 @@ def updateUser(userObj):
 	return user
 
 
+
+def setServerPushId(userObj):
+	"""
+	Set the server push id for the userObj
+
+	::type userObj : object
+	::param userObj : An instance of Collection with the following attributes
+						id - id of the user 
+						serverPushId - the id required for GCM notification
+	::return user : An object of User class
+	"""
+	user = getUserById(userObj)
+	User.objects(id = user.id).update(set__serverPushId = userObj.serverPushId)
+	user.save()
+	return user
+
+
+
 def modifyProfilePic(photoObj):
 	"""
 	Add a profile pic to the user account 
