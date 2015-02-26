@@ -7,13 +7,12 @@
         android:layout_width="0dp"
         android:layout_height="@dimen/taskActionHeight_xhdpi"
         android:layout_weight="1"
-        android:padding="@dimen/tinyMargin_xhdpi"
         android:gravity="center">
 
         <ImageView
             android:layout_width="@dimen/taskActionIconHeight_xhdpi"
             android:layout_height="@dimen/taskActionIconHeight_xhdpi"
-            android:src="@drawable/red_circle" />
+            android:src="@drawable/ic_viewtask" />
 
     </LinearLayout>
 
@@ -21,13 +20,12 @@
         android:layout_width="0dp"
         android:layout_height="@dimen/taskActionHeight_xhdpi"
         android:layout_weight="1"
-        android:gravity="center"
-        android:padding="@dimen/tinyMargin_xhdpi">
+        android:gravity="center">
 
         <ImageView
             android:layout_width="@dimen/taskActionIconHeight_xhdpi"
             android:layout_height="@dimen/taskActionIconHeight_xhdpi"
-            android:src="@drawable/red_circle" />
+            android:src="@drawable/ic_edittask" />
 
     </LinearLayout>
 
@@ -35,13 +33,12 @@
         android:layout_width="0dp"
         android:layout_height="@dimen/taskActionHeight_xhdpi"
         android:layout_weight="1"
-        android:gravity="center"
-        android:padding="@dimen/tinyMargin_xhdpi">
+        android:gravity="center">
 
         <ImageView
             android:layout_width="@dimen/taskActionIconHeight_xhdpi"
             android:layout_height="@dimen/taskActionIconHeight_xhdpi"
-            android:src="@drawable/red_circle" />
+            android:src="@drawable/ic_alert" />
 
     </LinearLayout>
 
@@ -49,13 +46,12 @@
         android:layout_width="0dp"
         android:layout_height="@dimen/taskActionHeight_xhdpi"
         android:layout_weight="1"
-        android:gravity="center"
-        android:padding="@dimen/tinyMargin_xhdpi">
+        android:gravity="center">
 
         <ImageView
             android:layout_width="@dimen/taskActionIconHeight_xhdpi"
             android:layout_height="@dimen/taskActionIconHeight_xhdpi"
-            android:src="@drawable/red_circle" />
+            android:src="@drawable/ic_completed" />
 
     </LinearLayout>
 
