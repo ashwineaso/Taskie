@@ -23,6 +23,7 @@ import java.util.List;
 
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.AltEngine;
+import in.altersense.taskapp.components.GCMHandler;
 import in.altersense.taskapp.components.GroupPanelOnClickListener;
 import in.altersense.taskapp.components.TaskPanelOnClickListener;
 import in.altersense.taskapp.database.TaskDbHelper;
@@ -36,7 +37,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class DashboardActivity extends ActionBarActivity {
 
-    private static final String CLASS_TAG = "TasksActivity";
+    private static final String CLASS_TAG = "DashboardActivity ";
     private LinearLayout taskListStageLL;  // For handling the main content area.
     private LinearLayout quickCreateStageLinearLayout; // Quick task creation area
     private TaskDbHelper taskDbHelper;
@@ -47,6 +48,8 @@ public class DashboardActivity extends ActionBarActivity {
     private EditText newTaskTitle;
     private ScrollView contentScroll;
     private LinearLayout groupListStageLL;
+
+    private GCMHandler gcmHandler;
 
 //    Authenticated user details.
     private String ownerId;
@@ -115,12 +118,19 @@ public class DashboardActivity extends ActionBarActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.gcmHandler.checkPlayServices();
+    }
+
     /**
      * Checks for an authenticated user in the device.
      * If it fails login activity is displayed.
      */
     private void authenticateUser() {
-        Log.d(CLASS_TAG, "Authenticating user.");
+        String TAG = CLASS_TAG+"authenticateUser";
+        Log.d(TAG, "Authenticating user.");
         this.ownerId = AltEngine.readStringFromSharedPref(
                 getApplicationContext(),
                 Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
@@ -131,6 +141,15 @@ public class DashboardActivity extends ActionBarActivity {
                 Config.SHARED_PREF_KEYS.OWNER_NAME.getKey(),
                 ""
         );
+
+        Log.d(TAG, "Creatig new GCMHandler.");
+        gcmHandler = new GCMHandler(
+                Config.getGCMSenderId(),
+                AltEngine.SHARED_PREFERENCE,
+                Config.SHARED_PREF_KEYS.GCM_REG_ID.getKey(),
+                this
+        );
+
         if(ownerId.equals("")) {
             Intent authenticateUserIntent = new Intent(
                     getApplicationContext(),
@@ -216,10 +235,10 @@ public class DashboardActivity extends ActionBarActivity {
 //                Set up input manager
                 InputMethodManager keyboardManager = (InputMethodManager) getApplicationContext()
                         .getSystemService(
-                        Context.INPUT_METHOD_SERVICE
-                );
-                if(hasFocus) {
-                    Log.i(CLASS_TAG,"hasFocus");
+                                Context.INPUT_METHOD_SERVICE
+                        );
+                if (hasFocus) {
+                    Log.i(CLASS_TAG, "hasFocus");
 //                    Display keyboard
                     keyboardManager.showSoftInput(
                             v,
@@ -234,7 +253,7 @@ public class DashboardActivity extends ActionBarActivity {
         isGroupTaskCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
+                if (isChecked) {
                     // Hide participant edit text
                     participantNameET.setVisibility(View.GONE);
                     // Show Group Name edit text
@@ -347,4 +366,5 @@ public class DashboardActivity extends ActionBarActivity {
         quickTask.getPanelView().requestFocusFromTouch();
         return quickTask;
     }
+
 }

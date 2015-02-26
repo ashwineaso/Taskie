@@ -1,8 +1,12 @@
 package in.altersense.taskapp.components;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,12 +18,14 @@ import in.altersense.taskapp.common.Config;
  */
 public class AltEngine {
 
-    private static String TAG = "Methods";
+    private static String CLASS_TAG = "AltEngine ";
+
+    public final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     /**
      * SharedPreference Name for the app.
      */
-    private static String SHARED_PREFERENCE = "SharedPref";
+    public static String SHARED_PREFERENCE = "SharedPref";
 
     /**
      * Write String to SharedPreferences.
@@ -36,7 +42,7 @@ public class AltEngine {
         prefEditor.putString(key, value);
 
         prefEditor.commit();
-        Log.i(TAG+" writeStringToSharedPref", "Success. ("+key+","+value+")");
+        Log.i(CLASS_TAG +" writeStringToSharedPref", "Success. ("+key+","+value+")");
     }
 
     /**
@@ -53,7 +59,7 @@ public class AltEngine {
         );
 
         String result = radioRemotePrefs.getString(key, defaultValue);
-        Log.i(TAG + " readStringFromSharedPref", "Success. (" + key + "," + result + ")");
+        Log.i(CLASS_TAG + " readStringFromSharedPref", "Success. (" + key + "," + result + ")");
         return result;
     }
 
@@ -72,7 +78,7 @@ public class AltEngine {
         prefEditor.putBoolean(key, value);
 
         prefEditor.commit();
-        Log.i(TAG+" writeStringToSharedPref", "Success. ("+key+","+value+")");
+        Log.i(CLASS_TAG +" writeStringToSharedPref", "Success. ("+key+","+value+")");
     }
 
     /**
@@ -89,7 +95,7 @@ public class AltEngine {
         );
 
         boolean result = radioRemotePrefs.getBoolean(key, defaultValue);
-        Log.i(TAG+" readStringFromSharedPref", "Success. ("+key+","+result+")");
+        Log.i(CLASS_TAG +" readStringFromSharedPref", "Success. ("+key+","+result+")");
         return result;
     }
 
@@ -114,4 +120,5 @@ public class AltEngine {
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
+
 }

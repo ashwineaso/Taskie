@@ -10,13 +10,26 @@ import java.util.List;
  */
 public class Config {
 
+    public static final boolean DEBUG = true;
+
     public static int DATABASE_VERSION = 1;
+
+    public static String getGCMSenderId() {
+        if(Config.DEBUG) {
+            return "475977412823";
+        } else {
+            return "";
+        }
+    }
+
     public static int REQUEST_MAXOUT = 3;
     public static String SERVER_ADDRESS = "192.168.0.102:8080";
     public static String RESPONSE_STATUS_FAILED = "failed";
     public static String RESPONSE_STATUS_SUCCESS = "success";
+
     public static String TOKEN_EXPIRED_ERROR = "Access Token Invalid";
     public static String REQUEST_TIMED_OUT_ERROR = "Request Timed Out";
+
     public static int CONNECTION_TIMEOUT = 10000;
 
     public static final int MIN_STATUS = -1;  // Minimum status a task can have.
@@ -74,7 +87,8 @@ public class Config {
         OWNER_ID("ownerID"), // UUID of the owner.
         OWNER_NAME("ownerName"),// Name to be displayed for owner.
         APP_SECRET("devOwnerPassword"),
-        APP_KEY("devOwnerEmail");
+        APP_KEY("devOwnerEmail"),
+        GCM_REG_ID("gcmRegId");
 
         private String key;
 
@@ -121,7 +135,8 @@ public class Config {
         TASK_COLLABOATORS("collaborators"),
         DESCRIPTION("description"),
         DUE_DATE_TIME("dueDateTime"),
-        PRIORITY("priority");
+        PRIORITY("priority"),
+        SERVER_PUSH_ID("serverPushId");
 
         private String key;
 
