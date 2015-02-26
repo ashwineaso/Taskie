@@ -15,13 +15,15 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
+import in.altersense.taskapp.common.Config;
+import in.altersense.taskapp.requests.PushGCMIDRequest;
+
 /**
  * Created by mahesmohan on 2/25/15.
  */
 public class GCMHandler {
 
     private static final String CLASS_TAG = "GCMHandler ";
-    private final Callable callable;
 
     private String CURRENT_APP_VERSION = "currentAppVersion";
 
@@ -41,15 +43,13 @@ public class GCMHandler {
             String sharedPreferenceIdentifier,
             String sharedPreferenceKey,
             Activity activity,
-            int maxCount,
-            Callable callable
+            int maxCount
             ) {
         this.senderID = senderID;
         this.sharedPreferenceIdentifier = sharedPreferenceIdentifier;
         this.sharedPreferenceKey = sharedPreferenceKey;
         this.activity = activity;
         this.maxCount = maxCount;
-        this.callable = callable;
 
         this.gcmInstance = GoogleCloudMessaging.getInstance(activity.getApplicationContext());
 
@@ -73,23 +73,6 @@ public class GCMHandler {
                 sharedPreferenceKey,
                 activity,
                 10
-        );
-    }
-
-    public GCMHandler(
-            String senderID,
-            String sharedPreferenceIdentifier,
-            String sharedPreferenceKey,
-            Activity activity,
-            Callable callable
-    ) {
-        this(
-                senderID,
-                sharedPreferenceIdentifier,
-                sharedPreferenceKey,
-                activity,
-                10,
-                callable
         );
     }
 
@@ -205,7 +188,16 @@ public class GCMHandler {
                             CURRENT_APP_VERSION,
                             getAppVersion()
                     );
-                    callable.
+                    new PushGCMIDRequest(
+                            readStringFromSharedPref(
+                                    activity.getApplicationContext(),
+                                    Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
+                                    ""
+                            ),
+                            registrationID,
+                            activity
+                    ).execute();
+
                 } else {
                     Log.d(TAG, "No registration id yet...");
                 }
