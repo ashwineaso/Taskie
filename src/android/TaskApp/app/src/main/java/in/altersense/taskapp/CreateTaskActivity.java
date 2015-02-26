@@ -1,5 +1,6 @@
 package in.altersense.taskapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -32,6 +33,8 @@ import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.User;
 import in.altersense.taskapp.requests.UpdateTaskRequest;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 public class CreateTaskActivity extends ActionBarActivity implements TokenCompleteTextView.TokenListener{
@@ -62,6 +65,12 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
         String TAG = CLASS_TAG+"onCreate";
         // Get intent.
         Intent createEditIntent = getIntent();
+        //        Setting up calligraphy
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                        .setDefaultFontPath("fonts/Cabin-Medium-TTF.ttf")
+                        .setFontAttrId(R.attr.fontPath)
+                        .build()
+        );
         long taskId;
         // Check whether there is an extra with the intent
         if(createEditIntent.hasExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey())) {
@@ -231,6 +240,14 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
         this.createTaskBtn.setVisibility(View.GONE);
     }
 
+    /**
+     * Calligraphy attached to new
+     * @param newBase
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

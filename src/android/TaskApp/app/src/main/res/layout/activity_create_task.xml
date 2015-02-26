@@ -1,125 +1,136 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="@dimen/smallMargin_xhdp"
     tools:context="in.altersense.taskapp.CreateTaskActivity"
-    android:background="#fffbfaff">
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Task Title"
-        android:id="@+id/lbl_title"
-        android:layout_margin="@dimen/tinyMargin_xhdpi"
-        android:textSize="@dimen/text_normal_xhdpi"
-        android:textColor="@color/headerText" />
-
-    <EditText android:id="@+id/taskTitleEditText"
-        android:hint="Task Title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:singleLine="true"/>
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Task Description"
-        android:id="@+id/lbl_desc"
-        android:layout_margin="@dimen/tinyMargin_xhdpi"
-        android:paddingTop="@dimen/smallMargin_xhdp"
-        android:textColor="@color/headerText"
-        android:textSize="@dimen/text_normal_xhdpi" />
-
-    <EditText android:id="@+id/taskDescriptionEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:maxHeight="@dimen/bigMargin_xhdp"
-        android:gravity="top"
-        android:inputType="textMultiLine"
-        android:hint="Task Description"/>
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Collaborators"
-        android:id="@+id/lbl_colls"
-        android:layout_margin="@dimen/tinyMargin_xhdpi"
-        android:paddingTop="@dimen/smallMargin_xhdp"
-        android:textColor="@color/headerText"
-        android:textSize="@dimen/text_normal_xhdpi" />
-
-    <in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText
-        android:id="@+id/collaboratorsTCET"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/tokenEditText" />
-
-    <EditText android:id="@+id/dueDateEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Due Date and Time"
-        android:enabled="false"/>
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/headerText"
-        android:layout_gravity="center_vertical"
-        android:text="Priority"
-        android:id="@+id/lbl_priority"
-        android:layout_margin="@dimen/tinyMargin_xhdpi"
-        android:paddingTop="@dimen/smallMargin_xhdp"
-        android:textSize="@dimen/text_normal_xhdpi" />
-
-    <SeekBar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/seekBar" />
+    android:background="#fffbfaff"
+    tools:ignore="MissingPrefix">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="@dimen/tinyMargin_xhdpi">
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:padding="@dimen/smallMargin_xhdp">
 
-        <SeekBar android:id="@+id/prioritySeekBar"
-            android:layout_width="0dp"
+        <TextView
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:progressDrawable="@drawable/scrubber_progress"
-            android:thumb="@drawable/scrubber_control"
-            android:max="2" />
+            android:text="Task Title"
+            android:id="@+id/lbl_title"
+            android:layout_margin="@dimen/tinyMargin_xhdpi"
+            android:textSize="@dimen/text_normal_xhdpi"
+            android:textColor="@color/headerText"
+            fontPath="fonts/Cabin-SemiBold-TTF.ttf"/>
 
-        <TextView android:id="@+id/priorityTextView"
-            android:layout_width="@dimen/priorityTextViewWidth_xhdpi"
-            android:layout_height="wrap_content"
-            android:textColor="@color/primaryText"
-            android:layout_gravity="center"
-            android:text="Medium"/>
-
-        </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="@dimen/smallMargin_xhdp">
-
-        <Button android:id="@+id/createTaskButton"
+        <EditText android:id="@+id/taskTitleEditText"
+            android:hint="Task Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/label_createTask"
-            style="@style/primaryButton"
-            android:textSize="@dimen/text_subHeader_xhdpi" />
+            android:singleLine="true"/>
 
-        <Button android:id="@+id/updateTaskButton"
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Task Description"
+            android:id="@+id/lbl_desc"
+            android:layout_margin="@dimen/tinyMargin_xhdpi"
+            android:paddingTop="@dimen/smallMargin_xhdp"
+            android:textColor="@color/headerText"
+            android:textSize="@dimen/text_normal_xhdpi"
+            fontPath="fonts/Cabin-SemiBold-TTF.ttf"/>
+
+        <EditText android:id="@+id/taskDescriptionEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/labbel_updateTask"
-            style="@style/primaryButton"/>
+            android:maxHeight="@dimen/bigMargin_xhdp"
+            android:gravity="top"
+            android:inputType="textMultiLine"
+            android:hint="Task Description"/>
 
-        </LinearLayout>
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Collaborators"
+            android:id="@+id/lbl_colls"
+            android:layout_margin="@dimen/tinyMargin_xhdpi"
+            android:paddingTop="@dimen/smallMargin_xhdp"
+            android:textColor="@color/headerText"
+            android:textSize="@dimen/text_normal_xhdpi"
+            fontPath="fonts/Cabin-SemiBold-TTF.ttf"/>
 
-</LinearLayout>
+        <in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText
+            android:id="@+id/collaboratorsTCET"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/tokenEditText" />
+
+        <EditText android:id="@+id/dueDateEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Due Date and Time"
+            android:enabled="false"/>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/headerText"
+            android:layout_gravity="center_vertical"
+            android:text="Priority"
+            android:id="@+id/lbl_priority"
+            android:layout_margin="@dimen/tinyMargin_xhdpi"
+            android:paddingTop="@dimen/smallMargin_xhdp"
+            android:textSize="@dimen/text_normal_xhdpi"
+            fontPath="fonts/Cabin-SemiBold-TTF.ttf"/>
+
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/seekBar" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="@dimen/tinyMargin_xhdpi">
+
+            <SeekBar android:id="@+id/prioritySeekBar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:progressDrawable="@drawable/scrubber_progress"
+                android:thumb="@drawable/scrubber_control"
+                android:max="2" />
+
+            <TextView android:id="@+id/priorityTextView"
+                android:layout_width="@dimen/priorityTextViewWidth_xhdpi"
+                android:layout_height="wrap_content"
+                android:textColor="@color/primaryText"
+                android:layout_gravity="center"
+                android:text="Medium"/>
+
+            </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/smallMargin_xhdp">
+
+            <Button android:id="@+id/createTaskButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_createTask"
+                style="@style/primaryButton"
+                android:textSize="@dimen/text_subHeader_xhdpi" />
+
+            <Button android:id="@+id/updateTaskButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/labbel_updateTask"
+                style="@style/primaryButton"/>
+
+            </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
