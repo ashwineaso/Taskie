@@ -2,18 +2,29 @@ package in.altersense.taskapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import in.altersense.taskapp.adapters.TaskDetailsViewAdapter;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.database.TaskDbHelper;
+import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.Task;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -23,7 +34,13 @@ public class TaskActivity extends ActionBarActivity {
 
     private static final String CLASS_TAG = "TaskActivity";
     private Task task;
-    private TextView taskTitleTV, dueDateTV, taskDescriptionTV, taskPriorityTV, taskStatusTV;
+    List<Collaborator> collaboratorList;
+
+    //Adapter implementation
+    ListView collList;
+    TaskDetailsViewAdapter adapter;
+    public TaskActivity activity;
+    public ArrayList<Collaborator> collaboratorArrayList = new ArrayList<Collaborator>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,22 +70,21 @@ public class TaskActivity extends ActionBarActivity {
             this.task = taskDbHelper.getTaskByRowId(taskId, TaskActivity.this);
         }
 
-        //Initialize the views
-        this.taskTitleTV = (TextView)findViewById(R.id.taskTitleTextView);
-        this.taskDescriptionTV = (TextView)findViewById(R.id.taskDescriptionTextView);
-        this.dueDateTV = (TextView)findViewById(R.id.dueDateTextView);
-        this.taskPriorityTV = (TextView)findViewById(R.id.taskStatusTextView);
-        this.taskStatusTV = (TextView)findViewById(R.id.taskStatusTextView);
+        Resources res = getResources();
 
-        //Set the text views
-        this.taskTitleTV.setText(this.task.getName());
-        this.taskDescriptionTV.setText(this.task.getDescription());
-        this.dueDateTV.setText(this.task.getDueDateTime());
-        this.taskPriorityTV.setText(this.task.getPriority()+"");
-        this.taskStatusTV.setText(this.task.getStatus()+"");
+        //Fill the ArrayList with the required data
+        this.collaboratorList = task.getCollaborators();
+        for (Collaborator collaborator:this.collaboratorList) {
+            collaboratorArrayList.add(collaborator);
+        }
 
-
-
+        collList = (ListView)findViewById(R.id.collListView);
+        //Create a custom adapter
+        adapter = new TaskDetailsViewAdapter(TaskActivity.this, collaboratorArrayList, res);
+        collList.setAdapter(adapter);
+        //Adjust the height of the ListView to accommodate all the children
+        setListViewHeightBasedOnChildren(collList);
+        collList.setFocusable(false); //To set the focus to top #glitch
 
     }
 
@@ -102,5 +118,30 @@ public class TaskActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**** Method for Setting the Height of the ListView dynamically.
+     **** Hack to fix the issue of not showing all the items of the ListView
+     **** when placed inside a ScrollView  ****/
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null)
+            return;
+
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+        int totalHeight = 0;
+        View view = null;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            view = listAdapter.getView(i, view, listView);
+            if (i == 0)
+                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += view.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
     }
 }

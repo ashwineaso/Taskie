@@ -6,6 +6,7 @@
     android:orientation="horizontal"
     android:background="@drawable/abc_popup_background_mtrl_mult"
     android:gravity="center_vertical"
+    android:radius="10dip"
     android:padding="@dimen/smallMargin_xhdp">
 
     <ImageView
@@ -20,18 +21,14 @@
         android:layout_marginLeft="8dp"
         android:textSize="16dp"
         android:textColor="@color/primaryText"
-        android:text="Shrigovind Sreelal Nair"/>
+        android:text="Collaborator Name"
+        android:id="@+id/collName" />
 
     <ImageView
         android:layout_width="@dimen/statusCircleDiameter_xhdp"
         android:layout_height="@dimen/statusCircleDiameter_xhdp"
         android:src="@drawable/done_notif"
         android:layout_marginRight="8dp"
-        android:id="@+id/statuscircle1" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="09:50"/>
+        android:id="@+id/statusCircle" />
 
 </LinearLayout>

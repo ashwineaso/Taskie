@@ -3,15 +3,16 @@
     xmlns:tools2="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:layout_height="match_parent"
+    android:layout_height="fill_parent"
     android:background="@color/secondaryText"
     tools:context="in.altersense.taskapp.TaskActivity"
-    tools2:ignore="MissingPrefix">
+    tools2:ignore="MissingPrefix"
+    android:id="@+id/detailsScrollView">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/scrollHolder"
             android:paddingLeft="@dimen/tinyMargin_xhdpi"
             android:paddingRight="@dimen/tinyMargin_xhdpi"
@@ -43,10 +44,11 @@
 
                 </LinearLayout>
 
-                <RelativeLayout android:id="@+id/taskDetailsRelativeLayout"
+                <LinearLayout android:id="@+id/taskDetailsRelativeLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/lightText">
+                    android:background="@color/lightText"
+                    android:orientation="vertical">
 
                     <LinearLayout android:id="@+id/taskMainLinearLayout"
                         android:layout_width="match_parent"
@@ -92,19 +94,18 @@
                         android:textColor="@color/taskSecondaryAccent"
                         android:text="High Priority"/>
 
-                    <TextView android:id="@+id/taskAttachmentTextView"
+                    <!--<TextView android:id="@+id/taskAttachmentTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/smallMargin_xhdp"
                         android:textSize="16dp"
                         android:layout_below="@id/taskPriorityTextView"
                         android:textColor="@color/taskAccentColor"
-                        android:text="Attatchment: Profile_Picture.jpg"/>
+                        android:text="Attatchment: Profile_Picture.jpg"/>-->
 
                     <LinearLayout android:id="@+id/taskStatusLinearLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/taskAttachmentTextView"
                         android:padding="@dimen/smallMargin_xhdp"
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
@@ -131,7 +132,7 @@
 
                     </LinearLayout>
 
-                    </RelativeLayout>
+                    </LinearLayout>
 
             </LinearLayout>
 
@@ -148,13 +149,10 @@
                 android:textColor="@color/headerText"
                 android:id="@+id/headingCollaborators" />
 
-            <LinearLayout
-                android:orientation="vertical"
+            <ListView
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/collaboratorsList">
-
-                </LinearLayout>
+                android:layout_height="wrap_content"
+                android:id="@+id/collListView" />
 
         </LinearLayout>
 
