@@ -190,12 +190,16 @@ public class User {
         // return false
   }
 */
-    public User(String name, String email) {
-        this.name = name;
+
+    /**
+     * For logging in user with email and password.
+     * @param email String email of the user.
+     * @param password String password of the user.
+     */
+    public User(String email, String password) {
         this.email = email;
-
+        this.password = password;
     }
-
 
     /**
      * Makes the user the device Owner.

@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import in.altersense.taskapp.models.User;
+import in.altersense.taskapp.requests.UserLoginRequest;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -54,6 +56,18 @@ public class UserLoginActivity extends ActionBarActivity {
                 );
                 startActivity(startRegistrationIntent);
                 finish();
+            }
+        });
+
+        this.loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                User newUser = new User(emailET.getText().toString(), passwordET.getText().toString());
+                UserLoginRequest userLoginRequest = new UserLoginRequest(
+                        newUser,
+                        UserLoginActivity.this
+                );
+                userLoginRequest.execute();
             }
         });
 
