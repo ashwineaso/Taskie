@@ -38,6 +38,30 @@ def register():
 	return response
 
 
+def setServerPushId():
+	"""
+	Set the serverPushId for the particular user
+	"""
+	response = {}
+	data = {}
+	userObj = Collection()
+
+	obj = request.json
+	try:
+		userObj.access_token = obj["access_token"]
+		userObj.id = obj["id"]
+		userObj.serverPushId = obj["serverPushId"]
+		if bll.checkAccessTokenValid():
+			user = bll.setServerPushId()
+		response["data"] = bll.convertUserToDict(user)
+		response["status"] = RESPONSE_SUCCESS
+	except Exception, e:
+		response['status'] = RESPONSE_FAILED
+		response['message'] = str(e)
+		if hasattr(e, "code"):
+			response["code"] = e.code
+	return response
+
 
 def verifyEmail(email, key):
 	"""

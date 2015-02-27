@@ -202,6 +202,15 @@ public class User {
     }
 
     /**
+     * For addding unknown user as a collaborator.
+     * @param email String Email of the user.
+     */
+    public User(String email) {
+        this.email = email;
+        this.name = email;
+    }
+
+    /**
      * Makes the user the device Owner.
      * @param context Current context to change the SharedPreferences.
      * @return Returns an instance of the current user.
@@ -266,12 +275,16 @@ public class User {
     }
 
     public String getInitials() {
-        String[] nameTerms = this.getName().split(" ");
-        String initials = "";
-        initials+=nameTerms[0].substring(0,1);
-        if(nameTerms.length>1) {
-            initials+=nameTerms[nameTerms.length-1].substring(0,1);
+        try{
+            String[] nameTerms = this.getName().split(" ");
+            String initials = "";
+            initials+=nameTerms[0].substring(0,1);
+            if(nameTerms.length>1) {
+                initials+=nameTerms[nameTerms.length-1].substring(0,1);
+            }
+            return initials.toUpperCase();
+        } catch (NullPointerException e) {
+            return "??";
         }
-        return initials.toUpperCase();
     }
 }

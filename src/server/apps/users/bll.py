@@ -63,6 +63,22 @@ def verifyUser(userObj):
 	return verified
 
 
+def setServerPushId(userObj):
+	"""
+	Set the server push id for the userObj
+
+	::type userObj : object
+	::param userObj : An instance of Collection with the following attributes
+						id - id of the user 
+						serverPushId - the id required for GCM notification
+	::return user : An object of User class
+	"""
+	user = dal.setServerPushId()
+	return user
+
+	pass
+
+
 def modifyProfilePic(photoObj):
 	"""
 	Adds a profile pic to the user's account
