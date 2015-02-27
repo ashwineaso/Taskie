@@ -120,8 +120,8 @@ public class Task {
 
     /**
      * Gets the user's status in this task.
-     * @param context
-     * @return
+     * @param context Application context
+     * @return Status value of the user in relation with the task
      */
     public int getStatus(Context context) {
         // Check if the user is the owner.

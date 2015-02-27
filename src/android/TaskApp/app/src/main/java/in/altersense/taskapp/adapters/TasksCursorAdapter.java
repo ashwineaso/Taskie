@@ -47,8 +47,8 @@ public class TasksCursorAdapter extends CursorAdapter{
         LinearLayout collaboratorsLL = (LinearLayout) taskView.findViewById(R.id.collaboratorsList);
         LinearLayout taskStatus = (LinearLayout) taskView.findViewById(R.id.taskStatusLinearLayout);
 
-        taskTitle.setText(cursor.getString(2));
-        timeMeasure.setText(cursor.getString(5));
-        taskStatus.setBackgroundResource(Task.getStatusColor(this.getStatus(activity.getApplicationContext())));
+        taskTitle.setText(task.getName());
+        timeMeasure.setText(task.getDueDateTime());
+        taskStatus.setBackgroundResource(Task.getStatusColor(task.getStatus(context)));
     }
 }
