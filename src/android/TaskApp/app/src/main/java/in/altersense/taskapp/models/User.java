@@ -83,10 +83,10 @@ public class User {
         this.id = cursor.getInt(3);
     }
 
-    public User(String userUUID, Activity activity) {
+    public User(String userUUID, Context context) {
         String TAG = CLASS_TAG+" Constructor(uuid,activity)";
         Log.d(TAG, "uuid: "+ userUUID);
-        UserDbHelper userDbHelper = new UserDbHelper(activity.getApplicationContext());
+        UserDbHelper userDbHelper = new UserDbHelper(context);
         User newUser = userDbHelper.getUserByUUID(userUUID);
         Log.d(TAG, "Fetched user.");
         this.id = newUser.getId();

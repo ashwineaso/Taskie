@@ -110,20 +110,20 @@ public class TaskGroup {
         );
     }
 
-    public TaskGroup(String uuid, Activity activity) {
+    public TaskGroup(String uuid, Context context) {
         TaskGroupDbHelper taskGroupDbHelper = new TaskGroupDbHelper(
-                activity.getApplicationContext()
+                context
         );
-        taskGroupDbHelper.getTaskGroupByUUID(uuid, activity);
+        taskGroupDbHelper.getTaskGroupByUUID(uuid, context);
     }
 
-    public TaskGroup(Cursor cursor, Activity activity) {
+    public TaskGroup(Cursor cursor, Context context) {
         this(
                 cursor.getString(0),
                 cursor.getString(1),
                 0,
                 cursor.getInt(2),
-                activity.getLayoutInflater()
+                LayoutInflater.from(context)
         );
     }
 

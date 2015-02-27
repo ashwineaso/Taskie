@@ -37,7 +37,7 @@ public class TaskGroupDbHelper extends SQLiteOpenHelper {
         db.execSQL(CREATION_STATEMENT);
     }
 
-    public TaskGroup getTaskGroupByUUID(String uuid, Activity activity) {
+    public TaskGroup getTaskGroupByUUID(String uuid, Context context) {
         // Open database.
         SQLiteDatabase readableDb = this.getReadableDatabase();
         // Fetch image with matching uuid.
@@ -60,7 +60,7 @@ public class TaskGroupDbHelper extends SQLiteOpenHelper {
         );
         selfCursor.moveToFirst();
         // Create a User object from the cursor
-        TaskGroup taskGroup = new TaskGroup(selfCursor, activity);
+        TaskGroup taskGroup = new TaskGroup(selfCursor, context);
         // Close database
         readableDb.close();
         return taskGroup;
