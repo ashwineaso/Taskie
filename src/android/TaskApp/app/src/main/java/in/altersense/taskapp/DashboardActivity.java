@@ -15,22 +15,19 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import in.altersense.taskapp.adapters.TasksCursorAdapter;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.components.GCMHandler;
 import in.altersense.taskapp.components.GroupPanelOnClickListener;
-import in.altersense.taskapp.components.TaskPanelOnClickListener;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.TaskGroup;
 import in.altersense.taskapp.models.User;
-import in.altersense.taskapp.requests.CreateTaskRequest;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -38,16 +35,16 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class DashboardActivity extends ActionBarActivity {
 
     private static final String CLASS_TAG = "DashboardActivity ";
-    private LinearLayout taskListStageLL;  // For handling the main content area.
+    private ListView taskListStageLL;  // For handling the main content area.
     private LinearLayout quickCreateStageLinearLayout; // Quick task creation area
     private TaskDbHelper taskDbHelper;
-    private List<Task> taskList = new ArrayList<Task>();  // Lists all non group tasks for traversing convenience.
-    private Task task;  // Task iterator.
     private boolean isQuickTaskCreationHidden;
     private View taskCreationView;
     private EditText newTaskTitle;
     private ScrollView contentScroll;
     private LinearLayout groupListStageLL;
+
+    private TasksCursorAdapter taskAdapter;
 
     private GCMHandler gcmHandler;
 
@@ -73,25 +70,24 @@ public class DashboardActivity extends ActionBarActivity {
         // Initializing the dbhelper.
         this.taskDbHelper = new TaskDbHelper(this.getApplicationContext());
 
+        this.taskAdapter = new TasksCursorAdapter(
+                this,
+                this.taskDbHelper.getAllNonGroupTasksAsCursor()
+        );
+
 //        Initializing the layout.
         this.contentScroll = (ScrollView) findViewById(R.id.contenScroll);
         this.quickCreateStageLinearLayout = (LinearLayout) findViewById(R.id.quickTaskCreation);
         this.quickCreateStageLinearLayout.setVisibility(View.GONE);
         setUpQuickTaskLayout();
-        this.taskListStageLL = (LinearLayout) findViewById(R.id.taskListStage);
+        this.taskListStageLL = (ListView) findViewById(R.id.taskListStage);
         this.groupListStageLL = (LinearLayout) findViewById(R.id.groupListStage);
         this.isQuickTaskCreationHidden = true;
 
         // Inflate all the nonGroupTasks in the TasksListStage.
-        this.taskList = taskDbHelper.getAllNonGroupTasks(this);
         Log.d(CLASS_TAG, "Initialized task list.");
-        for(Task task:this.taskList) {
-            Log.d(CLASS_TAG, "Adding task view to task list stage linear layout.");
-            taskListStageLL.addView(task.getPanelView());
-//            Adding an onClickListener to TaskPanel to show and hide task actions.
-            TaskPanelOnClickListener taskPanelOnClickListener = new TaskPanelOnClickListener(task, this.taskList);
-            task.getPanelView().setOnClickListener(taskPanelOnClickListener);
-        }
+
+        this.taskListStageLL.setAdapter(this.taskAdapter);
 
         LayoutInflater inflater = getLayoutInflater();
         LinearLayout taskCollection = (LinearLayout) inflater.inflate(R.layout.task_group_collection, groupListStageLL);
@@ -293,7 +289,7 @@ public class DashboardActivity extends ActionBarActivity {
                             DashboardActivity.this
                     );
                     Log.d(TAG, "QuickTask: "+quickTask.toString());
-                    quickTask = addQuickTaskToDb(quickTask);
+//                    quickTask = addQuickTaskToDb(quickTask);
 
                     newTaskTitle.setText("");
                     isGroupTaskCB.setChecked(false);
@@ -334,6 +330,7 @@ public class DashboardActivity extends ActionBarActivity {
      * Creates a quick task and adds it to the main list of tasks.
      * @param quickTask A task object which is created.
      */
+/*
     private Task addQuickTaskToDb(Task quickTask) {
         String TAG = CLASS_TAG+" addQuickTaskToDb";
         Log.d(TAG, "adding QuickTask: "+quickTask.toString()+" to db,");
@@ -366,5 +363,6 @@ public class DashboardActivity extends ActionBarActivity {
         quickTask.getPanelView().requestFocusFromTouch();
         return quickTask;
     }
+*/
 
 }

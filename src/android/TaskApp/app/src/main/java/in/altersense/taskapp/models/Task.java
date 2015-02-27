@@ -239,7 +239,7 @@ public class Task {
             columnsList.add(key.getName());
         }
         // Add row id to list of columns.
-        columnsList.add("ROWID");
+        columnsList.add("ROWID as _id");
         return columnsList;
     }
 
