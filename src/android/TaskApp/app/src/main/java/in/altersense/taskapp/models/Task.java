@@ -53,11 +53,13 @@ public class Task {
     private int priority;
     private int status;
     private List<Collaborator> collaborators;
-    private View panelView, actionsView;
+    private View panelView;
+
+    private View actionsView;
+
     private LinearLayout taskActionsPlaceHolderView;
     private LinearLayout action1, action2, action3, action4;
     private long dueDateTime;
-
     public Task() {
         Log.d(CLASS_TAG, "Constructor1 called.");
         this.name="";
@@ -86,6 +88,10 @@ public class Task {
 
     public String getDueDateTime() {
         return dateToString(this.dueDateTime);
+    }
+
+    public View getActionsView() {
+        return actionsView;
     }
 
     /**
@@ -196,6 +202,11 @@ public class Task {
      * Table name for Tasks
      */
     public static String TABLE_NAME = "TaskTable";
+
+    public void setTaskPanelView(View taskView) {
+        this.panelView = taskView;
+        this.taskActionsPlaceHolderView = (LinearLayout) panelView.findViewById(R.id.actionsPlaceHolderLinearLayout);
+    }
 
     /**
      * Table Structure for Task
@@ -636,7 +647,7 @@ public class Task {
         this.isActionsDisplayed = false;
     }
 
-    private View createView(Activity activity) {
+    public View createView(Activity activity) {
         LayoutInflater inflater = activity.getLayoutInflater();
         View taskView = inflater.inflate(R.layout.task_panel, null);
         TextView timeStatus = (TextView) taskView.findViewById(R.id.timeStatusCustomFontTextView);
@@ -795,6 +806,11 @@ public class Task {
                 break;
         }
         return backgroundResource;
+    }
+
+    public void setActionsView(Activity activity) {
+        this.actionsView = createActionsView(activity);
+        this.taskActionsPlaceHolderView.addView(this.actionsView);
     }
 
 }

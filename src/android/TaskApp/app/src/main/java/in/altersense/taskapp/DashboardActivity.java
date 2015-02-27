@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -23,10 +24,8 @@ import in.altersense.taskapp.adapters.TasksCursorAdapter;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.components.GCMHandler;
-import in.altersense.taskapp.components.GroupPanelOnClickListener;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.models.Task;
-import in.altersense.taskapp.models.TaskGroup;
 import in.altersense.taskapp.models.User;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -35,7 +34,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class DashboardActivity extends ActionBarActivity {
 
     private static final String CLASS_TAG = "DashboardActivity ";
-    private ListView taskListStageLL;  // For handling the main content area.
+    private ListView taskList;  // For handling the main content area.
     private LinearLayout quickCreateStageLinearLayout; // Quick task creation area
     private TaskDbHelper taskDbHelper;
     private boolean isQuickTaskCreationHidden;
@@ -76,41 +75,38 @@ public class DashboardActivity extends ActionBarActivity {
         );
 
 //        Initializing the layout.
+        Log.d(CLASS_TAG,"Initializing layout.");
         this.contentScroll = (ScrollView) findViewById(R.id.contenScroll);
         this.quickCreateStageLinearLayout = (LinearLayout) findViewById(R.id.quickTaskCreation);
         this.quickCreateStageLinearLayout.setVisibility(View.GONE);
         setUpQuickTaskLayout();
-        this.taskListStageLL = (ListView) findViewById(R.id.taskListStage);
+        this.taskList = (ListView) findViewById(R.id.taskListStage);
         this.groupListStageLL = (LinearLayout) findViewById(R.id.groupListStage);
         this.isQuickTaskCreationHidden = true;
+        Log.d(CLASS_TAG,"Done.");
 
+        Log.d(CLASS_TAG,"Settng adapter to listview.");
         // Inflate all the nonGroupTasks in the TasksListStage.
-        Log.d(CLASS_TAG, "Initialized task list.");
+        this.taskList.setAdapter(this.taskAdapter);
+        Log.d(CLASS_TAG, "Done.");
 
-        this.taskListStageLL.setAdapter(this.taskAdapter);
-
-        LayoutInflater inflater = getLayoutInflater();
-        LinearLayout taskCollection = (LinearLayout) inflater.inflate(R.layout.task_group_collection, groupListStageLL);
-
-        TaskGroup taskGroup = new TaskGroup(
-                "CREMID",
-                4,
-                true,
-                getLayoutInflater()
-        );
-        taskCollection.addView(taskGroup.getGroupView());
-        taskGroup.getGroupView().setOnClickListener(new GroupPanelOnClickListener(taskGroup, this));
-
-        for(int i=0; i<2; i++) {
-            taskGroup = new TaskGroup(
-                    "AlterSense",
-                    3,
-                    false,
-                    getLayoutInflater()
-            );
-            taskCollection.addView(taskGroup.getGroupView());
-            taskGroup.getGroupView().setOnClickListener(new GroupPanelOnClickListener(taskGroup, this));
-        }
+        this.taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(CLASS_TAG, "List item was clicked.");
+                if (((Task) parent.getItemAtPosition(position)).isActionsDisplayed) {
+                    ((Task) parent.getItemAtPosition(position)).hideTaskActions();
+                } else {
+                    for (int ctr = 0; ctr < parent.getCount(); ctr++) {
+                        if (((Task) parent.getItemAtPosition(ctr)).isActionsDisplayed) {
+                            ((Task) parent.getItemAtPosition(ctr)).hideTaskActions();
+                            break;
+                        }
+                    }
+                    ((Task) parent.getItemAtPosition(position)).showTaskActions();
+                }
+            }
+        });
 
     }
 
@@ -203,8 +199,8 @@ public class DashboardActivity extends ActionBarActivity {
         } else {
             this.quickCreateStageLinearLayout.setVisibility(View.GONE);
             this.newTaskTitle.clearFocus();
-            this.taskListStageLL.requestFocus();
-            this.taskListStageLL.requestFocusFromTouch();
+            this.taskList.requestFocus();
+            this.taskList.requestFocusFromTouch();
             hideKeyBoard(
                     getApplicationContext(),
                     getCurrentFocus()
@@ -298,7 +294,7 @@ public class DashboardActivity extends ActionBarActivity {
                     toggleQuickTaskLayout();
                     contentScroll.smoothScrollTo(
                             0,
-                            taskListStageLL.getBottom()
+                            taskList.getBottom()
                     );
                 } else {
                     Toast.makeText(
@@ -354,7 +350,7 @@ public class DashboardActivity extends ActionBarActivity {
         // Fetching the task from taskList.
         quickTask = this.taskList.get(this.taskList.size()-1);
         // Add task to top of the linear layout
-        this.taskListStageLL.addView(quickTask.getPanelView());
+        this.taskList.addView(quickTask.getPanelView());
         // Adding an onClickListener to TaskPanel to show and hide task actions.
         TaskPanelOnClickListener taskPanelOnClickListener = new TaskPanelOnClickListener(quickTask, this.taskList);
         quickTask.getPanelView().setOnClickListener(taskPanelOnClickListener);

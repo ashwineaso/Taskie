@@ -21,10 +21,12 @@ import in.altersense.taskapp.models.Task;
  */
 public class TasksCursorAdapter extends CursorAdapter{
 
+    private Activity activity;
     String CLASS_TAG = "TasksCursorAdapter ";
 
-    public TasksCursorAdapter(Context context, Cursor cursor) {
-        super(context, cursor, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+    public TasksCursorAdapter(Activity activity, Cursor cursor) {
+        super(activity.getApplicationContext(), cursor, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        this.activity = activity;
         Log.d(CLASS_TAG, "Initialized");
     }
 
@@ -45,9 +47,12 @@ public class TasksCursorAdapter extends CursorAdapter{
         Task task = new Task(cursor, context);
         Log.d(TAG, "Created new task from cursor");
 
+        Log.d(TAG, "Setting up collaborators for the created task.");
         CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
         task.setCollaborators(collaboratorDbHelper.getAllCollaborators(task));
+        Log.d(TAG, "All collaborators set.");
 
+        Log.d(TAG, "Initializing the views for the task panel view.");
         TextView timeStatus = (TextView) taskView.findViewById(R.id.timeStatusCustomFontTextView);
         TextView timeMeasure = (TextView) taskView.findViewById(R.id.timeMeasureCustomFontTextView);
         TextView timeUnit = (TextView) taskView.findViewById(R.id.timeUnitTextCustomFontTextView);
@@ -56,10 +61,19 @@ public class TasksCursorAdapter extends CursorAdapter{
         LinearLayout taskStatus = (LinearLayout) taskView.findViewById(R.id.taskStatusLinearLayout);
         Log.d(TAG, "Initialized the new view.");
 
+        Log.d(TAG, "Setting values to panel view.");
         taskTitle.setText(task.getName());
         timeMeasure.setText(task.getDueDateTime());
         taskStatus.setBackgroundResource(Task.getStatusColor(task.getStatus(context)));
-        Log.d(TAG, "Set up basic values.");
+        Log.d(TAG, "Basic values set up.");
+
+        Log.d(TAG, "Associating the panel view with the task.");
+        task.setTaskPanelView(taskView);
+        Log.d(TAG, "Set task panel view.");
+        Log.d(TAG, "Setting actions view.");
+        task.setActionsView(this.activity);
+        task.hideTaskActions();
+        Log.d(TAG, "Task actions view was set and hidden.");
 
     }
 }
