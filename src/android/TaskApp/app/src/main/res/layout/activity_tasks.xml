@@ -49,7 +49,7 @@
 
             </LinearLayout>
 
-            <ListView android:id="@+id/taskListStage"
+            <ExpandableListView android:id="@+id/taskListStage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:descendantFocusability="blocksDescendants"

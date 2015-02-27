@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -34,7 +35,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class DashboardActivity extends ActionBarActivity {
 
     private static final String CLASS_TAG = "DashboardActivity ";
-    private ListView taskList;  // For handling the main content area.
+    private ExpandableListView taskList;  // For handling the main content area.
     private LinearLayout quickCreateStageLinearLayout; // Quick task creation area
     private TaskDbHelper taskDbHelper;
     private boolean isQuickTaskCreationHidden;
@@ -80,7 +81,7 @@ public class DashboardActivity extends ActionBarActivity {
         this.quickCreateStageLinearLayout = (LinearLayout) findViewById(R.id.quickTaskCreation);
         this.quickCreateStageLinearLayout.setVisibility(View.GONE);
         setUpQuickTaskLayout();
-        this.taskList = (ListView) findViewById(R.id.taskListStage);
+        this.taskList = (ExpandableListView) findViewById(R.id.taskListStage);
         this.groupListStageLL = (LinearLayout) findViewById(R.id.groupListStage);
         this.isQuickTaskCreationHidden = true;
         Log.d(CLASS_TAG,"Done.");

@@ -608,7 +608,7 @@ public class Task {
         return actionsPanel;
     }
 
-    private void toggleStatus(Activity activity) {
+    public void toggleStatus(Activity activity) {
         String TAG = CLASS_TAG+"toggleStatus";
         int currentStatus = getStatus(activity);
         Log.d(TAG,"Current status "+currentStatus);
