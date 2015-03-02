@@ -99,8 +99,9 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         Task task = this.taskList.get(position);
 
         holder.taskStatus.setBackgroundResource(
-                task.getStatusColor(task.getStatus(
-                        activity.getApplicationContext()
+                task.getStatusColor(
+                        task.getStatus(
+                                activity.getApplicationContext()
                 ))
         );
         holder.taskTitle.setText(

@@ -447,6 +447,8 @@ public class Task {
         CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
         this.setCollaborators(collaboratorDbHelper.getAllCollaborators(this));
 
+        this.status = this.getStatus(context);
+
         Log.d(CLASS_TAG, " Collabs done. Cosntructor done.");
 
     }
