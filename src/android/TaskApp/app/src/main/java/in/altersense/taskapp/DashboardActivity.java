@@ -15,13 +15,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
-import in.altersense.taskapp.adapters.TasksCursorAdapter;
+import in.altersense.taskapp.adapters.TasksAdapter;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.components.GCMHandler;
@@ -35,7 +34,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class DashboardActivity extends ActionBarActivity {
 
     private static final String CLASS_TAG = "DashboardActivity ";
-    private ExpandableListView taskList;  // For handling the main content area.
+    private ListView taskList;  // For handling the main content area.
     private LinearLayout quickCreateStageLinearLayout; // Quick task creation area
     private TaskDbHelper taskDbHelper;
     private boolean isQuickTaskCreationHidden;
@@ -44,7 +43,7 @@ public class DashboardActivity extends ActionBarActivity {
     private ScrollView contentScroll;
     private LinearLayout groupListStageLL;
 
-    private TasksCursorAdapter taskAdapter;
+    private TasksAdapter taskAdapter;
 
     private GCMHandler gcmHandler;
 
@@ -70,10 +69,7 @@ public class DashboardActivity extends ActionBarActivity {
         // Initializing the dbhelper.
         this.taskDbHelper = new TaskDbHelper(this.getApplicationContext());
 
-        this.taskAdapter = new TasksCursorAdapter(
-                this,
-                this.taskDbHelper.getAllNonGroupTasksAsCursor()
-        );
+        this.taskAdapter = new TasksAdapter(this, taskDbHelper.getAllNonGroupTasks(this));
 
 //        Initializing the layout.
         Log.d(CLASS_TAG,"Initializing layout.");
@@ -81,7 +77,7 @@ public class DashboardActivity extends ActionBarActivity {
         this.quickCreateStageLinearLayout = (LinearLayout) findViewById(R.id.quickTaskCreation);
         this.quickCreateStageLinearLayout.setVisibility(View.GONE);
         setUpQuickTaskLayout();
-        this.taskList = (ExpandableListView) findViewById(R.id.taskListStage);
+        this.taskList = (ListView) findViewById(R.id.taskListStage);
         this.groupListStageLL = (LinearLayout) findViewById(R.id.groupListStage);
         this.isQuickTaskCreationHidden = true;
         Log.d(CLASS_TAG,"Done.");
@@ -94,18 +90,7 @@ public class DashboardActivity extends ActionBarActivity {
         this.taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(CLASS_TAG, "List item was clicked.");
-                if (((Task) parent.getItemAtPosition(position)).isActionsDisplayed) {
-                    ((Task) parent.getItemAtPosition(position)).hideTaskActions();
-                } else {
-                    for (int ctr = 0; ctr < parent.getCount(); ctr++) {
-                        if (((Task) parent.getItemAtPosition(ctr)).isActionsDisplayed) {
-                            ((Task) parent.getItemAtPosition(ctr)).hideTaskActions();
-                            break;
-                        }
-                    }
-                    ((Task) parent.getItemAtPosition(position)).showTaskActions();
-                }
+                ((TasksAdapter) parent.getItemAtPosition(position)).setSelected(position);
             }
         });
 
