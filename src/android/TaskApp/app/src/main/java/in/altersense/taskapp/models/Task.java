@@ -401,7 +401,7 @@ public class Task {
         this.isActionsDisplayed = false;
     }
 
-    public Task(Cursor cursor, Context context){
+    /*public Task(Cursor cursor, Context context){
         Log.d(CLASS_TAG, " Constructor(cursor,context)");
         this.uuid = cursor.getString(0);
         this.name = cursor.getString(2);
@@ -417,6 +417,38 @@ public class Task {
             this.group = null;
         }
         this.id = cursor.getLong(9);
+    }*/
+
+    /**
+     * Constructs tasks without inflating the actions or panel views.
+     * @param cursor Cursor with task data.
+     * @param context Current context.
+     * @param inflateViews Dummy variable.
+     */
+    public Task(Cursor cursor, Context context, boolean inflateViews) {
+        // TODO: Give inflate views a purpose by cut shorting certain constructors.
+        Log.d(CLASS_TAG, " Constructor(cursor,context,boolean)");
+        this.uuid = cursor.getString(0);
+        this.name = cursor.getString(2);
+        this.description = cursor.getString(3);
+        this.owner = new User(cursor.getString(1), context);
+        this.priority = cursor.getInt(4);
+        this.dueDateTime = cursor.getLong(5);
+        this.status = cursor.getInt(6);
+        this.isGroup = cursor.getInt(7)==1;
+        if(this.isGroup) {
+            this.group = new TaskGroup(cursor.getString(8), context);
+        } else {
+            this.group = null;
+        }
+        this.id = cursor.getLong(9);
+
+        Log.d(CLASS_TAG, " Fetching collabs.");
+        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
+        this.setCollaborators(collaboratorDbHelper.getAllCollaborators(this));
+
+        Log.d(CLASS_TAG, " Collabs done. Cosntructor done.");
+
     }
 
     public String getUuid() {
