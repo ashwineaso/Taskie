@@ -130,6 +130,7 @@ public class Task {
      * @return Status value of the user in relation with the task
      */
     public int getStatus(Context context) {
+        String TAG = CLASS_TAG+" getStatus";
         // Check if the user is the owner.
         if(isOwnedyDeviceUser(context)) {
             // Return the task status.
@@ -137,6 +138,7 @@ public class Task {
         } else {
             // Find collaborator.
             Collaborator collaborator = new Collaborator(User.getDeviceOwner(context));
+            Log.d(TAG, "CollaboratorName: "+collaborator.getName());
             collaborator = this.getCollaborators().get(this.getCollaborators().indexOf(collaborator));
             // Return collaborator status.
             return collaborator.getStatus();

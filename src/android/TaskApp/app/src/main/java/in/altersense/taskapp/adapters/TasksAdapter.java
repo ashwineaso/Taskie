@@ -75,6 +75,7 @@ public class TasksAdapter extends ArrayAdapter<Task>{
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        String TAG = CLASS_TAG+"getView";
         final ViewHolder holder;
         int viewType = getItemViewType(position);
         if(convertView==null) {
@@ -98,16 +99,7 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         }
         Task task = this.taskList.get(position);
 
-        holder.taskStatus.setBackgroundResource(
-                task.getStatusColor(
-                        task.getStatus(
-                                activity.getApplicationContext()
-                ))
-        );
-        holder.taskTitle.setText(
-                task.getName()
-        );
-        holder.actionsPlaceHolder.setVisibility(View.GONE);
+        Log.d(TAG, "Status: "+task.getStatus(getContext()));
 
         switch (viewType) {
             case VIEW_EXPANDED:
@@ -117,6 +109,19 @@ public class TasksAdapter extends ArrayAdapter<Task>{
             default:
                 holder.actionsPlaceHolder.setVisibility(View.GONE);
         }
+
+        holder.taskStatus.setBackgroundResource(
+                Task.getStatusColor(
+                        task.getStatus(
+                                activity.getApplicationContext()
+                        )
+                )
+        );
+
+        holder.taskTitle.setText(
+                task.getName()
+        );
+        holder.actionsPlaceHolder.setVisibility(View.GONE);
 
         return convertView;
     }
