@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import in.altersense.taskapp.R;
+import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.Task;
 
 /**
@@ -37,6 +39,9 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         public LinearLayout actionsPlaceHolder;
         public LinearLayout action1, action2, action3, action4;
         public ImageView actionImage1, actionImage2, actionImage3, actionImage4;
+
+        public TextView[] collaborators = new TextView[10];
+
     }
 
     public TasksAdapter(Activity activity, List<Task> taskList) {
@@ -79,6 +84,17 @@ public class TasksAdapter extends ArrayAdapter<Task>{
             holder.collaboratorList = (LinearLayout) convertView.findViewById(R.id.collaboratorsList);
             holder.taskStatus = (LinearLayout) convertView.findViewById(R.id.taskStatusLinearLayout);
 
+            holder.collaborators[0] = (TextView) convertView.findViewById(R.id.collaboratorName1);
+            holder.collaborators[1] = (TextView) convertView.findViewById(R.id.collaboratorName2);
+            holder.collaborators[2] = (TextView) convertView.findViewById(R.id.collaboratorName3);
+            holder.collaborators[3] = (TextView) convertView.findViewById(R.id.collaboratorName4);
+            holder.collaborators[4] = (TextView) convertView.findViewById(R.id.collaboratorName5);
+            holder.collaborators[5] = (TextView) convertView.findViewById(R.id.collaboratorName6);
+            holder.collaborators[6] = (TextView) convertView.findViewById(R.id.collaboratorName7);
+            holder.collaborators[7] = (TextView) convertView.findViewById(R.id.collaboratorName8);
+            holder.collaborators[8] = (TextView) convertView.findViewById(R.id.collaboratorName9);
+            holder.collaborators[9] = (TextView) convertView.findViewById(R.id.collaboratorName10);
+
             holder.actionsPlaceHolder = (LinearLayout) convertView.findViewById(R.id.actionsPlaceHolderLinearLayout);
 
             holder.action1 = (LinearLayout) holder.actionsPlaceHolder.findViewById(R.id.action1);
@@ -94,6 +110,7 @@ public class TasksAdapter extends ArrayAdapter<Task>{
             holder = (ViewHolder) convertView.getTag();
         }
         holder.actionsPlaceHolder.setVisibility(View.GONE);
+
 
         Task task = this.taskList.get(position);
 
@@ -120,6 +137,14 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         holder.taskTitle.setText(
                 task.getName()
         );
+
+        int collaboratorsToBeDisplayedCount = task.getCollaborators().size()<9 ? task.getCollaborators().size() : 9;
+
+        for(int ctr=0; ctr<collaboratorsToBeDisplayedCount; ctr++) {
+            Collaborator collaborator = task.getCollaborators().get(ctr);
+            holder.collaborators[ctr].setText(collaborator.getInitials());
+            holder.collaborators[ctr].setBackgroundResource(collaborator.getStatus());
+        }
 
         return convertView;
     }

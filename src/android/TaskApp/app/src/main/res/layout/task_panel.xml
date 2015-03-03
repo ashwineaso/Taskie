@@ -43,9 +43,82 @@
                 android:paddingTop="@dimen/tinyMargin_xhdpi">
 
                 <LinearLayout android:id="@+id/collaboratorsList"
-                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal" />
+                    android:orientation="horizontal">
+
+                    <TextView android:id="@+id/collaboratorName1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/token_background"
+                        android:padding="5dp"
+                        android:textSize="18sp" />
+
+                    <TextView android:id="@+id/collaboratorName2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/token_background"
+                        android:padding="5dp"
+                        android:textSize="18sp" />
+
+                    <TextView android:id="@+id/collaboratorName3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/token_background"
+                        android:padding="5dp"
+                        android:textSize="18sp" />
+
+                    <TextView android:id="@+id/collaboratorName4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/token_background"
+                        android:padding="5dp"
+                        android:textSize="18sp" />
+
+                    <TextView android:id="@+id/collaboratorName5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/token_background"
+                        android:padding="5dp"
+                        android:textSize="18sp" />
+
+                    <TextView android:id="@+id/collaboratorName6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/token_background"
+                        android:padding="5dp"
+                        android:textSize="18sp" />
+
+                    <TextView android:id="@+id/collaboratorName7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/token_background"
+                        android:padding="5dp"
+                        android:textSize="18sp" />
+
+                    <TextView android:id="@+id/collaboratorName8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/token_background"
+                        android:padding="5dp"
+                        android:textSize="18sp" />
+
+                    <TextView android:id="@+id/collaboratorName9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/token_background"
+                        android:padding="5dp"
+                        android:textSize="18sp" />
+
+                    <TextView android:id="@+id/collaboratorName10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/token_background"
+                        android:padding="5dp"
+                        android:textSize="18sp" />
+
+                    </LinearLayout>
 
                 <LinearLayout android:id="@+id/taskIconsListLinearLayout"
                         android:layout_width="wrap_content"
