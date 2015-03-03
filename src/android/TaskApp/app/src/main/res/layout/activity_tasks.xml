@@ -6,63 +6,54 @@
     android:layout_height="match_parent"
     tools:context="in.altersense.taskapp.TasksAtHand">
 
-    <ScrollView android:id="@+id/contenScroll"
+    <LinearLayout android:id="@+id/mainStageLinearLayout"
+        android:animateLayoutChanges="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/emptyBackground"
-        android:animateLayoutChanges="true">
+        android:orientation="vertical">
 
-        <LinearLayout android:id="@+id/mainStageLinearLayout"
-            android:animateLayoutChanges="true"
+        <LinearLayout android:id="@+id/quickTaskCreation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/emptyBackground"
-            android:orientation="vertical">
+            android:padding="@dimen/tinyMargin_xhdpi"
+            android:orientation="vertical" />
 
-            <LinearLayout android:id="@+id/quickTaskCreation"
-                android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/smallMargin_xhdp">
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/tinyMargin_xhdpi"
-                android:orientation="vertical" />
+                android:text="@string/label_sortby"
+                android:layout_gravity="left"
+                android:textAlignment="center"
+                android:textSize="@dimen/text_subHeader_xhdpi"
+                android:textColor="@color/primaryText" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <Spinner
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="@dimen/smallMargin_xhdp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_sortby"
-                    android:layout_gravity="left"
-                    android:textAlignment="center"
-                    android:textSize="@dimen/text_subHeader_xhdpi"
-                    android:textColor="@color/primaryText" />
-
-                <Spinner
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/array_sortBy"
-                    android:textAlignment="center"
-                    android:layout_marginLeft="@dimen/smallMargin_xhdp"/>
-
-            </LinearLayout>
-
-            <ListView android:id="@+id/taskListStage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:descendantFocusability="blocksDescendants"
-                android:clickable="true"/>
-
-            <LinearLayout android:id="@+id/groupListStage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"/>
+                android:entries="@array/array_sortBy"
+                android:textAlignment="center"
+                android:layout_marginLeft="@dimen/smallMargin_xhdp"/>
 
         </LinearLayout>
 
-    </ScrollView>
+        <ListView android:id="@+id/taskListStage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:descendantFocusability="blocksDescendants"
+            android:clickable="true"/>
 
+        <LinearLayout android:id="@+id/groupListStage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+
+    </LinearLayout>
 
 </LinearLayout>

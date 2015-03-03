@@ -1,30 +1,18 @@
 package in.altersense.taskapp.adapters;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CursorAdapter;
-import android.widget.CursorTreeAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
-import in.altersense.taskapp.CreateTaskActivity;
 import in.altersense.taskapp.R;
-import in.altersense.taskapp.TaskActivity;
-import in.altersense.taskapp.database.CollaboratorDbHelper;
-import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.models.Task;
 
 /**
@@ -40,7 +28,7 @@ public class TasksAdapter extends ArrayAdapter<Task>{
 
     private static final int VIEW_ITEM_NORMAL = 0;
     private static final int VIEW_EXPANDED = 1;
-    private int mSelected = -1;
+    private int selected = -1;
 
     public static class ViewHolder{
         public LinearLayout taskStatus;
@@ -60,12 +48,16 @@ public class TasksAdapter extends ArrayAdapter<Task>{
     }
 
     public void setSelected(int position) {
-        this.mSelected = position;
+        this.selected = position;
+    }
+
+    public int getSelected() {
+        return selected;
     }
 
     @Override
     public int getItemViewType(int position) {
-        return position==mSelected ? VIEW_EXPANDED : VIEW_ITEM_NORMAL;
+        return position== selected ? VIEW_EXPANDED : VIEW_ITEM_NORMAL;
     }
 
     @Override
@@ -78,6 +70,7 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         String TAG = CLASS_TAG+"getView";
         final ViewHolder holder;
         int viewType = getItemViewType(position);
+        Log.d(TAG, "ViewType: "+viewType+" at position: "+position);
         if(convertView==null) {
             holder = new ViewHolder();
             convertView = inflater.inflate(R.layout.task_panel, parent, false);
@@ -94,12 +87,18 @@ public class TasksAdapter extends ArrayAdapter<Task>{
             holder.action4 = (LinearLayout) holder.actionsPlaceHolder.findViewById(R.id.action4);
 
             holder.actionImage4 = (ImageView) holder.action4.findViewById(R.id.action4Image);
+
+            convertView.setTag(holder);
+
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+        holder.actionsPlaceHolder.setVisibility(View.GONE);
+
         Task task = this.taskList.get(position);
 
-        Log.d(TAG, "Status: "+task.getStatus(getContext()));
+        Log.d(TAG, "Status: " + task.getStatus(getContext()));
+
 
         switch (viewType) {
             case VIEW_EXPANDED:
@@ -121,7 +120,6 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         holder.taskTitle.setText(
                 task.getName()
         );
-        holder.actionsPlaceHolder.setVisibility(View.GONE);
 
         return convertView;
     }

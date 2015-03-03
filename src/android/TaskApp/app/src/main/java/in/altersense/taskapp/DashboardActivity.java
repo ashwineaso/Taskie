@@ -40,7 +40,6 @@ public class DashboardActivity extends ActionBarActivity {
     private boolean isQuickTaskCreationHidden;
     private View taskCreationView;
     private EditText newTaskTitle;
-    private ScrollView contentScroll;
     private LinearLayout groupListStageLL;
 
     private TasksAdapter taskAdapter;
@@ -73,7 +72,6 @@ public class DashboardActivity extends ActionBarActivity {
 
 //        Initializing the layout.
         Log.d(CLASS_TAG,"Initializing layout.");
-        this.contentScroll = (ScrollView) findViewById(R.id.contenScroll);
         this.quickCreateStageLinearLayout = (LinearLayout) findViewById(R.id.quickTaskCreation);
         this.quickCreateStageLinearLayout.setVisibility(View.GONE);
         setUpQuickTaskLayout();
@@ -90,7 +88,13 @@ public class DashboardActivity extends ActionBarActivity {
         this.taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ((TasksAdapter) parent.getItemAtPosition(position)).setSelected(position);
+                TasksAdapter adapter = (TasksAdapter)parent.getAdapter();
+                if(adapter.getSelected()==position) {
+                    adapter.setSelected(-1);
+                } else {
+                    adapter.setSelected(position);
+                }
+                adapter.notifyDataSetChanged();
             }
         });
 
@@ -278,10 +282,6 @@ public class DashboardActivity extends ActionBarActivity {
                     groupNameET.setText("");
                     participantNameET.setText("");
                     toggleQuickTaskLayout();
-                    contentScroll.smoothScrollTo(
-                            0,
-                            taskList.getBottom()
-                    );
                 } else {
                     Toast.makeText(
                             getApplicationContext(),
