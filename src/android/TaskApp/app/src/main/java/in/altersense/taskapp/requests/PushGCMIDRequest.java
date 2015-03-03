@@ -46,7 +46,7 @@ public class PushGCMIDRequest extends AsyncTask<Void, Integer, JSONObject> {
         JSONObject reponseObject = new JSONObject();
         try {
             APIRequest gcmRegIdPush = new APIRequest(
-                    AltEngine.formURL("user/serverPushIdPush"),
+                    AltEngine.formURL("user/setServerPushId"),
                     requestObject,
                     activity
             );

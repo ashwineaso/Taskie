@@ -73,10 +73,8 @@ def setServerPushId(userObj):
 						serverPushId - the id required for GCM notification
 	::return user : An object of User class
 	"""
-	user = dal.setServerPushId()
+	user = dal.setServerPushId(userObj)
 	return user
-
-	pass
 
 
 def modifyProfilePic(photoObj):

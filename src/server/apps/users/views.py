@@ -1,9 +1,9 @@
 import os
 from bottle import request, static_file
-from settings.altEngine import Collection, RESPONSE_SUCCESS, RESPONSE_FAILED
+from settings.altEngine import Collection, RESPONSE_SUCCESS, RESPONSE_FAILED, _decode_list, _decode_dict
 import bll
 import requests
-
+import json
 
 def register():
 	"""
@@ -47,12 +47,14 @@ def setServerPushId():
 	userObj = Collection()
 
 	obj = request.json
+	obj = json.loads(obj, object_hook=_decode_dict)
+	print obj
 	try:
 		userObj.access_token = obj["access_token"]
 		userObj.id = obj["id"]
 		userObj.serverPushId = obj["serverPushId"]
-		if bll.checkAccessTokenValid():
-			user = bll.setServerPushId()
+		if bll.checkAccessTokenValid(userObj):
+			user = bll.setServerPushId(userObj)
 		response["data"] = bll.convertUserToDict(user)
 		response["status"] = RESPONSE_SUCCESS
 	except Exception, e:
@@ -60,6 +62,7 @@ def setServerPushId():
 		response['message'] = str(e)
 		if hasattr(e, "code"):
 			response["code"] = e.code
+	print response
 	return response
 
 
