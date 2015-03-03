@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-android:innerRadius="0dp"
-android:shape="oval" >
-    <solid android:color="@color/status_done" />
+    android:useLevel="false"
+    android:innerRadius="@dimen/collaboratorTokenInnerRadius_xhdpi"
+    android:thickness="0dp"
+    android:shape="ring" >
+
+    <stroke android:width="@dimen/statusRingWidth_xhdpi"
+        android:color="@color/status_done" />
+
 </shape>

@@ -825,21 +825,21 @@ public class Task {
         return this.getOwner().getUuid().equals(ownnerUUID);
     }
 
-    private int collaboratorStatusBackground(int status) {
-        int backgroundResource = 0;
+    public int collaboratorStatusBackground(int status) {
+        int backgroundResource = R.drawable.collaborator_status_declined;
         switch (status) {
             case -1:
                 backgroundResource = R.drawable.collaborator_status_declined;
                 break;
-            case 0:
-                backgroundResource = R.drawable.collaborator_status_pending;
-                break;
             case 1:
-                backgroundResource = R.drawable.collaborator_status_accepted;
-                break;
+            backgroundResource = R.drawable.collaborator_status_accepted;
+            break;
             case 2:
-                backgroundResource = R.drawable.collaborator_status_done;
-                break;
+            backgroundResource = R.drawable.collaborator_status_done;
+            break;
+            case 0:
+            default:
+                backgroundResource = R.drawable.collaborator_status_pending;
         }
         return backgroundResource;
     }
