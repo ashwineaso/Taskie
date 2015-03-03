@@ -10,27 +10,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import in.altersense.taskapp.adapters.TasksAdapter;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.components.GCMHandler;
-import in.altersense.taskapp.components.GroupPanelOnClickListener;
-import in.altersense.taskapp.components.TaskPanelOnClickListener;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.models.Task;
-import in.altersense.taskapp.models.TaskGroup;
 import in.altersense.taskapp.models.User;
-import in.altersense.taskapp.requests.CreateTaskRequest;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -38,16 +34,15 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class DashboardActivity extends ActionBarActivity {
 
     private static final String CLASS_TAG = "DashboardActivity ";
-    private LinearLayout taskListStageLL;  // For handling the main content area.
+    private ListView taskList;  // For handling the main content area.
     private LinearLayout quickCreateStageLinearLayout; // Quick task creation area
     private TaskDbHelper taskDbHelper;
-    private List<Task> taskList = new ArrayList<Task>();  // Lists all non group tasks for traversing convenience.
-    private Task task;  // Task iterator.
     private boolean isQuickTaskCreationHidden;
     private View taskCreationView;
     private EditText newTaskTitle;
-    private ScrollView contentScroll;
     private LinearLayout groupListStageLL;
+
+    private TasksAdapter taskAdapter;
 
     private GCMHandler gcmHandler;
 
@@ -73,48 +68,35 @@ public class DashboardActivity extends ActionBarActivity {
         // Initializing the dbhelper.
         this.taskDbHelper = new TaskDbHelper(this.getApplicationContext());
 
+        this.taskAdapter = new TasksAdapter(this, taskDbHelper.getAllNonGroupTasks(this));
+
 //        Initializing the layout.
-        this.contentScroll = (ScrollView) findViewById(R.id.contenScroll);
+        Log.d(CLASS_TAG,"Initializing layout.");
         this.quickCreateStageLinearLayout = (LinearLayout) findViewById(R.id.quickTaskCreation);
         this.quickCreateStageLinearLayout.setVisibility(View.GONE);
         setUpQuickTaskLayout();
-        this.taskListStageLL = (LinearLayout) findViewById(R.id.taskListStage);
+        this.taskList = (ListView) findViewById(R.id.taskListStage);
         this.groupListStageLL = (LinearLayout) findViewById(R.id.groupListStage);
         this.isQuickTaskCreationHidden = true;
+        Log.d(CLASS_TAG,"Done.");
 
+        Log.d(CLASS_TAG,"Settng adapter to listview.");
         // Inflate all the nonGroupTasks in the TasksListStage.
-        this.taskList = taskDbHelper.getAllNonGroupTasks(this);
-        Log.d(CLASS_TAG, "Initialized task list.");
-        for(Task task:this.taskList) {
-            Log.d(CLASS_TAG, "Adding task view to task list stage linear layout.");
-            taskListStageLL.addView(task.getPanelView());
-//            Adding an onClickListener to TaskPanel to show and hide task actions.
-            TaskPanelOnClickListener taskPanelOnClickListener = new TaskPanelOnClickListener(task, this.taskList);
-            task.getPanelView().setOnClickListener(taskPanelOnClickListener);
-        }
+        this.taskList.setAdapter(this.taskAdapter);
+        Log.d(CLASS_TAG, "Done.");
 
-        LayoutInflater inflater = getLayoutInflater();
-        LinearLayout taskCollection = (LinearLayout) inflater.inflate(R.layout.task_group_collection, groupListStageLL);
-
-        TaskGroup taskGroup = new TaskGroup(
-                "CREMID",
-                4,
-                true,
-                getLayoutInflater()
-        );
-        taskCollection.addView(taskGroup.getGroupView());
-        taskGroup.getGroupView().setOnClickListener(new GroupPanelOnClickListener(taskGroup, this));
-
-        for(int i=0; i<2; i++) {
-            taskGroup = new TaskGroup(
-                    "AlterSense",
-                    3,
-                    false,
-                    getLayoutInflater()
-            );
-            taskCollection.addView(taskGroup.getGroupView());
-            taskGroup.getGroupView().setOnClickListener(new GroupPanelOnClickListener(taskGroup, this));
-        }
+        this.taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TasksAdapter adapter = (TasksAdapter)parent.getAdapter();
+                if(adapter.getSelected()==position) {
+                    adapter.setSelected(-1);
+                } else {
+                    adapter.setSelected(position);
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
 
     }
 
@@ -207,8 +189,8 @@ public class DashboardActivity extends ActionBarActivity {
         } else {
             this.quickCreateStageLinearLayout.setVisibility(View.GONE);
             this.newTaskTitle.clearFocus();
-            this.taskListStageLL.requestFocus();
-            this.taskListStageLL.requestFocusFromTouch();
+            this.taskList.requestFocus();
+            this.taskList.requestFocusFromTouch();
             hideKeyBoard(
                     getApplicationContext(),
                     getCurrentFocus()
@@ -293,17 +275,13 @@ public class DashboardActivity extends ActionBarActivity {
                             DashboardActivity.this
                     );
                     Log.d(TAG, "QuickTask: "+quickTask.toString());
-                    quickTask = addQuickTaskToDb(quickTask);
+//                    quickTask = addQuickTaskToDb(quickTask);
 
                     newTaskTitle.setText("");
                     isGroupTaskCB.setChecked(false);
                     groupNameET.setText("");
                     participantNameET.setText("");
                     toggleQuickTaskLayout();
-                    contentScroll.smoothScrollTo(
-                            0,
-                            taskListStageLL.getBottom()
-                    );
                 } else {
                     Toast.makeText(
                             getApplicationContext(),
@@ -334,6 +312,7 @@ public class DashboardActivity extends ActionBarActivity {
      * Creates a quick task and adds it to the main list of tasks.
      * @param quickTask A task object which is created.
      */
+/*
     private Task addQuickTaskToDb(Task quickTask) {
         String TAG = CLASS_TAG+" addQuickTaskToDb";
         Log.d(TAG, "adding QuickTask: "+quickTask.toString()+" to db,");
@@ -357,7 +336,7 @@ public class DashboardActivity extends ActionBarActivity {
         // Fetching the task from taskList.
         quickTask = this.taskList.get(this.taskList.size()-1);
         // Add task to top of the linear layout
-        this.taskListStageLL.addView(quickTask.getPanelView());
+        this.taskList.addView(quickTask.getPanelView());
         // Adding an onClickListener to TaskPanel to show and hide task actions.
         TaskPanelOnClickListener taskPanelOnClickListener = new TaskPanelOnClickListener(quickTask, this.taskList);
         quickTask.getPanelView().setOnClickListener(taskPanelOnClickListener);
@@ -366,5 +345,6 @@ public class DashboardActivity extends ActionBarActivity {
         quickTask.getPanelView().requestFocusFromTouch();
         return quickTask;
     }
+*/
 
 }

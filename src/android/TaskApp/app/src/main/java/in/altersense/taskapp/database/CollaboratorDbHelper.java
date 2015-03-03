@@ -127,7 +127,12 @@ public class CollaboratorDbHelper extends SQLiteOpenHelper {
             try {
                 String cursorString = "";
                 for(int i=0; i<result.getColumnCount();i++) {
-                    cursorString+=i+"="+result.getString(i)+", ";
+                    try{
+                        cursorString+=i+"="+result.getString(i)+", ";
+                    } catch (CursorIndexOutOfBoundsException e) {
+                        Log.d(TAG, "No collaborator to display");
+                        return collaboratorList;
+                    }
                 }
                 Log.d(TAG, "Collaborator: "+cursorString);
                 // Fetch collaborator from db

@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/lightText"
-    android:animateLayoutChanges="true"
     android:gravity="center_vertical"
     android:orientation="vertical">
 
@@ -39,23 +38,78 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/collaboratorTokenRadius_xhdpi"
                 android:orientation="horizontal"
                 android:paddingTop="@dimen/tinyMargin_xhdpi">
 
-                <HorizontalScrollView
-                    android:layout_width="fill_parent"
-                    android:scrollbars="none"
-                    android:layout_height="@dimen/userImageWidth_xhdp">
+                <LinearLayout android:id="@+id/collaboratorsList"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/collaboratorTokenRadius_xhdpi"
+                    android:orientation="horizontal">
 
-                    <LinearLayout android:id="@+id/collaboratorsList"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
+                    <TextView android:id="@+id/collaboratorName1"
+                        android:layout_width="@dimen/collaboratorTokenRadius_xhdpi"
+                        android:layout_height="@dimen/collaboratorTokenRadius_xhdpi"
+                        android:gravity="center"
+                        android:background="@drawable/collaborator_status_accepted"
+                        android:textSize="@dimen/collabortorStatusText_xhdpi" />
 
-                        </LinearLayout>
+                    <TextView android:id="@+id/collaboratorName2"
+                        android:layout_width="@dimen/collaboratorTokenRadius_xhdpi"
+                        android:gravity="center"
+                        android:layout_height="@dimen/collaboratorTokenRadius_xhdpi"
+                        android:textSize="@dimen/collabortorStatusText_xhdpi" />
 
-                    </HorizontalScrollView>
+                    <TextView android:id="@+id/collaboratorName3"
+                        android:layout_width="@dimen/collaboratorTokenRadius_xhdpi"
+                        android:gravity="center"
+                        android:layout_height="@dimen/collaboratorTokenRadius_xhdpi"
+                        android:textSize="@dimen/collabortorStatusText_xhdpi" />
+
+                    <TextView android:id="@+id/collaboratorName4"
+                        android:layout_width="@dimen/collaboratorTokenRadius_xhdpi"
+                        android:gravity="center"
+                        android:layout_height="@dimen/collaboratorTokenRadius_xhdpi"
+                        android:textSize="@dimen/collabortorStatusText_xhdpi" />
+
+                    <TextView android:id="@+id/collaboratorName5"
+                        android:layout_width="@dimen/collaboratorTokenRadius_xhdpi"
+                        android:gravity="center"
+                        android:layout_height="@dimen/collaboratorTokenRadius_xhdpi"
+                        android:textSize="@dimen/collabortorStatusText_xhdpi" />
+
+                    <TextView android:id="@+id/collaboratorName6"
+                        android:layout_width="@dimen/collaboratorTokenRadius_xhdpi"
+                        android:gravity="center"
+                        android:layout_height="@dimen/collaboratorTokenRadius_xhdpi"
+                        android:textSize="@dimen/collabortorStatusText_xhdpi" />
+
+                    <TextView android:id="@+id/collaboratorName7"
+                        android:layout_width="@dimen/collaboratorTokenRadius_xhdpi"
+                        android:gravity="center"
+                        android:layout_height="@dimen/collaboratorTokenRadius_xhdpi"
+                        android:textSize="@dimen/collabortorStatusText_xhdpi" />
+
+                    <TextView android:id="@+id/collaboratorName8"
+                        android:gravity="center"
+                        android:layout_width="@dimen/collaboratorTokenRadius_xhdpi"
+                        android:layout_height="@dimen/collaboratorTokenRadius_xhdpi"
+                        android:textSize="@dimen/collabortorStatusText_xhdpi" />
+
+                    <TextView android:id="@+id/collaboratorName9"
+                        android:layout_width="@dimen/collaboratorTokenRadius_xhdpi"
+                        android:gravity="center"
+                        android:layout_height="@dimen/collaboratorTokenRadius_xhdpi"
+                        android:textSize="@dimen/collabortorStatusText_xhdpi" />
+
+                    <TextView android:id="@+id/collaboratorName10"
+                        android:layout_width="@dimen/collaboratorTokenRadius_xhdpi"
+                        android:gravity="center"
+                        android:layout_height="@dimen/collaboratorTokenRadius_xhdpi"
+                        android:textSize="@dimen/collabortorStatusText_xhdpi" />
+
+                    </LinearLayout>
 
                 <LinearLayout android:id="@+id/taskIconsListLinearLayout"
                         android:layout_width="wrap_content"
@@ -117,7 +171,61 @@
         android:animateLayoutChanges="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"/>
+        android:orientation="horizontal">
+
+        <LinearLayout android:id="@+id/action1"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/taskActionHeight_xhdpi"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView android:id="@+id/action1Image"
+                android:layout_width="@dimen/taskActionIconHeight_xhdpi"
+                android:layout_height="@dimen/taskActionIconHeight_xhdpi"
+                android:src="@drawable/ic_viewtask" />
+
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/action2"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/taskActionHeight_xhdpi"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView android:id="@+id/action2Image"
+                android:layout_width="@dimen/taskActionIconHeight_xhdpi"
+                android:layout_height="@dimen/taskActionIconHeight_xhdpi"
+                android:src="@drawable/ic_edittask" />
+
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/action3"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="@dimen/taskActionHeight_xhdpi"
+            android:gravity="center">
+
+            <ImageView android:id="@+id/action3Image"
+                android:layout_width="@dimen/taskActionIconHeight_xhdpi"
+                android:layout_height="@dimen/taskActionIconHeight_xhdpi"
+                android:src="@drawable/ic_alert" />
+
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/action4"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/taskActionHeight_xhdpi"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView android:id="@+id/action4Image"
+                android:layout_width="@dimen/taskActionIconHeight_xhdpi"
+                android:layout_height="@dimen/taskActionIconHeight_xhdpi"
+                android:src="@drawable/ic_completed" />
+
+        </LinearLayout>
+
+        </LinearLayout>
 
     <ImageView
         android:layout_width="match_parent"

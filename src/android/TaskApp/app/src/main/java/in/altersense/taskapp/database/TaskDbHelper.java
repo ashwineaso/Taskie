@@ -147,35 +147,19 @@ public class TaskDbHelper extends SQLiteOpenHelper {
      */
     public List<Task> getAllNonGroupTasks(Activity activity) {
         String TAG = CLASS_TAG+"getAllNonGroupTasks";
-        // Open database.
-        Log.d(TAG, "Readable database opened.");
-        SQLiteDatabase readableDb = this.getReadableDatabase();
-        // Create a list of tasks.
-        List<Task> taskList = new ArrayList<Task>();
-        // List all the non group tasks.
-        // Setup columns
-        ArrayList<String> columnList = Task.getAllColumns();
-        String[] columns = new String[columnList.size()];
-        columns = columnList.toArray(columns);
-        Cursor resultCursor = readableDb.query(
-                Task.TABLE_NAME,
-                columns,
-                Task.KEYS.IS_GROUP.getName()+"=?",
-                new String[] {"0"},
-                null,
-                null,
-                null
-        );
+        Cursor resultCursor = getAllNonGroupTasksAsCursor();
         Log.d(TAG, "Returned "+resultCursor.getCount()+" rows.");
+        // List all the non group tasks.
+        List<Task> taskList = new ArrayList<Task>();
         if(resultCursor.moveToFirst()) {
             do {
-                taskList.add(new Task(resultCursor, activity));
+                Log.d(TAG, "Status: "+resultCursor.getInt(6));
+                taskList.add(new Task(resultCursor, activity.getApplicationContext(), false));
                 Log.d(TAG, "Added task to list.");
             } while(resultCursor.moveToNext());
         }
-        // Close database
+        // Close cursor.
         resultCursor.close();
-        readableDb.close();
         // Return the list.
         return taskList;
     }
@@ -266,5 +250,30 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         writableDb.close();
         // return status
         return (affectedRows>0);
+    }
+
+    public Cursor getAllNonGroupTasksAsCursor() {
+        String TAG = CLASS_TAG+"getAllNonGroupTasksAsCursor";
+        // Open database.
+        SQLiteDatabase readableDb = this.getReadableDatabase();
+        Log.d(TAG, "Readable database opened.");
+        // Create a list of tasks.
+        // Setup columns
+        ArrayList<String> columnList = Task.getAllColumns();
+        String[] columns = new String[columnList.size()];
+        columns = columnList.toArray(columns);
+        Cursor resultCursor = readableDb.query(
+                Task.TABLE_NAME,
+                columns,
+                Task.KEYS.IS_GROUP.getName()+"=?",
+                new String[] {"0"},
+                null,
+                null,
+                null
+        );
+        Log.d(TAG, "Returned "+resultCursor.getCount()+" rows.");
+        // Close db.
+        readableDb.close();
+        return resultCursor;
     }
 }

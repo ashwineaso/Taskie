@@ -21,7 +21,9 @@
     <dimen name="taskActionIconHeight_xhdpi">32dp</dimen>
     <dimen name="taskActionHeight_xhdpi">40dp</dimen>
     <dimen name="priorityTextViewWidth_xhdpi">80dp</dimen>
-    <dimen name="statusRingWidth_xhdpi">3dp</dimen>
+    <dimen name="statusRingWidth_xhdpi">5dp</dimen>
+    <dimen name="collaboratorTokenRadius_xhdpi">40dp</dimen>
+    <dimen name="collaboratorTokenInnerRadius_xhdpi">14dp</dimen>
 
     <!-- Text Sizes for xHdpi -->
     <dimen name="text_dueDats_xhdpi">30sp</dimen>
@@ -30,5 +32,7 @@
     <dimen name="text_normal_xhdpi">16sp</dimen>
     <dimen name="text_small_xhdpi">12sp</dimen>
     <dimen name="hugeHeader_hdpi">64dp</dimen>
+    <dimen name="collabortorStatusText_xhdpi">15sp</dimen>
+
 
 </resources>
