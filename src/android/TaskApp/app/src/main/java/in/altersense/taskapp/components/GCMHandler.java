@@ -13,7 +13,6 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
-import java.util.concurrent.Callable;
 
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.requests.PushGCMIDRequest;
@@ -67,7 +66,7 @@ public class GCMHandler {
                 this.registerInBackground();
             } else {
                 if(!this.alreadySynced) {
-                    new PushGCMIDRequest(senderID,registrationID,activity).execute();
+                    new PushGCMIDRequest(senderID,registrationID,activity,this.GCM_ALREADY_SYNCED).execute();
                 }
             }
         }
@@ -139,6 +138,7 @@ public class GCMHandler {
         int currentVersion = getAppVersion();
         if(currentVersion!=registeredVersion) {
             Log.i(TAG, "App version changed");
+            writeBooleanToSharedPref(activity.getApplicationContext(),this.GCM_ALREADY_SYNCED,false);
             return "";
         }
         return regId;
@@ -207,7 +207,8 @@ public class GCMHandler {
                                     ""
                             ),
                             registrationID,
-                            activity
+                            activity,
+                            GCM_ALREADY_SYNCED
                     ).execute();
 
                 } else {

@@ -18,16 +18,18 @@ import in.altersense.taskapp.models.User;
 public class PushGCMIDRequest extends AsyncTask<Void, Integer, JSONObject> {
 
     private static String CLASS_TAG = "PushGCMIDRequest ";
-
     private String userUUID;
+
     private String GCMRegId;
     private Activity activity;
     private JSONObject requestObject;
+    private String ALREADY_SYNCED_FLAG;
 
-    public PushGCMIDRequest(String ownerUUID, String GCMRegId, Activity activity) {
+    public PushGCMIDRequest(String ownerUUID, String GCMRegId, Activity activity, String GCM_ALREADY_SYNCED_KEY) {
         this.userUUID = ownerUUID;
         this.GCMRegId = GCMRegId;
         this.activity = activity;
+        this.ALREADY_SYNCED_FLAG = GCM_ALREADY_SYNCED_KEY;
     }
 
     @Override
@@ -65,8 +67,18 @@ public class PushGCMIDRequest extends AsyncTask<Void, Integer, JSONObject> {
             String status = response.getString(Config.REQUEST_RESPONSE_KEYS.STATUS.getKey());
             if(status.equals(Config.RESPONSE_STATUS_SUCCESS)) {
                 Log.d(TAG, "Response is success.");
+                AltEngine.writeBooleanToSharedPref(
+                        activity.getApplicationContext(),
+                        this.ALREADY_SYNCED_FLAG,
+                        true
+                );
             } else {
                 Log.d(TAG, "Request failed.");
+                AltEngine.writeBooleanToSharedPref(
+                        activity.getApplicationContext(),
+                        this.ALREADY_SYNCED_FLAG,
+                        false
+                );
             }
         } catch (JSONException e) {
             e.printStackTrace();
