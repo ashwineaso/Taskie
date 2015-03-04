@@ -317,7 +317,7 @@ public class GCMHandler {
      * @param defaultValue The default value to be returned.
      * @return boolean The fetched value.
      */
-    public boolean readBBooleanFromSharedPref(Context context, String key, boolean defaultValue) {
+    public boolean readBooleanFromSharedPref(Context context, String key, boolean defaultValue) {
         SharedPreferences prefs = context.getSharedPreferences(
                 this.sharedPreferenceIdentifier,
                 Context.MODE_PRIVATE
