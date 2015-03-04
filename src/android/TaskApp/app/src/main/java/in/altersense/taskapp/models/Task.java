@@ -297,25 +297,6 @@ public class Task {
         Log.d(CLASS_TAG, "Fetching collaborators.");
         CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity);
         this.setCollaborators(collaboratorDbHelper.getAllCollaborators(this));
-
-        Log.d(CLASS_TAG, "PanelView construction being called.");
-        this.panelView = createView(activity);
-        Log.d(CLASS_TAG, "PanelView constructed.");
-
-        Log.d(CLASS_TAG, "ActionsView constructions being called.");
-        this.actionsView = createActionsView(activity);
-        Log.d(CLASS_TAG, "ActionsView constructed.");
-
-        Log.d(CLASS_TAG, "TaskActionsPlaceHolder being set up.");
-        this.taskActionsPlaceHolderView =
-                (LinearLayout) this.panelView.findViewById(R.id.actionsPlaceHolderLinearLayout);
-        this.taskActionsPlaceHolderView.setVisibility(View.GONE);
-        Log.d(CLASS_TAG, "TaskActionsPlaceHolder visibility now set to GONE.");
-        this.taskActionsPlaceHolderView.addView(this.actionsView);
-        Log.d(CLASS_TAG, "TaskActionsPlaceHolder gets the addition of the ActionsView");
-        this.isActionsDisplayed = false;
-        Log.d(CLASS_TAG, "ActionsDisplayed is set to false.");
-
     }
 
     /**

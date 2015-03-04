@@ -74,7 +74,16 @@ public class GCMHandler {
                 Log.d(CLASS_TAG, "Phew registration id is not empty so checking whether already synced..");
                 if(!this.alreadySynced) {
                     Log.d(CLASS_TAG, "Not synced so about to push the request.");
-                    new PushGCMIDRequest(senderID,registrationID,activity,this.GCM_ALREADY_SYNCED).execute();
+                    new PushGCMIDRequest(
+                            readStringFromSharedPref(
+                                    activity.getApplicationContext(),
+                                    Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
+                                    ""
+                            ),
+                            registrationId,
+                            activity,
+                            this.GCM_ALREADY_SYNCED
+                    ).execute();
                 }
             }
         }

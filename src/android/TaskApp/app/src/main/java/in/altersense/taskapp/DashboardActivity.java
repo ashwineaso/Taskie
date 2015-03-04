@@ -27,6 +27,7 @@ import in.altersense.taskapp.components.GCMHandler;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.User;
+import in.altersense.taskapp.requests.CreateTaskRequest;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -275,7 +276,7 @@ public class DashboardActivity extends ActionBarActivity {
                             DashboardActivity.this
                     );
                     Log.d(TAG, "QuickTask: "+quickTask.toString());
-//                    quickTask = addQuickTaskToDb(quickTask);
+                    addQuickTaskToDb(quickTask);
 
                     newTaskTitle.setText("");
                     isGroupTaskCB.setChecked(false);
@@ -312,7 +313,6 @@ public class DashboardActivity extends ActionBarActivity {
      * Creates a quick task and adds it to the main list of tasks.
      * @param quickTask A task object which is created.
      */
-/*
     private Task addQuickTaskToDb(Task quickTask) {
         String TAG = CLASS_TAG+" addQuickTaskToDb";
         Log.d(TAG, "adding QuickTask: "+quickTask.toString()+" to db,");
@@ -323,28 +323,19 @@ public class DashboardActivity extends ActionBarActivity {
                 this
         );
         Log.d(TAG, "Task added to database");
-        // Add task to taskList
-        this.taskList.add(quickTask);
-        Log.d(TAG, "Task added to taskList");
-        // Request to task creation API
+        // Add task to the adapter.
+        this.taskAdapter.add(quickTask);
+        this.taskAdapter.notifyDataSetChanged();
+        Log.d(TAG, "Task added to adapter");
+
         CreateTaskRequest createTaskRequest = new CreateTaskRequest(
                 quickTask,
                 this
         );
         Log.d(TAG, "Task creation API Request called.");
         createTaskRequest.execute();
-        // Fetching the task from taskList.
-        quickTask = this.taskList.get(this.taskList.size()-1);
-        // Add task to top of the linear layout
-        this.taskList.addView(quickTask.getPanelView());
-        // Adding an onClickListener to TaskPanel to show and hide task actions.
-        TaskPanelOnClickListener taskPanelOnClickListener = new TaskPanelOnClickListener(quickTask, this.taskList);
-        quickTask.getPanelView().setOnClickListener(taskPanelOnClickListener);
-        // Request focus to the new task.
-        quickTask.getPanelView().requestFocus();
-        quickTask.getPanelView().requestFocusFromTouch();
+
         return quickTask;
     }
-*/
 
 }
