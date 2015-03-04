@@ -52,20 +52,28 @@ public class GCMHandler {
         this.activity = activity;
         this.maxCount = maxCount;
 
+        Log.d(CLASS_TAG, "Checking if already synced..");
         this.alreadySynced = readBooleanFromSharedPref(
                 activity.getApplicationContext(),
                 this.GCM_ALREADY_SYNCED,
                 false
                 );
+        Log.d(CLASS_TAG, "returned: "+this.alreadySynced);
 
         this.gcmInstance = GoogleCloudMessaging.getInstance(activity.getApplicationContext());
 
+        Log.d(CLASS_TAG, "Checking if play services are available.");
         if(checkPlayServices()) {
+            Log.d(CLASS_TAG, "play services are available");
             String registrationId = this.getGCMRegistrationId();
+            Log.d(CLASS_TAG, "getting registraion id as "+registrationId);
             if(registrationId.isEmpty()) {
+                Log.d(CLASS_TAG, "But its empty calling a functions to register it in background.");
                 this.registerInBackground();
             } else {
+                Log.d(CLASS_TAG, "Phew registration id is not empty so checking whether already synced..");
                 if(!this.alreadySynced) {
+                    Log.d(CLASS_TAG, "Not synced so about to push the request.");
                     new PushGCMIDRequest(senderID,registrationID,activity,this.GCM_ALREADY_SYNCED).execute();
                 }
             }
