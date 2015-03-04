@@ -154,7 +154,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         if(resultCursor.moveToFirst()) {
             do {
                 Log.d(TAG, "Status: "+resultCursor.getInt(6));
-                taskList.add(new Task(resultCursor, activity.getApplicationContext(), false));
+                taskList.add(new Task(resultCursor, activity));
                 Log.d(TAG, "Added task to list.");
             } while(resultCursor.moveToNext());
         }
