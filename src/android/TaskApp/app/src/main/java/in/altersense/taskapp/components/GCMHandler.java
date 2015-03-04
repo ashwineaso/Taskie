@@ -24,8 +24,10 @@ import in.altersense.taskapp.requests.PushGCMIDRequest;
 public class GCMHandler {
 
     private static final String CLASS_TAG = "GCMHandler ";
+    private boolean alreadySynced;
 
     private String CURRENT_APP_VERSION = "currentAppVersion";
+    private String GCM_ALREADY_SYNCED = "gcmAlreadySynced";
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
@@ -51,7 +53,11 @@ public class GCMHandler {
         this.activity = activity;
         this.maxCount = maxCount;
 
-        this.alreadySynced = read
+        this.alreadySynced = readBooleanFromSharedPref(
+                activity.getApplicationContext(),
+                this.GCM_ALREADY_SYNCED,
+                false
+                );
 
         this.gcmInstance = GoogleCloudMessaging.getInstance(activity.getApplicationContext());
 
@@ -60,7 +66,9 @@ public class GCMHandler {
             if(registrationId.isEmpty()) {
                 this.registerInBackground();
             } else {
-
+                if(!this.alreadySynced) {
+                    new PushGCMIDRequest(senderID,registrationID,activity).execute();
+                }
             }
         }
     }
