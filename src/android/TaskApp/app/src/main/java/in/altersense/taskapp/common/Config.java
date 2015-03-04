@@ -23,7 +23,7 @@ public class Config {
     }
 
     public static int REQUEST_MAXOUT = 3;
-    public static String SERVER_ADDRESS = "192.168.1.5:8080";
+    public static String SERVER_ADDRESS = "172.16.11.31:8080";
     public static String RESPONSE_STATUS_FAILED = "failed";
     public static String RESPONSE_STATUS_SUCCESS = "success";
 

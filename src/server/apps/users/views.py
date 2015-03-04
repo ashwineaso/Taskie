@@ -47,8 +47,6 @@ def setServerPushId():
 	userObj = Collection()
 
 	obj = request.json
-	obj = json.loads(obj, object_hook=_decode_dict)
-	print obj
 	try:
 		userObj.access_token = obj["access_token"]
 		userObj.id = obj["id"]

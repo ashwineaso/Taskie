@@ -51,12 +51,16 @@ public class GCMHandler {
         this.activity = activity;
         this.maxCount = maxCount;
 
+        this.alreadySynced = read
+
         this.gcmInstance = GoogleCloudMessaging.getInstance(activity.getApplicationContext());
 
         if(checkPlayServices()) {
             String registrationId = this.getGCMRegistrationId();
             if(registrationId.isEmpty()) {
                 this.registerInBackground();
+            } else {
+
             }
         }
     }
@@ -284,6 +288,42 @@ public class GCMHandler {
         );
 
         int result = prefs.getInt(key, defaultValue);
+        Log.i(CLASS_TAG + " readStringFromSharedPref", "Success. (" + key + "," + result + ")");
+        return result;
+    }
+
+    /**
+     * Write boolean to SharedPreferences.
+     * @param context Current context
+     * @param key The key to store the value.
+     * @param value The int value to be stored in the key.
+     */
+    public void writeBooleanToSharedPref(Context context, String key, boolean value) {
+        SharedPreferences prefs = context.getSharedPreferences(
+                this.sharedPreferenceIdentifier,
+                Context.MODE_PRIVATE
+        );
+        SharedPreferences.Editor prefEditor = prefs.edit();
+        prefEditor.putBoolean(key, value);
+
+        prefEditor.commit();
+        Log.i(CLASS_TAG +" writeBooleanToSharedPref", "Success. ("+key+","+value+")");
+    }
+
+    /**
+     * Read boolean from SharedPreferences.
+     * @param context Current context
+     * @param key The key to fetch the value from.
+     * @param defaultValue The default value to be returned.
+     * @return boolean The fetched value.
+     */
+    public boolean readBBooleanFromSharedPref(Context context, String key, boolean defaultValue) {
+        SharedPreferences prefs = context.getSharedPreferences(
+                this.sharedPreferenceIdentifier,
+                Context.MODE_PRIVATE
+        );
+
+        boolean result = prefs.getBoolean(key, defaultValue);
         Log.i(CLASS_TAG + " readStringFromSharedPref", "Success. (" + key + "," + result + ")");
         return result;
     }
