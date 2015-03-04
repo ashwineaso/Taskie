@@ -16,36 +16,11 @@
         fontPath="fonts/Cabin-Medium-TTF.ttf"
         tools2:ignore="MissingPrefix"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/white">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
-            android:layout_height="wrap_content"
-            android:text="Add to Group"
-            android:paddingLeft="5dp" />
-
-        <CheckBox android:id="@+id/isGroupTaskCheckBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        </LinearLayout>
-
-    <EditText android:id="@+id/quickTaskParticipantName"
+    <in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText
+        android:id="@+id/quickTaskParticipantName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Participant Name"/>
-
-    <EditText android:id="@+id/quickTaskGroupName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:hint="Group Name"/>
 
     <Button android:id="@+id/createQuickTaskButton"
         android:layout_width="wrap_content"

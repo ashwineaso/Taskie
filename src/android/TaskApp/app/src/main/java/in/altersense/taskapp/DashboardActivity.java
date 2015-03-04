@@ -20,10 +20,13 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import com.tokenautocomplete.TokenCompleteTextView;
+
 import in.altersense.taskapp.adapters.TasksAdapter;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.components.GCMHandler;
+import in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.User;
@@ -32,7 +35,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
-public class DashboardActivity extends ActionBarActivity {
+public class DashboardActivity extends ActionBarActivity implements TokenCompleteTextView.TokenListener {
 
     private static final String CLASS_TAG = "DashboardActivity ";
     private ListView taskList;  // For handling the main content area.
@@ -230,29 +233,8 @@ public class DashboardActivity extends ActionBarActivity {
                 }
             }
         });
-        final CheckBox isGroupTaskCB = (CheckBox) taskCreationView.findViewById(R.id.isGroupTaskCheckBox);
-        final EditText participantNameET = (EditText) taskCreationView.findViewById(R.id.quickTaskParticipantName);
-        final EditText groupNameET = (EditText) taskCreationView.findViewById(R.id.quickTaskGroupName);
-        isGroupTaskCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    // Hide participant edit text
-                    participantNameET.setVisibility(View.GONE);
-                    // Show Group Name edit text
-                    groupNameET.setVisibility(View.VISIBLE);
-                    // Request Focus to Group Name edit text
-                    groupNameET.requestFocus();
-                } else {
-                    // Hide Group Name edit text
-                    groupNameET.setVisibility(View.GONE);
-                    // Show participant edit text
-                    participantNameET.setVisibility(View.VISIBLE);
-                    // Request focus to participant edit text
-                    participantNameET.requestFocus();
-                }
-            }
-        });
+        final TokenCompleteCollaboratorsEditText participantNameET =
+                (TokenCompleteCollaboratorsEditText) taskCreationView.findViewById(R.id.quickTaskParticipantName);
         final Button createQuickTask = (Button) taskCreationView.findViewById(R.id.createQuickTaskButton);
         createQuickTask.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -338,4 +320,55 @@ public class DashboardActivity extends ActionBarActivity {
         return quickTask;
     }
 
+    @Override
+    public void onTokenAdded(Object o) {
+        String TAG = CLASS_TAG+"onTokenAdded";
+        try{
+            User userObject = (User) o;
+            if(AltEngine.verifyEmail(userObject.getEmail())) {
+                Log.d(TAG, "Valid email.");
+                this.collaboratorAdditionList.add((User) o);
+                Log.d(TAG, "Added: " + o.toString());
+                String listOfCollabs = "";
+                for(User user:this.collaboratorAdditionList) {
+                    listOfCollabs+=user.getEmail()+",";
+                }
+                Log.d(TAG, "New List: "+listOfCollabs);
+            } else {
+                Log.d(TAG, "Invalid email.");
+                collaboratorsTCET.removeObject(o);
+                Log.d(TAG, "Object removed.");
+                Toast.makeText(
+                        this,
+                        Config.MESSAGES.INVALID_EMAIL.getMessage(),
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+        } catch (NullPointerException e) {
+            Log.d(TAG, "Nothing added.");
+        }
+    }
+
+    @Override
+    public void onTokenRemoved(Object o) {
+        String TAG = CLASS_TAG+"onTokenRemoved";
+        try {
+            User userObject = (User) o;
+            if(AltEngine.verifyEmail(userObject.getEmail())) {
+                Log.d(TAG, "Valid email.");
+                this.collaboratorRemovalList.add(userObject);
+                Log.d(TAG, "Removed: "+userObject.toString());
+                String listOfCollabs = "";
+                for(User user:this.collaboratorRemovalList) {
+                    listOfCollabs+=user.getEmail()+",";
+                }
+                Log.d(TAG, "New List: "+listOfCollabs);
+            } else {
+                Log.d(TAG, "Invalid email.");
+                Log.d(TAG, "Nothing removed.");
+            }
+        } catch (NullPointerException e) {
+            Log.d(TAG, "Nothing removed.");
+        }
+    }
 }
