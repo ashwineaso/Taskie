@@ -1,6 +1,7 @@
 package in.altersense.taskapp.adapters;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +14,10 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import in.altersense.taskapp.CreateTaskActivity;
 import in.altersense.taskapp.R;
+import in.altersense.taskapp.TaskActivity;
+import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.Task;
 
@@ -122,7 +126,28 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         }
 
         // Getting current task
-        Task task = this.taskList.get(position);
+        final Task task = this.taskList.get(position);
+
+        // Action clicklisteners.
+        holder.action1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity.getApplicationContext(), TaskActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey(),task.getId());
+                activity.startActivity(intent);
+            }
+        });
+
+        holder.action2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity.getApplicationContext(), CreateTaskActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey(),task.getId());
+                activity.startActivity(intent);
+            }
+        });
 
         // Checking whether user already clicked it.
         switch (viewType) {

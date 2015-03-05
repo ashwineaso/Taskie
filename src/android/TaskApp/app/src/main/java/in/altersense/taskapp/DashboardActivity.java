@@ -89,28 +89,10 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         this.quickCreateStageLinearLayout = (LinearLayout) findViewById(R.id.quickTaskCreation);
         this.quickCreateStageLinearLayout.setVisibility(View.GONE);
         setUpQuickTaskLayout();
-        this.taskList = (ListView) findViewById(R.id.taskListStage);
-        this.groupListStageLL = (LinearLayout) findViewById(R.id.groupListStage);
+
         this.isQuickTaskCreationHidden = true;
         Log.d(CLASS_TAG,"Done.");
 
-        Log.d(CLASS_TAG,"Settng adapter to listview.");
-        // Inflate all the nonGroupTasks in the TasksListStage.
-        this.taskList.setAdapter(this.taskAdapter);
-        Log.d(CLASS_TAG, "Done.");
-
-        this.taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TasksAdapter adapter = (TasksAdapter)parent.getAdapter();
-                if(adapter.getSelected()==position) {
-                    adapter.setSelected(-1);
-                } else {
-                    adapter.setSelected(position);
-                }
-                adapter.notifyDataSetChanged();
-            }
-        });
 
     }
 
@@ -144,6 +126,27 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
             }
         };
         participantNameTCET.setAdapter(adapter);
+
+        this.taskList = (ListView) findViewById(R.id.taskListStage);
+        this.groupListStageLL = (LinearLayout) findViewById(R.id.groupListStage);
+        Log.d(CLASS_TAG,"Settng adapter to listview.");
+        // Inflate all the nonGroupTasks in the TasksListStage.
+        this.taskList.setAdapter(this.taskAdapter);
+        Log.d(CLASS_TAG, "Done.");
+
+        this.taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TasksAdapter adapter = (TasksAdapter)parent.getAdapter();
+                if(adapter.getSelected()==position) {
+                    adapter.setSelected(-1);
+                } else {
+                    adapter.setSelected(position);
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
+
     }
 
     /**

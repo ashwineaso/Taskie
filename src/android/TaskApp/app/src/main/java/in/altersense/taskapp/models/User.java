@@ -150,11 +150,7 @@ public class User {
             ) {
         this.uuid = uuid;
         this.email = email;
-        if(name==null) {
-            this.name = email;
-        } else {
-            this.name = name;
-        }
+        this.name = name;
         this.password = "";
     }
 

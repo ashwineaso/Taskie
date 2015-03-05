@@ -425,6 +425,7 @@ public class Task {
                 ),
                 activity
         );
+        Log.d(TAG, "OwnerUser: "+ownerUser.getString());
         if(userAdditionList.contains(ownerUser)) {
             userAdditionList.remove(ownerUser);
             Log.d(TAG, "Removed owner from the list of collaborators to be added.");
