@@ -86,6 +86,7 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
             this.task = taskDbHelper.getTaskByRowId(taskId, CreateTaskActivity.this);
         }
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_create_task);
         // Initialize the views.
         this.taskTitleET = (EditText) findViewById(R.id.taskTitleEditText);

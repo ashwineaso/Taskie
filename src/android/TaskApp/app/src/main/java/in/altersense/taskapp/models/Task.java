@@ -299,6 +299,12 @@ public class Task {
         this.setCollaborators(collaboratorDbHelper.getAllCollaborators(this));
     }
 
+    public void fetchAllCollaborators(Context context) {
+        Log.d(CLASS_TAG, "Fetching collaborators.");
+        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
+        this.setCollaborators(collaboratorDbHelper.getAllCollaborators(this));
+    }
+
     /**
      * Create a bare minimum task.
      * @param name Name of the Task.
@@ -407,6 +413,9 @@ public class Task {
         UserDbHelper userDbHelper = new UserDbHelper(activity.getApplicationContext());
         CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity.getApplicationContext());
 
+        Log.d(TAG, "Addition List: "+ userAdditionList.toString());
+        Log.d(TAG, "Removal List: "+ userRemovalList.toString());
+
         // Check whether task owner is present in addition or removal list.
         User ownerUser = new User(
                 AltEngine.readStringFromSharedPref(
@@ -489,9 +498,7 @@ public class Task {
                 activity
         );
         removeCollaboratorsRequest.execute();
-
-        Log.d(TAG, "All the collaborators.");
-        collaboratorDbHelper.listAllCollaborators();
+        this.fetchAllCollaborators(activity.getApplicationContext());
     }
 
     private View createActionsView(final Activity activity) {

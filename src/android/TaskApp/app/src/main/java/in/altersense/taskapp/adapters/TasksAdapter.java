@@ -124,8 +124,6 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         // Getting current task
         Task task = this.taskList.get(position);
 
-        Log.d(TAG, "Status: " + task.getStatus(getContext()));
-
         // Checking whether user already clicked it.
         switch (viewType) {
             case VIEW_EXPANDED:
@@ -149,9 +147,13 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         holder.taskTitle.setText(
                 task.getName()
         );
+        Log.d(TAG, "Task: " + task.getName());
+
 
         //Check whether the count of collaborators are more than 10 if not set number of colaborators to be displayed as 8
         int collaboratorsToBeDisplayedCount = task.getCollaborators().size()<8 ? task.getCollaborators().size() : 8;
+        Log.d(TAG, "CollaboratorCount: " + collaboratorsToBeDisplayedCount);
+
 
         // Display owners status
         holder.collaborators[0].setText(task.getOwner().getInitials());
@@ -159,11 +161,12 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         holder.collaborators[0].setVisibility(View.VISIBLE);
 
         // display initials and status of the collaborators
-        for(int ctr=1; ctr<collaboratorsToBeDisplayedCount; ctr++) {
+        for(int ctr=0; ctr<collaboratorsToBeDisplayedCount; ctr++) {
             Collaborator collaborator = task.getCollaborators().get(ctr);
-            holder.collaborators[ctr].setText(collaborator.getInitials());
-            holder.collaborators[ctr].setBackgroundResource(task.collaboratorStatusBackground(collaborator.getStatus()));
-            holder.collaborators[ctr].setVisibility(View.VISIBLE);
+            Log.d(TAG, "Collaborator : " + collaborator.toString());
+            holder.collaborators[ctr+1].setText(collaborator.getInitials());
+            holder.collaborators[ctr+1].setBackgroundResource(task.collaboratorStatusBackground(collaborator.getStatus()));
+            holder.collaborators[ctr+1].setVisibility(View.VISIBLE);
         }
 
         // display more collaborators if the count is greater than 8

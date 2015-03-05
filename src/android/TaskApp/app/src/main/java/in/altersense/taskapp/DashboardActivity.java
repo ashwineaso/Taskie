@@ -9,16 +9,21 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tokenautocomplete.FilteredArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import in.altersense.taskapp.adapters.TasksAdapter;
@@ -27,6 +32,7 @@ import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.components.GCMHandler;
 import in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText;
 import in.altersense.taskapp.database.TaskDbHelper;
+import in.altersense.taskapp.database.UserDbHelper;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.User;
 import in.altersense.taskapp.requests.CreateTaskRequest;
@@ -45,6 +51,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
     private EditText newTaskTitle;
     private LinearLayout groupListStageLL;
     private TokenCompleteCollaboratorsEditText participantNameTCET;
+    private FilteredArrayAdapter adapter;
 
     private TasksAdapter taskAdapter;
 
@@ -55,6 +62,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
     private String ownerName;
     private List<User> collaboratorAdditionList;
     private List<User> collaboratorRemovalList;
+    private List<User> userList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +118,32 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
     protected void onResume() {
         super.onResume();
         this.gcmHandler.checkPlayServices();
+        UserDbHelper userDbHelper = new UserDbHelper(this);
+        // Setting a Filtered Array Adapter to autocomplete with users in db
+        userList = userDbHelper.listAllUsers();
+        Log.d(CLASS_TAG, "User list: "+userList.toString());
+        adapter = new FilteredArrayAdapter<User>(this, R.layout.collaorator_list_layout, userList) {
+            @Override
+            protected boolean keepObject(User user, String s) {
+                s = s.toLowerCase();
+                return user.getName().toLowerCase().startsWith(s) || user.getEmail().toLowerCase().startsWith(s);
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                if(convertView==null) {
+                    LayoutInflater l = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                    convertView = l.inflate(R.layout.collaorator_list_layout, parent, false);
+                }
+
+                User u = getItem(position);
+                ((TextView)convertView.findViewById(R.id.name)).setText(u.getName());
+                ((TextView)convertView.findViewById(R.id.email)).setText(u.getEmail());
+
+                return convertView;
+            }
+        };
+        participantNameTCET.setAdapter(adapter);
     }
 
     /**
@@ -190,6 +224,15 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
 //            Request focus to edit text
             newTaskTitle.requestFocus();
 
+            // Initializing lists.
+            this.collaboratorRemovalList = new ArrayList<>();
+            this.collaboratorAdditionList = new ArrayList<>();
+
+            // Code to remove all the objects in the participants
+            for(Object object:participantNameTCET.getObjects()) {
+                participantNameTCET.removeObject(object);
+            }
+
 //            Set flag to show the layout is open
             this.isQuickTaskCreationHidden = false;
         } else {
@@ -213,6 +256,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                 R.layout.quick_task_creation,
                 null
         );
+
 //        Add view to placeholder
         this.quickCreateStageLinearLayout.addView(taskCreationView);
 //        Identify edit text
@@ -237,11 +281,13 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         });
         participantNameTCET =
                 (TokenCompleteCollaboratorsEditText) taskCreationView.findViewById(R.id.quickTaskParticipantName);
+        participantNameTCET.setTokenListener(this);
         final Button createQuickTask = (Button) taskCreationView.findViewById(R.id.createQuickTaskButton);
         createQuickTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String TAG = CLASS_TAG+" createQuickTask OnClickListener.";
+                Log.d(TAG, "onclick loaded");
                 String taskName = newTaskTitle.getText().toString();
                 taskName = taskName.trim();
                 if(!(taskName.length() <1)) {
@@ -259,12 +305,18 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                             ),
                             DashboardActivity.this
                     );
-                    quickTask.updateCollaborators(collaboratorAdditionList,collaboratorRemovalList,DashboardActivity.this);
+                    Log.d(TAG, "created task");
+                    quickTask = addQuickTaskToDb(quickTask);
                     Log.d(TAG, "QuickTask: "+quickTask.toString());
-                    addQuickTaskToDb(quickTask);
+                    quickTask.updateCollaborators(collaboratorAdditionList,collaboratorRemovalList,DashboardActivity.this);
+                    Log.d(TAG, "updated collabs");
+
+                    // Add task to the adapter.
+                    taskAdapter.add(quickTask);
+                    taskAdapter.notifyDataSetChanged();
+                    Log.d(TAG, "Task added to adapter");
 
                     newTaskTitle.setText("");
-                    participantNameTCET.setText("");
                     toggleQuickTaskLayout();
                 } else {
                     Toast.makeText(
@@ -306,10 +358,6 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                 this
         );
         Log.d(TAG, "Task added to database");
-        // Add task to the adapter.
-        this.taskAdapter.add(quickTask);
-        this.taskAdapter.notifyDataSetChanged();
-        Log.d(TAG, "Task added to adapter");
 
         CreateTaskRequest createTaskRequest = new CreateTaskRequest(
                 quickTask,
@@ -335,6 +383,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                     listOfCollabs+=user.getEmail()+",";
                 }
                 Log.d(TAG, "New List: "+listOfCollabs);
+                adapter.notifyDataSetChanged();
             } else {
                 Log.d(TAG, "Invalid email.");
                 participantNameTCET.removeObject(o);
