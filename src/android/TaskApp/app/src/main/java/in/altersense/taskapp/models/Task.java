@@ -425,15 +425,10 @@ public class Task {
                 ),
                 activity
         );
+
         Log.d(TAG, "OwnerUser: "+ownerUser.getString());
-        if(userAdditionList.contains(ownerUser)) {
-            userAdditionList.remove(ownerUser);
-            Log.d(TAG, "Removed owner from the list of collaborators to be added.");
-        }
-        if(userRemovalList.contains(ownerUser)) {
-            userRemovalList.remove(ownerUser);
-            Log.d(TAG, "Removed owner from the list of collaborators to be removed.");
-        }
+        userAdditionList = User.removeUserFromList(userAdditionList,ownerUser);
+        userRemovalList = User.removeUserFromList(userRemovalList,ownerUser);
 
         // Remove existing collaborators from added collaborators.
         for(Collaborator collaborator:this.getCollaborators()) {

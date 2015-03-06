@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import in.altersense.taskapp.common.Config;
@@ -150,7 +151,11 @@ public class User {
             ) {
         this.uuid = uuid;
         this.email = email;
-        this.name = name;
+        if(name==null) {
+            this.name = email;
+        } else {
+            this.name = name;
+        }
         this.password = "";
     }
 
@@ -286,5 +291,27 @@ public class User {
         } catch (NullPointerException e) {
             return "??";
         }
+    }
+
+    /**
+     * Checks for a particular user in the list and removes it from the list.
+     * @param list List of users to be checked
+     * @param userToBeCheckedForRemoval The user to be removed
+     * @return The updated list.
+     */
+    public static List<User> removeUserFromList(List<User> list, User userToBeCheckedForRemoval) {
+        String TAG = CLASS_TAG+"removeUserFromList";
+        int positionToBeRemoved=-1;
+        for(int ctr=0;ctr<list.size();ctr++) {
+            User userToBeChecked = list.get(ctr);
+            if(userToBeChecked.getEmail().equals(userToBeCheckedForRemoval.getEmail())) {
+                positionToBeRemoved=ctr;
+            }
+        }
+        if(positionToBeRemoved!=-1) {
+            list.remove(positionToBeRemoved);
+            Log.d(TAG, "Removed user: "+userToBeCheckedForRemoval.toString());
+        }
+        return list;
     }
 }
