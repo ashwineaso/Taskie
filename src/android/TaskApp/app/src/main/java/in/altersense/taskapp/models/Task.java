@@ -212,13 +212,8 @@ public class Task {
 
     public void delete(Context context) {
         String TAG = CLASS_TAG+"delete";
-        String userId = AltEngine.readStringFromSharedPref(
-                context,
-                Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
-                ""
-        );
         // Check task ownership.
-        if(this.getOwner().getUuid().equals(userId)){
+        if(isOwnedyDeviceUser(context)){
             Log.d(TAG, "Task owned by user.");
             // If owned by user
             // delete the task

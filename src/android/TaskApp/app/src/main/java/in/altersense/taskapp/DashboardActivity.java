@@ -136,25 +136,13 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         this.taskList.setAdapter(this.taskAdapter);
         Log.d(CLASS_TAG, "Done.");
 
-        this.taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TasksAdapter adapter = (TasksAdapter)parent.getAdapter();
-                if(adapter.getSelected()==position) {
-                    adapter.setSelected(-1);
-                } else {
-                    adapter.setSelected(position);
-                }
-                adapter.notifyDataSetChanged();
-            }
-        });
-
         this.taskList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(CLASS_TAG, "onItemLongClick triggered");
                 final TasksAdapter adapter = (TasksAdapter) parent.getAdapter();
                 final Task task = adapter.getItem(position);
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getApplicationContext());
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(DashboardActivity.this);
                 dialogBuilder.setMessage(Config.MESSAGES.CONFIRM_TASK_DELETE.getMessage());
                 dialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
@@ -170,7 +158,22 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
 
                     }
                 });
+                dialogBuilder.create();
+                dialogBuilder.show();
                 return false;
+            }
+        });
+
+        this.taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TasksAdapter adapter = (TasksAdapter)parent.getAdapter();
+                if(adapter.getSelected()==position) {
+                    adapter.setSelected(-1);
+                } else {
+                    adapter.setSelected(position);
+                }
+                adapter.notifyDataSetChanged();
             }
         });
 

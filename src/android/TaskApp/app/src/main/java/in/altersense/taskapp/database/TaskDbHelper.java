@@ -282,14 +282,17 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         Log.d(TAG, "About to delete task "+task.toString()+ " from db.");
         // Open writable database.
         SQLiteDatabase writableDb = this.getWritableDatabase();
+        Log.d(TAG, "Db opened.");
         // Delete row.
         int affectedRows = writableDb.delete(
                 Task.TABLE_NAME,
                 "ROWID =?",
                 new String[] { task.getId()+"" }
         );
+        Log.d(TAG,"Deleted "+affectedRows+" cols.");
         // Close database.
         writableDb.close();
+        Log.d(TAG, "Db closed.");
         if(affectedRows>0) {
             return true;
         } else {

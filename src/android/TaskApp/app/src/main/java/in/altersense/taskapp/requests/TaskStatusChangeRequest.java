@@ -38,7 +38,6 @@ public class TaskStatusChangeRequest extends AsyncTask<Void, Integer, JSONObject
         this.status = collaborator.getStatus();
     }
 
-
     @Override
     protected void onPreExecute() {
         this.requestObject = new JSONObject();
