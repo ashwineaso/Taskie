@@ -149,23 +149,30 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
             }
         });
 
-        this.taskList.getOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        this.taskList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 final TasksAdapter adapter = (TasksAdapter) parent.getAdapter();
                 final Task task = adapter.getItem(position);
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getApplicationContext());
                 dialogBuilder.setMessage(Config.MESSAGES.CONFIRM_TASK_DELETE.getMessage());
-                dialogBuilder.setPositiveButton(new DialogInterface.OnClickListener() {
+                dialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        task.delete();
+                        task.delete(getApplicationContext());
                         adapter.remove(task);
                         adapter.notifyDataSetChanged();
                     }
                 });
+                dialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                return false;
             }
-        })
+        });
 
     }
 

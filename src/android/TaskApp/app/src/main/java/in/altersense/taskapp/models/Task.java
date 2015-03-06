@@ -210,6 +210,30 @@ public class Task {
         this.taskActionsPlaceHolderView = (LinearLayout) panelView.findViewById(R.id.actionsPlaceHolderLinearLayout);
     }
 
+    public void delete(Context context) {
+        String TAG = CLASS_TAG+"delete";
+        String userId = AltEngine.readStringFromSharedPref(
+                context,
+                Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
+                ""
+        );
+        // Check task ownership.
+        if(this.getOwner().getUuid().equals(userId)){
+            Log.d(TAG, "Task owned by user.");
+            // If owned by user
+            // delete the task
+            TaskDbHelper taskDbHelper = new TaskDbHelper(context);
+            taskDbHelper.delete(this);
+            // send deletion request to server
+        } else {
+            // If not owned by user
+            Log.d(TAG,"Task not owned by user.");
+            // set status as declined
+            this.setStatus(Config.TASK_STATUS.DECLINED.getStatus(),context);
+            // send status change request to server
+        }
+    }
+
     /**
      * Table Structure for Task
      */
