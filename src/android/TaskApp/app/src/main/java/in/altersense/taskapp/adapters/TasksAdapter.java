@@ -149,6 +149,14 @@ public class TasksAdapter extends ArrayAdapter<Task>{
             }
         });
 
+        holder.action4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                task.toggleStatus(activity);
+                notifyDataSetChanged();
+            }
+        });
+
         // Checking whether user already clicked it.
         switch (viewType) {
             case VIEW_EXPANDED:
