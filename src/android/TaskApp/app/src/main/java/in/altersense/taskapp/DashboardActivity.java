@@ -1,6 +1,8 @@
 package in.altersense.taskapp;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -146,6 +148,24 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                 adapter.notifyDataSetChanged();
             }
         });
+
+        this.taskList.getOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                final TasksAdapter adapter = (TasksAdapter) parent.getAdapter();
+                final Task task = adapter.getItem(position);
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getApplicationContext());
+                dialogBuilder.setMessage(Config.MESSAGES.CONFIRM_TASK_DELETE.getMessage());
+                dialogBuilder.setPositiveButton(new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        task.delete();
+                        adapter.remove(task);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        })
 
     }
 

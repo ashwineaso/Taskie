@@ -65,7 +65,8 @@ public class Config {
         LOGIN_REQUEST("Signing in."),
         LOGIN_ERROR_TITLE("Oops"),
         TASK_TITLE_TOO_SHORT("Task title is too short."),
-        INVALID_EMAIL("Invalid email.");
+        INVALID_EMAIL("Invalid email."),
+        CONFIRM_TASK_DELETE("You are about to delete this task. Do you really want to ?");
 
         private String message;
 
