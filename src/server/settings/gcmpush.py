@@ -30,15 +30,22 @@ def pushSyncNotification(syncObj):
 
     def caseGroup():
         """ Group is to be synced and message to be sent to all group members"""
-        group = dal.getGroupById(syncObj)
+        group = groupdal.getGroupById(syncObj)
         for member in group.members:
             if not member.serverPushId in androidPayload:
                 androidPayload.append(str(member.serverPushId))
         androidPayload.append(str(group.owner.serverPushId))
 
+    def caseBuzz():
+        """Buzz all the collaborators of a task """
+        task = taskdal.getTaskById(syncObj)
+        for coll in task.collaborators:
+            if not coll.user.serverPushId in androidPayload:
+                androidPayload.append(str(coll.user.serverPushId))
+
 
     #Define the lookup dictionary
-    choice = {"Task":caseTask, "Group":caseGroup}
+    choice = {"Task":caseTask, "Group":caseGroup. "Buzz":caseBuzz}
 
     choice[syncObj.datatype]() #to call appropriate case    
     
