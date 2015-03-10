@@ -120,7 +120,8 @@ public class User {
     public static enum KEYS {
         UUID("uuid", "TEXT"),
         EMAIL("email", "TEXT"),
-        NAME("name", "TEXT");
+        NAME("name", "TEXT"),
+        SYNC_STATUS("sync_status", "INTEGER");
 
         public String getName() {
             return name;
