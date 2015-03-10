@@ -147,6 +147,15 @@ def syncAllTasks(taskObj):
 	return task_list
 
 
+def buzzCollaborators(taskObj):
+	"""
+	Send a buzz to all the collaborators
+	"""
+
+	#Send message to GCM server to notify collaborators of buzz
+	syncObj = SyncClass("Buzz", str(taskObj.id))
+	pushSyncNotification(syncObj)
+
 def taskToDictConverter(task):
 	"""
 	Convert the incoming Task object into JSON Serializable dict format
