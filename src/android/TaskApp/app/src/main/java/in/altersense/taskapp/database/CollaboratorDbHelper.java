@@ -28,7 +28,8 @@ public class CollaboratorDbHelper extends SQLiteOpenHelper {
             Collaborator.KEYS.TASK_UUID.getName() + " " + Collaborator.KEYS.TASK_UUID.getType() + ", " +
             Collaborator.KEYS.USER_ROWID.getName() + " " + Collaborator.KEYS.USER_ROWID.getType() + ", " +
             Collaborator.KEYS.USER_UUID.getName() + " " + Collaborator.KEYS.USER_UUID.getType() + " , " +
-            Collaborator.KEYS.STATUS.getName() + " " + Collaborator.KEYS.STATUS.getType() + ");";
+            Collaborator.KEYS.STATUS.getName() + " " + Collaborator.KEYS.STATUS.getType() + " , " +
+            Collaborator.KEYS.SYNC_STATUS.getName() + " " + Collaborator.KEYS.SYNC_STATUS.getType() + ");";
     private Context context;
 
 
@@ -39,9 +40,10 @@ public class CollaboratorDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // TODO: Move to a better database upgradation logic.
-        db.execSQL("DROP TABLE IF EXISTS " + Collaborator.TABLE_NAME);
-        db.execSQL(CREATION_STATEMENT);
+        db.execSQL(
+                "ALTER TABLE "+Collaborator.TABLE_NAME+
+                        " ADD "+Collaborator.KEYS.SYNC_STATUS.getName()+" "+
+                        Collaborator.KEYS.SYNC_STATUS.getType()+";");
     }
 
     public CollaboratorDbHelper(Context context) {

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.altersense.taskapp.common.Config;
+import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.User;
 
 /**
@@ -22,7 +23,8 @@ public class UserDbHelper extends SQLiteOpenHelper {
     private static String CREATION_STATEMENT = "CREATE TABLE " + User.TABLE_NAME + " ( " +
             User.KEYS.UUID.getName() + " " + User.KEYS.UUID.getType() + ", " +
             User.KEYS.EMAIL.getName() + " " + User.KEYS.EMAIL.getType() + ", " +
-            User.KEYS.NAME.getName() + " " + User.KEYS.NAME.getType() + ");";
+            User.KEYS.NAME.getName() + " " + User.KEYS.NAME.getType() + ", "+
+            User.KEYS.SYNC_STATUS.getName() + " " + User.KEYS.SYNC_STATUS.getType() + ");";
     private static String CLASS_TAG = "UserDbHelper ";
 
     public UserDbHelper(Context context) {
@@ -38,9 +40,10 @@ public class UserDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // TODO: Move to a better database upgradation logic.
-        db.execSQL("DROP TABLE IF EXISTS " + User.TABLE_NAME);
-        db.execSQL(CREATION_STATEMENT);
+        db.execSQL(
+                "ALTER TABLE "+ User.TABLE_NAME+
+                        " ADD "+User.KEYS.SYNC_STATUS.getName()+" "+
+                        User.KEYS.SYNC_STATUS.getType()+";");
     }
 
     /**

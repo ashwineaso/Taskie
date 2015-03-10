@@ -39,7 +39,8 @@ public class Collaborator extends User {
         TASK_UUID("task_uuid", "TEXT"),
         USER_ROWID("user_rowid", "INTEGER"),
         USER_UUID("user_uuid", "TEXT"),
-        STATUS("status", "INTEGER");
+        STATUS("status", "INTEGER"),
+        SYNC_STATUS("sync_status", "INTEGER");
 
         public String getName() {
             return name;

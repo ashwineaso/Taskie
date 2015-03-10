@@ -14,6 +14,7 @@ import java.util.List;
 
 import in.altersense.taskapp.CreateTaskActivity;
 import in.altersense.taskapp.common.Config;
+import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.Task;
 
 /**
@@ -31,7 +32,8 @@ public class TaskDbHelper extends SQLiteOpenHelper {
             Task.KEYS.DUE_DATE_TIME.getName() + " " + Task.KEYS.DUE_DATE_TIME.getType() + ", " +
             Task.KEYS.STATUS.getName() + " " + Task.KEYS.STATUS.getType() + ", " +
             Task.KEYS.IS_GROUP.getName() + " " + Task.KEYS.IS_GROUP.getType() + ", " +
-            Task.KEYS.GROUP_UUID.getName() + " " + Task.KEYS.GROUP_UUID.getType() + ");";
+            Task.KEYS.GROUP_UUID.getName() + " " + Task.KEYS.GROUP_UUID.getType() +", "+
+            Task.KEYS.SYNC_STATUS.getName() + " "+ Task.KEYS.SYNC_STATUS.getType() + ");";
 
     public TaskDbHelper(Context context) {
         super(context, Task.TABLE_NAME, null, Config.DATABASE_VERSION);
@@ -46,9 +48,10 @@ public class TaskDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // TODO: Move to a better database upgradation logic.
-        db.execSQL("DROP TABLE IF EXISTS " + Task.TABLE_NAME);
-        db.execSQL(CREATION_STATEMENT);
+        db.execSQL(
+                "ALTER TABLE "+ Task.TABLE_NAME+
+                        " ADD "+Task.KEYS.SYNC_STATUS.getName()+" "+
+                        Task.KEYS.SYNC_STATUS.getType()+";");
     }
 
     public void updateUUID(Task task) {

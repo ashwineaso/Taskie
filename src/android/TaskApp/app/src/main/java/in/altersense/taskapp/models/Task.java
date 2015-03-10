@@ -238,11 +238,12 @@ public class Task {
         OWNER_UUID("owner_uuid", "TEXT"),
         NAME("name", "TEXT"),
         DESCRIPTION("description", "TEXT"),
-        PRIORITY("priority", "INT"),
-        DUE_DATE_TIME("due_date_time", "INT"),
-        STATUS("status", "INT"),
-        IS_GROUP("is_group", "INT"),
-        GROUP_UUID("group_uuid", "TEXT");
+        PRIORITY("priority", "INTEGER"),
+        DUE_DATE_TIME("due_date_time", "INTEGER"),
+        STATUS("status", "INTEGER"),
+        IS_GROUP("is_group", "INTEGER"),
+        GROUP_UUID("group_uuid", "TEXT"),
+        SYNC_STATUS("sync_status", "INTEGER");
 
         public String getName() {
             return name;

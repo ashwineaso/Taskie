@@ -12,7 +12,7 @@ public class Config {
 
     public static final boolean DEBUG = true;
 
-    public static int DATABASE_VERSION = 1;
+    public static int DATABASE_VERSION = 2;
 
     public static String getGCMSenderId() {
         if(Config.DEBUG) {
