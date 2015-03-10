@@ -169,6 +169,8 @@ def taskToDictConverter(task):
 	taskie = {}
 	coll = {}
 	status = {}
+	owner = {}
+	userObj = Collection()
 
 	## Modify task to include only all essential details
 	taskie["id"] = str(task.id)
@@ -182,7 +184,11 @@ def taskToDictConverter(task):
 	taskie["status"] = status.copy()
 
 	#Retrieve owner information
-	taskie["owner"] = str(task.owner.id)
+	owner["id"] = str(task.owner.id)
+	owner["name"] = task.owner.name
+	owner["email"] = task.owner.email
+	taskie["owner"] = owner
+
 	#Collaborator informaiton
 	taskie["collaborators"] = []
 	for each_user in task.collaborators:
