@@ -214,4 +214,38 @@ public class CollaboratorDbHelper extends SQLiteOpenHelper {
             Log.d(TAG, "No Collaborators to display");
         }
     }
+
+    public boolean isCollaborator(Task task, Collaborator collaborator) {
+        String TAG = CLASS_TAG+"isCollaborator";
+        boolean state = false;
+        // Open readable database
+        SQLiteDatabase readableDb = getReadableDatabase();
+        Log.d(TAG, "Opened readable db.");
+        // Search for entry in db with task and collaborator.
+        Cursor result = readableDb.query(
+                Collaborator.TABLE_NAME,
+                Collaborator.getAllColumns(),
+                Collaborator.KEYS.TASK_ROWID.getName()+"=? "+
+                        Collaborator.KEYS.USER_ROWID.getName()+"=?",
+                new String[] {
+                        task.getId()+"",
+                        collaborator.getId()+""
+                },
+                null,
+                null,
+                null
+        );
+        result.moveToFirst();
+        if(result.getCount()!=0) {
+            // If present and status
+            state = true;
+        } else {
+            // else false.
+            state = false;
+        }
+        // Close db and cursor
+        result.close();
+        readableDb.close();
+        return state;
+    }
 }

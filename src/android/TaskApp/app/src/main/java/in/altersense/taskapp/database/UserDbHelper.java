@@ -79,6 +79,9 @@ public class UserDbHelper extends SQLiteOpenHelper {
             } while(selfCursor.moveToNext());
         }
         selfCursor.moveToFirst();
+        if(selfCursor.getCount()==0) {
+            return null;
+        }
         // Create a User object from the cursor
         User user = new User(selfCursor);
         // Close database

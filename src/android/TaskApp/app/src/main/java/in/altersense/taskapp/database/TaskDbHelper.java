@@ -193,14 +193,17 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 Log.d(TAG, "Tasks with same UUID("+cursor.getString(0)+"): "+cursor.getString(2));
             } while(cursor.moveToNext());
         }
-        // Close database.
-        readableDb.close();
         // Fetch task from the cursor
         cursor.moveToFirst();
+        if(cursor.getCount()==0) {
+            return null;
+        }
         Log.d(TAG, "Creating new task from the cursor.");
         Task task = new Task(cursor, activity);
         // Return the task.
         cursor.close();
+        // Close database.
+        readableDb.close();
         return task;
     }
 
