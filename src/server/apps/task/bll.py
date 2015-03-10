@@ -155,6 +155,7 @@ def buzzCollaborators(taskObj):
 	#Send message to GCM server to notify collaborators of buzz
 	syncObj = SyncClass("Buzz", str(taskObj.id))
 	pushSyncNotification(syncObj)
+	return True
 
 def taskToDictConverter(task):
 	"""

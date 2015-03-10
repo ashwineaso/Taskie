@@ -175,7 +175,7 @@ def syncAllTasks():
 
 	obj = request.json
 	try:
-		taskObj.id = obj["user_id"]
+		taskObj.id = obj["id"]
 		taskObj.access_token = obj["access_token"]
 		if checkAccessTokenValid(taskObj) is True:
 			task_list = bll.syncAllTasks(taskObj)
@@ -196,18 +196,18 @@ def buzzCollaborators():
 	data = {}
 
 	obj = request.json
-	try:
-		taskObj.id = obj["id"]
-		taskObj.access_token = obj["access_token"]
-		if checkAccessTokenValid(taskObj) is True:
-			flag = bll.buzzCollaborators(taskObj)
-		if (flag):
-			response["status"] = RESPONSE_SUCCESS
-		else
-			response["status"] = RESPONSE_FAILED
-	except Exception as e:
+	# try:
+	taskObj.id = obj["id"]
+	taskObj.access_token = obj["access_token"]
+	if checkAccessTokenValid(taskObj) is True:
+		flag = bll.buzzCollaborators(taskObj)
+	if (flag):
+		response["status"] = RESPONSE_SUCCESS
+	else:
 		response["status"] = RESPONSE_FAILED
-		response["message"] = str(e)
-		if hasattr(e, 'code'):
-			response["code"] = e.code
+	# except Exception as e:
+	# 	response["status"] = RESPONSE_FAILED
+	# 	response["message"] = str(e)
+	# 	if hasattr(e, 'code'):
+	# 		response["code"] = e.code
 	return response

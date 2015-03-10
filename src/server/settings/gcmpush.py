@@ -45,7 +45,7 @@ def pushSyncNotification(syncObj):
 
 
     #Define the lookup dictionary
-    choice = {"Task":caseTask, "Group":caseGroup. "Buzz":caseBuzz}
+    choice = {"Task":caseTask, "Group":caseGroup, "Buzz":caseBuzz}
 
     choice[syncObj.datatype]() #to call appropriate case    
     
