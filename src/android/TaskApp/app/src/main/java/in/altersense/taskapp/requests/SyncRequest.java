@@ -163,6 +163,11 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         Log.d(TAG, "Url: "+this.url);
     }
 
+    /**
+     * PostExecute for SyncEverything
+     * @param taskArray The array of tasks returned by the response.
+     * @throws JSONException
+     */
     private void postExecuteSyncEverything(JSONArray taskArray) throws JSONException {
         String TAG = CLASS_TAG+"postExecuteSyncEverything";
         UserDbHelper userDbHelper = new UserDbHelper(activity.getApplicationContext());
