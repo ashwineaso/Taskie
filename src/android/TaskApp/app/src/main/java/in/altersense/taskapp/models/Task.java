@@ -60,6 +60,9 @@ public class Task {
     private LinearLayout taskActionsPlaceHolderView;
     private LinearLayout action1, action2, action3, action4;
     private long dueDateTime;
+
+    private boolean syncStatus;
+
     public Task() {
         Log.d(CLASS_TAG, "Constructor1 called.");
         this.name="";
@@ -80,6 +83,10 @@ public class Task {
 
     public long getId() {
         return id;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 
     public User getOwner() {
@@ -198,6 +205,20 @@ public class Task {
 
     public void setDueDateTime(long dueDateTime) {
         this.dueDateTime = dueDateTime;
+    }
+
+    public boolean getSyncStatus() {
+        return syncStatus;
+    }
+    public int getSyncStatusAsInt() {
+        return getSyncStatus()==true ? 1 : 0;
+    }
+
+    public void setSyncStatus(boolean syncStatus) {
+        this.syncStatus = syncStatus;
+    }
+    public void setSyncStatus(int syncStatus) {
+        this.syncStatus = syncStatus==1 ? true : false;
     }
 
     /**
@@ -395,7 +416,8 @@ public class Task {
         } else {
             this.group = null;
         }
-        this.id = cursor.getLong(9);
+        this.setStatus(cursor.getInt(9));
+        this.id = cursor.getLong(10);
 
         Log.d(CLASS_TAG, "Fetching collaborators.");
         CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity);

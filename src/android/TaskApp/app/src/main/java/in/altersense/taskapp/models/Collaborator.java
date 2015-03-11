@@ -64,6 +64,24 @@ public class Collaborator extends User {
     }
 
     private int status;
+    private boolean syncStatus;
+
+    public int getSyncStatusAsInt() {
+        return this.syncStatus==true ? 1 : 0;
+    }
+
+    public boolean getSyncStatus() {
+        return this.syncStatus;
+    }
+
+    @Override
+    public void setSyncStatus(boolean syncStatus) {
+        this.syncStatus = syncStatus;
+    }
+
+    public void setSyncStatus(int syncStatus) {
+        this.syncStatus = syncStatus==1 ? true : false;
+    }
 
     public int getStatus() {
         return status;

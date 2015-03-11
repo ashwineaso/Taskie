@@ -63,6 +63,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         // Setup data to be updated.
         ContentValues values = new ContentValues();
         values.put(Task.KEYS.UUID.getName(), task.getUuid());
+        values.put(Task.KEYS.SYNC_STATUS.getName(), task.getSyncStatusAsInt());
         // Update the record.
         writableDb.update(
                 Task.TABLE_NAME,
@@ -90,6 +91,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         values.put(Task.KEYS.DUE_DATE_TIME.getName(), newTask.getDueDateTime());
         values.put(Task.KEYS.STATUS.getName(), newTask.getStatus());
         values.put(Task.KEYS.IS_GROUP.getName(), newTask.getIntIsGroup());
+        values.put(Task.KEYS.SYNC_STATUS.getName(), newTask.getSyncStatusAsInt());
         if(newTask.isGroup()) {
             values.put(Task.KEYS.GROUP_UUID.getName(), newTask.getGroup().getUuid());
         }
@@ -221,6 +223,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         values.put(Task.KEYS.DUE_DATE_TIME.getName(), task.getDueDateTime());
         values.put(Task.KEYS.STATUS.getName(), task.getStatus());
         values.put(Task.KEYS.IS_GROUP.getName(), task.getIntIsGroup());
+        values.put(Task.KEYS.SYNC_STATUS.getName(), task.getSyncStatusAsInt());
         if(task.isGroup()) {
             values.put(Task.KEYS.GROUP_UUID.getName(), task.getGroup().getUuid());
         }
@@ -245,6 +248,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         // make query
         ContentValues values = new ContentValues();
         values.put(Task.KEYS.STATUS.getName(),status);
+        values.put(Task.KEYS.SYNC_STATUS.getName(),task.getSyncStatusAsInt());
         // execute update
         int affectedRows = writableDb.update(
                 Task.TABLE_NAME,

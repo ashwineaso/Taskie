@@ -248,4 +248,25 @@ public class CollaboratorDbHelper extends SQLiteOpenHelper {
         readableDb.close();
         return state;
     }
+
+    public boolean delete(Task task) {
+        String TAG = CLASS_TAG+"delete(Task)";
+        if(task.getId()==0) {
+            Log.d(TAG, "Task ROWID is zero so aborting delete.");
+            return false;
+        }
+        // Open database.
+        SQLiteDatabase writableDb = this.getWritableDatabase();
+        // Delete all collaborators of the task
+        int affectedRows = writableDb.delete(
+                Collaborator.TABLE_NAME,
+                Collaborator.KEYS.TASK_ROWID.getName()+" =?",
+                new String[] { task.getId()+"" }
+        );
+        // Close database
+        writableDb.close();
+        // Return action status.
+        Log.d(TAG, "Cleared "+affectedRows+" rows.");
+        return affectedRows>0;
+    }
 }
