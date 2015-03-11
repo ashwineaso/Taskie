@@ -65,6 +65,7 @@ public class User {
     private String name;
     private boolean isDeviceOwner;
     private String password;
+    private boolean syncStatus;
 
     /**
      * Table name for Users
@@ -81,7 +82,8 @@ public class User {
                 cursor.getString(1),
                 cursor.getString(2)
         );
-        this.id = cursor.getInt(3);
+        this.setSyncStatus(cursor.getInt(3));
+        this.id = cursor.getInt(4);
     }
 
     public User(String userUUID, Context context) {
@@ -96,6 +98,7 @@ public class User {
         this.name = newUser.getEmail();
         this.password = "";
         this.isDeviceOwner = newUser.isDeviceOwner();
+        this.syncStatus = newUser.getSyncStatus();
         Log.d(TAG, "User setup complete.");
     }
 
@@ -264,6 +267,24 @@ public class User {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public boolean getSyncStatus() {
+        if(syncStatus) return true;
+        return false;
+    }
+
+    public int getSyncStatusAsInt() {
+        if(syncStatus) return 1;
+        return 0;
+    }
+
+    public void setSyncStatus(boolean syncStatus) {
+        this.syncStatus = syncStatus;
+    }
+
+    public void setSyncStatus(int syncStatus) {
+        this.syncStatus = syncStatus==1 ? true : false;
     }
 
     @Override

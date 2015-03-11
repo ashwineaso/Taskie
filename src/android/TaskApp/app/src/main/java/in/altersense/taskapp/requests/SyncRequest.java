@@ -74,6 +74,24 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         this(activity, null, null, false, false, true);
     }
 
+    /**
+     * SyncRequest to sync a single user.
+     * @param user User to be synced.
+     * @param activity Current activity.
+     */
+    public SyncRequest(User user, Activity activity) {
+        this(activity,user,null,true,false,false);
+    }
+
+    /**
+     * SyncRequest to sync a single task.
+     * @param task Task to be synced.
+     * @param activity Current activity.
+     */
+    public SyncRequest(Task task, Activity activity) {
+        this(activity,null,task,false,true,false);
+    }
+
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
@@ -128,6 +146,11 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         switch (this.mode){
             case 1:
                 //  Sync User
+                try {
+                    postExecuteSyncUser(result.getJSONObject(Config.REQUEST_RESPONSE_KEYS.DATA.getKey()));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 break;
             case 2:
                 // Sync Task
@@ -235,27 +258,24 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         Log.d(TAG, "Task set: "+task.toString());
     }
 
+    /**
+     * Post execute for syncUserInfo
+     * @param userObject User as JSONObject from the response.
+     * @throws JSONException
+     */
     private void postExecuteSyncUser(JSONObject userObject) throws JSONException {
         String TAG = CLASS_TAG+"userFromJSONObject";
-        Log.d(TAG, "Setting up user properties.");
-        UserDbHelper userDbHelper = new UserDbHelper(this.activity.getApplicationContext());
-        String userName = userObject.getString(Config.REQUEST_RESPONSE_KEYS.NAME.getKey());
-        String userUUID = userObject.getString(Config.REQUEST_RESPONSE_KEYS.UUID.getKey());
-        String userEmail = userObject.getString(Config.REQUEST_RESPONSE_KEYS.EMAIL.getKey());
-        Log.d(TAG, "Setting up user properties done.");
-        Log.d(TAG, "Check whether owner already exists in the db.");
-        User newUser = userDbHelper.getUserByUUID(userUUID);
-        if(newUser==null) {
-            Log.d(TAG, "Owner not present in the db.");
-            newUser = new User(
-                    userUUID,
-                    userEmail,
-                    userName
-            );
-            newUser = userDbHelper.createUser(newUser);
-            Log.d(TAG, "Owner added to db.");
+        UserDbHelper userDbHelper = new UserDbHelper(activity.getApplicationContext());
+        User user = userFromJSONObject(userObject);
+        user.setSyncStatus(true);
+        Log.d(TAG, "Checking whether user present in db");
+        if(this.user.getId()>0) {
+            Log.d(TAG, "User present in db. Updating db.");
+            userDbHelper.updateUser(user);
+        } else {
+            Log.d(TAG, "User not present in db. Inserting into db.");
+            userDbHelper.createUser(user);
         }
-        Log.d(TAG, "Owner set up and now she exists in the db too.");
     }
 
     private Task taskFromJSONObject (JSONObject taskObject) throws JSONException {
@@ -309,19 +329,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         String userUUID = userObject.getString(Config.REQUEST_RESPONSE_KEYS.UUID.getKey());
         String userEmail = userObject.getString(Config.REQUEST_RESPONSE_KEYS.EMAIL.getKey());
         Log.d(TAG, "Setting up user properties done.");
-        Log.d(TAG, "Check whether owner already exists in the db.");
-        User newUser = userDbHelper.getUserByUUID(userUUID);
-        if(newUser==null) {
-            Log.d(TAG, "Owner not present in the db.");
-            newUser = new User(
-                    userUUID,
-                    userEmail,
-                    userName
-            );
-            newUser = userDbHelper.createUser(newUser);
-            Log.d(TAG, "Owner added to db.");
-        }
-        Log.d(TAG, "Owner set up and now she exists in the db too.");
+        User newUser = new User(userUUID, userEmail, userName);
         return newUser;
     }
 

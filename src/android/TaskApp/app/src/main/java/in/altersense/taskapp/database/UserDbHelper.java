@@ -187,6 +187,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
         values.put(User.KEYS.UUID.getName(), newUser.getUuid());
         values.put(User.KEYS.NAME.getName(), newUser.getName());
         values.put(User.KEYS.EMAIL.getName(), newUser.getEmail());
+        values.put(User.KEYS.SYNC_STATUS.getName(), newUser.getSyncStatusAsInt());
         Log.d(TAG, "Set up a content values.");
         // Insert into database
         long rowId = database.insert(
@@ -228,23 +229,24 @@ public class UserDbHelper extends SQLiteOpenHelper {
     }
 
 
-    public boolean updateUser(User collaborator) {
+    public boolean updateUser(User user) {
         String TAG = CLASS_TAG+"updateUser";
         // Open writable db
         Log.d(TAG, "Writable db opened.");
         SQLiteDatabase writableDb = this.getWritableDatabase();
         // Make query
         ContentValues values = new ContentValues();
-        values.put(User.KEYS.NAME.getName(), collaborator.getName());
-        values.put(User.KEYS.UUID.getName(),collaborator.getUuid());
-        Log.d(TAG, "Content values: "+values);
+        values.put(User.KEYS.NAME.getName(), user.getName());
+        values.put(User.KEYS.UUID.getName(), user.getUuid());
+        values.put(User.KEYS.SYNC_STATUS.getName(), user.getSyncStatusAsInt());
+        Log.d(TAG, "Content values: " + values.toString());
         // Execute query
         int affectedRows = writableDb.update(
                 User.TABLE_NAME,
                 values,
                 User.KEYS.EMAIL.getName()+" =?",
                 new String[] {
-                        collaborator.getEmail()
+                        user.getEmail()
                 }
         );
         Log.d(TAG, "Query executed and affected "+affectedRows+" row.");
