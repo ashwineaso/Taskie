@@ -166,6 +166,8 @@ def authorize_user():
 			userObj.user = bll.getUserByEmail(userObj)
 			token = bll.getTokenByUser(userObj)
 			data["id"] = str(token.user.id)
+			data["name"] = userObj.user.name
+			data["email"] = userObj.user.email
 			data["key"] = token.key
 			data["access_token"] = token.access_token
 			data["refresh_token"] = token.refresh_token
