@@ -139,6 +139,15 @@ def syncTask(taskObj):
 	return task
 
 
+def deleteTask(taskObj):
+	"""Delete a task and update all collaborators about the status"""
+	flag = dal.deleteTask(taskObj)
+	if flag is True:
+		syncObj = SyncClass("Task", str(task.id))
+		pushSyncNotification(syncObj)
+	return flag
+
+
 def syncAllTasks(taskObj):
 	"""
 	Sync all tasks of user of which is he owner and collaborator

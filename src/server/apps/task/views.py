@@ -168,6 +168,29 @@ def syncTask():
 	return response
 
 
+def deleteTask():
+	response = {}
+	data = {}
+
+	obj = request.json
+	try:
+		taskObj.id = obj["id"]
+		taskObj.access_token = obj["access_token"]
+		if checkAccessTokenValid(taskObj) is True:
+			flag = bll.deleteTask(taskObj)
+		if flag is True:
+			response["status"] = RESPONSE_SUCCESS
+			response["message"] = "Task Deleted"
+		else
+			response["status"] = RESPONSE_FAILED
+			response["message "] = "Deletion Failed"
+	except Exception as e:
+		response["status"] = RESPONSE_FAILED
+		response["message"] = str(e)
+		if hasattr(e, 'code'):
+			response["code"] = e.code
+	return response
+
 
 def syncAllTasks():
 	response = {}

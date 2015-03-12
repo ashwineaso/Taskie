@@ -206,6 +206,19 @@ def syncTask(taskObj):
 	return task
 
 
+def deleteTask(taskObj):
+	"""Delete a task and update all collaborators about it"""
+	task = getTaskById(taskObj)
+	statusObj = Status(status = 2,
+						dateTime = time.time())
+	try:
+		Task.objects(id = task.id).update(set__status = statusObj)
+		task.reload()
+		return True
+	except Exception as e:
+		return False
+
+
 def syncAllTasks(taskObj):
 	"""
 	Sync all tasks of user of which is he owner and collaborator
