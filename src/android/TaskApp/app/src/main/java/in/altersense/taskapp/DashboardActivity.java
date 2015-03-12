@@ -1,9 +1,11 @@
 package in.altersense.taskapp;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -59,6 +61,8 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
 
     private GCMHandler gcmHandler;
 
+    private BroadcastReceiver syncCompletionReceiver;
+
 //    Authenticated user details.
     private String ownerId;
     private String ownerName;
@@ -84,18 +88,18 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         // Initializing the dbhelper.
         this.taskDbHelper = new TaskDbHelper(this.getApplicationContext());
 
-        this.taskAdapter = new TasksAdapter(this, taskDbHelper.getAllNonGroupTasks(this));
-
-//        Initializing the layout.
+        // Initializing the layout.
         Log.d(CLASS_TAG,"Initializing layout.");
         this.quickCreateStageLinearLayout = (LinearLayout) findViewById(R.id.quickTaskCreation);
         this.quickCreateStageLinearLayout.setVisibility(View.GONE);
+
+        this.taskList = (ListView) findViewById(R.id.taskListStage);
+        this.taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasks(DashboardActivity.this));
+
         setUpQuickTaskLayout();
 
         this.isQuickTaskCreationHidden = true;
         Log.d(CLASS_TAG,"Done.");
-
-
     }
 
     @Override
@@ -106,6 +110,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         // Setting a Filtered Array Adapter to autocomplete with users in db
         userList = userDbHelper.listAllUsers();
         Log.d(CLASS_TAG, "User list: "+userList.toString());
+
         adapter = new FilteredArrayAdapter<User>(this, R.layout.collaorator_list_layout, userList) {
             @Override
             protected boolean keepObject(User user, String s) {
@@ -129,11 +134,20 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         };
         participantNameTCET.setAdapter(adapter);
 
-        this.taskList = (ListView) findViewById(R.id.taskListStage);
         this.groupListStageLL = (LinearLayout) findViewById(R.id.groupListStage);
         Log.d(CLASS_TAG,"Settng adapter to listview.");
+
+        // Initialize a receiver
+        syncCompletionReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d(CLASS_TAG, "Received broadcast.");
+                taskAdapter.notifyDataSetChanged();
+            }
+        };
+        registerReceiver(syncCompletionReceiver, new IntentFilter(Config.SHARED_PREF_KEYS.SYNC_IN_PROGRESS.getKey()));
+
         // Inflate all the nonGroupTasks in the TasksListStage.
-        this.taskList.setAdapter(this.taskAdapter);
         Log.d(CLASS_TAG, "Done.");
 
         this.taskList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {

@@ -225,7 +225,7 @@ public class CollaboratorDbHelper extends SQLiteOpenHelper {
         Cursor result = readableDb.query(
                 Collaborator.TABLE_NAME,
                 Collaborator.getAllColumns(),
-                Collaborator.KEYS.TASK_ROWID.getName()+"=? "+
+                Collaborator.KEYS.TASK_ROWID.getName()+"=? AND "+
                         Collaborator.KEYS.USER_ROWID.getName()+"=?",
                 new String[] {
                         task.getId()+"",

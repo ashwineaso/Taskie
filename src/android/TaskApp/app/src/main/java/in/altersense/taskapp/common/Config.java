@@ -21,7 +21,7 @@ public class Config {
     }
 
     public static int REQUEST_MAXOUT = 3;
-    public static String SERVER_ADDRESS = "192.168.1.3:8080";
+    public static String SERVER_ADDRESS = "192.168.1.5:8080";
     public static String RESPONSE_STATUS_FAILED = "failed";
     public static String RESPONSE_STATUS_SUCCESS = "success";
 
@@ -109,6 +109,7 @@ public class Config {
         OWNER_NAME("ownerName"),// Name to be displayed for owner.
         APP_SECRET("devOwnerPassword"),
         APP_KEY("devOwnerEmail"),
+        SYNC_IN_PROGRESS("syncInProcess"),
         GCM_REG_ID("gcmRegId");
 
         private String key;

@@ -76,6 +76,11 @@ public class UserDbHelper extends SQLiteOpenHelper {
         if(selfCursor.moveToFirst()) {
             do {
                 Log.d(TAG, "Users with same UUID("+selfCursor.getString(0)+"): "+selfCursor.getString(2));
+                String cursorString = "";
+                for(int i=0;i<selfCursor.getColumnCount();i++) {
+                    cursorString+=i+": "+selfCursor.getString(i)+" ";
+                }
+                Log.d(TAG, "User: "+cursorString);
             } while(selfCursor.moveToNext());
         }
         selfCursor.moveToFirst();

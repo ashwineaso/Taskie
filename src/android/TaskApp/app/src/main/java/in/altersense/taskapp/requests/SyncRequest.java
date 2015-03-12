@@ -1,15 +1,13 @@
 package in.altersense.taskapp.requests;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.APIRequest;
@@ -31,6 +29,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
     private final Activity activity;
     private final User user;
     private final Task task;
+    private final Intent syncCompleteBroadcastIntent;
     private JSONObject requestObject;
     private String url;
 
@@ -64,6 +63,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         } else {
             this.mode=0;
         }
+        this.syncCompleteBroadcastIntent = new Intent(Config.SHARED_PREF_KEYS.SYNC_IN_PROGRESS.getKey());
     }
 
     /**
@@ -95,6 +95,12 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+        AltEngine.writeBooleanToSharedPref(
+                activity.getApplicationContext(),
+                Config.SHARED_PREF_KEYS.SYNC_IN_PROGRESS.getKey(),
+                true
+        );
+        this.requestObject = new JSONObject();
         switch (this.mode){
             case 1:
                 //  Sync User
@@ -254,15 +260,18 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
                 task.setOwner(taskOwner);
                 task = taskDbHelper.createTask(task,activity);
             }
-            Log.d(TAG, "Task added to db: "+task.toString());
             Log.d(TAG, "Setting up collaborators.");
             collaboratorsFromJSONArray(
                     taskObject.getJSONArray(Config.REQUEST_RESPONSE_KEYS.TASK_COLLABOATORS.getKey()),
+                    task,
                     collaboratorDbHelper,
                     userDbHelper
             );
             task.setCollaborators(collaboratorDbHelper.getAllCollaborators(task));
             Log.d(TAG, "Setting up collaborators done.");
+            Log.d(TAG, "Task added to db: "+task.toString());
+            this.activity.sendBroadcast(syncCompleteBroadcastIntent);
+            Log.d(TAG, "Broadcast sent.");
         }
     }
 
@@ -300,12 +309,15 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         Log.d(TAG, "Setting up collaborators.");
         collaboratorsFromJSONArray(
                 taskObject.getJSONArray(Config.REQUEST_RESPONSE_KEYS.TASK_COLLABOATORS.getKey()),
+                task,
                 collaboratorDbHelper,
                 userDbHelper
         );
         task.setCollaborators(collaboratorDbHelper.getAllCollaborators(task));
         Log.d(TAG, "Setting up collaborators done.");
         Log.d(TAG, "Task set: "+task.toString());
+        this.activity.sendBroadcast(syncCompleteBroadcastIntent);
+        Log.d(TAG, "Broadcast sent.");
     }
 
     /**
@@ -326,6 +338,9 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             Log.d(TAG, "User not present in db. Inserting into db.");
             userDbHelper.createUser(user);
         }
+        Log.d(TAG, "User created/updated: "+user.getString());
+        this.activity.sendBroadcast(syncCompleteBroadcastIntent);
+        Log.d(TAG, "Broadcast sent.");
     }
 
     private Task taskFromJSONObject (JSONObject taskObject) throws JSONException {
@@ -344,7 +359,6 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         Log.d(TAG, "Setting up owner of task.");
         User owner = userFromJSONObject(ownerObject);
         Log.d(TAG, "Setting up owner of task done.");
-        Log.d(TAG, "Now checking if task is present in db.");
         Task task = new Task(
                 uuid,
                 name,
@@ -357,6 +371,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
                 null,
                 activity
         );
+        Log.d(TAG, "Returning task: "+task.toString());
         return task;
     }
 
@@ -374,6 +389,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
 
     private void collaboratorsFromJSONArray(
             JSONArray collaborators,
+            Task task,
             CollaboratorDbHelper collaboratorDbHelper,
             UserDbHelper userDbHelper
     ) throws JSONException {
@@ -386,7 +402,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             ).getInt(Config.REQUEST_RESPONSE_KEYS.STATUS.getKey());
             User collaboratorUser = userFromJSONObject(collaboratorObject);
             Log.d(TAG, "Check whether collaborating user is present in database.");
-            User userInDb = userDbHelper.getUserByUUID(user.getUuid());
+            User userInDb = userDbHelper.getUserByUUID(collaboratorUser.getUuid());
             if(userInDb==null) {
                 Log.d(TAG, "Not found.");
                 collaboratorUser.setSyncStatus(true);

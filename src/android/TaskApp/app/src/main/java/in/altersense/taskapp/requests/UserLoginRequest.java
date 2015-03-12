@@ -130,6 +130,10 @@ public class UserLoginRequest extends AsyncTask<Void, Integer, JSONObject> {
                 // make user owner
                 this.user.makeDeviceOwner(this.activity.getApplicationContext());
 
+                // Call sync everything.
+                SyncRequest syncRequest = new SyncRequest(this.activity);
+                syncRequest.execute();
+
                 // load TasksActivity according to the the start activity flag
                 if(this.startActivity) {
                     Intent tasksActivityStarterIntent = new Intent(
@@ -165,7 +169,7 @@ public class UserLoginRequest extends AsyncTask<Void, Integer, JSONObject> {
         }
     }
 
-        @Override
+    @Override
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
         if(values.equals(1)) {

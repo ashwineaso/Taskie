@@ -102,7 +102,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 null,
                 values
         );
-        Log.d(TAG, "Query run db inserted to row "+rowId+".");
+        Log.d(TAG, "Query run task inserted to row "+rowId+".");
         database.close();
         Task task = getTaskByRowId(rowId, activity);
         task.setId(rowId);
