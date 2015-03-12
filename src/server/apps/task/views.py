@@ -181,7 +181,7 @@ def deleteTask():
 		if flag is True:
 			response["status"] = RESPONSE_SUCCESS
 			response["message"] = "Task Deleted"
-		else
+		else:
 			response["status"] = RESPONSE_FAILED
 			response["message "] = "Deletion Failed"
 	except Exception as e:
