@@ -33,12 +33,11 @@
                     android:background="@color/createTaskPrimaryActionBar"
                     android:gravity="center_vertical">
 
-                    <TextView
+                    <TextView android:id="@+id/taskOwnerTV"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/lightText"
                         android:textSize="@dimen/text_header_xhdpi"
-                        android:text="Ashwin Easo Zachariah"
                         fontPath="fonts/Cabin-SemiBold-TTF.ttf"
                         tools2:ignore="MissingPrefix"/>
 

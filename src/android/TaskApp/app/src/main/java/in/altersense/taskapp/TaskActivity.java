@@ -41,6 +41,12 @@ public class TaskActivity extends ActionBarActivity {
     TaskDetailsViewAdapter adapter;
     public TaskActivity activity;
     public ArrayList<Collaborator> collaboratorArrayList = new ArrayList<Collaborator>();
+    private TextView taskTitleTV;
+    private TextView taskDescriptionTV;
+    private TextView dueDateTV;
+    private TextView taskPriorityTV;
+    private TextView taskStatusTV;
+    private TextView taskOwnerTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,13 +76,30 @@ public class TaskActivity extends ActionBarActivity {
             this.task = taskDbHelper.getTaskByRowId(taskId, TaskActivity.this);
         }
 
-        Resources res = getResources();
+
+        //Initialize the views
+        this.taskTitleTV = (TextView)findViewById(R.id.taskTitleTextView);
+        this.taskDescriptionTV = (TextView)findViewById(R.id.taskDescriptionTextView);
+        this.dueDateTV = (TextView)findViewById(R.id.dueDateTextView);
+        this.taskPriorityTV = (TextView)findViewById(R.id.taskStatusTextView);
+        this.taskStatusTV = (TextView)findViewById(R.id.taskStatusTextView);
+        this.taskOwnerTV = (TextView) findViewById(R.id.taskOwnerTV);
+
+        //Set the text views
+        this.taskTitleTV.setText(this.task.getName());
+        this.taskDescriptionTV.setText(this.task.getDescription());
+        this.dueDateTV.setText(this.task.getDueDateTime());
+        this.taskPriorityTV.setText(this.task.getPriority()+"");
+        this.taskStatusTV.setText(this.task.getStatus()+"");
+        this.taskOwnerTV.setText(this.task.getOwner().getName());
 
         //Fill the ArrayList with the required data
         this.collaboratorList = task.getCollaborators();
         for (Collaborator collaborator:this.collaboratorList) {
             collaboratorArrayList.add(collaborator);
         }
+
+        Resources res = getResources();
 
         collList = (ListView)findViewById(R.id.collListView);
         //Create a custom adapter

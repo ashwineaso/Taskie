@@ -95,7 +95,7 @@ public class User {
         this.id = newUser.getId();
         this.uuid = newUser.getUuid();
         this.email = newUser.getEmail();
-        this.name = newUser.getEmail();
+        this.name = newUser.getName();
         this.password = "";
         this.isDeviceOwner = newUser.isDeviceOwner();
         this.syncStatus = newUser.getSyncStatus();
