@@ -142,7 +142,8 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.d(CLASS_TAG, "Received broadcast.");
-                taskAdapter.notifyDataSetChanged();
+                taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasks(DashboardActivity.this));
+                taskList.setAdapter(taskAdapter);
             }
         };
         registerReceiver(syncCompletionReceiver, new IntentFilter(Config.SHARED_PREF_KEYS.SYNC_IN_PROGRESS.getKey()));

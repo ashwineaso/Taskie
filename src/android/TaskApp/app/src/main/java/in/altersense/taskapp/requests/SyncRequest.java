@@ -177,6 +177,8 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             default:
                 // Hell breaks loose.
         }
+        this.activity.sendBroadcast(syncCompleteBroadcastIntent);
+        Log.d(TAG, "Broadcast sent.");
     }
 
     /**
@@ -258,8 +260,8 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
                 task.getOwner().setSyncStatus(true);
                 taskOwner = userDbHelper.createUser(task.getOwner());
                 task.setOwner(taskOwner);
-                task = taskDbHelper.createTask(task,activity);
             }
+            task = taskDbHelper.createTask(task,activity);
             Log.d(TAG, "Setting up collaborators.");
             collaboratorsFromJSONArray(
                     taskObject.getJSONArray(Config.REQUEST_RESPONSE_KEYS.TASK_COLLABOATORS.getKey()),
@@ -270,8 +272,6 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             task.setCollaborators(collaboratorDbHelper.getAllCollaborators(task));
             Log.d(TAG, "Setting up collaborators done.");
             Log.d(TAG, "Task added to db: "+task.toString());
-            this.activity.sendBroadcast(syncCompleteBroadcastIntent);
-            Log.d(TAG, "Broadcast sent.");
         }
     }
 
@@ -316,8 +316,6 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         task.setCollaborators(collaboratorDbHelper.getAllCollaborators(task));
         Log.d(TAG, "Setting up collaborators done.");
         Log.d(TAG, "Task set: "+task.toString());
-        this.activity.sendBroadcast(syncCompleteBroadcastIntent);
-        Log.d(TAG, "Broadcast sent.");
     }
 
     /**
@@ -339,8 +337,6 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             userDbHelper.createUser(user);
         }
         Log.d(TAG, "User created/updated: "+user.getString());
-        this.activity.sendBroadcast(syncCompleteBroadcastIntent);
-        Log.d(TAG, "Broadcast sent.");
     }
 
     private Task taskFromJSONObject (JSONObject taskObject) throws JSONException {

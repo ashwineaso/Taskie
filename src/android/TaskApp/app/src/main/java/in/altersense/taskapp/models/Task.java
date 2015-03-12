@@ -710,6 +710,7 @@ public class Task {
         task+=" uuid="+this.uuid;
         task+=" name="+this.name;
         task+=" owner="+this.owner.getUuid();
+        task+=" isGroup="+this.getIntIsGroup();
         return task;
     }
 
