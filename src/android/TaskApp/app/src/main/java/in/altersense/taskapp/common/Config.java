@@ -2,8 +2,6 @@ package in.altersense.taskapp.common;
 
 import android.util.Log;
 
-import java.util.List;
-
 /**
  * Holds most configuration of the app.
  * Created by mahesmohan on 1/29/15.
@@ -36,6 +34,28 @@ public class Config {
     public static final int MAX_STATUS = 2;  // Maximum status a task can have.
 
     public static enum TASK_STATUS {
+        INCOMPLETE(0, "Incomplete"),
+        COMPLETE(1, "Complete"),
+        DELETED(2, "Deleted");
+
+        public String getStatusText() {
+            return statusText;
+        }
+
+        public int getStatus() {
+            return status;
+        }
+
+        private int status;
+        private String statusText;
+
+        private TASK_STATUS(int status, String statusText) {
+            this.status = status;
+            this.statusText = statusText;
+        }
+    }
+
+    public static enum COLLABORATOR_STATUS {
 
         DECLINED(-1,"Declined"),
         PENDING(0,"Pending"),
@@ -53,7 +73,7 @@ public class Config {
         private int status;
         private String statusText;
 
-        private TASK_STATUS(int status, String statusText) {
+        private COLLABORATOR_STATUS(int status, String statusText) {
             this.status = status;
             this.statusText = statusText;
         }

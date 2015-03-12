@@ -20,7 +20,6 @@ import in.altersense.taskapp.CreateTaskActivity;
 import in.altersense.taskapp.R;
 import in.altersense.taskapp.TaskActivity;
 import in.altersense.taskapp.common.Config;
-import in.altersense.taskapp.common.Methods;
 import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.database.CollaboratorDbHelper;
 import in.altersense.taskapp.database.TaskDbHelper;
@@ -245,7 +244,7 @@ public class Task {
             // If not owned by user
             Log.d(TAG,"Task not owned by user.");
             // set status as declined
-            this.setStatus(Config.TASK_STATUS.DECLINED.getStatus(),context);
+            this.setStatus(Config.COLLABORATOR_STATUS.DECLINED.getStatus(),context);
             // send status change request to server
         }
     }
