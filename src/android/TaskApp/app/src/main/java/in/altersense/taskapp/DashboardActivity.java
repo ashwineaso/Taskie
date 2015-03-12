@@ -81,7 +81,10 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         );
 
         // Authenticate user.
-        authenticateUser();
+        if(!authenticateUser()) {
+            this.finish();
+            return;
+        }
 
         setContentView(R.layout.activity_tasks);
 
@@ -95,6 +98,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
 
         this.taskList = (ListView) findViewById(R.id.taskListStage);
         this.taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasks(DashboardActivity.this));
+        this.taskList.setAdapter(this.taskAdapter);
 
         setUpQuickTaskLayout();
 
@@ -198,7 +202,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
      * Checks for an authenticated user in the device.
      * If it fails login activity is displayed.
      */
-    private void authenticateUser() {
+    private boolean authenticateUser() {
         String TAG = CLASS_TAG+"authenticateUser";
         Log.d(TAG, "Authenticating user.");
         this.ownerId = AltEngine.readStringFromSharedPref(
@@ -212,6 +216,16 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                 ""
         );
 
+        if(ownerId.equals("")) {
+            Intent authenticateUserIntent = new Intent(
+                    getApplicationContext(),
+                    UserLoginActivity.class
+            );
+            startActivity(authenticateUserIntent);
+            finish();
+            return false;
+        }
+
         Log.d(TAG, "Creatig new GCMHandler.");
         gcmHandler = new GCMHandler(
                 Config.getGCMSenderId(),
@@ -220,15 +234,8 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                 this
         );
 
-        if(ownerId.equals("")) {
-            Intent authenticateUserIntent = new Intent(
-                    getApplicationContext(),
-                    UserLoginActivity.class
-            );
-            startActivity(authenticateUserIntent);
-            finish();
-        }
         Log.d(CLASS_TAG, "Auth completed device owner identified");
+        return true;
     }
 
     /**
