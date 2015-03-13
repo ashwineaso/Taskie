@@ -14,7 +14,7 @@ password = "wxqkqxr4$&$@"
 
 
 def sendInvite(userObj):
-	inviter = dal.getUserById(userObj)
+	inviter = dal.getUserById(userObj.user)
 	invited_by = inviter.email
 	invite_to = userObj.email
 	token = Token.objects.get(user = inviter)

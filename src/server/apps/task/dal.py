@@ -111,6 +111,8 @@ def addCollaborators(taskObj):
 					dateTime = time.time()
 					)
 
+	task = getTaskById(taskObj)
+	userObj.user = task.owner
 	#Check if new collaborators exist
 	for userObj.email in taskObj.collaborators:
 		flag = False
@@ -127,7 +129,7 @@ def addCollaborators(taskObj):
 		my_objects.append(Collaborator(user = userbll.getUserByEmail(userObj),
 										status = taskObj.status))
 
-	task = getTaskById(taskObj)
+
 	Task.objects(id = task.id).update( push_all__collaborators = my_objects)
 	task.save()
 	task.reload()
