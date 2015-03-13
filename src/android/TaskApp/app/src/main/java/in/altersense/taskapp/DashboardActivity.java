@@ -363,8 +363,19 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                     Log.d(TAG, "created task");
                     quickTask = addQuickTaskToDb(quickTask);
                     Log.d(TAG, "QuickTask: "+quickTask.toString());
-                    quickTask.updateCollaborators(collaboratorAdditionList,collaboratorRemovalList,DashboardActivity.this);
+                    quickTask.updateCollaborators(
+                            collaboratorAdditionList,
+                            collaboratorRemovalList,
+                            DashboardActivity.this,
+                            false
+                    );
                     Log.d(TAG, "updated collabs");
+                    CreateTaskRequest createTaskRequest = new CreateTaskRequest(
+                            quickTask,
+                            DashboardActivity.this
+                    );
+                    Log.d(TAG, "Task creation API Request called.");
+                    createTaskRequest.execute();
 
                     // Add task to the adapter.
                     taskAdapter.add(quickTask);
@@ -413,13 +424,6 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                 this
         );
         Log.d(TAG, "Task added to database");
-
-        CreateTaskRequest createTaskRequest = new CreateTaskRequest(
-                quickTask,
-                this
-        );
-        Log.d(TAG, "Task creation API Request called.");
-        createTaskRequest.execute();
 
         return quickTask;
     }

@@ -53,7 +53,6 @@ public class SyncTaskRequest extends AsyncTask<Void, Integer, JSONObject> {
         }
     }
 
-
     @Override
     protected JSONObject doInBackground(Void... params) {
         JSONObject responseObject = new JSONObject();

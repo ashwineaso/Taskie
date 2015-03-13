@@ -445,10 +445,18 @@ public class Task {
         this.collaborators = newCollaboratorList;
     }
 
+    /**
+     * Updates the collaborators of the task in db and also intimates the server if need be.
+     * @param userAdditionList List of users added as collaborators.
+     * @param userRemovalList List of users removed from collaborators
+     * @param activity Current activity
+     * @param informServer If the server needs to be intimated of the change.
+     */
     public void updateCollaborators(
             List<User> userAdditionList,
             List<User> userRemovalList,
-            Activity activity
+            Activity activity,
+            boolean informServer
     ) {
         String TAG = CLASS_TAG+"updateCollaborators";
         UserDbHelper userDbHelper = new UserDbHelper(activity.getApplicationContext());
@@ -519,23 +527,41 @@ public class Task {
         for(Collaborator collaborator:collaboratorsAdded) {
             collaboratorDbHelper.addCollaborator(this,collaborator);
         }
-        AddCollaboratorsRequest addCollaboratorsRequest = new AddCollaboratorsRequest(
-                this,
-                collaboratorsAdded,
-                activity
-        );
-        addCollaboratorsRequest.execute();
-        // Remove all collaborators in removal list from db
-        for(Collaborator collaborator:collaboratorsRemoved) {
-            collaboratorDbHelper.removeCollaborator(this, collaborator);
+
+        if(informServer) {
+            AddCollaboratorsRequest addCollaboratorsRequest = new AddCollaboratorsRequest(
+                    this,
+                    collaboratorsAdded,
+                    activity
+            );
+            addCollaboratorsRequest.execute();
+            // Remove all collaborators in removal list from db
+            for(Collaborator collaborator:collaboratorsRemoved) {
+                collaboratorDbHelper.removeCollaborator(this, collaborator);
+            }
+            RemoveCollaboratorsRequest removeCollaboratorsRequest = new RemoveCollaboratorsRequest(
+                    this,
+                    collaboratorsRemoved,
+                    activity
+            );
+            removeCollaboratorsRequest.execute();
         }
-        RemoveCollaboratorsRequest removeCollaboratorsRequest = new RemoveCollaboratorsRequest(
-                this,
-                collaboratorsRemoved,
-                activity
-        );
-        removeCollaboratorsRequest.execute();
+
         this.fetchAllCollaborators(activity.getApplicationContext());
+    }
+
+    /**
+     * Updates the collaborators of the task in db and intimates the server of the changes.
+     * @param userAdditionList List of users added as collaborators.
+     * @param userRemovalList List of users removed from collaborators
+     * @param activity Current activity
+     */
+    public void updateCollaborators(
+            List<User> userAdditionList,
+            List<User> userRemovalList,
+            Activity activity
+    ) {
+        updateCollaborators(userAdditionList,userRemovalList,activity,true);
     }
 
     private View createActionsView(final Activity activity) {
