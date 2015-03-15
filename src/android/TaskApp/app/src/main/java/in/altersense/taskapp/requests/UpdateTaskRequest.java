@@ -85,8 +85,8 @@ public class UpdateTaskRequest extends AsyncTask<Void, Integer, JSONObject> {
             // Check whether the request was success
             if(status.equals(Config.RESPONSE_STATUS_SUCCESS)) {
                 // If success update uuid
-                JSONObject data = result.getJSONObject(Config.REQUEST_RESPONSE_KEYS.DATA.getKey())
-                        .getJSONObject("task");
+                JSONObject data = result.getJSONObject(Config.REQUEST_RESPONSE_KEYS.DATA.getKey());
+                this.task.setSyncStatus(true);
                 this.task.setUuid(data.getString(Config.REQUEST_RESPONSE_KEYS.UUID.getKey()), this.activity);
             }
         } catch (JSONException e) {

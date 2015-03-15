@@ -26,7 +26,7 @@ import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
 import in.altersense.taskapp.requests.AddCollaboratorsRequest;
 import in.altersense.taskapp.requests.RemoveCollaboratorsRequest;
-import in.altersense.taskapp.requests.SyncUserRequest;
+import in.altersense.taskapp.requests.SyncRequest;
 import in.altersense.taskapp.requests.TaskStatusChangeRequest;
 
 /**
@@ -499,8 +499,8 @@ public class Task {
                 user = userDbHelper.createUser(user);
                 Log.d(TAG, "Added user to db.");
                 // Call user sync api
-                SyncUserRequest syncUserRequest = new SyncUserRequest(user, activity);
-                syncUserRequest.execute();
+                SyncRequest syncRequest = new SyncRequest(user, activity);
+                syncRequest.execute();
                 Log.d(TAG, "Called sync user for user "+user.getString());
             }
             collaboratorsAdded.add(new Collaborator(user));
