@@ -36,6 +36,14 @@ public class BuzzCollaboratorRequest extends AsyncTask<Void, Integer, JSONObject
         String TAG = CLASS_TAG + "onPreExecute";
         super.onPreExecute();
         this.requestObject = new JSONObject();
+
+    }
+
+    @Override
+    protected JSONObject doInBackground(Void... params) {
+        String TAG = CLASS_TAG+"doInBackground";
+        JSONObject responseObject = new JSONObject();
+
         // Checks whether the task is synced and has an id.
         if(
                 this.task.getUuid().length()<0 ||
@@ -44,7 +52,9 @@ public class BuzzCollaboratorRequest extends AsyncTask<Void, Integer, JSONObject
             Log.d(TAG, "No id for task to be buzzed.");
             SyncRequest taskSyncRequest = new SyncRequest(this.task, this.activity);
             try {
+                Log.d(TAG, "taskSyncRequest called");
                 taskSyncRequest.onPostExecute(taskSyncRequest.get());
+                Log.d(TAG, "taskSyncRequest call completed");
                 this.task = taskSyncRequest.getTask();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -52,7 +62,7 @@ public class BuzzCollaboratorRequest extends AsyncTask<Void, Integer, JSONObject
                         activity.getApplicationContext(),
                         "Could not send Buzz. Task sync was interrupted. Please connect to the internet.",
                         Toast.LENGTH_LONG
-                        ).show();
+                ).show();
                 this.cancel(true);
             } catch (ExecutionException e) {
                 e.printStackTrace();
@@ -71,12 +81,7 @@ public class BuzzCollaboratorRequest extends AsyncTask<Void, Integer, JSONObject
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
 
-    @Override
-    protected JSONObject doInBackground(Void... params) {
-        String TAG = CLASS_TAG+"doInBackground";
-        JSONObject responseObject = new JSONObject();
         APIRequest buzzCollabs = new APIRequest(
                 AltEngine.formURL("task/buzzCollaborators"),
                 this.requestObject,

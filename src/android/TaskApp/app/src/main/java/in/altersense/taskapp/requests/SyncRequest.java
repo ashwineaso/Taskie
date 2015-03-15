@@ -54,12 +54,16 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         this.activity = activity;
         this.user = user;
         this.task = task;
+        this.requestObject = new JSONObject();
         if(syncUser) {
             this.mode = 1;
+            prepareSyncUser();
         } else if(syncTask) {
             this.mode = 2;
+            prepareSyncTask();
         } else if(syncEverything) {
             this.mode = 3;
+            prepareSyncEverything();
         } else {
             this.mode=0;
         }
@@ -103,33 +107,18 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        AltEngine.writeBooleanToSharedPref(
-                activity.getApplicationContext(),
-                Config.SHARED_PREF_KEYS.SYNC_IN_PROGRESS.getKey(),
-                true
-        );
-        this.requestObject = new JSONObject();
-        switch (this.mode){
-            case 1:
-                //  Sync User
-                prepareSyncUser();
-                break;
-            case 2:
-                // Sync Taskn
-                prepareSyncTask();
-                break;
-            case 3:
-                // Sync everything
-                prepareSyncEverything();
-                break;
-            default:
-                // Hell breaks loose.
-        }
     }
 
     @Override
     protected JSONObject doInBackground(Void... params) {
         JSONObject responseObject = new JSONObject();
+
+        AltEngine.writeBooleanToSharedPref(
+                activity.getApplicationContext(),
+                Config.SHARED_PREF_KEYS.SYNC_IN_PROGRESS.getKey(),
+                true
+        );
+
         APIRequest syncRequest = new APIRequest(
                 this.url,
                 this.requestObject,
