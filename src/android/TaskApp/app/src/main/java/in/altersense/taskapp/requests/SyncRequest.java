@@ -27,8 +27,8 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
     private static final String CLASS_TAG = "SyncRequest ";
 
     private final Activity activity;
-    private final User user;
-    private final Task task;
+    private User user;
+    private Task task;
     private final Intent syncCompleteBroadcastIntent;
     private JSONObject requestObject;
     private String url;
@@ -90,6 +90,14 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
      */
     public SyncRequest(Task task, Activity activity) {
         this(activity,null,task,false,true,false);
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Task getTask() {
+        return task;
     }
 
     @Override
@@ -316,6 +324,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         task.setCollaborators(collaboratorDbHelper.getAllCollaborators(task));
         Log.d(TAG, "Setting up collaborators done.");
         Log.d(TAG, "Task set: "+task.toString());
+        this.task = task;
     }
 
     /**
@@ -337,6 +346,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             userDbHelper.createUser(user);
         }
         Log.d(TAG, "User created/updated: "+user.getString());
+        this.user = user;
     }
 
     private Task taskFromJSONObject (JSONObject taskObject) throws JSONException {
