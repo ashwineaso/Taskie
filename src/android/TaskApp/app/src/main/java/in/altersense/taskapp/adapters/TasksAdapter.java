@@ -20,6 +20,7 @@ import in.altersense.taskapp.TaskActivity;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.Task;
+import in.altersense.taskapp.requests.BuzzCollaboratorRequest;
 
 /**
  * Created by mahesmohan on 2/26/15.
@@ -146,6 +147,14 @@ public class TasksAdapter extends ArrayAdapter<Task>{
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey(),task.getId());
                 activity.startActivity(intent);
+            }
+        });
+
+        holder.action3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BuzzCollaboratorRequest buzzCollaboratorRequest = new BuzzCollaboratorRequest(task, activity);
+                buzzCollaboratorRequest.execute();
             }
         });
 
