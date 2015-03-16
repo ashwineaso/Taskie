@@ -87,3 +87,28 @@ def sendVerification(user):
 	server.login(taskie_mail,password)
 	server.sendmail(taskie_mail,userObj.user.email, msg.as_string())
 	server.close()
+
+
+def passwordReset(userObj):
+	"""Send a password reset mail to the user along with email and key"""
+	token = dal.getTokenByUser(userObj)
+
+	link = """http://taskie.me/user/updatePassword/%s/%s""" % (userObj.user.email, token.key)
+	html = """A password reset has been made for your email address. Please click the following link and provide a new password : %s. If the request was not made by you, please ignore this mail.""" %(link)
+
+	# Create message container - the correct MIME type is multipart/alternative.
+	msg = MIMEMultipart('alternative')
+	msg['Subject'] = " Taskie Account  - Password Reset"
+	msg['From'] = taskie_mail
+	msg['To'] = userObj.user.email
+
+	html_msg = MIMEText(html, 'html')
+	msg.attach(html_msg)
+
+	#Send the message via local smtp server
+	server = smtplib.SMTP()
+	server.connect(HOST, PORT)
+	server.starttls()
+	server.login(taskie_mail,password)
+	server.sendmail(taskie_mail,userObj.user.email, msg.as_string())
+	server.close()
