@@ -71,19 +71,19 @@ def addCollaborators():
 	response = {}
 	data = {}
 	obj = request.json
-	# try:
-	taskObj.access_token = obj["access_token"]
-	taskObj.id = obj["id"]
-	taskObj.collaborators = obj["collaborators"]
-	if checkAccessTokenValid(taskObj) is True:
-		task = bll.addCollaborators(taskObj)
-	response["status"] = RESPONSE_SUCCESS
-	response["data"] = bll.taskToDictConverter(task)
-	# except Exception as e:
-	# 	response["status"] = RESPONSE_FAILED
-	# 	response["message"] = str(e)
-	# 	if hasattr(e, "code"):
-	# 		response["code"] = e.code
+	try:
+		taskObj.access_token = obj["access_token"]
+		taskObj.id = obj["id"]
+		taskObj.collaborators = obj["collaborators"]
+		if checkAccessTokenValid(taskObj) is True:
+			task = bll.addCollaborators(taskObj)
+		response["status"] = RESPONSE_SUCCESS
+		response["data"] = bll.taskToDictConverter(task)
+	except Exception as e:
+		response["status"] = RESPONSE_FAILED
+		response["message"] = str(e)
+		if hasattr(e, "code"):
+			response["code"] = e.code
 	return response
 
 
@@ -219,18 +219,18 @@ def buzzCollaborators():
 	data = {}
 
 	obj = request.json
-	# try:
-	taskObj.id = obj["id"]
-	taskObj.access_token = obj["access_token"]
-	if checkAccessTokenValid(taskObj) is True:
-		flag = bll.buzzCollaborators(taskObj)
-	if (flag):
-		response["status"] = RESPONSE_SUCCESS
-	else:
+	try:
+		taskObj.id = obj["id"]
+		taskObj.access_token = obj["access_token"]
+		if checkAccessTokenValid(taskObj) is True:
+			flag = bll.buzzCollaborators(taskObj)
+		if (flag):
+			response["status"] = RESPONSE_SUCCESS
+		else:
+			response["status"] = RESPONSE_FAILED
+	except Exception as e:
 		response["status"] = RESPONSE_FAILED
-	# except Exception as e:
-	# 	response["status"] = RESPONSE_FAILED
-	# 	response["message"] = str(e)
-	# 	if hasattr(e, 'code'):
-	# 		response["code"] = e.code
+		response["message"] = str(e)
+		if hasattr(e, 'code'):
+			response["code"] = e.code
 	return response
