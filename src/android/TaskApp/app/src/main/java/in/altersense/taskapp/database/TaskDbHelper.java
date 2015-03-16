@@ -7,14 +7,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.view.LayoutInflater;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import in.altersense.taskapp.CreateTaskActivity;
 import in.altersense.taskapp.common.Config;
-import in.altersense.taskapp.models.Collaborator;
+import in.altersense.taskapp.models.Buzz;
 import in.altersense.taskapp.models.Task;
 
 /**
@@ -23,7 +21,7 @@ import in.altersense.taskapp.models.Task;
 public class TaskDbHelper extends SQLiteOpenHelper {
 
     private static final String CLASS_TAG = "TaskDbHelper ";
-    private static String CREATION_STATEMENT = "CREATE TABLE " + Task.TABLE_NAME + " ( " +
+    private static String CREATION_STATEMENT_TASK = "CREATE TABLE " + Task.TABLE_NAME + " ( " +
             Task.KEYS.UUID.getName() + " " + Task.KEYS.UUID.getType() + ", " +
             Task.KEYS.OWNER_UUID.getName() + " " + Task.KEYS.OWNER_UUID.getType() + ", " +
             Task.KEYS.NAME.getName() + " " + Task.KEYS.NAME.getType() + ", " +
@@ -35,6 +33,10 @@ public class TaskDbHelper extends SQLiteOpenHelper {
             Task.KEYS.GROUP_UUID.getName() + " " + Task.KEYS.GROUP_UUID.getType() +", "+
             Task.KEYS.SYNC_STATUS.getName() + " "+ Task.KEYS.SYNC_STATUS.getType() + ");";
 
+    private static String CREATION_STATEMENT_BUZZ = "CREATE TABLE " + Buzz.TABLE_NAME + " ( " +
+            Buzz.KEYS.TASK_ID.getName() + " " + Buzz.KEYS.TASK_ID.getType() + ", " +
+            Buzz.KEYS.TASK_UUID.getName() + " " + Buzz.KEYS.TASK_UUID.getType() + ");";
+
     public TaskDbHelper(Context context) {
         super(context, Task.TABLE_NAME, null, Config.DATABASE_VERSION);
     }
@@ -42,7 +44,10 @@ public class TaskDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(
-                CREATION_STATEMENT
+                CREATION_STATEMENT_TASK
+        );
+        db.execSQL(
+                CREATION_STATEMENT_BUZZ
         );
     }
 
@@ -52,6 +57,10 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 "ALTER TABLE "+ Task.TABLE_NAME+
                         " ADD "+Task.KEYS.SYNC_STATUS.getName()+" "+
                         Task.KEYS.SYNC_STATUS.getType()+";");
+        db.execSQL("DROP TABLE IF EXISTS "+Buzz.TABLE_NAME);
+        db.execSQL(
+                CREATION_STATEMENT_BUZZ
+        );
     }
 
     public void updateUUID(Task task) {
@@ -309,4 +318,104 @@ public class TaskDbHelper extends SQLiteOpenHelper {
             return false;
         }
     }
+
+    public Buzz createBuzz(Buzz buzz) {
+        String TAG = CLASS_TAG+"createBuzz";
+        // Open writable datanase.
+        SQLiteDatabase writableDb = this.getWritableDatabase();
+        // Setup values
+        ContentValues values = new ContentValues();
+        values.put(Buzz.KEYS.TASK_ID.getName(),buzz.getTaskId());
+        values.put(Buzz.KEYS.TASK_UUID.getName(),buzz.getTaskUuid());
+        // Insert row
+        long id = writableDb.insert(
+                Buzz.TABLE_NAME,
+                null,
+                values
+        );
+        // ceate new buzz from the fetched row.
+        buzz.setId(id);
+        // close writable db
+        writableDb.close();
+        // return new buzz
+        return buzz;
+    }
+
+    public List<Buzz> retrieveBuzz(Activity activity) {
+        String TAG = CLASS_TAG+"retrieveBuzz()";
+        List<Buzz> buzzList = new ArrayList<>();
+        // Open readable database
+        SQLiteDatabase readableDb = this.getReadableDatabase();
+        // Execute query
+        Cursor result = readableDb.query(
+                Buzz.TABLE_NAME,
+                Buzz.getAllColumns(),
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+        result.moveToFirst();
+        // loop through each cursor and add new buzz to a lisr
+        do {
+            Buzz buzz = new Buzz(result, activity);
+            buzzList.add(buzz);
+        } while (result.moveToNext());
+        // close the db, closse the cursor
+        readableDb.close();
+        result.close();
+        // return list of all buzz
+        return buzzList;
+    }
+
+    public Buzz retrieveBuzz(Task task, Activity activity) {
+        String TAG = CLASS_TAG+"retrieveBuzz(Task,Activity)";
+        // Open readable database
+        SQLiteDatabase readableDb = this.getReadableDatabase();
+        // Make query
+        Cursor result = readableDb.query(
+                Buzz.TABLE_NAME,
+                Buzz.getAllColumns(),
+                Buzz.KEYS.TASK_UUID+"=? OR "+Buzz.KEYS.TASK_UUID+"=?",
+                new String[]{
+                        task.getUuid()+"",
+                        task.getId()+""
+                },
+                null,
+                null,
+                null
+        );
+        result.moveToFirst();
+        // Create buzz from cursor
+        Buzz buzz;
+        if(result.getCount()!=0) {
+            buzz = new Buzz(result, activity);
+        } else {
+            buzz = null;
+        }
+        // close cursor, db
+        result.close();
+        readableDb.close();
+        // return buzz
+        return buzz;
+    }
+
+    public boolean deleteBuzz(Buzz buzz) {
+        String TAG = CLASS_TAG+"deleteBuzz(Buzz)";
+        // Open writable database.
+        SQLiteDatabase writableDb = this.getWritableDatabase();
+        // execute delete query
+        // find affected row count
+        int affectedRows = writableDb.delete(
+                Buzz.TABLE_NAME,
+                "ROWID =?",
+                new String[] { buzz.getId()+"" }
+        );
+        // close db
+        writableDb.close();
+        // if affected row greater than 0 return true
+        return affectedRows>0;
+    }
+
 }

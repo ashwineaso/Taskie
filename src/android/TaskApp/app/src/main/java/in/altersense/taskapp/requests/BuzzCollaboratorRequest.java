@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,6 +19,7 @@ import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.database.CollaboratorDbHelper;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
+import in.altersense.taskapp.models.Buzz;
 import in.altersense.taskapp.models.Task;
 
 /**
@@ -33,6 +35,7 @@ public class BuzzCollaboratorRequest extends AsyncTask<Void, Integer, JSONObject
     private TaskDbHelper taskDbHelper;
     private UserDbHelper userDbHelper;
     private CollaboratorDbHelper collaboratorDbHelper;
+    private Buzz buzz;
 
     public BuzzCollaboratorRequest(Task task, Activity activity) {
         this.task = task;
@@ -59,7 +62,8 @@ public class BuzzCollaboratorRequest extends AsyncTask<Void, Integer, JSONObject
                 this.task.getUuid().length()<0 ||
                         !this.task.getSyncStatus()
                 ) {
-            Log.d(TAG, "No id for task to be buzzed.");
+            long taskId = this.task.getId();
+            Log.d(TAG, "No uuid for task to be buzzed.");
             SyncRequest taskSyncRequest = new SyncRequest(this.task, this.activity);
             try {
                 //Syncing task.
@@ -69,6 +73,7 @@ public class BuzzCollaboratorRequest extends AsyncTask<Void, Integer, JSONObject
                         Config.REQUEST_RESPONSE_KEYS.DATA.getKey()
                 ));
                 this.task = taskSyncRequest.getTask();
+                this.task.setId(taskId);
                 this.task.setSyncStatus(true);
                 this.task.updateTask(this.activity);
             } catch (JSONException e) {
@@ -77,10 +82,17 @@ public class BuzzCollaboratorRequest extends AsyncTask<Void, Integer, JSONObject
                 e.printStackTrace();
             }
         }
+
+        this.buzz = new Buzz(this.task, this.activity);
+        this.buzz = taskDbHelper.createBuzz(buzz);
+
         try {
+            JSONArray buzzes = new JSONArray();
+            buzzes.put(buzz.getTaskUuid());
+            // TODO: Change the json key name.
             this.requestObject.put(
                     Config.REQUEST_RESPONSE_KEYS.UUID.getKey(),
-                    this.task.getUuid()
+                    buzzes
             );
         } catch (JSONException e) {
             e.printStackTrace();
@@ -110,6 +122,7 @@ public class BuzzCollaboratorRequest extends AsyncTask<Void, Integer, JSONObject
                         "Buzz sent!",
                         Toast.LENGTH_SHORT
                 ).show();
+                taskDbHelper.deleteBuzz(buzz);
             }
         } catch (JSONException e) {
             e.printStackTrace();
