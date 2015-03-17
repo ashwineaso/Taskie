@@ -9,6 +9,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.APIRequest;
 import in.altersense.taskapp.components.AltEngine;
@@ -28,8 +33,8 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
 
     private final Activity activity;
     private APIRequest apiRequest;
-    private User user;
-    private Task task;
+    private List<User> userList;
+    private List<Task> taskList;
     private final Intent syncCompleteBroadcastIntent;
     private JSONObject requestObject;
     private String url;
@@ -39,22 +44,23 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
     /**
      * Base constructor called by all the constructors
      * @param activity Current activity.
-     * @param user User to be synced.
-     * @param task Task to be synced
-     * @param syncUser True if this is a user sync
-     * @param syncTask True if this is a task sync
+     * @param users Users to be synced.
+     * @param tasks Tasks to be synced
+     * @param syncUser True if this is a userList sync
+     * @param syncTask True if this is a taskList sync
      * @param syncEverything True if this is a request to sync an entire account.
      */
     private SyncRequest(
             Activity activity,
-            User user,
-            Task task,
+            User[] users,
+            Task[] tasks,
             boolean syncUser,
             boolean syncTask,
-            boolean syncEverything) {
+            boolean syncEverything
+    ) {
         this.activity = activity;
-        this.user = user;
-        this.task = task;
+        this.userList = Arrays.asList(users);
+        this.taskList = Arrays.asList(tasks);
         this.requestObject = new JSONObject();
         if(syncUser) {
             this.mode = 1;
@@ -91,7 +97,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
      * @param activity Current activity.
      */
     public SyncRequest(User user, Activity activity) {
-        this(activity,user,null,true,false,false);
+        this(activity, new User[] {user}, null, true, false, false);
     }
 
     /**
@@ -100,7 +106,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
      * @param activity Current activity.
      */
     public SyncRequest(Task task, Activity activity) {
-        this(activity,null,task,false,true,false);
+        this(activity,null,new Task[] {task},false,true,false);
     }
 
     public User getUser() {
@@ -211,10 +217,16 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
      */
     private void prepareSyncTask() {
         String TAG = CLASS_TAG+"prepareSyncTask";
+        JSONArray requestObjectsArray = new JSONArray();
         try {
+            for (Task task:taskList) {
+                requestObjectsArray.put(
+                        task.getUuid()
+                );
+            }
             this.requestObject.put(
-                    Config.REQUEST_RESPONSE_KEYS.UUID.getKey(),
-                    this.task.getUuid()
+                    Config.REQUEST_RESPONSE_KEYS.DATA.getKey(),
+                    requestObjectsArray
             );
         } catch (JSONException e) {
             e.printStackTrace();
@@ -229,10 +241,16 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
      */
     private void prepareSyncUser() {
         String TAG = CLASS_TAG+"prepareSyncUser";
+        JSONArray requestObjectsArray = new JSONArray();
         try {
+            for(User user:userList) {
+                requestObjectsArray.put(
+                        user.getUuid()
+                );
+            }
             this.requestObject.put(
-                    Config.REQUEST_RESPONSE_KEYS.UUID.getKey(),
-                    user.getUuid()
+                    Config.REQUEST_RESPONSE_KEYS.DATA.getKey(),
+                    requestObjectsArray
             );
         } catch (JSONException e) {
             e.printStackTrace();
