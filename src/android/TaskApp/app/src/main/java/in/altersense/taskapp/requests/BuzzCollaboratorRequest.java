@@ -71,7 +71,9 @@ public class BuzzCollaboratorRequest extends AsyncTask<Void, Integer, JSONObject
                 JSONObject responseOfSync = taskSyncRequest.getApiRequest().request();
                 taskSyncRequest.postExecuteSyncTask(responseOfSync.getJSONObject(
                         Config.REQUEST_RESPONSE_KEYS.DATA.getKey()
-                ));
+                    ),
+                    this.task
+                );
                 this.task = taskSyncRequest.getTask();
                 this.task.setId(taskId);
                 this.task.setSyncStatus(true);
@@ -89,9 +91,8 @@ public class BuzzCollaboratorRequest extends AsyncTask<Void, Integer, JSONObject
         try {
             JSONArray buzzes = new JSONArray();
             buzzes.put(buzz.getTaskUuid());
-            // TODO: Change the json key name.
             this.requestObject.put(
-                    Config.REQUEST_RESPONSE_KEYS.UUID.getKey(),
+                    Config.REQUEST_RESPONSE_KEYS.DATA.getKey(),
                     buzzes
             );
         } catch (JSONException e) {
