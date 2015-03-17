@@ -34,7 +34,8 @@ public class CreateTaskRequest extends AsyncTask<Void, Integer, JSONObject> {
     protected void onPreExecute() {
         String TAG = CLASS_TAG+"onPreExecute";
         super.onPreExecute();
-        this.requestObject = new JSONObject();
+        JSONArray requestObjectJSONArray = new JSONArray();
+        JSONObject taskObject = new JSONObject();
         this.collaborators = new JSONArray();
         try {
             if(this.task.getCollaborators().size()>0) {
@@ -46,18 +47,20 @@ public class CreateTaskRequest extends AsyncTask<Void, Integer, JSONObject> {
             Log.d(TAG, "No collaborators.");
         }
         try {
-            this.requestObject.put(
+            taskObject.put(
                     Config.REQUEST_RESPONSE_KEYS.OWNER.getKey(),
                     this.task.getOwner().getUuid()
             );
-            this.requestObject.put(
+            taskObject.put(
                     Config.REQUEST_RESPONSE_KEYS.TASK_NAME.getKey(),
                     this.task.getName()
             );
-            this.requestObject.put(
+            taskObject.put(
                     Config.REQUEST_RESPONSE_KEYS.TASK_COLLABOATORS.getKey(),
                     this.collaborators
             );
+            requestObjectJSONArray.put(taskObject);
+            this.requestObject.put(Config.REQUEST_RESPONSE_KEYS.DATA.getKey(), requestObjectJSONArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }
