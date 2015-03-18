@@ -316,9 +316,28 @@ def syncUserInfo():
 			user = bll.syncUserInfo(userObj)
 		response["data"] = bll.convertUserToDict(user)
 		response["status"] = RESPONSE_SUCCESS
-	except Exception, e:
+	except Exception as e:
 		response['status'] = RESPONSE_FAILED
 		response['message'] = str(e)
+		if hasattr(e, "code"):
+			response["code"] = e.code
+	return response
+
+
+def passwordReset():
+	"""Request to reset password made by the user"""
+	response = {}
+	data = {}
+	userObj = Collection()
+
+	obj = request.json
+	try:
+		userObj.email = obj["email"]
+		bll.passwordReset(userObj)
+		response["status"] = RESPONSE_SUCCESS
+	except Exception as e:
+		response["status"] = RESPONSE_FAILED
+		response["message"] = str(e)
 		if hasattr(e, "code"):
 			response["code"] = e.code
 	return response

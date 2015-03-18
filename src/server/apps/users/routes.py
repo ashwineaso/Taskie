@@ -14,5 +14,7 @@ users_app.route('/refreshtokens', 'POST', refreshTokens)
 users_app.route('/checkaccesstoken', 'POST', checkAccessToken)
 users_app.route('/modifyProfilePic', 'POST', modifyProfilePic)
 users_app.route('/syncUserInfo', 'POST', syncUserInfo)
+users_app.route('/passwordReset', 'POST', passwordReset)
+
 
 __author__ = ["ashwineaso"]

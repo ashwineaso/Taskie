@@ -151,6 +151,12 @@ def syncUserInfo(userObj):
 	return user
 
 
+def passwordReset(userObj):
+	"""Request to reset password made by the user"""
+	userObj.user = getUserByEmail(userObj)
+	mailing.passwordReset(userObj)
+
+
 def issueToken(userObj):
 	"""
 	Issue access and refresh tokens by confirming user key
