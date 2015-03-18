@@ -9,9 +9,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.ArrayList;
+import java.util.List;
 
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.APIRequest;
@@ -29,16 +28,21 @@ public class BuzzCollaboratorRequest extends AsyncTask<Void, Integer, JSONObject
 
     private static final String CLASS_TAG = "BuzzCollaboratorRequest ";
 
-    private Task task;
     private final Activity activity;
     private JSONObject requestObject;
     private TaskDbHelper taskDbHelper;
     private UserDbHelper userDbHelper;
     private CollaboratorDbHelper collaboratorDbHelper;
-    private Buzz buzz;
+    private List<Buzz> buzzList;
 
-    public BuzzCollaboratorRequest(Task task, Activity activity) {
-        this.task = task;
+    public BuzzCollaboratorRequest(Buzz buzz, Activity activity) {
+        this.activity = activity;
+        this.buzzList = new ArrayList<>();
+        buzzList.add(buzz);
+    }
+
+    public BuzzCollaboratorRequest(List<Buzz> buzzList, Activity activity) {
+        this.buzzList = buzzList;
         this.activity = activity;
     }
 
@@ -57,43 +61,63 @@ public class BuzzCollaboratorRequest extends AsyncTask<Void, Integer, JSONObject
         String TAG = CLASS_TAG+"doInBackground";
         JSONObject responseObject = new JSONObject();
 
-        // Checks whether the task is synced and has an id.
-        if(
-                this.task.getUuid().length()<0 ||
-                        !this.task.getSyncStatus()
-                ) {
-            long taskId = this.task.getId();
-            Log.d(TAG, "No uuid for task to be buzzed.");
-            SyncRequest taskSyncRequest = new SyncRequest(this.task, this.activity);
-            try {
-                //Syncing task.
-                Log.d(TAG, "taskSyncRequest called");
-                JSONObject responseOfSync = taskSyncRequest.getApiRequest().request();
-                taskSyncRequest.postExecuteSyncTask(responseOfSync.getJSONObject(
-                        Config.REQUEST_RESPONSE_KEYS.DATA.getKey()
-                    ),
-                    this.task
-                );
-                this.task = taskSyncRequest.getTask();
-                this.task.setId(taskId);
-                this.task.setSyncStatus(true);
-                this.task.updateTask(this.activity);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
+        for(Buzz buzzFromList:buzzList) {
+            Task task = taskDbHelper.getTaskByRowId(buzzFromList.getTaskId(),activity);
+            // Checks whether the task is synced and has an id.
+            if(
+                    buzzFromList.getTaskUuid().length()<0 ||
+                            !task.getSyncStatus()
+                    ) {
+                Log.d(TAG, "No uuid for task to be buzzed.");
+                SyncRequest taskSyncRequest = new SyncRequest(task, this.activity);
+                try {
+                    //Syncing task.
+                    Log.d(TAG, "taskSyncRequest called");
+                    JSONObject responseOfSync = taskSyncRequest.getApiRequest().request();
+                    JSONObject taskObject = responseObject.getJSONObject(Config.REQUEST_RESPONSE_KEYS.DATA.getKey());
+                    if(!taskObject.get(Config.REQUEST_RESPONSE_KEYS.STATUS.getKey()).equals(Config.RESPONSE_STATUS_SUCCESS)) {
+                        if(taskObject.getInt(
+                                Config.REQUEST_RESPONSE_KEYS.ERROR_CODE.getKey()
+                        ) == Config.REQUEST_ERROR_CODES.TASK_WITH_ID_NOT_FOUND.getCode()) {
+                            continue;
+                        }
+                    }
+                    taskSyncRequest.postExecuteSyncTask(responseOfSync.getJSONObject(
+                                    Config.REQUEST_RESPONSE_KEYS.DATA.getKey()
+                            ),
+                            task
+                    );
+                    task = taskSyncRequest.getTask();
+                    // Task sync complete setting task id to updated task object
+                    task.setId(buzzFromList.getTaskId());
+                    task.setSyncStatus(true);
+                    // update task in database
+                    task.updateTask(this.activity);
+                    // set the task uuid to buzz instance
+                    buzzFromList.setTaskUuid(task.getUuid());
+                    // update buzz in db and replace the updated buzz with the one in buzz list
+                    if(taskDbHelper.updateBuzz(buzzFromList)) {
+                        int buzzPosition = this.buzzList.indexOf(buzzFromList);
+                        this.buzzList.remove(buzzPosition);
+                        this.buzzList.add(buzzPosition,buzzFromList);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
+
+            // Set up Buzz Request
+            JSONArray buzzes = new JSONArray();
+            buzzes.put(buzzFromList.getTaskUuid());
+
         }
 
-        this.buzz = new Buzz(this.task, this.activity);
-        this.buzz = taskDbHelper.createBuzz(buzz);
-
         try {
-            JSONArray buzzes = new JSONArray();
-            buzzes.put(buzz.getTaskUuid());
             this.requestObject.put(
                     Config.REQUEST_RESPONSE_KEYS.DATA.getKey(),
-                    buzzes
+                    buzzList
             );
         } catch (JSONException e) {
             e.printStackTrace();
@@ -109,21 +133,29 @@ public class BuzzCollaboratorRequest extends AsyncTask<Void, Integer, JSONObject
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return responseObject;
     }
 
     @Override
     protected void onPostExecute(JSONObject result) {
+        String TAG = CLASS_TAG+"onPostExecute";
         super.onPostExecute(result);
         try {
-            String status = result.getString(Config.REQUEST_RESPONSE_KEYS.STATUS.getKey());
-            if(status.equals(Config.RESPONSE_STATUS_SUCCESS)) {
-                Toast.makeText(
-                        activity.getApplicationContext(),
-                        "Buzz sent!",
-                        Toast.LENGTH_SHORT
-                ).show();
-                taskDbHelper.deleteBuzz(buzz);
+            JSONArray resultArray = result.getJSONArray(Config.REQUEST_RESPONSE_KEYS.DATA.getKey());
+            for(int ctr  = 0; ctr<resultArray.length();ctr++) {
+                result = resultArray.getJSONObject(ctr);
+                String status = result.getString(Config.REQUEST_RESPONSE_KEYS.STATUS.getKey());
+                if(status.equals(Config.RESPONSE_STATUS_SUCCESS)) {
+                    // TODO: Remove the toast.
+                    Toast.makeText(
+                            activity.getApplicationContext(),
+                            "Buzz sent!",
+                            Toast.LENGTH_SHORT
+                    ).show();
+                    taskDbHelper.deleteBuzz(buzzList.get(0));
+                    buzzList.remove(0);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();

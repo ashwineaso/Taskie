@@ -110,4 +110,8 @@ public class Buzz {
     public long getId() {
         return id;
     }
+
+    public void setTaskUuid(String taskUuid) {
+        this.taskUuid = taskUuid;
+    }
 }

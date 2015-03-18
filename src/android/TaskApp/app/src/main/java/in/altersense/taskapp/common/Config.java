@@ -129,7 +129,8 @@ public class Config {
         TOKEN_NOT_FOUND(3001),
         ACCESS_TOKEN_INVALID(3002),
         REFRESH_TOKEN_INVALID(3003),
-        ACCESS_TOKEN_EXPIRED(3004);
+        ACCESS_TOKEN_EXPIRED(3004),
+        TASK_WITH_ID_NOT_FOUND(2001);
 
         public int getCode() {
             return code;
@@ -159,7 +160,8 @@ public class Config {
         DESCRIPTION("description"),
         DUE_DATE_TIME("dueDateTime"),
         PRIORITY("priority"),
-        SERVER_PUSH_ID("serverPushId");
+        SERVER_PUSH_ID("serverPushId"),
+        ERROR_CODE("code");
 
         private String key;
 

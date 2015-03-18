@@ -401,6 +401,28 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         return buzz;
     }
 
+    public boolean updateBuzz(Buzz buzz) {
+        String TAG = CLASS_TAG+"updateBuzz";
+        // Open writable database.
+        SQLiteDatabase writableDb = this.getWritableDatabase();
+        // Make querry
+        ContentValues values = new ContentValues();
+        values.put(Buzz.KEYS.TASK_ID.getName(), buzz.getTaskId());
+        values.put(Buzz.KEYS.TASK_UUID.getName(), buzz.getTaskUuid());
+        // Execute query
+        // Check affected rows
+        int affectedRows = writableDb.update(
+                Buzz.TABLE_NAME,
+                values,
+                "ROWID =?",
+                new String[] { buzz.getId()+"" }
+        );
+        // Close db
+        writableDb.close();
+        // return true if affecctedRows > 0
+        return affectedRows > 0;
+    }
+
     public boolean deleteBuzz(Buzz buzz) {
         String TAG = CLASS_TAG+"deleteBuzz(Buzz)";
         // Open writable database.
