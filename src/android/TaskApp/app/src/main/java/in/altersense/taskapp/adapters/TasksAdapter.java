@@ -18,6 +18,7 @@ import in.altersense.taskapp.CreateTaskActivity;
 import in.altersense.taskapp.R;
 import in.altersense.taskapp.TaskActivity;
 import in.altersense.taskapp.common.Config;
+import in.altersense.taskapp.models.Buzz;
 import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.requests.BuzzCollaboratorRequest;
@@ -153,7 +154,8 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         holder.action3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BuzzCollaboratorRequest buzzCollaboratorRequest = new BuzzCollaboratorRequest(task, activity);
+                Buzz buzz = new Buzz(task, activity);
+                BuzzCollaboratorRequest buzzCollaboratorRequest = new BuzzCollaboratorRequest(buzz, activity);
                 buzzCollaboratorRequest.execute();
             }
         });
