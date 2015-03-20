@@ -65,11 +65,10 @@
             android:layout_height="wrap_content"
             style="@style/tokenEditText" />
 
-        <EditText android:id="@+id/dueDateEditText"
-            android:layout_width="match_parent"
+        <TextView android:id="@+id/dueDateTextView"
             android:layout_height="wrap_content"
-            android:hint="Due Date and Time"
-            android:enabled="false"/>
+            android:layout_width="match_parent"
+            android:text="Set Task Duedate"/>
 
         <TextView
             android:layout_width="fill_parent"

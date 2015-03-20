@@ -52,7 +52,7 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
 
     private EditText taskTitleET;
     private EditText taskDescriptionET;
-    private EditText dueDateET;
+    private TextView dueDateTV;
     private TokenCompleteCollaboratorsEditText collaboratorsTCET;
     private SeekBar prioritySB;
     private TextView priorityTV;
@@ -123,19 +123,18 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
         this.taskTitleET = (EditText) findViewById(R.id.taskTitleEditText);
         this.taskDescriptionET = (EditText) findViewById(R.id.taskDescriptionEditText);
         this.collaboratorsTCET = (TokenCompleteCollaboratorsEditText) findViewById(R.id.collaboratorsTCET);
-        this.dueDateET = (EditText) findViewById(R.id.dueDateEditText);
+        this.dueDateTV = (TextView) findViewById(R.id.dueDateTextView);
         this.prioritySB = (SeekBar) findViewById(R.id.prioritySeekBar);
         this.priorityTV = (TextView) findViewById(R.id.priorityTextView);
         this.createTaskBtn = (Button) findViewById(R.id.createTaskButton);
         this.updateTaskBtn = (Button) findViewById(R.id.updateTaskButton);
 
-        this.dueDateET.setEnabled(true);
-        this.dueDateET.setOnClickListener(new View.OnClickListener() {
+        this.dueDateTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                datePickerDialog.setYearRange(2015,2030);
+                datePickerDialog.setYearRange(2015, 2030);
                 datePickerDialog.setCloseOnSingleTapDay(true);
-                datePickerDialog.show(getSupportFragmentManager(),DATEPICKER_TAG);
+                datePickerDialog.show(getSupportFragmentManager(), DATEPICKER_TAG);
             }
         });
 
@@ -262,7 +261,7 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
         String TAG = CLASS_TAG+"populateTheForm";
         this.taskTitleET.setText(this.task.getName());
         this.taskDescriptionET.setText(this.task.getDescription());
-        this.dueDateET.setText(this.task.getDueDateTime()+"");
+        this.dueDateTV.setText(this.task.getDueDateTime() + "");
         prioritySB.setProgress(this.task.getPriority());
         String priority = Config.PRIORITY.getText(this.task.getPriority());
         Log.d(TAG,"Priority: "+priority);
