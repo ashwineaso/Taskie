@@ -112,7 +112,7 @@ public class Task {
     private String dateToString(long dueDateTime) {
         String dateTime = null;
         if (dueDateTime == 0) { return dateTime; }
-        Date date = new Date(dueDateTime*1000L);
+        Date date = new Date(dueDateTime);
         SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM d, h:mm a");
         dateTime = sdf.format(date);
         return dateTime;
@@ -130,9 +130,7 @@ public class Task {
         return priority;
     }
 
-    public int getStatus() {
-        return status;
-    }
+    public int getStatus() { return status; }
 
     /**
      * Gets the user's status in this task.
