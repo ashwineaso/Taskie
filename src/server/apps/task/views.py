@@ -12,14 +12,16 @@ groupObj = Collection()
 
 
 def addNewTask():
-	response = {}
-	data = {}
-	jsonResponse = []
+	jsonResponse = {}
 
 	jsonObj = request.json
-	for obj in jsonObj:
+	jsonResponse["data"] = []
+
+	taskObj.access_token = jsonObj["access_token"]
+	for obj in jsonObj["data"]:
+		response = {}
+		data = {}
 		try:
-			taskObj.access_token = obj["access_token"]
 			taskObj.owner = obj["owner"]
 			taskObj.name = obj["name"]
 			try:
@@ -45,19 +47,20 @@ def addNewTask():
 			response["message"] = str(e)
 			if hasattr(e, "code"):
 				response["code"] = e.code
-		jsonResponse.append(response)
-	return json.dumps(jsonResponse) 
+		jsonResponse["data"].append(response)
+	return jsonResponse
 
 
 def editTask():
-	response = {}
-	data = {}
-	jsonResponse = []
+	jsonResponse = {}
 
 	jsonObj = request.json
-	for obj in jsonObj:
+	jsonResponse["data"] = []
+	taskObj.access_token = jsonObj["access_token"]
+	for obj in jsonObj["data"]:
+		response = {}
+		data = {}
 		try:
-			taskObj.access_token = obj["access_token"]
 			taskObj.id = obj["id"]
 			taskObj.priority = obj["priority"]
 			taskObj.name = obj["name"]
@@ -72,19 +75,20 @@ def editTask():
 			response["message"] = str(e)
 			if hasattr(e, "code"):
 				response["code"] = e.code
-		jsonResponse.append(response)
-	return json.dumps(jsonResponse)
+		jsonResponse["data"].append(response)
+	return jsonResponse
 
 
 def addCollaborators():
-	response = {}
-	data = {}
-	jsonResponse = []
+	jsonResponse = {}
 
 	jsonObj = request.json
-	for obj in jsonObj:
+	jsonResponse["data"] = []
+	taskObj.access_token = jsonObj["access_token"]
+	for obj in jsonObj["data"]:
+		response = {}
+		data = {}
 		try:
-			taskObj.access_token = obj["access_token"]
 			taskObj.id = obj["id"]
 			taskObj.collaborators = obj["collaborators"]
 			if checkAccessTokenValid(taskObj) is True:
@@ -96,19 +100,20 @@ def addCollaborators():
 			response["message"] = str(e)
 			if hasattr(e, "code"):
 				response["code"] = e.code
-		jsonResponse.append(response)
-	return json.dumps(jsonResponse)
+		jsonResponse["data"].append(response)
+	return jsonResponse
 
 
 def remCollaborators():
-	response = {}
-	data = {}
-	jsonResponse = []
+	jjsonResponse = {}
 
 	jsonObj = request.json
-	for obj in jsonObj:
+	jsonResponse["data"] = []
+	taskObj.access_token = jsonObj["access_token"]
+	for obj in jsonObj["data"]:
+		response = {}
+		data = {}
 		try:
-			taskObj.access_token = obj["access_token"]
 			taskObj.id = obj["id"]
 			taskObj.collaborators = obj["collaborators"]
 			if checkAccessTokenValid(taskObj) is True:
@@ -120,19 +125,20 @@ def remCollaborators():
 			response["message"] = str(e)
 			if hasattr(e, "code"):
 				response["code"] = e.code
-		jsonResponse.append(response)
-	return json.dumps(jsonResponse)
+		jsonResponse["data"].append(response)
+	return jsonResponse
 
 
 def modifyTaskStatus():
-	response = {}
-	data = {}
-	jsonResponse = []
+	jsonResponse = {}
 
 	jsonObj = request.json
-	for obj in jsonObj:
+	jsonResponse["data"] = []
+	taskObj.access_token = jsonObj["access_token"]
+	for obj in jsonObj["data"]:
+		response = {}
+		data = {}
 		try:
-			taskObj.access_token = obj["access_token"]
 			taskObj.id = obj["id"]
 			taskObj.status = obj["status"]
 			if checkAccessTokenValid(taskObj) is True:
@@ -144,19 +150,20 @@ def modifyTaskStatus():
 			response["message"] = str(e)
 			if hasattr(e, "code"):
 				response["code"] = e.code
-		jsonResponse.append(response)
-	return json.dumps(jsonResponse)
+		jsonResponse["data"].append(response)
+	return jsonResponse
 
 
 def modifyCollStatus():
-	response = {}
-	data = {}
-	jsonResponse = []
+	jsonResponse = {}
 
 	jsonObj = request.json
-	for obj in jsonObj:
+	jsonResponse["data"] = []
+	taskObj.access_token = jsonObj["access_token"]
+	for obj in jsonObj["data"]:
+		response = {}
+		data = {}
 		try:
-			taskObj.access_token = obj["access_token"]
 			taskObj.id = obj["id"]
 			taskObj.email = obj["collemail"]
 			taskObj.collstatus = obj["collstatus"]
@@ -169,20 +176,21 @@ def modifyCollStatus():
 			response["message"] = str(e)
 			if hasattr(e, "code"):
 				response["code"] = e.code
-		jsonResponse.append(response)
-	return json.dumps(jsonResponse)
+		jsonResponse["data"].append(response)
+	return jsonResponse
 
 
 def syncTask():
-	response = {}
-	data = {}
-	jsonResponse = []
+	jsonResponse = {}
 
 	jsonObj = request.json
-	for obj in jsonObj:
+	jsonResponse["data"] = []
+	taskObj.access_token = jsonObj["access_token"]
+	for obj in jsonObj["data"]:
+		response = {}
+		data = {}
 		try:
-			taskObj.id = obj["id"]
-			taskObj.access_token = obj["access_token"]
+			taskObj.id = obj
 			if checkAccessTokenValid(taskObj) is True:
 				task = bll.syncTask(taskObj)
 			response["status"] = RESPONSE_SUCCESS
@@ -192,20 +200,21 @@ def syncTask():
 			response["message"] = str(e)
 			if hasattr(e, "code"):
 				response["code"] = e.code
-		jsonResponse.append(response)
-	return json.dumps(jsonResponse)
+		jsonResponse["data"].append(response)
+	return jsonResponse
 
 
 def deleteTask():
-	response = {}
-	data = {}
-	jsonResponse = []
+	jsonResponse = {}
 
 	jsonObj = request.json
-	for obj in jsonObj:
+	jsonResponse["data"] = []
+	taskObj.access_token = jsonObj["access_token"]
+	for obj in jsonObj["data"]:
+		response = {}
+		data = {}
 		try:
 			taskObj.id = obj["id"]
-			taskObj.access_token = obj["access_token"]
 			if checkAccessTokenValid(taskObj) is True:
 				flag = bll.deleteTask(taskObj)
 			if flag is True:
@@ -219,8 +228,8 @@ def deleteTask():
 			response["message"] = str(e)
 			if hasattr(e, 'code'):
 				response["code"] = e.code
-		jsonResponse.append(response)
-	return json.dumps(jsonResponse)
+		jsonResponse["data"].append(response)
+	return jsonResponse
 
 
 def syncAllTasks():
@@ -246,15 +255,16 @@ def syncAllTasks():
 
 
 def buzzCollaborators():
-	response = {}
-	data = {}
-	jsonResponse = []
+	jsonResponse = {}
 
 	jsonObj = request.json
-	for obj in jsonObj:
+	jsonResponse["data"] = []
+	taskObj.access_token = jsonObj["access_token"]
+	for obj in jsonObj["data"]:
+		response = {}
+		data = {}
 		try:
-			taskObj.id = obj["id"]
-			taskObj.access_token = obj["access_token"]
+			taskObj.id = obj
 			if checkAccessTokenValid(taskObj) is True:
 				flag = bll.buzzCollaborators(taskObj)
 			if (flag):
@@ -266,5 +276,5 @@ def buzzCollaborators():
 			response["message"] = str(e)
 			if hasattr(e, 'code'):
 				response["code"] = e.code
-		jsonResponse.append(response)
-	return json.dumps(jsonResponse)
+		jsonResponse["data"].append(response)
+	return jsonResponse
