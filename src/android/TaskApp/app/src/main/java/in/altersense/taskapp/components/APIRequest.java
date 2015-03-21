@@ -256,7 +256,7 @@ public class APIRequest {
 			authorizeAPIContent.put(
                     Config.REQUEST_RESPONSE_KEYS.PASSWORD.getKey(),
                     AltEngine.readStringFromSharedPref(
-                            context.getApplicationContext(),
+                            context,
                             Config.SHARED_PREF_KEYS.APP_SECRET.getKey(),
                             ""
                     )
@@ -264,7 +264,7 @@ public class APIRequest {
 			authorizeAPIContent.put(
                     Config.REQUEST_RESPONSE_KEYS.EMAIL.getKey(),
                     AltEngine.readStringFromSharedPref(
-                            context.getApplicationContext(),
+                            context,
                             Config.SHARED_PREF_KEYS.APP_KEY.getKey(),
                             ""
                     )

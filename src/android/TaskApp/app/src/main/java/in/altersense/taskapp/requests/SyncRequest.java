@@ -32,11 +32,11 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
 
     private static final String CLASS_TAG = "SyncRequest ";
 
-    private final Context activity;
+    private Context activity;
     private APIRequest apiRequest;
     private List<User> userList;
     private List<Task> taskList;
-    private final Intent syncCompleteBroadcastIntent;
+    private Intent syncCompleteBroadcastIntent;
     private JSONObject requestObject;
     private String url;
 
@@ -101,7 +101,13 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         this(activity, new User[] {user}, null, true, false, false);
     }
 
+    /**
+     * Constructor with list of users.
+     * @param userList List of users to be synced
+     * @param context Current context.
+     */
     public SyncRequest(List<User> userList, Context context) {
+        this(context,userList.toArray(new User[userList.size()]),null,true,false,false);
     }
 
     /**
@@ -111,6 +117,15 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
      */
     public SyncRequest(Task task, Activity activity) {
         this(activity,null,new Task[] {task},false,true,false);
+    }
+
+    /**
+     * Constructor with a list of Tasks.
+     * @param taskList List of tasks to be synced.
+     * @param context Current context.
+     */
+    public SyncRequest(List<Task> taskList, Context context) {
+        this(context, null, taskList.toArray(new Task[taskList.size()]),false,true,false);
     }
 
     public User getUser() {
