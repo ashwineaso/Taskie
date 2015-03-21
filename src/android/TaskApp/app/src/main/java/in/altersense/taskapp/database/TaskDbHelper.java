@@ -229,7 +229,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         values.put(Task.KEYS.DESCRIPTION.getName(), task.getDescription());
         values.put(Task.KEYS.OWNER_UUID.getName(), task.getOwner().getUuid());
         values.put(Task.KEYS.PRIORITY.getName(), task.getPriority());
-        values.put(Task.KEYS.DUE_DATE_TIME.getName(), task.getDueDateTime());
+        values.put(Task.KEYS.DUE_DATE_TIME.getName(), task.getDueDateTimeAsLong());
         values.put(Task.KEYS.STATUS.getName(), task.getStatus());
         values.put(Task.KEYS.IS_GROUP.getName(), task.getIntIsGroup());
         values.put(Task.KEYS.SYNC_STATUS.getName(), task.getSyncStatusAsInt());

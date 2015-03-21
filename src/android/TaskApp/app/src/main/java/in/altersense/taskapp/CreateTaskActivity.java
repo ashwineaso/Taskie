@@ -23,8 +23,11 @@ import com.sleepbot.datetimepicker.time.TimePickerDialog;
 import com.tokenautocomplete.FilteredArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import in.altersense.taskapp.common.Config;
@@ -58,6 +61,9 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
     private TextView priorityTV;
     private Button createTaskBtn;
     private Button updateTaskBtn;
+
+    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
+    private String dueString = "";
 
     private List<User> users;
 
@@ -247,6 +253,15 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
         this.task.setName(this.taskTitleET.getText().toString());
         this.task.setDescription(this.taskDescriptionET.getText().toString());
         this.task.setPriority(this.prioritySB.getProgress());
+        long dueDateTime = 0;
+        try {
+            dueDateTime = sdf.parse(this.dueDateTV.getText().toString()).getTime();
+            Log.d(TAG, "dueDateTime set as: "+dueDateTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        this.task.setDueDateTime(dueDateTime);
+        this.task.setSyncStatus(false);
         Log.d(TAG, "Values set.");
         this.task.updateTask(this);
         Log.d(TAG, "Task update complete.");
@@ -261,7 +276,13 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
         String TAG = CLASS_TAG+"populateTheForm";
         this.taskTitleET.setText(this.task.getName());
         this.taskDescriptionET.setText(this.task.getDescription());
-        this.dueDateTV.setText(this.task.getDueDateTime() + "");
+        String dueDate;
+        if(this.task.getDueDateTimeAsLong()==0) {
+            dueDate = "Set a due date.";
+        } else {
+            dueDate = sdf.format(this.task.getDueDateTimeAsLong()/1000);
+        }
+        this.dueDateTV.setText(dueDate);
         prioritySB.setProgress(this.task.getPriority());
         String priority = Config.PRIORITY.getText(this.task.getPriority());
         Log.d(TAG,"Priority: "+priority);
@@ -371,11 +392,17 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
         Log.d(TAG, "Date: "+i+"-"+i2+"-"+i3);
         timePickerDialog.setCloseOnSingleTapMinute(true);
         timePickerDialog.show(getSupportFragmentManager(), TIMEPICKER_TAG);
+        this.dueString = i3 + "-" + i2 + "-" + i + " ";
     }
 
     @Override
     public void onTimeSet(RadialPickerLayout radialPickerLayout, int i, int i2) {
         String TAG = CLASS_TAG + "onTimeSet";
         Log.d(TAG, "Time: "+i+":"+i2);
+        this.dueString += i>12 ? i-12 : i;
+        this.dueString +=":"+i2+" ";
+        this.dueString += i>12 ? "PM" : "AM";
+
+        this.dueDateTV.setText(dueString);
     }
 }

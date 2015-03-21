@@ -92,6 +92,10 @@ public class Task {
         return owner;
     }
 
+    public long getDueDateTimeAsLong() {
+        return this.dueDateTime;
+    }
+
     public String getDueDateTime() {
         return dateToString(this.dueDateTime);
     }
