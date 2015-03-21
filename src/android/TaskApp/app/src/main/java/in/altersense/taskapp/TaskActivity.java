@@ -81,7 +81,7 @@ public class TaskActivity extends ActionBarActivity {
         this.taskTitleTV = (TextView)findViewById(R.id.taskTitleTextView);
         this.taskDescriptionTV = (TextView)findViewById(R.id.taskDescriptionTextView);
         this.dueDateTV = (TextView)findViewById(R.id.dueDateTextView);
-        this.taskPriorityTV = (TextView)findViewById(R.id.taskStatusTextView);
+        this.taskPriorityTV = (TextView)findViewById(R.id.taskPriorityTextView);
         this.taskStatusTV = (TextView)findViewById(R.id.taskStatusTextView);
         this.taskOwnerTV = (TextView) findViewById(R.id.taskOwnerTV);
 
@@ -89,8 +89,8 @@ public class TaskActivity extends ActionBarActivity {
         this.taskTitleTV.setText(this.task.getName());
         this.taskDescriptionTV.setText(this.task.getDescription());
         this.dueDateTV.setText(this.task.getDueDateTime());
-        this.taskPriorityTV.setText(this.task.getPriority()+"");
-        this.taskStatusTV.setText(this.task.getStatus()+"");
+        this.taskPriorityTV.setText(priorityToString(this.task.getPriority()));
+        this.taskStatusTV.setText("Status : " + statusToString(this.task.getStatus()));
         this.taskOwnerTV.setText(this.task.getOwner().getName());
 
         //Fill the ArrayList with the required data
@@ -109,6 +109,33 @@ public class TaskActivity extends ActionBarActivity {
         setListViewHeightBasedOnChildren(collList);
         collList.setFocusable(false); //To set the focus to top #glitch
 
+    }
+
+    /**
+     * Convert the priority from int format to apropriate string format
+     */
+    private String priorityToString(int priority) {
+        String priorityToString = "";
+        switch (priority) {
+            case 0 : priorityToString = "Low Priority"; break;
+            case 1 : priorityToString = "Normal Priority"; break;
+            case 2 : priorityToString = "High Priority"; break;
+        }
+        return priorityToString;
+    }
+
+    /**
+     * Convert the status from int format to apropriate string format
+     */
+    private String statusToString(Integer status) {
+        String statusAsString = "Undefined";
+        switch (status) {
+            case 0 : statusAsString = "Not Accepted"; break;
+            case 1 : statusAsString = "Ongoing"; break;
+            case 2 : statusAsString = "Completed"; break;
+            case -1 : statusAsString = "Declined"; break;
+        }
+        return statusAsString;
     }
 
     /**

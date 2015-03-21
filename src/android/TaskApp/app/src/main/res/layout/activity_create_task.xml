@@ -68,7 +68,11 @@
         <TextView android:id="@+id/dueDateTextView"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:text="Set Task Duedate"/>
+            android:text="Tap to set Due Date and Time"
+            android:layout_margin="@dimen/tinyMargin_xhdpi"
+            android:textSize="@dimen/text_subHeader_xhdpi"
+            android:paddingTop="@dimen/smallMargin_xhdp"
+            android:textColor="@color/headerText" />
 
         <TextView
             android:layout_width="fill_parent"
@@ -82,11 +86,6 @@
             android:textSize="@dimen/text_normal_xhdpi"
             fontPath="fonts/Cabin-SemiBold-TTF.ttf"/>
 
-        <SeekBar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/seekBar" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -97,8 +96,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:progressDrawable="@drawable/scrubber_progress"
-                android:thumb="@drawable/scrubber_control"
                 android:max="2" />
 
             <TextView android:id="@+id/priorityTextView"

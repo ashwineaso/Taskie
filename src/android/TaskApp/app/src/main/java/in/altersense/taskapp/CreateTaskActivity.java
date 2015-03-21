@@ -280,7 +280,7 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
         if(this.task.getDueDateTimeAsLong()==0) {
             dueDate = "Set a due date.";
         } else {
-            dueDate = sdf.format(this.task.getDueDateTimeAsLong()/1000);
+            dueDate = this.task.getDueDateTime();
         }
         this.dueDateTV.setText(dueDate);
         prioritySB.setProgress(this.task.getPriority());
@@ -387,21 +387,21 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
     }
 
     @Override
-    public void onDateSet(DatePickerDialog datePickerDialog, int i, int i2, int i3) {
+    public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
         String TAG = CLASS_TAG + "onDateSet";
-        Log.d(TAG, "Date: "+i+"-"+i2+"-"+i3);
+        Log.d(TAG, "Date: "+year+"-"+month+"-"+day);
         timePickerDialog.setCloseOnSingleTapMinute(true);
         timePickerDialog.show(getSupportFragmentManager(), TIMEPICKER_TAG);
-        this.dueString = i3 + "-" + i2 + "-" + i + " ";
+        this.dueString = year + "-" + (month+1) + "-" + day + " ";
     }
 
     @Override
-    public void onTimeSet(RadialPickerLayout radialPickerLayout, int i, int i2) {
+    public void onTimeSet(RadialPickerLayout radialPickerLayout, int hour, int minute) {
         String TAG = CLASS_TAG + "onTimeSet";
-        Log.d(TAG, "Time: "+i+":"+i2);
-        this.dueString += i>12 ? i-12 : i;
-        this.dueString +=":"+i2+" ";
-        this.dueString += i>12 ? "PM" : "AM";
+        Log.d(TAG, "Time: "+ hour +":"+ minute);
+        this.dueString += hour > 12 ? (hour-12) : hour;
+        this.dueString +=":"+ minute +" ";
+        this.dueString += hour > 12 ? "PM" : "AM";
 
         this.dueDateTV.setText(dueString);
     }

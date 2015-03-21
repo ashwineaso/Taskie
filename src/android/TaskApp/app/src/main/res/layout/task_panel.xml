@@ -34,13 +34,12 @@
                 android:layout_width="wrap_content"
                 android:textColor="@color/primaryText"
                 fontPath="fonts/Cabin-Regular-TTF.ttf"
-                android:textSize="@dimen/text_header_xhdpi"/>
+                android:textSize="@dimen/text_subHeader_xhdpi"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/collaboratorTokenRadius_xhdpi"
-                android:orientation="horizontal"
-                android:paddingTop="@dimen/tinyMargin_xhdpi">
+                android:orientation="horizontal">
 
                 <LinearLayout android:id="@+id/collaboratorsList"
                     android:layout_weight="1"
@@ -131,8 +130,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                tools:ignore="MissingPrefix"
-                android:layout_margin="@dimen/tinyMargin_xhdpi">
+                tools:ignore="MissingPrefix">
 
                 <TextView
                     android:id="@+id/timeStatusCustomFontTextView"

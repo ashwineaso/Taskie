@@ -36,6 +36,7 @@ public class CreateTaskRequest extends AsyncTask<Void, Integer, JSONObject> {
         super.onPreExecute();
         JSONArray requestObjectJSONArray = new JSONArray();
         JSONObject taskObject = new JSONObject();
+        this.requestObject = new JSONObject();
         this.collaborators = new JSONArray();
         try {
             if(this.task.getCollaborators().size()>0) {
