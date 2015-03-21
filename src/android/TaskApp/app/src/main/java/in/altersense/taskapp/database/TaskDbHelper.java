@@ -118,7 +118,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         return task;
     }
 
-    public Task getTaskByRowId(long rowId, Activity activity) {
+    public Task getTaskByRowId(long rowId, Context context) {
         String TAG = CLASS_TAG+"getTaskByRowId";
         // Open database.
         Log.d(TAG, "Readable database opened.");
@@ -147,7 +147,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         Log.d(TAG, "Cursor: "+cursorString);
         Task task = new Task(
                 selfCursor,
-                activity
+                context
         );
         selfCursor.close();
         readableDb.close();
