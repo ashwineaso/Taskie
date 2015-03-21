@@ -1,6 +1,7 @@
 package in.altersense.taskapp.requests;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -31,7 +32,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
 
     private static final String CLASS_TAG = "SyncRequest ";
 
-    private final Activity activity;
+    private final Context activity;
     private APIRequest apiRequest;
     private List<User> userList;
     private List<Task> taskList;
@@ -43,7 +44,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
 
     /**
      * Base constructor called by all the constructors
-     * @param activity Current activity.
+     * @param context Current context.
      * @param users Users to be synced.
      * @param tasks Tasks to be synced
      * @param syncUser True if this is a userList sync
@@ -51,14 +52,14 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
      * @param syncEverything True if this is a request to sync an entire account.
      */
     private SyncRequest(
-            Activity activity,
+            Context context,
             User[] users,
             Task[] tasks,
             boolean syncUser,
             boolean syncTask,
             boolean syncEverything
     ) {
-        this.activity = activity;
+        this.activity = context;
         this.userList = Arrays.asList(users);
         this.taskList = Arrays.asList(tasks);
         this.requestObject = new JSONObject();
@@ -98,6 +99,9 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
      */
     public SyncRequest(User user, Activity activity) {
         this(activity, new User[] {user}, null, true, false, false);
+    }
+
+    public SyncRequest(List<User> userList, Context context) {
     }
 
     /**

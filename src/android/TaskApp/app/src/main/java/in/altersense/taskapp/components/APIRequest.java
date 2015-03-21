@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 import in.altersense.taskapp.common.Config;
 
@@ -28,7 +29,7 @@ public class APIRequest {
 	private String accessToken;
 	private String refreshToken;
 
-	private Activity activity;
+	private Context context;
 	
 	private int reqCounter;
 	
@@ -52,7 +53,7 @@ public class APIRequest {
     public APIRequest(
             String _reqURL,
             JSONObject _content,
-            Activity _currentActivity,
+            Context _currentContext,
             String accessToken,
             String refreshToken) {
 
@@ -62,25 +63,25 @@ public class APIRequest {
         this.content = _content;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
-        this.activity = _currentActivity;
+        this.context = _currentContext;
 
         this.addAccessTokenToContent();
 
     }
 
-	// Constructor with activity.
-	public APIRequest(String _reqURL, JSONObject _content, Activity _currentActivty) {
+	// Constructor with context.
+	public APIRequest(String _reqURL, JSONObject _content, Context _currentContext) {
         this(
                 _reqURL,
                 _content,
-                _currentActivty,
+                _currentContext,
                 AltEngine.readStringFromSharedPref(
-                        _currentActivty.getApplicationContext(),
+                        _currentContext,
                         Config.SHARED_PREF_KEYS.ACCESS_TOKEN.getKey(),
                         ""
                 ),
                 AltEngine.readStringFromSharedPref(
-                        _currentActivty.getApplicationContext(),
+                        _currentContext,
                         Config.SHARED_PREF_KEYS.REFRESH_TOKEN.getKey(),
                         ""
                 )
@@ -160,7 +161,7 @@ public class APIRequest {
 				APIRequest tokenRequestAPI = new APIRequest(
 						"http://"+Config.SERVER_ADDRESS+"/user/refreshtokens",
 						tokenRequestContent,
-                        this.activity
+                        this.context
 						);
 				tokenRequestAPI.removeAccessTokenFromContent();
                 refreshedTokenResponse = tokenRequestAPI.request();
@@ -185,12 +186,12 @@ public class APIRequest {
                     Config.REQUEST_RESPONSE_KEYS.ACCESS_TOKEN.getKey()
             );
             AltEngine.writeStringToSharedPref(
-                    activity.getApplicationContext(),
+                    context,
                     Config.SHARED_PREF_KEYS.ACCESS_TOKEN.getKey(),
                     this.accessToken
             );
             AltEngine.writeStringToSharedPref(
-                    activity.getApplicationContext(),
+                    context,
                     Config.SHARED_PREF_KEYS.REFRESH_TOKEN.getKey(),
                     this.refreshToken
             );
@@ -255,7 +256,7 @@ public class APIRequest {
 			authorizeAPIContent.put(
                     Config.REQUEST_RESPONSE_KEYS.PASSWORD.getKey(),
                     AltEngine.readStringFromSharedPref(
-                            activity.getApplicationContext(),
+                            context.getApplicationContext(),
                             Config.SHARED_PREF_KEYS.APP_SECRET.getKey(),
                             ""
                     )
@@ -263,7 +264,7 @@ public class APIRequest {
 			authorizeAPIContent.put(
                     Config.REQUEST_RESPONSE_KEYS.EMAIL.getKey(),
                     AltEngine.readStringFromSharedPref(
-                            activity.getApplicationContext(),
+                            context.getApplicationContext(),
                             Config.SHARED_PREF_KEYS.APP_KEY.getKey(),
                             ""
                     )
@@ -271,7 +272,7 @@ public class APIRequest {
 			APIRequest authAPIRequest = new APIRequest(
 					"http://"+Config.SERVER_ADDRESS+"/user/authorize",
 					authorizeAPIContent,
-                    this.activity
+                    this.context
 					);
 			
 			authAPIRequest.removeAccessTokenFromContent();

@@ -21,6 +21,9 @@ import in.altersense.taskapp.models.Task;
 public class TaskDbHelper extends SQLiteOpenHelper {
 
     private static final String CLASS_TAG = "TaskDbHelper ";
+
+    private final Context context;
+
     private static String CREATION_STATEMENT_TASK = "CREATE TABLE " + Task.TABLE_NAME + " ( " +
             Task.KEYS.UUID.getName() + " " + Task.KEYS.UUID.getType() + ", " +
             Task.KEYS.OWNER_UUID.getName() + " " + Task.KEYS.OWNER_UUID.getType() + ", " +
@@ -39,6 +42,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
 
     public TaskDbHelper(Context context) {
         super(context, Task.TABLE_NAME, null, Config.DATABASE_VERSION);
+        this.context = context;
     }
 
     @Override
@@ -440,4 +444,37 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         return affectedRows>0;
     }
 
+    public List<Task> retrieveAllUnsyncedTask() {
+        String TAG = CLASS_TAG+"getAllUnsyncedTask";
+        // Open readable database.
+        SQLiteDatabase readableDb = this.getReadableDatabase();
+        // make query
+        String[] columns = new String[Task.getAllColumns().size()];
+        columns = Task.getAllColumns().toArray(columns);
+        // execute query
+        Cursor unsyncedTasksCursor = readableDb.query(
+                Task.TABLE_NAME,
+                columns,
+                Task.KEYS.SYNC_STATUS.getName()+" <>?",
+                new String[] { 1 + "" },
+                null,
+                null,
+                null
+        );
+        unsyncedTasksCursor.moveToFirst();
+        // create an empty list
+        List<Task> unSyncedTaskList = new ArrayList<>();
+        // loop through the result cursor
+        do {
+            Task unSyncedTask = new Task(unsyncedTasksCursor, this.context);
+            // add tasks to the list
+            unSyncedTaskList.add(unSyncedTask);
+        } while (unsyncedTasksCursor.moveToNext());
+        // close db
+        readableDb.close();
+        // close cursor
+        unsyncedTasksCursor.close();
+        // return tasks list
+        return unSyncedTaskList;
+    }
 }
