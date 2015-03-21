@@ -130,9 +130,7 @@ public class Task {
         return priority;
     }
 
-    public int getStatus() {
-        return status;
-    }
+    public int getStatus() { return status; }
 
     /**
      * Gets the user's status in this task.

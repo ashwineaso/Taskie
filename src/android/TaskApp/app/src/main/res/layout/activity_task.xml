@@ -81,7 +81,7 @@
                         android:layout_below="@id/taskMainLinearLayout"
                         android:padding="@dimen/smallMargin_xhdp"
                         android:textSize="16dp"
-                        android:text="As I said earlier, this is a longer description of the task for the recieve to understand what the hell is going on."/>
+                        android:text="Task Description"/>
 
                     <TextView android:id="@+id/taskPriorityTextView"
                         android:layout_width="match_parent"
