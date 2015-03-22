@@ -194,16 +194,15 @@ public class TasksAdapter extends ArrayAdapter<Task>{
                 )
         );
 
+        Log.d(TAG, "Status: "+task.getName()+" "+task.getStatus(activity.getApplicationContext()));
+
         // Setting task title
         holder.taskTitle.setText(
                 task.getName()
         );
-        Log.d(TAG, "Task: " + task.getName());
-
 
         //Check whether the count of collaborators are more than 10 if not set number of colaborators to be displayed as 8
         int collaboratorsToBeDisplayedCount = task.getCollaborators().size()<8 ? task.getCollaborators().size() : 8;
-        Log.d(TAG, "CollaboratorCount: " + collaboratorsToBeDisplayedCount);
 
 
         // Display owners status
@@ -214,7 +213,6 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         // display initials and status of the collaborators
         for(int ctr=0; ctr<collaboratorsToBeDisplayedCount; ctr++) {
             Collaborator collaborator = task.getCollaborators().get(ctr);
-            Log.d(TAG, "Collaborator : " + collaborator.toString());
             holder.collaborators[ctr+1].setText(collaborator.getInitials());
             holder.collaborators[ctr+1].setBackgroundResource(task.collaboratorStatusBackground(collaborator.getStatus()));
             holder.collaborators[ctr+1].setVisibility(View.VISIBLE);

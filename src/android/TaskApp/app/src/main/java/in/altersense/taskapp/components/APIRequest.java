@@ -312,18 +312,23 @@ public class APIRequest {
 			do {
 				apiReqResponse = this.simpleURLReq();
 				this.reqCounter++;
-			} while(apiReqResponse==null);
+			} while(apiReqResponse==null && reqCounter < Config.REQUEST_MAXOUT );
 			
 			// Reseting counter on successful response or request max out.
 			this.reqCounter = 0;
 			
 		}catch (IOException e) {
-			this.reqCounter++;
-			if(this.reqCounter < Config.REQUEST_MAXOUT) {
-				apiReqResponse = this.simpleURLReq();
-			} else {
-				throw new Exception(Config.REQUEST_TIMED_OUT_ERROR);
-			}
+            this.reqCounter++;
+            if (this.reqCounter < Config.REQUEST_MAXOUT) {
+                apiReqResponse = this.simpleURLReq();
+            } else {
+                throw new Exception(Config.REQUEST_TIMED_OUT_ERROR);
+            }
+        } catch (JSONException e) {
+            JSONObject noResponse = new JSONObject();
+            noResponse.put("status",Config.RESPONSE_STATUS_FAILED);
+            noResponse.put("message", "Cannot reach server.");
+            apiReqResponse = noResponse;
 		} catch (Exception e) {
 			throw e;
 		}

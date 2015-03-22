@@ -113,9 +113,8 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         );
         Log.d(TAG, "Query run task inserted to row "+rowId+".");
         database.close();
-        Task task = getTaskByRowId(rowId, activity);
-        task.setId(rowId);
-        return task;
+        newTask.setId(rowId);
+        return newTask;
     }
 
     public Task getTaskByRowId(long rowId, Context context) {
@@ -142,9 +141,10 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         selfCursor.moveToFirst();
         String cursorString = new String();
         for(int i=0;i<selfCursor.getColumnCount();i++) {
-            cursorString+=i+":"+selfCursor.getString(i)+", ";
+            cursorString+=selfCursor.getColumnName(i)+":"+selfCursor.getString(i)+", ";
         }
         Log.d(TAG, "Cursor: "+cursorString);
+        selfCursor.moveToFirst();
         Task task = new Task(
                 selfCursor,
                 context

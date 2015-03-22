@@ -361,13 +361,12 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                             DashboardActivity.this
                     );
                     quickTask.setStatus(
-                            Config.TASK_STATUS.INCOMPLETE.getStatus(),
-                            getApplicationContext()
+                            Config.TASK_STATUS.INCOMPLETE.getStatus()
                     );
                     Log.d(TAG, "created task");
-                    quickTask = addQuickTaskToDb(quickTask);
-                    Log.d(TAG, "QuickTask: "+quickTask.toString());
-                    quickTask.updateCollaborators(
+                    Task createdQuickTask = addQuickTaskToDb(quickTask);
+                    Log.d(TAG, "createdQuickTask: "+createdQuickTask.toString());
+                    createdQuickTask.updateCollaborators(
                             collaboratorAdditionList,
                             collaboratorRemovalList,
                             DashboardActivity.this,
@@ -375,14 +374,14 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                     );
                     Log.d(TAG, "updated collabs");
                     CreateTaskRequest createTaskRequest = new CreateTaskRequest(
-                            quickTask,
+                            createdQuickTask,
                             DashboardActivity.this
                     );
                     Log.d(TAG, "Task creation API Request called.");
                     createTaskRequest.execute();
 
                     // Add task to the adapter.
-                    taskAdapter.add(quickTask);
+                    taskAdapter.add(createdQuickTask);
                     taskAdapter.notifyDataSetChanged();
                     Log.d(TAG, "Task added to adapter");
 
@@ -423,13 +422,14 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         Log.d(TAG, "adding QuickTask: "+quickTask.toString()+" to db,");
         TaskDbHelper taskDbHelper = new TaskDbHelper(this);
         // Add task to database.
-        quickTask = taskDbHelper.createTask(
+        Task createdTask = taskDbHelper.createTask(
                 quickTask,
                 this
         );
         Log.d(TAG, "Task added to database");
 
-        return quickTask;
+        Log.d(TAG, "createdTask: "+createdTask.toString());
+        return createdTask;
     }
 
     @Override
