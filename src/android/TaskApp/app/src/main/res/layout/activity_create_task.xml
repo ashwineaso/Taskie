@@ -70,7 +70,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:padding="@dimen/tinyMargin_xhdpi">
+            android:padding="@dimen/tinyMargin_xhdpi"
+            android:layout_gravity="center_vertical">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -78,12 +79,13 @@
                 android:id="@+id/imageView"
                 android:src="@drawable/ic_calender" />
 
-            <TextView android:id="@+id/dueDateTextView"
-                android:layout_height="wrap_content"
+            <TextView
                 android:layout_width="wrap_content"
-                android:text="Tap to set Due Date and Time"
+                android:layout_height="wrap_content"
+                android:id="@+id/dueDateTextView"
                 android:textSize="@dimen/text_normal_xhdpi"
-                android:textColor="@color/headerText" />
+                android:textColor="@color/headerText"
+                android:hint="Tap to set Due Date and Time" />
 
             <ImageView
                 android:layout_width="match_parent"
