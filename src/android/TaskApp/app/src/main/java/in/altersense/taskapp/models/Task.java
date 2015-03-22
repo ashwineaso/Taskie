@@ -679,15 +679,13 @@ public class Task {
     public View createView(Activity activity) {
         LayoutInflater inflater = activity.getLayoutInflater();
         View taskView = inflater.inflate(R.layout.task_panel, null);
-        TextView timeStatus = (TextView) taskView.findViewById(R.id.timeStatusCustomFontTextView);
-        TextView timeMeasure = (TextView) taskView.findViewById(R.id.timeMeasureCustomFontTextView);
-        TextView timeUnit = (TextView) taskView.findViewById(R.id.timeUnitTextCustomFontTextView);
+        TextView dueDateTime = (TextView) taskView.findViewById(R.id.dueDateTextView);
         TextView taskTitle = (TextView) taskView.findViewById(R.id.taskTitleTextView);
         LinearLayout collaboratorsLL = (LinearLayout) taskView.findViewById(R.id.collaboratorsList);
         LinearLayout taskStatus = (LinearLayout) taskView.findViewById(R.id.taskStatusLinearLayout);
 
         taskTitle.setText(this.name);
-        timeMeasure.setText(this.deadlineTimeMeasure);
+        dueDateTime.setText(this.getDueDateTime());
         taskStatus.setBackgroundResource(this.getStatusColor(this.getStatus(activity.getApplicationContext())));
 
 

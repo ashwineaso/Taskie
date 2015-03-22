@@ -2,6 +2,10 @@ package in.altersense.taskapp.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.Calendar;
 import java.util.List;
 
 import in.altersense.taskapp.CreateTaskActivity;
@@ -40,7 +45,7 @@ public class TasksAdapter extends ArrayAdapter<Task>{
 
     public static class ViewHolder{
         public LinearLayout taskStatus;
-        public TextView taskTitle;
+        public TextView taskTitle, dueDateTimeTV;
         public LinearLayout collaboratorList;
         public LinearLayout actionsPlaceHolder;
         public LinearLayout action1, action2, action3, action4;
@@ -114,6 +119,8 @@ public class TasksAdapter extends ArrayAdapter<Task>{
 
             // Actions images.
             holder.actionImage4 = (ImageView) holder.action4.findViewById(R.id.action4Image);
+            //Due Date Time
+            holder.dueDateTimeTV = (TextView) convertView.findViewById(R.id.dueDateTimeTextView);
 
             convertView.setTag(holder);
 
@@ -221,6 +228,38 @@ public class TasksAdapter extends ArrayAdapter<Task>{
             holder.collaborators[9].setVisibility(View.VISIBLE);
         }
 
+        //Display the Due Date time
+        long dueDateTime = task.getDueDateTimeAsLong();
+        long todayStartTime = getStartTime();
+        if (dueDateTime == 0) {
+            holder.dueDateTimeTV.setText(null);
+        }
+        else if (dueDateTime - todayStartTime < 0) {
+            holder.dueDateTimeTV.setText("Due on "+task.getDueDateTime());
+            holder.dueDateTimeTV.setTextColor(Color.rgb(245, 0, 87));
+        }
+        else if(dueDateTime - todayStartTime < 86400000) {
+            holder.dueDateTimeTV.setText("Due Today");
+            holder.dueDateTimeTV.setTextColor(Color.rgb(255, 186, 26));
+        }
+        else if (dueDateTime - todayStartTime < 172800000) {
+            holder.dueDateTimeTV.setText("Due Tomorrow");
+            holder.dueDateTimeTV.setTextColor(Color.rgb(255, 186, 26));
+        }
+        else {
+            holder.dueDateTimeTV.setText("Due on "+task.getDueDateTime());
+            holder.dueDateTimeTV.setTextColor(Color.rgb(0, 188, 213));
+        }
+
         return convertView;
+    }
+
+    private long getStartTime() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTimeInMillis();
     }
 }
