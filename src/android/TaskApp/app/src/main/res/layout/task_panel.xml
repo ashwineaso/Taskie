@@ -133,31 +133,12 @@
                 tools:ignore="MissingPrefix">
 
                 <TextView
-                    android:id="@+id/timeStatusCustomFontTextView"
+                    android:id="@+id/dueDateTimeTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     fontPath="fonts/Cabin-Regular-TTF.ttf"
                     android:textColor="@color/duedatetime"
-                    android:textSize="@dimen/text_normal_xhdpi"
-                    android:text="Due In"/>
-
-                <TextView
-                    android:id="@+id/timeMeasureCustomFontTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    fontPath="fonts/Cabin-Regular-TTF.ttf"
-                    android:text="123"
-                    android:textColor="@color/duedatetime"
-                    android:textSize="@dimen/text_normal_xhdpi"/>
-
-                <TextView
-                    android:id="@+id/timeUnitTextCustomFontTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Days"
-                    fontPath="fonts/Cabin-Regular-TTF.ttf"
-                    android:textColor="@color/duedatetime"
-                    android:textSize="@dimen/text_normal_xhdpi"/>
+                    android:textSize="@dimen/text_normal_xhdpi" />
 
             </LinearLayout>
 
