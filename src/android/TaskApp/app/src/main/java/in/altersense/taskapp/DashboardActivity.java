@@ -360,6 +360,10 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                             ),
                             DashboardActivity.this
                     );
+                    quickTask.setStatus(
+                            Config.TASK_STATUS.INCOMPLETE.getStatus(),
+                            getApplicationContext()
+                    );
                     Log.d(TAG, "created task");
                     quickTask = addQuickTaskToDb(quickTask);
                     Log.d(TAG, "QuickTask: "+quickTask.toString());

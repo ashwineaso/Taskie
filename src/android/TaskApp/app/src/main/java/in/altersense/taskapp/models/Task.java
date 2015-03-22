@@ -183,7 +183,7 @@ public class Task {
         String TAG = CLASS_TAG+"setStatus";
         // Checks if the status to be set is outside limit.
         if(status>Config.MAX_STATUS ||
-                status<0) {
+                status<Config.MIN_STATUS) {
             Log.d(TAG, "Status out of bounds. Status is "+status);
             // Returns false
             return false;
