@@ -312,7 +312,7 @@ public class Task {
      * @param status Current status of the task
      * @param isGroup Is task in a group
      * @param group Task group
-     * @param activity Current activity
+     * @param context Current context
      */
     public Task(
             String uuid,
@@ -324,7 +324,7 @@ public class Task {
             int status,
             boolean isGroup,
             TaskGroup group,
-            Activity activity
+            Context context
     ) {
         Log.d(CLASS_TAG, "Constructor2 called.");
         this.uuid = uuid;
@@ -340,7 +340,7 @@ public class Task {
         Log.d(CLASS_TAG, "Basic fields set.");
 
         Log.d(CLASS_TAG, "Fetching collaborators.");
-        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity);
+        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
         this.setCollaborators(collaboratorDbHelper.getAllCollaborators(this));
     }
 
@@ -388,7 +388,7 @@ public class Task {
             int status,
             int isGroup,
             TaskGroup group,
-            Activity activity
+            Context context
     ) {
         this(
                 uuid,
@@ -400,7 +400,7 @@ public class Task {
                 status,
                 isGroup==1,
                 group,
-                activity
+                context
         );
         Log.d(CLASS_TAG, "Constructor4 called.");
     }
@@ -454,18 +454,18 @@ public class Task {
      * Updates the collaborators of the task in db and also intimates the server if need be.
      * @param userAdditionList List of users added as collaborators.
      * @param userRemovalList List of users removed from collaborators
-     * @param activity Current activity
+     * @param context Current context.
      * @param informServer If the server needs to be intimated of the change.
      */
     public void updateCollaborators(
             List<User> userAdditionList,
             List<User> userRemovalList,
-            Activity activity,
+            Context context,
             boolean informServer
     ) {
         String TAG = CLASS_TAG+"updateCollaborators";
-        UserDbHelper userDbHelper = new UserDbHelper(activity.getApplicationContext());
-        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity.getApplicationContext());
+        UserDbHelper userDbHelper = new UserDbHelper(context);
+        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
 
         Log.d(TAG, "Addition List: "+ userAdditionList.toString());
         Log.d(TAG, "Removal List: "+ userRemovalList.toString());
@@ -473,11 +473,11 @@ public class Task {
         // Check whether task owner is present in addition or removal list.
         User ownerUser = new User(
                 AltEngine.readStringFromSharedPref(
-                        activity.getApplicationContext(),
+                        context,
                         Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
                         ""
                 ),
-                activity
+                context
         );
 
         Log.d(TAG, "OwnerUser: "+ownerUser.getString());
@@ -504,7 +504,7 @@ public class Task {
                 user = userDbHelper.createUser(user);
                 Log.d(TAG, "Added user to db.");
                 // Call user sync api
-                SyncRequest syncRequest = new SyncRequest(user, activity);
+                SyncRequest syncRequest = new SyncRequest(user, context);
                 syncRequest.execute();
                 Log.d(TAG, "Called sync user for user "+user.getString());
             }
@@ -537,7 +537,7 @@ public class Task {
             AddCollaboratorsRequest addCollaboratorsRequest = new AddCollaboratorsRequest(
                     this,
                     collaboratorsAdded,
-                    activity
+                    context
             );
             addCollaboratorsRequest.execute();
             // Remove all collaborators in removal list from db
@@ -547,26 +547,26 @@ public class Task {
             RemoveCollaboratorsRequest removeCollaboratorsRequest = new RemoveCollaboratorsRequest(
                     this,
                     collaboratorsRemoved,
-                    activity
+                    context
             );
             removeCollaboratorsRequest.execute();
         }
 
-        this.fetchAllCollaborators(activity.getApplicationContext());
+        this.fetchAllCollaborators(context);
     }
 
     /**
      * Updates the collaborators of the task in db and intimates the server of the changes.
      * @param userAdditionList List of users added as collaborators.
      * @param userRemovalList List of users removed from collaborators
-     * @param activity Current activity
+     * @param context Current context.
      */
     public void updateCollaborators(
             List<User> userAdditionList,
             List<User> userRemovalList,
-            Activity activity
+            Context context
     ) {
-        updateCollaborators(userAdditionList,userRemovalList,activity,true);
+        updateCollaborators(userAdditionList,userRemovalList,context,true);
     }
 
     private View createActionsView(final Activity activity) {
