@@ -28,7 +28,6 @@ public class AddCollaboratorsRequest extends AsyncTask<Void, Integer, JSONObject
     private List<Collaborator> collaborators;
     private Context context;
     private JSONObject requestObject;
-    private JSONArray dataArray;
 
     public AddCollaboratorsRequest(Task task, List<Collaborator> collboratorList, Context context) {
         this.task = task;
@@ -39,6 +38,7 @@ public class AddCollaboratorsRequest extends AsyncTask<Void, Integer, JSONObject
     @Override
     protected void onPreExecute() {
         this.requestObject = new JSONObject();
+        JSONArray dataArray;
         JSONObject dataObject = new JSONObject();
         dataArray = new JSONArray();
         JSONArray collaboratorJSONArray = new JSONArray();
