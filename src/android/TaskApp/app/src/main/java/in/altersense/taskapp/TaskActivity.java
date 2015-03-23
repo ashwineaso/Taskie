@@ -92,7 +92,7 @@ public class TaskActivity extends ActionBarActivity {
         this.taskDescriptionTV.setText(this.task.getDescription());
         this.dueDateTV.setText(this.task.getDueDateTime());
         this.taskPriorityTV.setText(priorityToString(this.task.getPriority()));
-        this.taskStatusTV.setText("Status : " + statusToString(this.task.getStatus()));
+        this.taskStatusTV.setText("Status : " + statusToString(this.task.getStatus(getApplicationContext())));
         this.taskOwnerTV.setText(this.task.getOwner().getName());
 
         //Fill the ArrayList with the required data

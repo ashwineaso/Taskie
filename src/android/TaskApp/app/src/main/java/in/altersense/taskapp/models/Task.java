@@ -66,6 +66,7 @@ public class Task {
         Log.d(CLASS_TAG, "Constructor1 called.");
         this.name="";
         this.collaborators = new ArrayList<>();
+        this.id = 0;
     }
 
     public boolean isGroup() {
@@ -429,9 +430,9 @@ public class Task {
         return uuid;
     }
 
-    public void setUuid(String uuid, Activity activity) {
+    public void setUuid(String uuid, Context context) {
         this.uuid = uuid;
-        TaskDbHelper taskDbHelper = new TaskDbHelper(activity);
+        TaskDbHelper taskDbHelper = new TaskDbHelper(context);
         taskDbHelper.updateUUID(this);
     }
 

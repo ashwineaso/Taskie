@@ -7,6 +7,9 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import in.altersense.taskapp.models.Task;
+import in.altersense.taskapp.requests.SyncRequest;
+
 /**
  * Created by ashwineaso on 2/27/15.
  */
@@ -31,9 +34,29 @@ public class GcmMessageHandler extends IntentService {
         GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
         String MessageType = gcm.getMessageType(intent);
 
-        datatype = extras.getString("datatype");
-        id = extras.getString("id");
-        Log.i("GCM", "Recieved + ( " + MessageType + " ) + datatype : " +datatype + " , id : " + id);
+        String messageType = gcm.getMessageType(intent);
+
+        if(!extras.isEmpty()) {
+            /* Filtering the message based on the message type.
+             * For now We will be handling only normal gcm messages */
+
+            if (GoogleCloudMessaging. MESSAGE_TYPE_MESSAGE.equals(messageType)) {
+                //perform the operation
+                datatype = extras.getString("datatype");
+                id = extras.getString("id");
+                Log.i("GCM", "Recieved + ( " + MessageType + " ) + datatype : " +datatype + " , id : " + id);
+
+                switch(datatype) {
+                    case "Task" :
+                        //Implement syncing of a Task
+                        Task task = new Task();
+                        task.setUuid(id, getApplicationContext());
+                        SyncRequest syncRequest = new SyncRequest();
+                }
+            }
+        }
+
+
         GcmBroadcastReceiver.completeWakefulIntent(intent);
 
     }
