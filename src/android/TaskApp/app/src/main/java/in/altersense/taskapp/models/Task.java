@@ -427,29 +427,6 @@ public class Task {
         this.setCollaborators(collaboratorDbHelper.getAllCollaborators(this));
     }
 
-    public Task(Cursor cursor, Context context) {
-        Log.d(CLASS_TAG, " Constructor(cursor,activity)");
-        this.uuid = cursor.getString(0);
-        this.name = cursor.getString(2);
-        this.description = cursor.getString(3);
-        this.owner = new User(cursor.getString(1), context);
-        this.priority = cursor.getInt(4);
-        this.dueDateTime = cursor.getLong(5);
-        this.status = cursor.getInt(6);
-        this.isGroup = cursor.getInt(7)==1;
-        if(this.isGroup) {
-            this.group = new TaskGroup(cursor.getString(8), context);
-        } else {
-            this.group = null;
-        }
-        this.setStatus(cursor.getInt(9));
-        this.id = cursor.getLong(10);
-
-        Log.d(CLASS_TAG, "Fetching collaborators.");
-        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
-        this.setCollaborators(collaboratorDbHelper.getAllCollaborators(this));
-    }
-
     public String getUuid() {
         return uuid;
     }
