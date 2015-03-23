@@ -18,7 +18,7 @@ import in.altersense.taskapp.models.Task;
  */
 public class UpdateTaskRequest extends AsyncTask<Void, Integer, JSONObject> {
 
-    private static final String CLASS_TAG = "UpdateTaskRequest";
+    private static final String CLASS_TAG = "UpdateTaskRequest ";
     private final Task task;
     private Activity activity;
     private final Context context;
@@ -32,28 +32,31 @@ public class UpdateTaskRequest extends AsyncTask<Void, Integer, JSONObject> {
     @Override
     protected void onPreExecute() {
         this.requestObject = new JSONObject();
+        JSONArray dataArray = new JSONArray();
+        JSONObject dataObject = new JSONObject();
         try {
-            this.requestObject.put(
+            dataObject.put(
                     Config.REQUEST_RESPONSE_KEYS.UUID.getKey(),
                     this.task.getUuid()
                     );
-            this.requestObject.put(
+            dataObject.put(
                     Config.REQUEST_RESPONSE_KEYS.NAME.getKey(),
                     this.task.getName()
             );
-            this.requestObject.put(
+            dataObject.put(
                     Config.REQUEST_RESPONSE_KEYS.DESCRIPTION.getKey(),
                     this.task.getDescription()
             );
-            this.requestObject.put(
+            dataObject.put(
                     Config.REQUEST_RESPONSE_KEYS.DUE_DATE_TIME.getKey(),
                     this.task.getDueDateTime()
             );
-            this.requestObject.put(
+            dataObject.put(
                     Config.REQUEST_RESPONSE_KEYS.PRIORITY.getKey(),
                     this.task.getPriority()
             );
-
+            dataArray.put(dataObject);
+            this.requestObject.put(Config.REQUEST_RESPONSE_KEYS.DATA.getKey(), dataArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }
