@@ -1,6 +1,7 @@
 package in.altersense.taskapp.requests;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -28,22 +29,22 @@ public class BuzzCollaboratorRequest extends AsyncTask<Void, Integer, JSONObject
 
     private static final String CLASS_TAG = "BuzzCollaboratorRequest ";
 
-    private final Activity activity;
+    private final Context context;
     private JSONObject requestObject;
     private TaskDbHelper taskDbHelper;
     private UserDbHelper userDbHelper;
     private CollaboratorDbHelper collaboratorDbHelper;
     private List<Buzz> buzzList;
 
-    public BuzzCollaboratorRequest(Buzz buzz, Activity activity) {
-        this.activity = activity;
+    public BuzzCollaboratorRequest(Buzz buzz, Context context) {
+        this.context = context;
         this.buzzList = new ArrayList<>();
         buzzList.add(buzz);
     }
 
-    public BuzzCollaboratorRequest(List<Buzz> buzzList, Activity activity) {
+    public BuzzCollaboratorRequest(List<Buzz> buzzList, Context context) {
         this.buzzList = buzzList;
-        this.activity = activity;
+        this.context = context;
     }
 
     @Override
@@ -51,9 +52,9 @@ public class BuzzCollaboratorRequest extends AsyncTask<Void, Integer, JSONObject
         String TAG = CLASS_TAG + "onPreExecute";
         super.onPreExecute();
         this.requestObject = new JSONObject();
-        this.taskDbHelper = new TaskDbHelper(activity.getApplicationContext());
-        this.userDbHelper = new UserDbHelper(activity.getApplicationContext());
-        this.collaboratorDbHelper = new CollaboratorDbHelper(activity.getApplicationContext());
+        this.taskDbHelper = new TaskDbHelper(context.getApplicationContext());
+        this.userDbHelper = new UserDbHelper(context.getApplicationContext());
+        this.collaboratorDbHelper = new CollaboratorDbHelper(context.getApplicationContext());
     }
 
     @Override
@@ -69,7 +70,7 @@ public class BuzzCollaboratorRequest extends AsyncTask<Void, Integer, JSONObject
                             !task.getSyncStatus()
                     ) {
                 Log.d(TAG, "No uuid for task to be buzzed.");
-                SyncRequest taskSyncRequest = new SyncRequest(task, this.activity);
+                SyncRequest taskSyncRequest = new SyncRequest(task, this.context);
                 try {
                     //Syncing task.
                     Log.d(TAG, "taskSyncRequest called");
@@ -92,7 +93,7 @@ public class BuzzCollaboratorRequest extends AsyncTask<Void, Integer, JSONObject
                     task.setId(buzzFromList.getTaskId());
                     task.setSyncStatus(true);
                     // update task in database
-                    task.updateTask(this.activity);
+                    task.updateTask(this.context);
                     // set the task uuid to buzz instance
                     buzzFromList.setTaskUuid(task.getUuid());
                     // update buzz in db and replace the updated buzz with the one in buzz list
@@ -126,7 +127,7 @@ public class BuzzCollaboratorRequest extends AsyncTask<Void, Integer, JSONObject
         APIRequest buzzCollabs = new APIRequest(
                 AltEngine.formURL("task/buzzCollaborators"),
                 this.requestObject,
-                this.activity
+                this.context
         );
         try {
             responseObject = buzzCollabs.request();
@@ -149,7 +150,7 @@ public class BuzzCollaboratorRequest extends AsyncTask<Void, Integer, JSONObject
                 if(status.equals(Config.RESPONSE_STATUS_SUCCESS)) {
                     // TODO: Remove the toast.
                     Toast.makeText(
-                            activity.getApplicationContext(),
+                            context,
                             "Buzz sent!",
                             Toast.LENGTH_SHORT
                     ).show();
@@ -160,7 +161,7 @@ public class BuzzCollaboratorRequest extends AsyncTask<Void, Integer, JSONObject
         } catch (JSONException e) {
             e.printStackTrace();
             Toast.makeText(
-                    activity.getApplicationContext(),
+                    context,
                     "Buzz could not be sent. Please connect to the internet.",
                     Toast.LENGTH_LONG
             ).show();

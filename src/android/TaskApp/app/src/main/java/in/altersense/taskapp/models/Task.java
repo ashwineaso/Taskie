@@ -804,8 +804,8 @@ public class Task {
         }
     }
 
-    public void updateTask(Activity activity) {
-        TaskDbHelper taskDbHelper = new TaskDbHelper(activity.getApplicationContext());
+    public void updateTask(Context context) {
+        TaskDbHelper taskDbHelper = new TaskDbHelper(context);
         taskDbHelper.updateTask(this);
     }
 
