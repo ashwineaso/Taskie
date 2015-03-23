@@ -419,7 +419,7 @@ public class Task {
         } else {
             this.group = null;
         }
-        this.setStatus(cursor.getInt(9));
+        this.setSyncStatus(cursor.getInt(9));
         this.id = cursor.getLong(10);
 
         Log.d(CLASS_TAG, "Fetching collaborators.");

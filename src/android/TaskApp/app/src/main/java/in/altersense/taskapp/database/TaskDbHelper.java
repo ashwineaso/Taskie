@@ -162,14 +162,11 @@ public class TaskDbHelper extends SQLiteOpenHelper {
     public List<Task> getAllNonGroupTasks(Activity activity) {
         String TAG = CLASS_TAG+"getAllNonGroupTasks";
         Cursor resultCursor = getAllNonGroupTasksAsCursor();
-        Log.d(TAG, "Returned "+resultCursor.getCount()+" rows.");
         // List all the non group tasks.
         List<Task> taskList = new ArrayList<Task>();
         if(resultCursor.moveToFirst()) {
             do {
-                Log.d(TAG, "Status: "+resultCursor.getInt(6));
                 taskList.add(new Task(resultCursor, activity));
-                Log.d(TAG, "Added task to list.");
             } while(resultCursor.moveToNext());
         }
         // Close cursor.
