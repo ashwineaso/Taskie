@@ -62,12 +62,13 @@ public class GcmMessageHandler extends IntentService {
                         Task task = new Task();
                         task.setUuid(id, getApplicationContext());
                         SyncRequest syncRequest = new SyncRequest(task, getApplicationContext());
+                        syncRequest.execute();
                         break;
 
                     case "Buzz" :
                         //Implement showing a buzz
                         TaskDbHelper taskDbHelper = new TaskDbHelper(getApplicationContext());
-                        tempTask = taskDbHelper.getTaskByUUID(id, getApplicationContext());
+                        tempTask = taskDbHelper.getTaskByUUID(id);
                         sendNotification(tempTask.getOwner().getName()
                                 + "has reminded you to complete the task : "
                                 + tempTask.getName());
