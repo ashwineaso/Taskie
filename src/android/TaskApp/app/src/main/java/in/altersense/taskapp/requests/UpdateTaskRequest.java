@@ -1,6 +1,7 @@
 package in.altersense.taskapp.requests;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -19,12 +20,13 @@ public class UpdateTaskRequest extends AsyncTask<Void, Integer, JSONObject> {
 
     private static final String CLASS_TAG = "UpdateTaskRequest";
     private final Task task;
-    private final Activity activity;
+    private Activity activity;
+    private final Context context;
     private JSONObject requestObject;
 
-    public UpdateTaskRequest(Task task, Activity activity) {
+    public UpdateTaskRequest(Task task, Context context) {
         this.task = task;
-        this.activity = activity;
+        this.context = context;
     }
 
     @Override
@@ -64,7 +66,7 @@ public class UpdateTaskRequest extends AsyncTask<Void, Integer, JSONObject> {
         APIRequest updateTask = new APIRequest(
                 AltEngine.formURL("task/editTask"),
                 this.requestObject,
-                this.activity
+                this.context
         );
         try {
             responseObject = updateTask.request();
@@ -87,7 +89,7 @@ public class UpdateTaskRequest extends AsyncTask<Void, Integer, JSONObject> {
                 // If success update uuid
                 JSONObject data = result.getJSONObject(Config.REQUEST_RESPONSE_KEYS.DATA.getKey());
                 this.task.setSyncStatus(true);
-                this.task.setUuid(data.getString(Config.REQUEST_RESPONSE_KEYS.UUID.getKey()), this.activity);
+                this.task.setUuid(data.getString(Config.REQUEST_RESPONSE_KEYS.UUID.getKey()), this.context);
             }
         } catch (JSONException e) {
             e.printStackTrace();

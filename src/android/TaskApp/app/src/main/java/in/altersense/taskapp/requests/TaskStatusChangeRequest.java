@@ -1,6 +1,7 @@
 package in.altersense.taskapp.requests;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -19,22 +20,23 @@ import in.altersense.taskapp.models.Task;
 public class TaskStatusChangeRequest extends AsyncTask<Void, Integer, JSONObject>{
 
     private static String CLASS_TAG = "TaskStatusChangeRequest ";
+    private Context context;
     private int status;
     private Task task;
     private Activity activity;
     private JSONObject requestObject;
 
-    public TaskStatusChangeRequest(Task task, Activity activity) {
+    public TaskStatusChangeRequest(Task task, Context context) {
         Log.d(CLASS_TAG, "Created request for owner.");
         this.task = task;
-        this.activity = activity;
+        this.context = context;
         this.status = task.getStatus();
     }
 
-    public TaskStatusChangeRequest(Task task, Collaborator collaborator, Activity activity) {
+    public TaskStatusChangeRequest(Task task, Collaborator collaborator, Context context) {
         Log.d(CLASS_TAG, "Created request for collaborator.");
         this.task = task;
-        this.activity = activity;
+        this.context = context;
         this.status = collaborator.getStatus();
     }
 
@@ -62,7 +64,7 @@ public class TaskStatusChangeRequest extends AsyncTask<Void, Integer, JSONObject
         APIRequest changeStatusRequest = new APIRequest(
                 AltEngine.formURL("task/modifyTaskStatus"),
                 requestObject,
-                this.activity
+                this.context
         );
         try {
             responseObject = changeStatusRequest.request();
