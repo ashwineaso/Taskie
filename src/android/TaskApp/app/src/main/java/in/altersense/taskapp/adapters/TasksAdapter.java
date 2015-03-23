@@ -86,7 +86,6 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         String TAG = CLASS_TAG+"getView";
         final ViewHolder holder;
         int viewType = getItemViewType(position);
-        Log.d(TAG, "ViewType: "+viewType+" at position: "+position);
         if(convertView==null) {
             holder = new ViewHolder();
             convertView = inflater.inflate(R.layout.task_panel, parent, false);
@@ -193,8 +192,6 @@ public class TasksAdapter extends ArrayAdapter<Task>{
                         )
                 )
         );
-
-        Log.d(TAG, "Status: "+task.getName()+" "+task.getStatus(activity.getApplicationContext()));
 
         // Setting task title
         holder.taskTitle.setText(

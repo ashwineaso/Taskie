@@ -641,7 +641,7 @@ public class Task {
 
     public void toggleStatus(Activity activity) {
         String TAG = CLASS_TAG+"toggleStatus";
-        int currentStatus = getStatus(activity);
+        int currentStatus = getStatus(activity.getApplicationContext());
         Log.d(TAG,"Current status "+currentStatus);
         switch (currentStatus) {
             case -1:
@@ -760,13 +760,13 @@ public class Task {
             // Set task status.
             Log.d(TAG, "Setting status as "+status);
             this.status = status;
-            TaskStatusChangeRequest taskStatusChangeRequest = new TaskStatusChangeRequest(this, activity);
             // Update db
             TaskDbHelper taskDbHelper = new TaskDbHelper(activity);
             this.setSyncStatus(false);
             taskDbHelper.updateStatus(this, status);
             Log.d(TAG, "Updated in db.");
             // Query API status change API
+            TaskStatusChangeRequest taskStatusChangeRequest = new TaskStatusChangeRequest(this, activity);
             taskStatusChangeRequest.execute();
             Log.d(TAG, "API Request initiated.");
             return true;

@@ -342,7 +342,6 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
             @Override
             public void onClick(View v) {
                 String TAG = CLASS_TAG+" createQuickTask OnClickListener.";
-                Log.d(TAG, "onclick loaded");
                 String taskName = newTaskTitle.getText().toString();
                 taskName = taskName.trim();
                 if(!(taskName.length() <1)) {
@@ -363,27 +362,22 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                     quickTask.setStatus(
                             Config.TASK_STATUS.INCOMPLETE.getStatus()
                     );
-                    Log.d(TAG, "created task");
                     Task createdQuickTask = addQuickTaskToDb(quickTask);
-                    Log.d(TAG, "createdQuickTask: "+createdQuickTask.toString());
                     createdQuickTask.updateCollaborators(
                             collaboratorAdditionList,
                             collaboratorRemovalList,
                             DashboardActivity.this,
                             false
                     );
-                    Log.d(TAG, "updated collabs");
                     CreateTaskRequest createTaskRequest = new CreateTaskRequest(
                             createdQuickTask,
                             DashboardActivity.this
                     );
-                    Log.d(TAG, "Task creation API Request called.");
                     createTaskRequest.execute();
 
                     // Add task to the adapter.
                     taskAdapter.add(createdQuickTask);
                     taskAdapter.notifyDataSetChanged();
-                    Log.d(TAG, "Task added to adapter");
 
                     newTaskTitle.setText("");
                     toggleQuickTaskLayout();
