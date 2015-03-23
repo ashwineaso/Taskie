@@ -17,6 +17,8 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
+
 import in.altersense.taskapp.common.Config;
 
 public class APIRequest {
@@ -112,29 +114,31 @@ public class APIRequest {
 	    String responseString;
 	    
 	    try {
-	    	
-	    	post = new HttpPost(this.url);
-	    	post.setHeader("Content-type", "application/json");
-	    	post.setHeader("Accept", "application/json");
-	    	
-	    	try {
-	    		post.setEntity(new StringEntity(
-	    				this.contentToString(),
-	    				"UTF-8"
-	    				)
-	    				);
-	    	} catch (NullPointerException e) {
-	    		Log.d(LOG_TAG, "No content so going for a blank request.");
-	    	}
-			Log.d(LOG_TAG, "Making Http call to "+this.url+" with content "+this.contentToString());
-			response = client.execute(post);  
-			resEntity = response.getEntity();
-			
-			if(resEntity != null) {
-				responseString = EntityUtils.toString(resEntity);
-				responseObject = new JSONObject(responseString);
-			}
-		} catch (Exception e) {
+
+            post = new HttpPost(this.url);
+            post.setHeader("Content-type", "application/json");
+            post.setHeader("Accept", "application/json");
+
+            try {
+                post.setEntity(new StringEntity(
+                                this.contentToString(),
+                                "UTF-8"
+                        )
+                );
+            } catch (NullPointerException e) {
+                Log.d(LOG_TAG, "No content so going for a blank request.");
+            }
+            Log.d(LOG_TAG, "Making Http call to " + this.url + " with content " + this.contentToString());
+            response = client.execute(post);
+            resEntity = response.getEntity();
+
+            if (resEntity != null) {
+                responseString = EntityUtils.toString(resEntity);
+                responseObject = new JSONObject(responseString);
+            }
+        } catch (HttpHostConnectException e) {
+            Toast.makeText(this.context, "Cannot reach server.", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
 			throw e;
 		}
 	    return responseObject;
