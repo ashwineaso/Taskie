@@ -88,8 +88,8 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
      * A constructor for syncing everything.
      * @param activity Current activity.
      */
-    public SyncRequest(Activity activity) {
-        this(activity, null, null, false, false, true);
+    public SyncRequest(Context context) {
+        this(context, null, null, false, false, true);
     }
 
     /**
@@ -97,17 +97,18 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
      * @param user User to be synced.
      * @param activity Current activity.
      */
-    public SyncRequest(User user, Activity activity) {
-        this(activity, new User[] {user}, null, true, false, false);
+    public SyncRequest(User user, Context context) {
+        this(context, new User[] {user}, null, true, false, false);
     }
 
     /**
-     * Constructor with list of users.
+     * Constructor with list of users or list of tasks but not both.
      * @param userList List of users to be synced
+     * @param taskList List of users to be synced
      * @param context Current context.
      */
-    public SyncRequest(List<User> userList, Context context) {
-        this(context,userList.toArray(new User[userList.size()]),null,true,false,false);
+    public SyncRequest(List<User> userList, List<Task> taskList, Context context) {
+        this(context,userList.toArray(new User[userList.size()]),taskList.toArray(new Task[taskList.size()]),userList!=null,taskList!=null,false);
     }
 
     /**
@@ -117,15 +118,6 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
      */
     public SyncRequest(Task task, Activity activity) {
         this(activity,null,new Task[] {task},false,true,false);
-    }
-
-    /**
-     * Constructor with a list of Tasks.
-     * @param taskList List of tasks to be synced.
-     * @param context Current context.
-     */
-    public SyncRequest(List<Task> taskList, Context context) {
-        this(context, null, taskList.toArray(new Task[taskList.size()]),false,true,false);
     }
 
     public User getUser() {
@@ -309,7 +301,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
                 taskOwner = userDbHelper.createUser(task.getOwner());
                 task.setOwner(taskOwner);
             }
-            task = taskDbHelper.createTask(task,activity);
+            task = taskDbHelper.createTask(task);
             Log.d(TAG, "Setting up collaborators.");
             collaboratorsFromJSONArray(
                     taskObject.getJSONArray(Config.REQUEST_RESPONSE_KEYS.TASK_COLLABOATORS.getKey()),
@@ -352,7 +344,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
                 taskDbHelper.updateTask(taskFromJSONObject);
             } else {
                 Log.d(TAG, "Task does not exist so adding.");
-                taskFromJSONObject = taskDbHelper.createTask(taskFromJSONObject,activity);
+                taskFromJSONObject = taskDbHelper.createTask(taskFromJSONObject);
             }
             Log.d(TAG, "Task creation updation done.");
             Log.d(TAG, "Clearing all collaborators if any.");
@@ -429,7 +421,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
                 status,
                 false,
                 null,
-                activity
+                this.context
         );
         Log.d(TAG, "Returning task: "+task.toString());
         return task;

@@ -97,7 +97,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         this.quickCreateStageLinearLayout.setVisibility(View.GONE);
 
         this.taskList = (ListView) findViewById(R.id.taskListStage);
-        this.taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasks(DashboardActivity.this));
+        this.taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasks());
         this.taskList.setAdapter(this.taskAdapter);
 
         setUpQuickTaskLayout();
@@ -146,7 +146,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.d(CLASS_TAG, "Received broadcast.");
-                taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasks(DashboardActivity.this));
+                taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasks());
                 taskList.setAdapter(taskAdapter);
             }
         };
@@ -417,8 +417,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         TaskDbHelper taskDbHelper = new TaskDbHelper(this);
         // Add task to database.
         Task createdTask = taskDbHelper.createTask(
-                quickTask,
-                this
+                quickTask
         );
         Log.d(TAG, "Task added to database");
 

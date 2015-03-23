@@ -79,7 +79,7 @@ public class Buzz {
         this.taskUuid = cursor.getString(1);
         this.id = cursor.getLong(2);
         this.context = context;
-        this.task = taskDbHelper.getTaskByRowId(this.taskId, this.context);
+        this.task = taskDbHelper.getTaskByRowId(this.taskId);
     }
 
     /**

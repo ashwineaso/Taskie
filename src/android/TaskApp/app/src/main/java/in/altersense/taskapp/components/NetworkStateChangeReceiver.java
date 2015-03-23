@@ -82,7 +82,5 @@ public class NetworkStateChangeReceiver extends BroadcastReceiver {
             }
         }
 
-        SyncRequest syncRequest = new SyncRequest();
-
     }
 }

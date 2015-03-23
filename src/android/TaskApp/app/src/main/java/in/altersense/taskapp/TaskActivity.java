@@ -74,7 +74,7 @@ public class TaskActivity extends ActionBarActivity {
             TaskDbHelper taskDbHelper = new TaskDbHelper(TaskActivity.this);
             // If yes fetch task from the uuid
             Log.d(TAG, "Fetching row from the db");
-            this.task = taskDbHelper.getTaskByRowId(taskId, TaskActivity.this);
+            this.task = taskDbHelper.getTaskByRowId(taskId);
         }
 
 

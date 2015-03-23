@@ -62,7 +62,7 @@ public class BuzzCollaboratorRequest extends AsyncTask<Void, Integer, JSONObject
         JSONObject responseObject = new JSONObject();
 
         for(Buzz buzzFromList:buzzList) {
-            Task task = taskDbHelper.getTaskByRowId(buzzFromList.getTaskId(),activity);
+            Task task = taskDbHelper.getTaskByRowId(buzzFromList.getTaskId());
             // Checks whether the task is synced and has an id.
             if(
                     buzzFromList.getTaskUuid().length()<0 ||

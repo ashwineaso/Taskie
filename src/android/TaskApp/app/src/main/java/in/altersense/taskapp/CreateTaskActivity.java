@@ -103,7 +103,7 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
             TaskDbHelper taskDbHelper = new TaskDbHelper(CreateTaskActivity.this);
             // If yes fetch task from the uuid
             Log.d(TAG, "Fetching row from the db");
-            this.task = taskDbHelper.getTaskByRowId(taskId, CreateTaskActivity.this);
+            this.task = taskDbHelper.getTaskByRowId(taskId);
         }
         super.onCreate(savedInstanceState);
 
