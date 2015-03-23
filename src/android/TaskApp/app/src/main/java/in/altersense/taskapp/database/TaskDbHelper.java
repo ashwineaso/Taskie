@@ -89,7 +89,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         writableDb.close();
     }
 
-    public Task createTask(Task newTask, Activity activity) {
+    public Task createTask(Task newTask) {
         String TAG = CLASS_TAG+"createTask";
         // Open a writable database
         Log.d(TAG, "Writable database opened.");
@@ -121,7 +121,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         return newTask;
     }
 
-    public Task getTaskByRowId(long rowId, Context context) {
+    public Task getTaskByRowId(long rowId) {
         String TAG = CLASS_TAG+"getTaskByRowId";
         // Open database.
         Log.d(TAG, "Readable database opened.");
@@ -151,7 +151,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         selfCursor.moveToFirst();
         Task task = new Task(
                 selfCursor,
-                context
+                this.context
         );
         selfCursor.close();
         readableDb.close();
