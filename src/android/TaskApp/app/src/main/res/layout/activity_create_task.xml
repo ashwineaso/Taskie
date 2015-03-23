@@ -65,14 +65,36 @@
             android:layout_height="wrap_content"
             style="@style/tokenEditText" />
 
-        <TextView android:id="@+id/dueDateTextView"
-            android:layout_height="wrap_content"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:text="Tap to set Due Date and Time"
-            android:layout_margin="@dimen/tinyMargin_xhdpi"
-            android:textSize="@dimen/text_subHeader_xhdpi"
-            android:paddingTop="@dimen/smallMargin_xhdp"
-            android:textColor="@color/headerText" />
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="@dimen/tinyMargin_xhdpi"
+            android:layout_gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView"
+                android:src="@drawable/ic_calender" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/dueDateTextView"
+                android:textSize="@dimen/text_normal_xhdpi"
+                android:textColor="@color/headerText"
+                android:hint="Tap to set Due Date and Time" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnCancelDate"
+                android:src="@drawable/ic_cancel"
+                android:layout_gravity="right" />
+
+        </LinearLayout>
 
         <TextView
             android:layout_width="fill_parent"
