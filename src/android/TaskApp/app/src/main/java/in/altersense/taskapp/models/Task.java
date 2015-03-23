@@ -139,18 +139,20 @@ public class Task {
      */
     public int getStatus(Context context) {
         String TAG = CLASS_TAG+" getStatus";
+        int status = 0;
         // Check if the user is the owner.
         if(isOwnedyDeviceUser(context)) {
             // Return the task status.
-            return this.status;
+            status = this.status;
         } else {
             // Find collaborator.
             Collaborator collaborator = new Collaborator(User.getDeviceOwner(context));
             Log.d(TAG, "CollaboratorName: "+collaborator.getName());
             collaborator = this.getCollaborators().get(this.getCollaborators().indexOf(collaborator));
             // Return collaborator status.
-            return collaborator.getStatus();
+            status = collaborator.getStatus();
         }
+        return status;
     }
 
     public List<Collaborator> getCollaborators() {
@@ -183,7 +185,7 @@ public class Task {
         String TAG = CLASS_TAG+"setStatus";
         // Checks if the status to be set is outside limit.
         if(status>Config.MAX_STATUS ||
-                status<0) {
+                status<Config.MIN_STATUS) {
             Log.d(TAG, "Status out of bounds. Status is "+status);
             // Returns false
             return false;
@@ -402,26 +404,26 @@ public class Task {
         Log.d(CLASS_TAG, "Constructor4 called.");
     }
 
-    public Task(Cursor cursor, Activity activity) {
+    public Task(Cursor cursor, Context context) {
         Log.d(CLASS_TAG, " Constructor(cursor,activity)");
         this.uuid = cursor.getString(0);
         this.name = cursor.getString(2);
         this.description = cursor.getString(3);
-        this.owner = new User(cursor.getString(1), activity);
+        this.owner = new User(cursor.getString(1), context);
         this.priority = cursor.getInt(4);
         this.dueDateTime = cursor.getLong(5);
         this.status = cursor.getInt(6);
         this.isGroup = cursor.getInt(7)==1;
         if(this.isGroup) {
-            this.group = new TaskGroup(cursor.getString(8), activity);
+            this.group = new TaskGroup(cursor.getString(8), context);
         } else {
             this.group = null;
         }
-        this.setStatus(cursor.getInt(9));
+        this.setSyncStatus(cursor.getInt(9));
         this.id = cursor.getLong(10);
 
         Log.d(CLASS_TAG, "Fetching collaborators.");
-        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity);
+        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
         this.setCollaborators(collaboratorDbHelper.getAllCollaborators(this));
     }
 
@@ -662,7 +664,7 @@ public class Task {
 
     public void toggleStatus(Activity activity) {
         String TAG = CLASS_TAG+"toggleStatus";
-        int currentStatus = getStatus(activity);
+        int currentStatus = getStatus(activity.getApplicationContext());
         Log.d(TAG,"Current status "+currentStatus);
         switch (currentStatus) {
             case -1:
@@ -702,15 +704,13 @@ public class Task {
     public View createView(Activity activity) {
         LayoutInflater inflater = activity.getLayoutInflater();
         View taskView = inflater.inflate(R.layout.task_panel, null);
-        TextView timeStatus = (TextView) taskView.findViewById(R.id.timeStatusCustomFontTextView);
-        TextView timeMeasure = (TextView) taskView.findViewById(R.id.timeMeasureCustomFontTextView);
-        TextView timeUnit = (TextView) taskView.findViewById(R.id.timeUnitTextCustomFontTextView);
+        TextView dueDateTime = (TextView) taskView.findViewById(R.id.dueDateTextView);
         TextView taskTitle = (TextView) taskView.findViewById(R.id.taskTitleTextView);
         LinearLayout collaboratorsLL = (LinearLayout) taskView.findViewById(R.id.collaboratorsList);
         LinearLayout taskStatus = (LinearLayout) taskView.findViewById(R.id.taskStatusLinearLayout);
 
         taskTitle.setText(this.name);
-        timeMeasure.setText(this.deadlineTimeMeasure);
+        dueDateTime.setText(this.getDueDateTime());
         taskStatus.setBackgroundResource(this.getStatusColor(this.getStatus(activity.getApplicationContext())));
 
 
@@ -761,6 +761,7 @@ public class Task {
         task+=" uuid="+this.uuid;
         task+=" name="+this.name;
         task+=" owner="+this.owner.getUuid();
+        task+=" status="+this.status;
         task+=" isGroup="+this.getIntIsGroup();
         return task;
     }
@@ -777,17 +778,18 @@ public class Task {
         );
         Log.d(TAG, "Fetched device user.");
         // Check whether the device owner is the task owner.
-        if(this.owner.getUuid().equals(ownerId)) {
+        if(this.isOwnedyDeviceUser(activity.getApplicationContext())) {
             Log.d(TAG, "Fetched device user is the task owner.");
             // Set task status.
             Log.d(TAG, "Setting status as "+status);
             this.status = status;
-            TaskStatusChangeRequest taskStatusChangeRequest = new TaskStatusChangeRequest(this, activity);
             // Update db
             TaskDbHelper taskDbHelper = new TaskDbHelper(activity);
+            this.setSyncStatus(false);
             taskDbHelper.updateStatus(this, status);
             Log.d(TAG, "Updated in db.");
             // Query API status change API
+            TaskStatusChangeRequest taskStatusChangeRequest = new TaskStatusChangeRequest(this, activity);
             taskStatusChangeRequest.execute();
             Log.d(TAG, "API Request initiated.");
             return true;
@@ -804,6 +806,7 @@ public class Task {
                     // Change status of the collaborator
                     Log.d(TAG, "Setting status as "+status);
                     collaborator.setStatus(status);
+                    this.setSyncStatus(false);
                     // Update database.
                     CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity);
                     collaboratorDbHelper.updateStatus(this, collaborator);
@@ -834,12 +837,12 @@ public class Task {
      * @return Boolean isOwnedByDeviceUser
      */
     public boolean isOwnedyDeviceUser(Context context) {
-        String ownnerUUID = AltEngine.readStringFromSharedPref(
+        String ownerUUID = AltEngine.readStringFromSharedPref(
                 context,
                 Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
                 ""
         );
-        return this.getOwner().getUuid().equals(ownnerUUID);
+        return this.getOwner().getUuid().equals(ownerUUID);
     }
 
     public int collaboratorStatusBackground(int status) {

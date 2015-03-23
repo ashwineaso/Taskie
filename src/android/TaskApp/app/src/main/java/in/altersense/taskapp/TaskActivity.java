@@ -47,6 +47,7 @@ public class TaskActivity extends ActionBarActivity {
     private TextView taskPriorityTV;
     private TextView taskStatusTV;
     private TextView taskOwnerTV;
+    private LinearLayout taskHeaderLL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +85,7 @@ public class TaskActivity extends ActionBarActivity {
         this.taskPriorityTV = (TextView)findViewById(R.id.taskPriorityTextView);
         this.taskStatusTV = (TextView)findViewById(R.id.taskStatusTextView);
         this.taskOwnerTV = (TextView) findViewById(R.id.taskOwnerTV);
+        this.taskHeaderLL = (LinearLayout) findViewById(R.id.taskHeaderLinearLayout);
 
         //Set the text views
         this.taskTitleTV.setText(this.task.getName());
@@ -98,6 +100,8 @@ public class TaskActivity extends ActionBarActivity {
         for (Collaborator collaborator:this.collaboratorList) {
             collaboratorArrayList.add(collaborator);
         }
+
+        this.taskHeaderLL.setBackgroundResource(Task.getStatusColor(task.getStatus()));
 
         Resources res = getResources();
 

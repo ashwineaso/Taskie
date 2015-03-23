@@ -1,6 +1,7 @@
 package in.altersense.taskapp.models;
 
 import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class Buzz {
      * Table name for Buzz
      */
     public static final String TABLE_NAME = "BuzzList";
+    private final Context context;
     private String taskUuid;
     private long taskId;
     private long id;
@@ -56,28 +58,28 @@ public class Buzz {
     /**
      * Constructor with task.
      * @param task Task which needs to be bzzed.
-     * @param activity Current activity.
+     * @param context the current context.
      */
-    public Buzz(Task task, Activity activity) {
+    public Buzz(Task task, Context context) {
         this.task = task;
         this.taskId = task.getId();
         this.taskUuid = task.getUuid();
-        this.activity = activity;
+        this.context = context;
         this.id = 0;
     }
 
     /**
      * Constructor with a cursor and activity
      * @param cursor Cursor containing Buzz data
-     * @param activity Current activity.
+     * @param context Current context.
      */
-    public Buzz(Cursor cursor, Activity activity) {
-        TaskDbHelper taskDbHelper = new TaskDbHelper(activity.getApplicationContext());
+    public Buzz(Cursor cursor, Context context) {
+        TaskDbHelper taskDbHelper = new TaskDbHelper(context);
         this.taskId = cursor.getLong(0);
         this.taskUuid = cursor.getString(1);
         this.id = cursor.getLong(2);
-        this.activity = activity;
-        this.task = taskDbHelper.getTaskByRowId(this.taskId, this.activity);
+        this.context = context;
+        this.task = taskDbHelper.getTaskByRowId(this.taskId, this.context);
     }
 
     /**

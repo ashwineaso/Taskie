@@ -58,8 +58,8 @@
                         <TextView android:id="@+id/taskTitleTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/smallMargin_xhdp"
-                            android:textSize="@dimen/text_header_xhdpi"
+                            android:layout_marginLeft="@dimen/thinMargin_xhdpi"
+                            android:textSize="@dimen/text_subHeader_xhdpi"
                             android:text="Title of the Task"
                             fontPath="fonts/Cabin-SemiBold-TTF.ttf"
                             tools2:ignore="MissingPrefix"/>
@@ -67,7 +67,7 @@
                         <TextView android:id="@+id/dueDateTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/smallMargin_xhdp"
+                            android:layout_marginLeft="@dimen/thinMargin_xhdpi"
                             android:text="Due on 25 Dec, 2014"
                             android:textSize="@dimen/text_small_xhdpi"
                             fontPath="fonts/Cabin-Medium-TTF.ttf"
@@ -79,19 +79,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/taskMainLinearLayout"
-                        android:padding="@dimen/smallMargin_xhdp"
                         android:textSize="16dp"
-                        android:text="Task Description"/>
-
-                    <TextView android:id="@+id/taskPriorityTextView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/smallMargin_xhdp"
-                        android:layout_marginRight="@dimen/smallMargin_xhdp"
-                        android:textSize="16dp"
-                        android:layout_below="@id/taskDescriptionTextView"
-                        android:textColor="@color/taskSecondaryAccent"
-                        android:text="High Priority"/>
+                        android:text="Task Description"
+                        android:padding="@dimen/thinMargin_xhdpi" />
 
                     <!--<TextView android:id="@+id/taskAttachmentTextView"
                         android:layout_width="match_parent"
@@ -102,32 +92,30 @@
                         android:textColor="@color/taskAccentColor"
                         android:text="Attatchment: Profile_Picture.jpg"/>-->
 
-                    <LinearLayout android:id="@+id/taskStatusLinearLayout"
-                        android:layout_width="match_parent"
+                    <LinearLayout android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/smallMargin_xhdp"
                         android:orientation="horizontal"
-                        android:gravity="center_vertical">
+                        android:gravity="center_vertical"
+                        android:paddingRight="@dimen/thinMargin_xhdpi"
+                        android:paddingBottom="@dimen/thinMargin_xhdpi"
+                        android:paddingLeft="@dimen/thinMargin_xhdpi">
+
+                        <TextView android:id="@+id/taskPriorityTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16dp"
+                            android:layout_below="@id/taskDescriptionTextView"
+                            android:textColor="@color/taskSecondaryAccent"
+                            android:text="High Priority"
+                            android:paddingRight="@dimen/thinMargin_xhdpi" />
 
                         <TextView android:id="@+id/taskStatusTextView"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
+                            android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/text_normal_xhdpi"
                             fontPath="fonts/Cabin-SemiBold-TTF.ttf"
-                            android:text="Status: Ongoing"/>
-
-                        <ImageView
-                            android:layout_width="@dimen/statusCircleDiameter_xhdp"
-                            android:layout_height="@dimen/statusCircleDiameter_xhdp"
-                            android:src="@drawable/done_notif"
-                            android:layout_marginRight="8dp"
-                            android:id="@+id/change_status_btn" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/menu"/>
+                            android:text="Status: Ongoing"
+                            android:gravity="right" />
 
                     </LinearLayout>
 

@@ -117,12 +117,11 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         );
         Log.d(TAG, "Query run task inserted to row "+rowId+".");
         database.close();
-        Task task = getTaskByRowId(rowId, activity);
-        task.setId(rowId);
-        return task;
+        newTask.setId(rowId);
+        return newTask;
     }
 
-    public Task getTaskByRowId(long rowId, Activity activity) {
+    public Task getTaskByRowId(long rowId, Context context) {
         String TAG = CLASS_TAG+"getTaskByRowId";
         // Open database.
         Log.d(TAG, "Readable database opened.");
@@ -146,12 +145,13 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         selfCursor.moveToFirst();
         String cursorString = new String();
         for(int i=0;i<selfCursor.getColumnCount();i++) {
-            cursorString+=i+":"+selfCursor.getString(i)+", ";
+            cursorString+=selfCursor.getColumnName(i)+":"+selfCursor.getString(i)+", ";
         }
         Log.d(TAG, "Cursor: "+cursorString);
+        selfCursor.moveToFirst();
         Task task = new Task(
                 selfCursor,
-                activity
+                context
         );
         selfCursor.close();
         readableDb.close();
@@ -166,14 +166,11 @@ public class TaskDbHelper extends SQLiteOpenHelper {
     public List<Task> getAllNonGroupTasks(Activity activity) {
         String TAG = CLASS_TAG+"getAllNonGroupTasks";
         Cursor resultCursor = getAllNonGroupTasksAsCursor();
-        Log.d(TAG, "Returned "+resultCursor.getCount()+" rows.");
         // List all the non group tasks.
         List<Task> taskList = new ArrayList<Task>();
         if(resultCursor.moveToFirst()) {
             do {
-                Log.d(TAG, "Status: "+resultCursor.getInt(6));
                 taskList.add(new Task(resultCursor, activity));
-                Log.d(TAG, "Added task to list.");
             } while(resultCursor.moveToNext());
         }
         // Close cursor.

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -76,6 +77,7 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
     private TimePickerDialog timePickerDialog;
 
     private boolean isCreate = true;
+    private ImageView btnCancelDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +136,7 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
         this.priorityTV = (TextView) findViewById(R.id.priorityTextView);
         this.createTaskBtn = (Button) findViewById(R.id.createTaskButton);
         this.updateTaskBtn = (Button) findViewById(R.id.updateTaskButton);
+        this.btnCancelDate = (ImageView) findViewById(R.id.btnCancelDate);
 
         this.dueDateTV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,6 +176,13 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
+            }
+        });
+
+        this.btnCancelDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dueDateTV.setText("");
             }
         });
 
@@ -278,7 +288,7 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
         this.taskDescriptionET.setText(this.task.getDescription());
         String dueDate;
         if(this.task.getDueDateTimeAsLong()==0) {
-            dueDate = "Set a due date.";
+            dueDate = "";
         } else {
             dueDate = this.task.getDueDateTime();
         }

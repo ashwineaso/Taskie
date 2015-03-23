@@ -2,6 +2,10 @@ package in.altersense.taskapp.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.Calendar;
 import java.util.List;
 
 import in.altersense.taskapp.CreateTaskActivity;
@@ -40,7 +45,7 @@ public class TasksAdapter extends ArrayAdapter<Task>{
 
     public static class ViewHolder{
         public LinearLayout taskStatus;
-        public TextView taskTitle;
+        public TextView taskTitle, dueDateTimeTV;
         public LinearLayout collaboratorList;
         public LinearLayout actionsPlaceHolder;
         public LinearLayout action1, action2, action3, action4;
@@ -81,7 +86,6 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         String TAG = CLASS_TAG+"getView";
         final ViewHolder holder;
         int viewType = getItemViewType(position);
-        Log.d(TAG, "ViewType: "+viewType+" at position: "+position);
         if(convertView==null) {
             holder = new ViewHolder();
             convertView = inflater.inflate(R.layout.task_panel, parent, false);
@@ -114,6 +118,8 @@ public class TasksAdapter extends ArrayAdapter<Task>{
 
             // Actions images.
             holder.actionImage4 = (ImageView) holder.action4.findViewById(R.id.action4Image);
+            //Due Date Time
+            holder.dueDateTimeTV = (TextView) convertView.findViewById(R.id.dueDateTimeTextView);
 
             convertView.setTag(holder);
 
@@ -191,12 +197,9 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         holder.taskTitle.setText(
                 task.getName()
         );
-        Log.d(TAG, "Task: " + task.getName());
-
 
         //Check whether the count of collaborators are more than 10 if not set number of colaborators to be displayed as 8
         int collaboratorsToBeDisplayedCount = task.getCollaborators().size()<8 ? task.getCollaborators().size() : 8;
-        Log.d(TAG, "CollaboratorCount: " + collaboratorsToBeDisplayedCount);
 
 
         // Display owners status
@@ -207,7 +210,6 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         // display initials and status of the collaborators
         for(int ctr=0; ctr<collaboratorsToBeDisplayedCount; ctr++) {
             Collaborator collaborator = task.getCollaborators().get(ctr);
-            Log.d(TAG, "Collaborator : " + collaborator.toString());
             holder.collaborators[ctr+1].setText(collaborator.getInitials());
             holder.collaborators[ctr+1].setBackgroundResource(task.collaboratorStatusBackground(collaborator.getStatus()));
             holder.collaborators[ctr+1].setVisibility(View.VISIBLE);
@@ -221,6 +223,38 @@ public class TasksAdapter extends ArrayAdapter<Task>{
             holder.collaborators[9].setVisibility(View.VISIBLE);
         }
 
+        //Display the Due Date time
+        long dueDateTime = task.getDueDateTimeAsLong();
+        long todayStartTime = getStartTime();
+        if (dueDateTime == 0) {
+            holder.dueDateTimeTV.setText(null);
+        }
+        else if (dueDateTime - todayStartTime < 0) {
+            holder.dueDateTimeTV.setText("Due on "+task.getDueDateTime());
+            holder.dueDateTimeTV.setTextColor(Color.rgb(245, 0, 87));
+        }
+        else if(dueDateTime - todayStartTime < 86400000) {
+            holder.dueDateTimeTV.setText("Due Today");
+            holder.dueDateTimeTV.setTextColor(Color.rgb(255, 186, 26));
+        }
+        else if (dueDateTime - todayStartTime < 172800000) {
+            holder.dueDateTimeTV.setText("Due Tomorrow");
+            holder.dueDateTimeTV.setTextColor(Color.rgb(255, 186, 26));
+        }
+        else {
+            holder.dueDateTimeTV.setText("Due on "+task.getDueDateTime());
+            holder.dueDateTimeTV.setTextColor(Color.rgb(0, 188, 213));
+        }
+
         return convertView;
+    }
+
+    private long getStartTime() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTimeInMillis();
     }
 }
