@@ -1,12 +1,20 @@
 package in.altersense.taskapp.components;
 
 import android.app.IntentService;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import in.altersense.taskapp.R;
+import in.altersense.taskapp.TaskActivity;
+import in.altersense.taskapp.database.TaskDbHelper;
+import in.altersense.taskapp.models.Buzz;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.requests.SyncRequest;
 
@@ -16,6 +24,8 @@ import in.altersense.taskapp.requests.SyncRequest;
 public class GcmMessageHandler extends IntentService {
 
     String datatype, id;
+    private NotificationManager mNotificationManager;
+    private Task tempTask;
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
@@ -51,13 +61,42 @@ public class GcmMessageHandler extends IntentService {
                         //Implement syncing of a Task
                         Task task = new Task();
                         task.setUuid(id, getApplicationContext());
-                        SyncRequest syncRequest = new SyncRequest();
+                        SyncRequest syncRequest = new SyncRequest(task, getApplicationContext());
+                        break;
+
+                    case "Buzz" :
+                        //Implement showing a buzz
+                        TaskDbHelper taskDbHelper = new TaskDbHelper(getApplicationContext());
+                        tempTask = taskDbHelper.getTaskByUUID(id, getApplicationContext());
+                        sendNotification(tempTask.getOwner().getName()
+                                + "has reminded you to complete the task : "
+                                + tempTask.getName());
+
                 }
             }
         }
 
 
         GcmBroadcastReceiver.completeWakefulIntent(intent);
+
+    }
+
+    private void sendNotification(String msg) {
+
+        mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        Intent intent  = new Intent(this, TaskActivity.class);
+        intent.putExtra(Task.ID, tempTask.getUuid());
+        PendingIntent pendingIntent = PendingIntent.getActivity(this.getApplicationContext(), 0, intent, 0);
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle("Reminder")
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
+                        .setContentText(msg);
+
+        mBuilder.setContentIntent(pendingIntent);
+        mNotificationManager.notify(0, mBuilder.build());
 
     }
 }
