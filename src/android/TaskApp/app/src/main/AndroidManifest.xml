@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <permission android:name="in.altersense.taskapp.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
@@ -25,7 +26,13 @@
                 <category android:name="in.altersense.taskapp" />
             </intent-filter>
         </receiver>
-        <service android:name=".GcmIntentService" />
+        <receiver android:name=".components.NetworkStateChangeReceiver" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".components.GcmMessageHandler" />
 
         <activity
             android:name=".DashboardActivity"

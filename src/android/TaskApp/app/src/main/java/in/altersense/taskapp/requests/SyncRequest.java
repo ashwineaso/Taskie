@@ -36,7 +36,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
     private APIRequest apiRequest;
     private List<User> userList;
     private List<Task> taskList;
-    private final Intent syncCompleteBroadcastIntent;
+    private Intent syncCompleteBroadcastIntent;
     private JSONObject requestObject;
     private String url;
 
@@ -44,7 +44,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
 
     /**
      * Base constructor called by all the constructors
-     * @param context Current activity.
+     * @param context Current context.
      * @param users Users to be synced.
      * @param tasks Tasks to be synced
      * @param syncUser True if this is a userList sync
@@ -86,7 +86,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
 
     /**
      * A constructor for syncing everything.
-     * @param context Current activity.
+     * @param context Current context.
      */
     public SyncRequest(Context context) {
         this(context, null, null, false, false, true);
@@ -95,10 +95,20 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
     /**
      * SyncRequest to sync a single user.
      * @param user User to be synced.
-     * @param context Current activity.
+     * @param context Current context.
      */
     public SyncRequest(User user, Context context) {
         this(context, new User[] {user}, null, true, false, false);
+    }
+
+    /**
+     * Constructor with list of users or list of tasks but not both.
+     * @param userList List of users to be synced
+     * @param taskList List of users to be synced
+     * @param context Current context.
+     */
+    public SyncRequest(List<User> userList, List<Task> taskList, Context context) {
+        this(context,userList.toArray(new User[userList.size()]),taskList.toArray(new Task[taskList.size()]),userList!=null,taskList!=null,false);
     }
 
     /**
@@ -132,7 +142,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         JSONObject responseObject = new JSONObject();
 
         AltEngine.writeBooleanToSharedPref(
-                context.getApplicationContext(),
+                context,
                 Config.SHARED_PREF_KEYS.SYNC_IN_PROGRESS.getKey(),
                 true
         );
@@ -291,7 +301,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
                 taskOwner = userDbHelper.createUser(task.getOwner());
                 task.setOwner(taskOwner);
             }
-            task = taskDbHelper.createTask(task, context);
+            task = taskDbHelper.createTask(task);
             Log.d(TAG, "Setting up collaborators.");
             collaboratorsFromJSONArray(
                     taskObject.getJSONArray(Config.REQUEST_RESPONSE_KEYS.TASK_COLLABOATORS.getKey()),
@@ -334,7 +344,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
                 taskDbHelper.updateTask(taskFromJSONObject);
             } else {
                 Log.d(TAG, "Task does not exist so adding.");
-                taskFromJSONObject = taskDbHelper.createTask(taskFromJSONObject, context);
+                taskFromJSONObject = taskDbHelper.createTask(taskFromJSONObject);
             }
             Log.d(TAG, "Task creation updation done.");
             Log.d(TAG, "Clearing all collaborators if any.");
@@ -411,7 +421,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
                 status,
                 false,
                 null,
-                context
+                this.context
         );
         Log.d(TAG, "Returning task: "+task.toString());
         return task;
