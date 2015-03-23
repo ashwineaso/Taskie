@@ -178,7 +178,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         return taskList;
     }
 
-    public Task getTaskByUUID(String taskUUID, Activity activity) {
+    public Task getTaskByUUID(String taskUUID) {
         String TAG = CLASS_TAG+"getTaskByUUID";
         // Open readable database.
         SQLiteDatabase readableDb = this.getReadableDatabase();
@@ -210,7 +210,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
             return null;
         }
         Log.d(TAG, "Creating new task from the cursor.");
-        Task task = new Task(cursor, activity);
+        Task task = new Task(cursor, this.context);
         // Return the task.
         cursor.close();
         // Close database.
@@ -341,7 +341,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         return buzz;
     }
 
-    public List<Buzz> retrieveBuzz(Activity activity) {
+    public List<Buzz> retrieveBuzz() {
         String TAG = CLASS_TAG+"retrieveBuzz()";
         List<Buzz> buzzList = new ArrayList<>();
         // Open readable database
@@ -359,7 +359,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         result.moveToFirst();
         // loop through each cursor and add new buzz to a lisr
         do {
-            Buzz buzz = new Buzz(result, activity);
+            Buzz buzz = new Buzz(result, this.context);
             buzzList.add(buzz);
         } while (result.moveToNext());
         // close the db, closse the cursor
@@ -369,7 +369,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         return buzzList;
     }
 
-    public Buzz retrieveBuzz(Task task, Activity activity) {
+    public Buzz retrieveBuzz(Task task) {
         String TAG = CLASS_TAG+"retrieveBuzz(Task,Activity)";
         // Open readable database
         SQLiteDatabase readableDb = this.getReadableDatabase();
@@ -390,7 +390,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         // Create buzz from cursor
         Buzz buzz;
         if(result.getCount()!=0) {
-            buzz = new Buzz(result, activity);
+            buzz = new Buzz(result, this.context);
         } else {
             buzz = null;
         }
