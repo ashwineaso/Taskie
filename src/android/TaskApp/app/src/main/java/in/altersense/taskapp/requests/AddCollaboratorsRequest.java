@@ -55,7 +55,7 @@ public class AddCollaboratorsRequest extends AsyncTask<Void, Integer, JSONObject
                     collaboratorJSONArray
             );
             dataArray.put(dataObject);
-            this.requestObject.put(Config.REQUEST_RESPONSE_KEYS.DATA.getKey(),dataArray)
+            this.requestObject.put(Config.REQUEST_RESPONSE_KEYS.DATA.getKey(),dataArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }

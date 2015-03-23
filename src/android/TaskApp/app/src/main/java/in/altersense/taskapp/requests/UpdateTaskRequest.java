@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,8 +33,8 @@ public class UpdateTaskRequest extends AsyncTask<Void, Integer, JSONObject> {
     @Override
     protected void onPreExecute() {
         this.requestObject = new JSONObject();
-        JSONArray dataArray = new JSONArray();
         JSONObject dataObject = new JSONObject();
+        JSONArray dataArray = new JSONArray();
         try {
             dataObject.put(
                     Config.REQUEST_RESPONSE_KEYS.UUID.getKey(),
