@@ -60,8 +60,16 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             boolean syncEverything
     ) {
         this.context = context;
-        this.userList = Arrays.asList(users);
-        this.taskList = Arrays.asList(tasks);
+        try {
+            this.userList = Arrays.asList(users);
+        } catch (NullPointerException e) {
+            this.userList = new ArrayList<>();
+        }
+        try {
+            this.taskList = Arrays.asList(tasks);
+        } catch (NullPointerException e) {
+            this.taskList = new ArrayList<>();
+        }
         this.requestObject = new JSONObject();
         if(syncUser) {
             this.mode = 1;
