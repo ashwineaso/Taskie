@@ -38,20 +38,24 @@ public class RemoveCollaboratorsRequest extends AsyncTask<Void, Integer, JSONObj
 
     @Override
     protected void onPreExecute() {
+        JSONObject dataObject = new JSONObject();
+        JSONArray dataArray;
         this.requestObject = new JSONObject();
         JSONArray collaboratorJSONArray = new JSONArray();
         try {
-            this.requestObject.put(
+            dataObject.put(
                     Config.REQUEST_RESPONSE_KEYS.UUID.getKey(),
                     this.task.getUuid()
             );
             for(User collaborator:collaborators) {
                 collaboratorJSONArray.put(collaborator.getEmail());
             }
-            this.requestObject.put(
+            dataObject.put(
                     Config.REQUEST_RESPONSE_KEYS.TASK_COLLABOATORS.getKey(),
                     collaboratorJSONArray
             );
+            dataArray.put(dataObject);
+            this.requestObject.put(Config.REQUEST_RESPONSE_KEYS.DATA.getKey(),dataArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }
