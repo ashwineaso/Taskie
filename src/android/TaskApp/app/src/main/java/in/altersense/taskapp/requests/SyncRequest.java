@@ -32,7 +32,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
 
     private static final String CLASS_TAG = "SyncRequest ";
 
-    private Context activity;
+    private final Context context;
     private APIRequest apiRequest;
     private List<User> userList;
     private List<Task> taskList;
@@ -59,7 +59,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             boolean syncTask,
             boolean syncEverything
     ) {
-        this.activity = context;
+        this.context = context;
         this.userList = Arrays.asList(users);
         this.taskList = Arrays.asList(tasks);
         this.requestObject = new JSONObject();
@@ -80,13 +80,13 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         this.apiRequest = new APIRequest(
                 this.url,
                 this.requestObject,
-                this.activity
+                this.context
         );
     }
 
     /**
      * A constructor for syncing everything.
-     * @param activity Current activity.
+     * @param context Current context.
      */
     public SyncRequest(Context context) {
         this(context, null, null, false, false, true);
@@ -95,7 +95,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
     /**
      * SyncRequest to sync a single user.
      * @param user User to be synced.
-     * @param activity Current activity.
+     * @param context Current context.
      */
     public SyncRequest(User user, Context context) {
         this(context, new User[] {user}, null, true, false, false);
@@ -114,10 +114,10 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
     /**
      * SyncRequest to sync a single task.
      * @param task Task to be synced.
-     * @param activity Current activity.
+     * @param context Current activity.
      */
-    public SyncRequest(Task task, Activity activity) {
-        this(activity,null,new Task[] {task},false,true,false);
+    public SyncRequest(Task task, Context context) {
+        this(context,null,new Task[] {task},false,true,false);
     }
 
     public User getUser() {
@@ -142,7 +142,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         JSONObject responseObject = new JSONObject();
 
         AltEngine.writeBooleanToSharedPref(
-                activity.getApplicationContext(),
+                context,
                 Config.SHARED_PREF_KEYS.SYNC_IN_PROGRESS.getKey(),
                 true
         );
@@ -205,7 +205,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             default:
                 // Hell breaks loose.
         }
-        this.activity.sendBroadcast(syncCompleteBroadcastIntent);
+        this.context.sendBroadcast(syncCompleteBroadcastIntent);
         Log.d(TAG, "Broadcast sent.");
     }
 
@@ -218,7 +218,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             this.requestObject.put(
                     Config.REQUEST_RESPONSE_KEYS.UUID.getKey(),
                     AltEngine.readStringFromSharedPref(
-                            activity.getApplicationContext(),
+                            context,
                             Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
                             ""
                     )
@@ -286,9 +286,9 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
      */
     public void postExecuteSyncEverything(JSONArray taskArray) throws JSONException {
         String TAG = CLASS_TAG+"postExecuteSyncEverything";
-        TaskDbHelper taskDbHelper = new TaskDbHelper(activity.getApplicationContext());
-        UserDbHelper userDbHelper = new UserDbHelper(activity.getApplicationContext());
-        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity.getApplicationContext());
+        TaskDbHelper taskDbHelper = new TaskDbHelper(context);
+        UserDbHelper userDbHelper = new UserDbHelper(context);
+        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
         for(int ctr=0; ctr<taskArray.length();ctr++) {
             Log.d(TAG, "TaskCtr: "+ctr+1);
             JSONObject taskObject = taskArray.getJSONObject(ctr);
@@ -325,9 +325,9 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         String taskStatus = taskObject.getString(Config.REQUEST_RESPONSE_KEYS.STATUS.getKey());
         if(taskStatus.equals(Config.RESPONSE_STATUS_SUCCESS)) {
 
-            TaskDbHelper taskDbHelper = new TaskDbHelper(activity.getApplicationContext());
-            UserDbHelper userDbHelper = new UserDbHelper(activity.getApplicationContext());
-            CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity.getApplicationContext());
+            TaskDbHelper taskDbHelper = new TaskDbHelper(context);
+            UserDbHelper userDbHelper = new UserDbHelper(context);
+            CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
             Task taskFromJSONObject = taskFromJSONObject(taskObject.getJSONObject(Config.REQUEST_RESPONSE_KEYS.DATA.getKey()));
             Log.d(TAG, "Check whether taskFromJSONObject owner is in db");
             User taskOwner = userDbHelper.getUserByUUID(taskFromJSONObject.getOwner().getUuid());
@@ -375,7 +375,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         String userStatus = userObject.getString(Config.REQUEST_RESPONSE_KEYS.STATUS.getKey());
         if(userStatus.equals(Config.RESPONSE_STATUS_SUCCESS)) {
 
-            UserDbHelper userDbHelper = new UserDbHelper(activity.getApplicationContext());
+            UserDbHelper userDbHelper = new UserDbHelper(context);
             User userFromJSONObject = userFromJSONObject(userObject.getJSONObject(Config.REQUEST_RESPONSE_KEYS.DATA.getKey()));
             userFromJSONObject.setSyncStatus(true);
             Log.d(TAG, "Checking whether userFromJSONObject present in db");
@@ -397,7 +397,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
 
     public Task taskFromJSONObject (JSONObject taskObject) throws JSONException {
         String TAG = CLASS_TAG+"taskFromJSONObject";
-        TaskDbHelper taskDbHelper = new TaskDbHelper(this.activity.getApplicationContext());
+        TaskDbHelper taskDbHelper = new TaskDbHelper(this.context);
         Log.d(TAG, "Setting up task properties");
         String name = taskObject.getString(Config.REQUEST_RESPONSE_KEYS.NAME.getKey());
         String uuid = taskObject.getString(Config.REQUEST_RESPONSE_KEYS.UUID.getKey());
@@ -430,7 +430,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
     public User userFromJSONObject (JSONObject userObject) throws JSONException {
         String TAG = CLASS_TAG+"userFromJSONObject";
         Log.d(TAG, "Setting up user properties.");
-        UserDbHelper userDbHelper = new UserDbHelper(this.activity.getApplicationContext());
+        UserDbHelper userDbHelper = new UserDbHelper(this.context);
         String userName = userObject.getString(Config.REQUEST_RESPONSE_KEYS.NAME.getKey());
         String userUUID = userObject.getString(Config.REQUEST_RESPONSE_KEYS.UUID.getKey());
         String userEmail = userObject.getString(Config.REQUEST_RESPONSE_KEYS.EMAIL.getKey());
