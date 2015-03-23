@@ -105,7 +105,7 @@ def addCollaborators():
 
 
 def remCollaborators():
-	jjsonResponse = {}
+	jsonResponse = {}
 
 	jsonObj = request.json
 	jsonResponse["data"] = []

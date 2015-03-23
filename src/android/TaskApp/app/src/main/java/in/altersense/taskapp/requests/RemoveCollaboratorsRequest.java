@@ -39,7 +39,7 @@ public class RemoveCollaboratorsRequest extends AsyncTask<Void, Integer, JSONObj
     @Override
     protected void onPreExecute() {
         JSONObject dataObject = new JSONObject();
-        JSONArray dataArray;
+        JSONArray dataArray = new JSONArray();
         this.requestObject = new JSONObject();
         JSONArray collaboratorJSONArray = new JSONArray();
         try {

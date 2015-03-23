@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,16 +43,20 @@ public class TaskStatusChangeRequest extends AsyncTask<Void, Integer, JSONObject
 
     @Override
     protected void onPreExecute() {
+        JSONArray dataArray = new JSONArray();
+        JSONObject dataObject = new JSONObject();
         this.requestObject = new JSONObject();
         try {
-            requestObject.put(
+            dataObject.put(
                     Config.REQUEST_RESPONSE_KEYS.UUID.getKey(),
                     this.task.getUuid()
             );
-            requestObject.put(
+            dataObject.put(
                     Config.REQUEST_RESPONSE_KEYS.STATUS.getKey(),
                     this.status
             );
+            dataArray.put(dataObject);
+            this.requestObject.put(Config.REQUEST_RESPONSE_KEYS.DATA.getKey(), dataArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }
