@@ -86,7 +86,6 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         String TAG = CLASS_TAG+"getView";
         final ViewHolder holder;
         int viewType = getItemViewType(position);
-        Log.d(TAG, "ViewType: "+viewType+" at position: "+position);
         if(convertView==null) {
             holder = new ViewHolder();
             convertView = inflater.inflate(R.layout.task_panel, parent, false);
@@ -198,12 +197,9 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         holder.taskTitle.setText(
                 task.getName()
         );
-        Log.d(TAG, "Task: " + task.getName());
-
 
         //Check whether the count of collaborators are more than 10 if not set number of colaborators to be displayed as 8
         int collaboratorsToBeDisplayedCount = task.getCollaborators().size()<8 ? task.getCollaborators().size() : 8;
-        Log.d(TAG, "CollaboratorCount: " + collaboratorsToBeDisplayedCount);
 
 
         // Display owners status
@@ -214,7 +210,6 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         // display initials and status of the collaborators
         for(int ctr=0; ctr<collaboratorsToBeDisplayedCount; ctr++) {
             Collaborator collaborator = task.getCollaborators().get(ctr);
-            Log.d(TAG, "Collaborator : " + collaborator.toString());
             holder.collaborators[ctr+1].setText(collaborator.getInitials());
             holder.collaborators[ctr+1].setBackgroundResource(task.collaboratorStatusBackground(collaborator.getStatus()));
             holder.collaborators[ctr+1].setVisibility(View.VISIBLE);

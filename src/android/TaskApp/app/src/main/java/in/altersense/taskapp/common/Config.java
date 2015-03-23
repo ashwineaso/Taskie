@@ -35,9 +35,9 @@ public class Config {
     public static final int MAX_STATUS = 2;  // Maximum status a task can have.
 
     public static enum TASK_STATUS {
-        INCOMPLETE(0, "Incomplete"),
-        COMPLETE(1, "Complete"),
-        DELETED(2, "Deleted");
+        INCOMPLETE(1, "Incomplete"),
+        COMPLETE(2, "Complete"),
+        DELETED(-1, "Deleted");
 
         public String getStatusText() {
             return statusText;
