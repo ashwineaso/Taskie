@@ -1,6 +1,7 @@
 package in.altersense.taskapp.requests;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -25,13 +26,13 @@ public class AddCollaboratorsRequest extends AsyncTask<Void, Integer, JSONObject
     private static String CLASS_TAG = "AddCollaboratorsRequest ";
     private Task task;
     private List<Collaborator> collaborators;
-    private Activity activity;
+    private Context context;
     private JSONObject requestObject;
 
-    public AddCollaboratorsRequest(Task task, List<Collaborator> collboratorList, Activity activity) {
+    public AddCollaboratorsRequest(Task task, List<Collaborator> collboratorList, Context context) {
         this.task = task;
         this.collaborators = collboratorList;
-        this.activity = activity;
+        this.context = context;
     }
 
     @Override
@@ -61,7 +62,7 @@ public class AddCollaboratorsRequest extends AsyncTask<Void, Integer, JSONObject
         APIRequest addCollaborators = new APIRequest(
                 AltEngine.formURL("task/addCollaborators"),
                 requestObject,
-                this.activity
+                this.context
         );
         try {
             responseObject = addCollaborators.request();
