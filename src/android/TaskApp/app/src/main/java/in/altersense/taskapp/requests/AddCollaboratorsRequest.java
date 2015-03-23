@@ -28,6 +28,7 @@ public class AddCollaboratorsRequest extends AsyncTask<Void, Integer, JSONObject
     private List<Collaborator> collaborators;
     private Context context;
     private JSONObject requestObject;
+    private JSONArray dataArray;
 
     public AddCollaboratorsRequest(Task task, List<Collaborator> collboratorList, Context context) {
         this.task = task;
@@ -38,19 +39,23 @@ public class AddCollaboratorsRequest extends AsyncTask<Void, Integer, JSONObject
     @Override
     protected void onPreExecute() {
         this.requestObject = new JSONObject();
+        JSONObject dataObject = new JSONObject();
+        dataArray = new JSONArray();
         JSONArray collaboratorJSONArray = new JSONArray();
         try {
-            this.requestObject.put(
+            dataObject.put(
                     Config.REQUEST_RESPONSE_KEYS.UUID.getKey(),
                     this.task.getUuid()
             );
             for(User collaborator:collaborators) {
                 collaboratorJSONArray.put(collaborator.getEmail());
             }
-            this.requestObject.put(
+            dataObject.put(
                     Config.REQUEST_RESPONSE_KEYS.TASK_COLLABOATORS.getKey(),
                     collaboratorJSONArray
             );
+            this.dataArray.put(dataObject);
+            this.requestObject.put(Config.REQUEST_RESPONSE_KEYS.DATA.getKey(),dataArray)
         } catch (JSONException e) {
             e.printStackTrace();
         }
