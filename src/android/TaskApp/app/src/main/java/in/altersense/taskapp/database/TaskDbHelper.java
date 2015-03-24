@@ -458,6 +458,9 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 null
         );
         unsyncedTasksCursor.moveToFirst();
+        if(unsyncedTasksCursor.getCount()==0) {
+            return new ArrayList<>();
+        }
         // create an empty list
         List<Task> unSyncedTaskList = new ArrayList<>();
         // loop through the result cursor
