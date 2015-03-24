@@ -198,30 +198,35 @@ public class TasksAdapter extends ArrayAdapter<Task>{
                 task.getName()
         );
 
-        //Check whether the count of collaborators are more than 10 if not set number of colaborators to be displayed as 8
-        int collaboratorsToBeDisplayedCount = task.getCollaborators().size()<8 ? task.getCollaborators().size() : 8;
-
-
         // Display owners status
         holder.collaborators[0].setText(task.getOwner().getInitials());
         holder.collaborators[0].setBackgroundResource(task.collaboratorStatusBackground(task.getStatus()));
         holder.collaborators[0].setVisibility(View.VISIBLE);
 
-        // display initials and status of the collaborators
-        for(int ctr=0; ctr<collaboratorsToBeDisplayedCount; ctr++) {
-            Collaborator collaborator = task.getCollaborators().get(ctr);
-            holder.collaborators[ctr+1].setText(collaborator.getInitials());
-            holder.collaborators[ctr+1].setBackgroundResource(task.collaboratorStatusBackground(collaborator.getStatus()));
-            holder.collaborators[ctr+1].setVisibility(View.VISIBLE);
+        //Check whether the count of collaborators are more than 10 if not set number of colaborators to be displayed as 8
+        try {
+            int collaboratorsToBeDisplayedCount = task.getCollaborators().size()<8 ? task.getCollaborators().size() : 8;
+
+            // display initials and status of the collaborators
+            for(int ctr=0; ctr<collaboratorsToBeDisplayedCount; ctr++) {
+                Collaborator collaborator = task.getCollaborators().get(ctr);
+                holder.collaborators[ctr+1].setText(collaborator.getInitials());
+                holder.collaborators[ctr+1].setBackgroundResource(task.collaboratorStatusBackground(collaborator.getStatus()));
+                holder.collaborators[ctr+1].setVisibility(View.VISIBLE);
+            }
+
+            // display more collaborators if the count is greater than 8
+            if(collaboratorsToBeDisplayedCount<task.getCollaborators().size()) {
+                int remaining = task.getCollaborators().size()-collaboratorsToBeDisplayedCount;
+                String messageText = "+"+remaining+" MORE";
+                holder.collaborators[9].setText(messageText);
+                holder.collaborators[9].setVisibility(View.VISIBLE);
+            }
+
+        } catch (NullPointerException e) {
+            Log.d(TAG, "Cannot find collaborators");
         }
 
-        // display more collaborators if the count is greater than 8
-        if(collaboratorsToBeDisplayedCount<task.getCollaborators().size()) {
-            int remaining = task.getCollaborators().size()-collaboratorsToBeDisplayedCount;
-            String messageText = "+"+remaining+" MORE";
-            holder.collaborators[9].setText(messageText);
-            holder.collaborators[9].setVisibility(View.VISIBLE);
-        }
 
         //Display the Due Date time
         long dueDateTime = task.getDueDateTimeAsLong();

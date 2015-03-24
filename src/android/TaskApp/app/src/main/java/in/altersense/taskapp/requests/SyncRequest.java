@@ -336,17 +336,22 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             Log.d(TAG, "Clearing all collaborators if any.");
             collaboratorDbHelper.delete(taskFromJSONObject);
             Log.d(TAG, "Setting up collaborators.");
-            collaboratorsFromJSONArray(
-                    taskObject.getJSONArray(Config.REQUEST_RESPONSE_KEYS.TASK_COLLABOATORS.getKey()),
-                    taskFromJSONObject,
-                    collaboratorDbHelper,
-                    userDbHelper
-            );
-            taskFromJSONObject.setCollaborators(collaboratorDbHelper.getAllCollaborators(taskFromJSONObject));
+            try {
+                collaboratorsFromJSONArray(
+                        taskObject.getJSONArray(Config.REQUEST_RESPONSE_KEYS.TASK_COLLABOATORS.getKey()),
+                        taskFromJSONObject,
+                        collaboratorDbHelper,
+                        userDbHelper
+                );
+                taskFromJSONObject.setCollaborators(collaboratorDbHelper.getAllCollaborators(taskFromJSONObject));
+            } catch (JSONException e) {
+                Log.d(TAG, "No collaborators.");
+                taskFromJSONObject.setCollaborators(new ArrayList<Collaborator>());
+            }
             Log.d(TAG, "Setting up collaborators done.");
             Log.d(TAG, "Task set: "+taskFromJSONObject.toString());
             int position = this.taskList.indexOf(task);
-            this.taskList.remove(task);
+            this.taskList.remove(position);
             this.taskList.add(position, taskFromJSONObject);
         }
     }
