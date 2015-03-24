@@ -332,7 +332,10 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             TaskDbHelper taskDbHelper = new TaskDbHelper(context);
             UserDbHelper userDbHelper = new UserDbHelper(context);
             CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
-            Task taskFromJSONObject = taskFromJSONObject(taskObject.getJSONObject(Config.REQUEST_RESPONSE_KEYS.DATA.getKey()));
+            Task taskFromJSONObject = taskFromJSONObject(
+                    taskObject.getJSONObject(Config.REQUEST_RESPONSE_KEYS.DATA.getKey())
+            );
+            Task taskFromDatabase = taskDbHelper.getTaskByUUID(task.getUuid());
             Log.d(TAG, "Check whether taskFromJSONObject owner is in db");
             User taskOwner = userDbHelper.getUserByUUID(taskFromJSONObject.getOwner().getUuid());
             if(taskOwner==null) {
@@ -342,11 +345,16 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
                 taskFromJSONObject.setOwner(taskOwner);
             }
             Log.d(TAG, "Check whether the taskFromJSONObject exists in database.");
-            if(task.getId()>0) {
-                Log.d(TAG, "Task exists so updating.");
-                taskFromJSONObject.setId(task.getId());
-                taskDbHelper.updateTask(taskFromJSONObject);
-            } else {
+            try {
+                if(taskFromDatabase.getId()>0) {
+                    Log.d(TAG, "Task exists so updating.");
+                    taskFromJSONObject.setId(taskFromDatabase.getId());
+                    taskDbHelper.updateTask(taskFromJSONObject);
+                } else {
+                    Log.d(TAG, "Task does not exist so adding.");
+                    taskFromJSONObject = taskDbHelper.createTask(taskFromJSONObject);
+                }
+            } catch (NullPointerException e) {
                 Log.d(TAG, "Task does not exist so adding.");
                 taskFromJSONObject = taskDbHelper.createTask(taskFromJSONObject);
             }
