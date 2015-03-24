@@ -65,6 +65,8 @@ public class Task {
     public Task() {
         Log.d(CLASS_TAG, "Constructor1 called.");
         this.name="";
+        this.owner = new User("noUser");
+        this.status = Config.TASK_STATUS.INCOMPLETE.getStatus();
         this.collaborators = new ArrayList<>();
         this.id = 0;
     }
