@@ -339,9 +339,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             try {
                 collaboratorsFromJSONArray(
                         taskObject.getJSONArray(Config.REQUEST_RESPONSE_KEYS.TASK_COLLABOATORS.getKey()),
-                        taskFromJSONObject,
-                        collaboratorDbHelper,
-                        userDbHelper
+                        taskFromJSONObject
                 );
                 taskFromJSONObject.setCollaborators(collaboratorDbHelper.getAllCollaborators(taskFromJSONObject));
             } catch (JSONException e) {
@@ -459,11 +457,10 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
 
     public void collaboratorsFromJSONArray(
             JSONArray collaborators,
-            Task task,
-            CollaboratorDbHelper collaboratorDbHelper,
-            UserDbHelper userDbHelper
+            Task task
     ) throws JSONException {
         String TAG = CLASS_TAG+"collaboratorsFromJSONArray";
+        Log.d(TAG, "Array of collaborators: "+collaborators.toString());
         for(int collCtr=0; collCtr<collaborators.length(); collCtr++) {
             Log.d(TAG, "Setting up collaborator "+collCtr+1+ " params.");
             JSONObject collaboratorObject = collaborators.getJSONObject(collCtr);
@@ -475,7 +472,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             Collaborator collaborator = new Collaborator(collaboratorUser);
             collaborator.setStatus(collStatus);
             Log.d(TAG, "Adding collaborator to db.");
-            collaboratorDbHelper.addCollaborator(task, collaborator);
+            this.collaboratorDbHelper.addCollaborator(task, collaborator);
         }
     }
 }
