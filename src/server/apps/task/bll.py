@@ -204,8 +204,8 @@ def taskToDictConverter(task):
 		status["status"] = each_user.status.status
 		status["dateTime"] = each_user.status.dateTime
 		coll["id"] = str(each_user.user.id)
-		coll["name"] = each_user.user.name
-		coll["email"] = each_user.user.email
+		coll["name"] = str(each_user.user.name)
+		coll["email"] = str(each_user.user.email)
 		coll["status"] = status.copy()
 		coll["startTime"] = each_user.startTime
 		coll["endTime"] = each_user.endTime
