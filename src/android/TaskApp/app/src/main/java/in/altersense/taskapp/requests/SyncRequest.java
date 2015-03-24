@@ -64,12 +64,12 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
     ) {
         this.context = context;
         try {
-            this.userList = Arrays.asList(users);
+            this.userList = new ArrayList<User>(Arrays.asList(users));
         } catch (NullPointerException e) {
             this.userList = new ArrayList<>();
         }
         try {
-            this.taskList = Arrays.asList(tasks);
+            this.taskList = new ArrayList<>(Arrays.asList(tasks));
         } catch (NullPointerException e) {
             this.taskList = new ArrayList<>();
         }
