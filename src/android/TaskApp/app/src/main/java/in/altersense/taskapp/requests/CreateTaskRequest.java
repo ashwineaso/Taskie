@@ -32,7 +32,6 @@ public class CreateTaskRequest extends AsyncTask<Void, Integer, JSONObject> {
     private UserDbHelper userDbHelper;
     private Context context;
     private ArrayList<Task> taskList;
-    private Task task;
     private JSONObject requestObject;
     private JSONArray collaborators;
 
@@ -60,16 +59,16 @@ public class CreateTaskRequest extends AsyncTask<Void, Integer, JSONObject> {
                 taskObject = new JSONObject();
                 taskObject.put(
                         Config.REQUEST_RESPONSE_KEYS.OWNER.getKey(),
-                        this.task.getOwner().getUuid()
+                        task.getOwner().getUuid()
                 );
                 taskObject.put(
                         Config.REQUEST_RESPONSE_KEYS.TASK_NAME.getKey(),
-                        this.task.getName()
+                        task.getName()
                 );
 
                 this.collaborators = new JSONArray();
 
-                if(this.task.getCollaborators().size()>0) {
+                if(task.getCollaborators().size()>0) {
                     for(User collaborator : task.getCollaborators()) {
                         this.collaborators.put(collaborator.getEmail());
                     }
@@ -117,10 +116,11 @@ public class CreateTaskRequest extends AsyncTask<Void, Integer, JSONObject> {
                 // If success update uuid
                 JSONArray dataArray = result.getJSONArray(Config.REQUEST_RESPONSE_KEYS.DATA.getKey());
                 for(int ctr = 0; ctr<dataArray.length(); ctr++) {
+                    Task task = this.taskList.get(ctr);
                     JSONObject data = dataArray.getJSONObject(ctr);
-                    this.task.setUuid(data.getString(Config.REQUEST_RESPONSE_KEYS.UUID.getKey()));
-                    this.task.setSyncStatus(true);
-                    this.task.updateTask(context);
+                    task.setUuid(data.getString(Config.REQUEST_RESPONSE_KEYS.UUID.getKey()));
+                    task.setSyncStatus(true);
+                    task.updateTask(context);
 
                     JSONArray collaboratorArray = data.getJSONArray(Config.REQUEST_RESPONSE_KEYS.TASK_COLLABOATORS.getKey());
                     for(int colCtr=0; colCtr<collaboratorArray.length(); colCtr++) {
