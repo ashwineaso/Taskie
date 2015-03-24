@@ -305,9 +305,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             Log.d(TAG, "Setting up collaborators.");
             collaboratorsFromJSONArray(
                     taskObject.getJSONArray(Config.REQUEST_RESPONSE_KEYS.TASK_COLLABOATORS.getKey()),
-                    task,
-                    collaboratorDbHelper,
-                    userDbHelper
+                    task
             );
             task.setCollaborators(collaboratorDbHelper.getAllCollaborators(task));
             Log.d(TAG, "Setting up collaborators done.");
