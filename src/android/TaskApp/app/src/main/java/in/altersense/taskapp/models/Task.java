@@ -260,6 +260,14 @@ public class Task {
         }
     }
 
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public void setGroup(boolean isGroup) {
+        this.isGroup = isGroup;
+    }
+
     /**
      * Table Structure for Task
      */
@@ -344,10 +352,6 @@ public class Task {
         this.group = group;
         this.collaborators = new ArrayList<Collaborator>();
         Log.d(CLASS_TAG, "Basic fields set.");
-
-        Log.d(CLASS_TAG, "Fetching collaborators.");
-        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
-        this.setCollaborators(collaboratorDbHelper.getAllCollaborators(this));
     }
 
     public void fetchAllCollaborators(Context context) {
@@ -428,10 +432,6 @@ public class Task {
         }
         this.setSyncStatus(cursor.getInt(9));
         this.id = cursor.getLong(10);
-
-        Log.d(CLASS_TAG, "Fetching collaborators.");
-        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
-        this.setCollaborators(collaboratorDbHelper.getAllCollaborators(this));
     }
 
     public String getUuid() {
