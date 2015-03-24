@@ -199,7 +199,13 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         );
 
         //Check whether the count of collaborators are more than 10 if not set number of colaborators to be displayed as 8
-        int collaboratorsToBeDisplayedCount = task.getCollaborators().size()<8 ? task.getCollaborators().size() : 8;
+        int collaboratorsToBeDisplayedCount = 0;
+        try {
+            collaboratorsToBeDisplayedCount = task.getCollaborators().size()<8 ? task.getCollaborators().size() : 8;
+        } catch (NullPointerException e) {
+            Log.d(TAG, "Cannot find collaborators");
+            collaboratorsToBeDisplayedCount = 0;
+        }
 
 
         // Display owners status
