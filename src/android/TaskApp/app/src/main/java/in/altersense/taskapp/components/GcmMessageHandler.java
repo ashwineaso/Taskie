@@ -56,23 +56,19 @@ public class GcmMessageHandler extends IntentService {
                 id = extras.getString("id");
                 Log.i("GCM", "Recieved + ( " + MessageType + " ) + datatype : " +datatype + " , id : " + id);
 
-                switch(datatype) {
-                    case "Task" :
-                        //Implement syncing of a Task
-                        Task task = new Task();
-                        task.setUuid(id, getApplicationContext());
-                        SyncRequest syncRequest = new SyncRequest(task, getApplicationContext());
-                        syncRequest.execute();
-                        break;
-
-                    case "Buzz" :
-                        //Implement showing a buzz
-                        TaskDbHelper taskDbHelper = new TaskDbHelper(getApplicationContext());
-                        tempTask = taskDbHelper.getTaskByUUID(id);
-                        sendNotification(tempTask.getOwner().getName()
-                                + "has reminded you to complete the task : "
-                                + tempTask.getName());
-
+                if(datatype.equals("Task")) {
+                    //Implement syncing of a Task
+                    Task task = new Task();
+                    task.setUuid(id, getApplicationContext());
+                    SyncRequest syncRequest = new SyncRequest(task, getApplicationContext());
+                    syncRequest.execute();
+                } else if(datatype.equals("Buzz")) {
+                    //Implement showing a buzz
+                    TaskDbHelper taskDbHelper = new TaskDbHelper(getApplicationContext());
+                    tempTask = taskDbHelper.getTaskByUUID(id);
+                    sendNotification(tempTask.getOwner().getName()
+                            + "has reminded you to complete the task : "
+                            + tempTask.getName());
                 }
             }
         }
