@@ -33,6 +33,9 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
     private static final String CLASS_TAG = "SyncRequest ";
 
     private final Context context;
+    private final TaskDbHelper taskDbHelper;
+    private final UserDbHelper userDbHelper;
+    private final CollaboratorDbHelper collaboratorDbHelper;
     private APIRequest apiRequest;
     private List<User> userList;
     private List<Task> taskList;
@@ -83,6 +86,11 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         } else {
             this.mode=0;
         }
+
+        this.taskDbHelper = new TaskDbHelper(this.context);
+        this.userDbHelper = new UserDbHelper(this.context);
+        this.collaboratorDbHelper = new CollaboratorDbHelper(this.context);
+
         this.syncCompleteBroadcastIntent = new Intent(Config.SHARED_PREF_KEYS.SYNC_IN_PROGRESS.getKey());
 
         this.apiRequest = new APIRequest(
@@ -290,22 +298,10 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
      */
     public void postExecuteSyncEverything(JSONArray taskArray) throws JSONException {
         String TAG = CLASS_TAG+"postExecuteSyncEverything";
-        TaskDbHelper taskDbHelper = new TaskDbHelper(context);
-        UserDbHelper userDbHelper = new UserDbHelper(context);
-        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
         for(int ctr=0; ctr<taskArray.length();ctr++) {
             Log.d(TAG, "TaskCtr: "+ctr+1);
             JSONObject taskObject = taskArray.getJSONObject(ctr);
             Task task = taskFromJSONObject(taskObject);
-            Log.d(TAG, "Check whether task owner is in db");
-            User taskOwner = userDbHelper.getUserByUUID(task.getOwner().getUuid());
-            if(taskOwner==null) {
-                Log.d(TAG, "Task owner not in db. Adding.");
-                task.getOwner().setSyncStatus(true);
-                taskOwner = userDbHelper.createUser(task.getOwner());
-                task.setOwner(taskOwner);
-            }
-            task = taskDbHelper.createTask(task);
             Log.d(TAG, "Setting up collaborators.");
             collaboratorsFromJSONArray(
                     taskObject.getJSONArray(Config.REQUEST_RESPONSE_KEYS.TASK_COLLABOATORS.getKey()),
@@ -335,30 +331,8 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             Task taskFromJSONObject = taskFromJSONObject(
                     taskObject.getJSONObject(Config.REQUEST_RESPONSE_KEYS.DATA.getKey())
             );
-            Task taskFromDatabase = taskDbHelper.getTaskByUUID(task.getUuid());
-            Log.d(TAG, "Check whether taskFromJSONObject owner is in db");
-            User taskOwner = userDbHelper.getUserByUUID(taskFromJSONObject.getOwner().getUuid());
-            if(taskOwner==null) {
-                Log.d(TAG, "Task owner not in db. Adding.");
-                taskFromJSONObject.getOwner().setSyncStatus(true);
-                taskOwner = userDbHelper.createUser(taskFromJSONObject.getOwner());
-                taskFromJSONObject.setOwner(taskOwner);
-            }
-            Log.d(TAG, "Check whether the taskFromJSONObject exists in database.");
-            try {
-                if(taskFromDatabase.getId()>0) {
-                    Log.d(TAG, "Task exists so updating.");
-                    taskFromJSONObject.setId(taskFromDatabase.getId());
-                    taskDbHelper.updateTask(taskFromJSONObject);
-                } else {
-                    Log.d(TAG, "Task does not exist so adding.");
-                    taskFromJSONObject = taskDbHelper.createTask(taskFromJSONObject);
-                }
-            } catch (NullPointerException e) {
-                Log.d(TAG, "Task does not exist so adding.");
-                taskFromJSONObject = taskDbHelper.createTask(taskFromJSONObject);
-            }
             Log.d(TAG, "Task creation updation done.");
+
             Log.d(TAG, "Clearing all collaborators if any.");
             collaboratorDbHelper.delete(taskFromJSONObject);
             Log.d(TAG, "Setting up collaborators.");
@@ -409,11 +383,12 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
 
     public Task taskFromJSONObject (JSONObject taskObject) throws JSONException {
         String TAG = CLASS_TAG+"taskFromJSONObject";
-        TaskDbHelper taskDbHelper = new TaskDbHelper(this.context);
+
         Log.d(TAG, "Setting up task properties");
         String name = taskObject.getString(Config.REQUEST_RESPONSE_KEYS.NAME.getKey());
         String uuid = taskObject.getString(Config.REQUEST_RESPONSE_KEYS.UUID.getKey());
         int priority = taskObject.getInt(Config.REQUEST_RESPONSE_KEYS.PRIORITY.getKey());
+        long dueDateTime = taskObject.getLong(Config.REQUEST_RESPONSE_KEYS.DUE_DATE_TIME.getKey());
         String descr = taskObject.getString(Config.REQUEST_RESPONSE_KEYS.DESCRIPTION.getKey());
         int status = taskObject.getJSONObject(
                 Config.REQUEST_RESPONSE_KEYS.STATUS.getKey()
@@ -423,18 +398,38 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         Log.d(TAG, "Setting up owner of task.");
         User owner = userFromJSONObject(ownerObject);
         Log.d(TAG, "Setting up owner of task done.");
-        Task task = new Task(
-                uuid,
-                name,
-                descr,
-                owner,
-                priority,
-                0,
-                status,
-                false,
-                null,
-                this.context
-        );
+        Task taskFromDatabase = this.taskDbHelper.getTaskByUUID(uuid);
+        Task task;
+        Log.d(TAG, "Check whether the taskFromJSONObject exists in database.");
+        if(taskFromDatabase != null) {
+            Log.d(TAG, "Task exists so updating.");
+            task = taskFromDatabase;
+            task.setUuid(uuid);
+            task.setName(name);
+            task.setDescription(descr);
+            task.setPriority(priority);
+            task.setDueDateTime(dueDateTime);
+            task.setStatus(status);
+            task.setGroup(false);
+            task.setOwner(owner);
+            task.setCollaborators(collaboratorDbHelper.getAllCollaborators(task));
+        } else {
+            Log.d(TAG, "Task does not exist so adding.");
+            task = new Task(
+                    uuid,
+                    name,
+                    descr,
+                    owner,
+                    priority,
+                    dueDateTime,
+                    status,
+                    false,
+                    null,
+                    this.context
+            );
+            this.taskDbHelper.createTask(task);
+        }
+
         Log.d(TAG, "Returning task: "+task.toString());
         return task;
     }
@@ -442,13 +437,19 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
     public User userFromJSONObject (JSONObject userObject) throws JSONException {
         String TAG = CLASS_TAG+"userFromJSONObject";
         Log.d(TAG, "Setting up user properties.");
-        UserDbHelper userDbHelper = new UserDbHelper(this.context);
         String userName = userObject.getString(Config.REQUEST_RESPONSE_KEYS.NAME.getKey());
         String userUUID = userObject.getString(Config.REQUEST_RESPONSE_KEYS.UUID.getKey());
         String userEmail = userObject.getString(Config.REQUEST_RESPONSE_KEYS.EMAIL.getKey());
+        User user = this.userDbHelper.getUserByNameEmail(userEmail);
+        if(user!=null) {
+            user.setName(userName);
+            user.setUuid(userUUID);
+        } else {
+            User newUser = new User(userUUID, userEmail, userName, 0);
+            user = this.userDbHelper.createUser(newUser);
+        }
         Log.d(TAG, "Setting up user properties done.");
-        User newUser = new User(userUUID, userEmail, userName);
-        return newUser;
+        return user;
     }
 
     public void collaboratorsFromJSONArray(
@@ -465,38 +466,11 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
                     Config.REQUEST_RESPONSE_KEYS.STATUS.getKey()
             ).getInt(Config.REQUEST_RESPONSE_KEYS.STATUS.getKey());
             User collaboratorUser = userFromJSONObject(collaboratorObject);
-            Log.d(TAG, "Check whether collaborating user is present in database.");
-            User userInDb = userDbHelper.getUserByUUID(collaboratorUser.getUuid());
-            if(userInDb==null) {
-                Log.d(TAG, "Not found.");
-                collaboratorUser.setSyncStatus(true);
-                collaboratorUser = userDbHelper.createUser(collaboratorUser);
-            } else {
-                collaboratorUser = userInDb;
-            }
             Log.d(TAG, "Making collaborator out of user.");
             Collaborator collaborator = new Collaborator(collaboratorUser);
             collaborator.setStatus(collStatus);
-            Log.d(TAG, "Checking collaboration.");
-            if(!collaboratorDbHelper.isCollaborator(task,collaborator)){
-                Log.d(TAG, "Adding collaborator to db.");
-                collaboratorDbHelper.addCollaborator(task, collaborator);
-                Log.d(TAG, "Added collaborator to db.");
-            }
+            Log.d(TAG, "Adding collaborator to db.");
+            collaboratorDbHelper.addCollaborator(task, collaborator);
         }
-    }
-
-    /**
-     * Finds the user with the same email from the list of users.
-     * @param user The user to be checked.
-     * @return The found user or null.
-     */
-    private User findUser(User user) {
-        for(User userInList:userList) {
-            if(user.getEmail().equals(userInList.getEmail())) {
-                return userInList;
-            }
-        }
-        return null;
     }
 }

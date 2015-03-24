@@ -102,7 +102,6 @@ public class APIRequest {
 	
 	private JSONObject httpRequest() throws Exception {
 		
-		Log.d(LOG_TAG,"Making HttpRequest to "+ this.url);
 		JSONObject responseObject = null;
 		
 		HttpClient client = new DefaultHttpClient();
@@ -135,6 +134,8 @@ public class APIRequest {
             if (resEntity != null) {
                 responseString = EntityUtils.toString(resEntity);
                 responseObject = new JSONObject(responseString);
+            } else {
+                Toast.makeText(this.context, "Cannot reach server.", Toast.LENGTH_LONG).show();
             }
         } catch (HttpHostConnectException e) {
             Toast.makeText(this.context, "Cannot reach server.", Toast.LENGTH_LONG).show();
@@ -213,7 +214,7 @@ public class APIRequest {
 		Log.d(LOG_TAG,"SimpleURLReq called.");
 		JSONObject apiReqResponse = null;
 		
-		Log.d(LOG_TAG,"    -> APIRequest #"+this.reqCounter+" for URL "+url+" with accessToken "+accessToken);
+		Log.d(LOG_TAG,"    -> APIRequest #"+(this.reqCounter+1)+" for URL "+url+" with accessToken "+accessToken);
 		
 		try {
 			

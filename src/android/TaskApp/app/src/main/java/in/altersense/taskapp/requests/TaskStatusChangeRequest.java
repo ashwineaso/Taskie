@@ -84,9 +84,9 @@ public class TaskStatusChangeRequest extends AsyncTask<Void, Integer, JSONObject
     protected void onPostExecute(JSONObject result) {
         String TAG = CLASS_TAG+"onPostExecute";
         Log.d(TAG, "Response: "+result.toString());
-        boolean status = false;
+        String status = "";
         try {
-            status = result.getBoolean(Config.REQUEST_RESPONSE_KEYS.STATUS.getKey());
+            status = result.getString(Config.REQUEST_RESPONSE_KEYS.STATUS.getKey());
         } catch (JSONException e) {
             e.printStackTrace();
         }
