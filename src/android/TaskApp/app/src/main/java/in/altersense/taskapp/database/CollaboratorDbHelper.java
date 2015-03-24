@@ -155,7 +155,22 @@ public class CollaboratorDbHelper extends SQLiteOpenHelper {
         // Return list
         return collaboratorList;
     }
+/*
+    public Collaborator getCollaborator(Task task, Collaborator collaborator) {
+        // Open a readable db
+        SQLiteDatabase readableDb = this.getReadableDatabase();
+        // Exectute query
+        readableDb.query(
+                Collaborator.TABLE_NAME,
+                Collaborator.getAllColumns(),
+                Collaborator.KEYS.TASK_ROWID.getName()+"=? AND "+
+                        Collaborator.KEYS.USER_ROWID.getName()+"=?",
 
+        )
+        // Create collaborator
+        // Return collaborator
+    }
+*/
     public boolean updateStatus(Task task, Collaborator collaborator) {
         String TAG = CLASS_TAG+"updateStatus";
         // Open writable database.

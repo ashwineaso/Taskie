@@ -151,7 +151,10 @@ public class Task {
             // Find collaborator.
             Collaborator collaborator = new Collaborator(User.getDeviceOwner(context));
             Log.d(TAG, "CollaboratorName: "+collaborator.getName());
-            collaborator = this.getCollaborators().get(this.getCollaborators().indexOf(collaborator));
+            CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
+            int indexOfCollaborator = this.getCollaborators().indexOf(collaborator);
+            Log.d(TAG, "IndexOfCollaborator: "+indexOfCollaborator);
+            collaborator = this.getCollaborators().get(indexOfCollaborator);
             // Return collaborator status.
             status = collaborator.getStatus();
         }
