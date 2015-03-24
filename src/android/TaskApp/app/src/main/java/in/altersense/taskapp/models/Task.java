@@ -153,6 +153,7 @@ public class Task {
             Log.d(TAG, "CollaboratorName: "+collaborator.getName());
             CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
             int indexOfCollaborator = this.getCollaborators().indexOf(collaborator);
+            Log.d(TAG, "Collaborators: "+this.getCollaborators().toString());
             Log.d(TAG, "IndexOfCollaborator: "+indexOfCollaborator);
             collaborator = this.getCollaborators().get(indexOfCollaborator);
             // Return collaborator status.

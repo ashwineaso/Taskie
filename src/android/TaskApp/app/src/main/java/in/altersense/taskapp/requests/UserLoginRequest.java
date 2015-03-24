@@ -124,6 +124,10 @@ public class UserLoginRequest extends AsyncTask<Void, Integer, JSONObject> {
                         Config.REQUEST_RESPONSE_KEYS.UUID.getKey()
                 );
                 this.user.setUuid(uuid);
+                String name = data.getString(
+                        Config.REQUEST_RESPONSE_KEYS.NAME.getKey()
+                );
+                this.user.setName(name);
                 // insert user to db.
                 UserDbHelper userDbHelper = new UserDbHelper(this.activity.getApplicationContext());
                 userDbHelper.createUser(this.user);
