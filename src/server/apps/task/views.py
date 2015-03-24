@@ -14,9 +14,13 @@ groupObj = Collection()
 def addNewTask():
 	jsonResponse = {}
 
-	jsonObj = request.json
-	jsonResponse["data"] = []
+	try:
+		jsonObj = request.json
+		jsonResponse["status"] = RESPONSE_SUCCESS
+	except Exception as e:
+		jsonResponse["status"] = RESPONSE_FAILED
 
+	jsonResponse["data"] = []
 	taskObj.access_token = jsonObj["access_token"]
 	for obj in jsonObj["data"]:
 		response = {}
@@ -54,7 +58,11 @@ def addNewTask():
 def editTask():
 	jsonResponse = {}
 
-	jsonObj = request.json
+	try:
+		jsonObj = request.json
+		jsonResponse["status"] = RESPONSE_SUCCESS
+	except Exception as e:
+		jsonResponse["status"] = RESPONSE_FAILED
 	jsonResponse["data"] = []
 	taskObj.access_token = jsonObj["access_token"]
 	for obj in jsonObj["data"]:
@@ -82,7 +90,11 @@ def editTask():
 def addCollaborators():
 	jsonResponse = {}
 
-	jsonObj = request.json
+	try:
+		jsonObj = request.json
+		jsonResponse["status"] = RESPONSE_SUCCESS
+	except Exception as e:
+		jsonResponse["status"] = RESPONSE_FAILED
 	jsonResponse["data"] = []
 	taskObj.access_token = jsonObj["access_token"]
 	for obj in jsonObj["data"]:
@@ -107,7 +119,11 @@ def addCollaborators():
 def remCollaborators():
 	jsonResponse = {}
 
-	jsonObj = request.json
+	try:
+		jsonObj = request.json
+		jsonResponse["status"] = RESPONSE_SUCCESS
+	except Exception as e:
+		jsonResponse["status"] = RESPONSE_FAILED
 	jsonResponse["data"] = []
 	taskObj.access_token = jsonObj["access_token"]
 	for obj in jsonObj["data"]:
@@ -132,7 +148,11 @@ def remCollaborators():
 def modifyTaskStatus():
 	jsonResponse = {}
 
-	jsonObj = request.json
+	try:
+		jsonObj = request.json
+		jsonResponse["status"] = RESPONSE_SUCCESS
+	except Exception as e:
+		jsonResponse["status"] = RESPONSE_FAILED
 	jsonResponse["data"] = []
 	taskObj.access_token = jsonObj["access_token"]
 	for obj in jsonObj["data"]:
@@ -157,7 +177,11 @@ def modifyTaskStatus():
 def modifyCollStatus():
 	jsonResponse = {}
 
-	jsonObj = request.json
+	try:
+		jsonObj = request.json
+		jsonResponse["status"] = RESPONSE_SUCCESS
+	except Exception as e:
+		jsonResponse["status"] = RESPONSE_FAILED
 	jsonResponse["data"] = []
 	taskObj.access_token = jsonObj["access_token"]
 	for obj in jsonObj["data"]:
@@ -183,7 +207,12 @@ def modifyCollStatus():
 def syncTask():
 	jsonResponse = {}
 
-	jsonObj = request.json
+	
+	try:
+		jsonObj = request.json
+		jsonResponse["status"] = RESPONSE_SUCCESS
+	except Exception as e:
+		jsonResponse["status"] = RESPONSE_FAILED
 	jsonResponse["data"] = []
 	taskObj.access_token = jsonObj["access_token"]
 	for obj in jsonObj["data"]:
@@ -207,7 +236,11 @@ def syncTask():
 def deleteTask():
 	jsonResponse = {}
 
-	jsonObj = request.json
+	try:
+		jsonObj = request.json
+		jsonResponse["status"] = RESPONSE_SUCCESS
+	except Exception as e:
+		jsonResponse["status"] = RESPONSE_FAILED
 	jsonResponse["data"] = []
 	taskObj.access_token = jsonObj["access_token"]
 	for obj in jsonObj["data"]:
@@ -257,7 +290,11 @@ def syncAllTasks():
 def buzzCollaborators():
 	jsonResponse = {}
 
-	jsonObj = request.json
+	try:
+		jsonObj = request.json
+		jsonResponse["status"] = RESPONSE_SUCCESS
+	except Exception as e:
+		jsonResponse["status"] = RESPONSE_FAILED
 	jsonResponse["data"] = []
 	taskObj.access_token = jsonObj["access_token"]
 	for obj in jsonObj["data"]:
