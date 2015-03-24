@@ -1,11 +1,14 @@
 package in.altersense.taskapp.components;
 
-import java.io.IOException;
+import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
@@ -14,10 +17,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
-import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
+import java.io.IOException;
 
 import in.altersense.taskapp.common.Config;
 
@@ -323,12 +323,12 @@ public class APIRequest {
 			this.reqCounter = 0;
 			
 		}catch (IOException e) {
-			this.reqCounter++;
-			if(this.reqCounter < Config.REQUEST_MAXOUT) {
-				apiReqResponse = this.simpleURLReq();
-			} else {
-				throw new Exception(Config.REQUEST_TIMED_OUT_ERROR);
-			}
+            this.reqCounter++;
+            if (this.reqCounter < Config.REQUEST_MAXOUT) {
+                apiReqResponse = this.simpleURLReq();
+            } else {
+                throw new Exception(Config.REQUEST_TIMED_OUT_ERROR);
+            }
 		} catch (Exception e) {
 			throw e;
 		}

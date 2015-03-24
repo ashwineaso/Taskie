@@ -168,9 +168,9 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         String TAG = CLASS_TAG+"onPostExecute";
         super.onPostExecute(result);
         String status = "";
-        status = result.getString(Config.REQUEST_RESPONSE_KEYS.STATUS.getKey());
         JSONArray responseArray = new JSONArray();
         try {
+            status = result.getString(Config.REQUEST_RESPONSE_KEYS.STATUS.getKey());
             responseArray = result.getJSONArray(Config.REQUEST_RESPONSE_KEYS.DATA.getKey());
         } catch (JSONException e) {
             e.printStackTrace();
