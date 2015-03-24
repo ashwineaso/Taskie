@@ -94,6 +94,49 @@ public class UserDbHelper extends SQLiteOpenHelper {
         return user;
     }
 
+    public User retrieve(String email) {
+        String TAG = CLASS_TAG+"retrieve";
+        // Open database.
+        Log.d(TAG, "Set up a readable database");
+        SQLiteDatabase readableDb = this.getReadableDatabase();
+        // Fetch user with matching uuid.
+        String whereClause = User.KEYS.EMAIL.getName()+"=?";
+        String[] whereArgs = new String[] {
+                email
+        };
+        Log.d(TAG, "Query set up with retrieve: "+email);
+        // Fetch the result of the query.
+        Cursor selfCursor = readableDb.query(
+                User.TABLE_NAME,
+                User.getAllColumns(),
+                whereClause,
+                whereArgs,
+                null,
+                null,
+                null
+        );
+        Log.d(TAG, "Query executed. "+selfCursor.getCount()+" rows returned.");
+        if(selfCursor.moveToFirst()) {
+            do {
+                Log.d(TAG, "Users with same UUID("+selfCursor.getString(0)+"): "+selfCursor.getString(2));
+                String cursorString = "";
+                for(int i=0;i<selfCursor.getColumnCount();i++) {
+                    cursorString+=i+": "+selfCursor.getString(i)+" ";
+                }
+                Log.d(TAG, "User: "+cursorString);
+            } while(selfCursor.moveToNext());
+        }
+        selfCursor.moveToFirst();
+        if(selfCursor.getCount()==0) {
+            return null;
+        }
+        // Create a User object from the cursor
+        User user = new User(selfCursor);
+        // Close database
+        readableDb.close();
+        return user;
+    }
+
     public List<User> listAllUsers() {
         String TAG = CLASS_TAG+"listAllUsers";
         // Open readable database.
