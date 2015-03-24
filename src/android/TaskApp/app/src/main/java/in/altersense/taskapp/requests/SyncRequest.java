@@ -351,7 +351,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             Log.d(TAG, "Setting up collaborators done.");
             Log.d(TAG, "Task set: "+taskFromJSONObject.toString());
             int position = this.taskList.indexOf(task);
-            this.taskList.remove(task);
+            this.taskList.remove(position);
             this.taskList.add(position, taskFromJSONObject);
         }
     }
