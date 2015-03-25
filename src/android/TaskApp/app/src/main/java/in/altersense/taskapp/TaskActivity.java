@@ -23,6 +23,7 @@ import java.util.List;
 
 import in.altersense.taskapp.adapters.TaskDetailsViewAdapter;
 import in.altersense.taskapp.common.Config;
+import in.altersense.taskapp.database.CollaboratorDbHelper;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.Task;
@@ -96,8 +97,10 @@ public class TaskActivity extends ActionBarActivity {
         this.taskOwnerTV.setText(this.task.getOwner().getName());
 
         //Fill the ArrayList with the required data
-        this.collaboratorList = task.getCollaborators();
-        for (Collaborator collaborator:this.collaboratorList) {
+        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(getApplicationContext());
+        this.collaboratorList = collaboratorDbHelper.getAllCollaborators(this.task);
+        Log.d(TAG, "Fetched collaborator : " + collaboratorList.toString());
+        for (Collaborator collaborator: this.collaboratorList) {
             collaboratorArrayList.add(collaborator);
         }
 

@@ -188,7 +188,7 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         holder.taskStatus.setBackgroundResource(
                 Task.getStatusColor(
                         task.getStatus(
-                                activity.getApplicationContext()
+                                this.getContext()
                         )
                 )
         );

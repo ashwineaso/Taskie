@@ -114,7 +114,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/text_normal_xhdpi"
                             fontPath="fonts/Cabin-SemiBold-TTF.ttf"
-                            android:text="Status: Ongoing"
+                            android:text="Status Unavailable"
                             android:gravity="right" />
 
                     </LinearLayout>
