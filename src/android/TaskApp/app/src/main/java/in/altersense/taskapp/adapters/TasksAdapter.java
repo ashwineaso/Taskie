@@ -204,19 +204,21 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         holder.collaborators[0].setVisibility(View.VISIBLE);
 
         //Check whether the count of collaborators are more than 10 if not set number of colaborators to be displayed as 8
+        //First populate all collaborators into a list
+        List<Collaborator> collaboratorList = task.getCollaborators(task, this.getContext());
         try {
-            int collaboratorsToBeDisplayedCount = task.getCollaborators().size()<8 ? task.getCollaborators().size() : 8;
+            int collaboratorsToBeDisplayedCount = collaboratorList.size()<8 ? collaboratorList.size() : 8;
 
             // display initials and status of the collaborators
             for(int ctr=0; ctr<collaboratorsToBeDisplayedCount; ctr++) {
-                Collaborator collaborator = task.getCollaborators().get(ctr);
+                Collaborator collaborator = collaboratorList.get(ctr);
                 holder.collaborators[ctr+1].setText(collaborator.getInitials());
                 holder.collaborators[ctr+1].setBackgroundResource(task.collaboratorStatusBackground(collaborator.getStatus()));
                 holder.collaborators[ctr+1].setVisibility(View.VISIBLE);
             }
 
             // display more collaborators if the count is greater than 8
-            if(collaboratorsToBeDisplayedCount<task.getCollaborators().size()) {
+            if(collaboratorsToBeDisplayedCount < collaboratorList.size()) {
                 int remaining = task.getCollaborators().size()-collaboratorsToBeDisplayedCount;
                 String messageText = "+"+remaining+" MORE";
                 holder.collaborators[9].setText(messageText);

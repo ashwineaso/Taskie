@@ -117,7 +117,8 @@ public class CreateTaskRequest extends AsyncTask<Void, Integer, JSONObject> {
                 JSONArray dataArray = result.getJSONArray(Config.REQUEST_RESPONSE_KEYS.DATA.getKey());
                 for(int ctr = 0; ctr<dataArray.length(); ctr++) {
                     Task task = this.taskList.get(ctr);
-                    JSONObject data = dataArray.getJSONObject(ctr);
+                    JSONObject taskdata = dataArray.getJSONObject(ctr);
+                    JSONObject data = taskdata.getJSONObject(Config.REQUEST_RESPONSE_KEYS.DATA.getKey());
                     task.setUuid(data.getString(Config.REQUEST_RESPONSE_KEYS.UUID.getKey()));
                     task.setSyncStatus(true);
                     task.updateTask(context);

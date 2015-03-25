@@ -166,6 +166,13 @@ public class Task {
         return collaborators;
     }
 
+    public List<Collaborator> getCollaborators(Task task, Context context) {
+        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
+        collaborators = collaboratorDbHelper.getAllCollaborators(task);
+        return collaborators;
+    }
+
+
     public void setName(String name) {
         this.name = name;
     }

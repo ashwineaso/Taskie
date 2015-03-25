@@ -325,18 +325,19 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
 
             TaskDbHelper taskDbHelper = new TaskDbHelper(context);
             UserDbHelper userDbHelper = new UserDbHelper(context);
+            //Assign the Task data to a JSONObject for ease of handling
+            JSONObject taskData = taskObject.getJSONObject(Config.REQUEST_RESPONSE_KEYS.DATA.getKey());
             CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
-            Task taskFromJSONObject = taskFromJSONObject(
-                    taskObject.getJSONObject(Config.REQUEST_RESPONSE_KEYS.DATA.getKey())
-            );
+            Task taskFromJSONObject = taskFromJSONObject(taskData);
             Log.d(TAG, "Task creation updation done.");
 
             Log.d(TAG, "Clearing all collaborators if any.");
             collaboratorDbHelper.delete(taskFromJSONObject);
             Log.d(TAG, "Setting up collaborators.");
+
             try {
                 collaboratorsFromJSONArray(
-                        taskObject.getJSONArray(Config.REQUEST_RESPONSE_KEYS.TASK_COLLABOATORS.getKey()),
+                        taskData.getJSONArray(Config.REQUEST_RESPONSE_KEYS.TASK_COLLABOATORS.getKey()),
                         taskFromJSONObject
                 );
                 taskFromJSONObject.setCollaborators(collaboratorDbHelper.getAllCollaborators(taskFromJSONObject));
@@ -388,8 +389,8 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         Log.d(TAG, "Setting up task properties");
         String name = taskObject.getString(Config.REQUEST_RESPONSE_KEYS.NAME.getKey());
         String uuid = taskObject.getString(Config.REQUEST_RESPONSE_KEYS.UUID.getKey());
-        int priority = taskObject.getInt(Config.REQUEST_RESPONSE_KEYS.PRIORITY.getKey());
-        long dueDateTime = taskObject.getLong(Config.REQUEST_RESPONSE_KEYS.DUE_DATE_TIME.getKey());
+        Integer priority = taskObject.getInt(Config.REQUEST_RESPONSE_KEYS.PRIORITY.getKey());
+        Long dueDateTime = taskObject.getLong(Config.REQUEST_RESPONSE_KEYS.DUE_DATE_TIME.getKey());
         String descr = taskObject.getString(Config.REQUEST_RESPONSE_KEYS.DESCRIPTION.getKey());
         int status = taskObject.getJSONObject(
                 Config.REQUEST_RESPONSE_KEYS.STATUS.getKey()

@@ -182,7 +182,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         String TAG = CLASS_TAG+"getTaskByUUID";
         // Open readable database.
         SQLiteDatabase readableDb = this.getReadableDatabase();
-        Log.d(TAG, "Readable db opened.");
+        Log.d(TAG, "Readable db opened. Searching for id = " + taskUUID);
         // Prepare columns list.
         ArrayList<String> columnList = Task.getAllColumns();
         String[] columns = new String[columnList.size()];
@@ -226,6 +226,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         // Set up updation content value.
         ContentValues values = new ContentValues();
         values.put(Task.KEYS.NAME.getName(), task.getName());
+        values.put(Task.KEYS.UUID.getName(), task.getUuid());
         values.put(Task.KEYS.DESCRIPTION.getName(), task.getDescription());
         values.put(Task.KEYS.OWNER_UUID.getName(), task.getOwner().getUuid());
         values.put(Task.KEYS.PRIORITY.getName(), task.getPriority());
