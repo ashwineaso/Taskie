@@ -94,6 +94,11 @@ public class UserDbHelper extends SQLiteOpenHelper {
         return user;
     }
 
+    /**
+     * Fetches a User object with the supplied Email
+     * @param email The Email of the user to be fetched.
+     * @return An instance of User
+     */
     public User retrieve(String email) {
         String TAG = CLASS_TAG+"retrieve";
         // Open database.

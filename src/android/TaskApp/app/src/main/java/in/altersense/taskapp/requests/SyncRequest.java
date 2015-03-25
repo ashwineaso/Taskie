@@ -441,7 +441,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         String userName = userObject.getString(Config.REQUEST_RESPONSE_KEYS.NAME.getKey());
         String userUUID = userObject.getString(Config.REQUEST_RESPONSE_KEYS.UUID.getKey());
         String userEmail = userObject.getString(Config.REQUEST_RESPONSE_KEYS.EMAIL.getKey());
-        User user = this.userDbHelper.getUserByNameEmail(userEmail);
+        User user = this.userDbHelper.retrieve(userEmail);
         if(user!=null) {
             user.setName(userName);
             user.setUuid(userUUID);
