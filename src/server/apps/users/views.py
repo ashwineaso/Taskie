@@ -302,26 +302,34 @@ def syncUserInfo():
 	Suny the basic information of the user like:
 	id, name, email and addProfilePic
 	"""
-	response = {}
-	data = {}
 	userObj = Collection()
 	clientObj = Collection()
 	tokenObj = Collection()
+	jsonResponse = {}
 	
-	obj = request.json
 	try:
-		userObj.access_token = obj["access_token"]
-		userObj.email = obj["email"]
-		if bll.checkAccessTokenValid(userObj):
-			user = bll.syncUserInfo(userObj)
-		response["data"] = bll.convertUserToDict(user)
-		response["status"] = RESPONSE_SUCCESS
+		jsonObj = request.json
+		jsonResponse["status"] = RESPONSE_SUCCESS
 	except Exception as e:
-		response['status'] = RESPONSE_FAILED
-		response['message'] = str(e)
-		if hasattr(e, "code"):
-			response["code"] = e.code
-	return response
+		jsonResponse["status"] = RESPONSE_FAILED
+	jsonResponse["data"] = []
+	userObj.access_token = jsonObj["access_token"]
+	for obj in jsonObj["data"]:
+		response = {}
+		data = {}
+		try:
+			userObj.email = obj["email"]
+			if bll.checkAccessTokenValid(userObj):
+				user = bll.syncUserInfo(userObj)
+			response["data"] = bll.convertUserToDict(user)
+			response["status"] = RESPONSE_SUCCESS
+		except Exception as e:
+			response['status'] = RESPONSE_FAILED
+			response['message'] = str(e)
+			if hasattr(e, "code"):
+				response["code"] = e.code
+		jsonResponse["data"].append(response)
+	return jsonResponse
 
 
 def passwordReset():
