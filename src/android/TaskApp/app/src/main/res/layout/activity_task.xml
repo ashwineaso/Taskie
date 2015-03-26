@@ -105,7 +105,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="16dp"
                             android:layout_below="@id/taskDescriptionTextView"
-                            android:textColor="@color/taskSecondaryAccent"
+                            android:textColor="@color/taskPrimaryActionBar"
                             android:text="High Priority"
                             android:paddingRight="@dimen/thinMargin_xhdpi" />
 

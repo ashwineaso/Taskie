@@ -27,7 +27,9 @@
             android:hint="Task Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            android:capitalize="sentences"
+            android:inputType="textCapSentences" />
 
         <TextView
             android:layout_width="fill_parent"
@@ -46,7 +48,8 @@
             android:maxHeight="@dimen/bigMargin_xhdp"
             android:gravity="top"
             android:inputType="textMultiLine"
-            android:hint="Task Description"/>
+            android:hint="Task Description"
+            android:capitalize="sentences" />
 
         <TextView
             android:layout_width="fill_parent"

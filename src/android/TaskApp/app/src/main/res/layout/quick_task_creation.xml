@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools2="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:padding="@dimen/tinyMargin_xhdpi"
-    android:layout_height="match_parent" android:background="#ffffff"
+    android:padding="@dimen/smallMargin_xhdp"
+    android:layout_height="wrap_content" android:background="@drawable/abc_popup_background_mtrl_mult"
     tools2:ignore="MissingPrefix">
 
     <EditText android:id="@+id/newTaskTitle"
@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/smallMargin_xhdp"
         fontPath="fonts/Cabin-Medium-TTF.ttf"
-        tools2:ignore="MissingPrefix"/>
+        tools2:ignore="MissingPrefix"
+        android:inputType="textCapSentences" />
 
     <in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText
         android:id="@+id/quickTaskParticipantName"
@@ -23,9 +24,13 @@
         android:hint="Participant Name"/>
 
     <Button android:id="@+id/createQuickTaskButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:text="CREATE"/>
+        android:text="ADD TASK"
+        android:drawableLeft="@drawable/ic_action_content_add"
+        android:background="@color/headerText"
+        android:padding="@dimen/thinMargin_xhdpi"
+        android:elegantTextHeight="false"
+        android:textColor="#ffffffff" />
 
 </LinearLayout>
