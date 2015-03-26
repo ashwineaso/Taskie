@@ -26,7 +26,11 @@ def addNewTask(taskObj):
 	"""
 
 	#Assigning initial status to each task
-	taskObj.status = Status(
+	taskObj.task_status = Status(
+					status = 1,
+					dateTime = time.time()
+					)
+	taskObj.coll_status = Status(
 					status = 0,
 					dateTime = time.time()
 					)
@@ -51,7 +55,7 @@ def addNewTask(taskObj):
 	for val in taskObj.collaborators:
 		userObj.email = val
 		my_objects.append(Collaborator(user = userbll.getUserByEmail(userObj),
-										status = taskObj.status))
+										status = taskObj.coll_status))
 	
 	#Create a task with the necessary data.
 	task = Task(
@@ -61,7 +65,7 @@ def addNewTask(taskObj):
 				name = taskObj.name,
 				description = taskObj.description,
 				dueDateTime = taskObj.dueDateTime,
-				status = taskObj.status
+				status = taskObj.task_status
 				)
 	task.save()
 	return task
@@ -211,7 +215,7 @@ def syncTask(taskObj):
 def deleteTask(taskObj):
 	"""Delete a task and update all collaborators about it"""
 	task = getTaskById(taskObj)
-	statusObj = Status(status = 2,
+	statusObj = Status(status = -1,
 						dateTime = time.time())
 	try:
 		Task.objects(id = task.id).update(set__status = statusObj)
