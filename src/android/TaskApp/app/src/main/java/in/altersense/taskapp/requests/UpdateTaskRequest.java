@@ -50,7 +50,7 @@ public class UpdateTaskRequest extends AsyncTask<Void, Integer, JSONObject> {
             );
             dataObject.put(
                     Config.REQUEST_RESPONSE_KEYS.DUE_DATE_TIME.getKey(),
-                    this.task.getDueDateTime()
+                    this.task.getDueDateTimeAsLong()
             );
             dataObject.put(
                     Config.REQUEST_RESPONSE_KEYS.PRIORITY.getKey(),
@@ -91,9 +91,13 @@ public class UpdateTaskRequest extends AsyncTask<Void, Integer, JSONObject> {
             // Check whether the request was success
             if(status.equals(Config.RESPONSE_STATUS_SUCCESS)) {
                 // If success update uuid
-                JSONObject data = result.getJSONObject(Config.REQUEST_RESPONSE_KEYS.DATA.getKey());
-                this.task.setSyncStatus(true);
-                this.task.setUuid(data.getString(Config.REQUEST_RESPONSE_KEYS.UUID.getKey()), this.context);
+                JSONArray dataArray = result.getJSONArray(Config.REQUEST_RESPONSE_KEYS.DATA.getKey());
+                for(int ctr = 0; ctr<dataArray.length(); ctr++) {
+                    JSONObject data = dataArray.getJSONObject(ctr); //Gets each dict in the dataArray
+                    JSONObject taskData = data.getJSONObject(Config.REQUEST_RESPONSE_KEYS.DATA.getKey()); //Access the content of the data in each dict
+                    this.task.setSyncStatus(true);
+                    this.task.setUuid(taskData.getString(Config.REQUEST_RESPONSE_KEYS.UUID.getKey()), this.context);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
