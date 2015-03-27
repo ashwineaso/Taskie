@@ -152,7 +152,7 @@ public class Task {
             Collaborator collaborator = new Collaborator(User.getDeviceOwner(context));
             Log.d(TAG, "CollaboratorName: "+collaborator.getName());
             CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
-            int indexOfCollaborator = this.getCollaborators().indexOf(collaborator);
+            int indexOfCollaborator = this.getCollaborators(this, context).indexOf(collaborator);
             Log.d(TAG, "Collaborators: "+this.getCollaborators().toString());
             Log.d(TAG, "IndexOfCollaborator: "+indexOfCollaborator);
             collaborator = this.getCollaborators().get(indexOfCollaborator);

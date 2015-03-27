@@ -182,7 +182,7 @@ public class CollaboratorDbHelper extends SQLiteOpenHelper {
         int affectedRows = writableDb.update(
                 Collaborator.TABLE_NAME,
                 values,
-                Collaborator.KEYS.TASK_ROWID.getName()+" =? " +
+                Collaborator.KEYS.TASK_ROWID.getName()+" =? AND " +
                         Collaborator.KEYS.USER_ROWID.getName()+" =?",
                 new String[] {
                         task.getId()+"",
