@@ -276,7 +276,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         try {
             for(User user:userList) {
                 requestObjectsArray.put(
-                        user.getUuid()
+                        user.getEmail()
                 );
             }
             this.requestObject.put(
