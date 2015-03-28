@@ -14,8 +14,8 @@
 
     <color name="collaborationInvited">#fff50057</color>
     <color name="taskUnattended">#607D88</color>
-    <color name="taskDoingColor">#EC962C</color>
-    <color name="taskDone">#0F9C57</color>
+    <color name="taskDoingColor">#ef6c00</color>
+    <color name="taskDone">#2e7d32</color>
 
     <color name="lightText">#FFFFFF</color>
     <color name="headerText">#fff50057</color>
@@ -35,8 +35,8 @@
     <color name="buttonPressed">#BA174E</color>
     <color name="transparent_buttonPressed">#22000000</color>
 
-    <color name="status_declined">#F14345</color>
-    <color name="status_pending">#FFBA1A</color>
-    <color name="status_accepted">#00BCD5</color>
-    <color name="status_done">#75EF44</color>
+    <color name="status_declined">#ffc62828</color>
+    <color name="status_pending">#ef6c00</color>
+    <color name="status_accepted">#00838f</color>
+    <color name="status_done">#2e7d32</color>
 </resources>
