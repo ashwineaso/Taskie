@@ -21,7 +21,7 @@ public class User {
 
     private static String CLASS_TAG = "User";
 
-    public User(String uuid, String email, String name, int id) {
+    public User(String uuid, String email, String name, long  id) {
         this(uuid,email,name);
         this.id = id;
     }

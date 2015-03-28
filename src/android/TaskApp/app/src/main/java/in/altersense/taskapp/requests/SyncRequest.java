@@ -118,7 +118,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
     }
 
     /**
-     * Constructor with list of users or list of tasks but not both.
+     * Constructor with list of users or list of tasks Nbut not both.
      * @param userList List of users to be synced
      * @param taskList List of users to be synced
      * @param context Current context.
@@ -323,11 +323,8 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         String taskStatus = taskObject.getString(Config.REQUEST_RESPONSE_KEYS.STATUS.getKey());
         if(taskStatus.equals(Config.RESPONSE_STATUS_SUCCESS)) {
 
-            TaskDbHelper taskDbHelper = new TaskDbHelper(context);
-            UserDbHelper userDbHelper = new UserDbHelper(context);
             //Assign the Task data to a JSONObject for ease of handling
             JSONObject taskData = taskObject.getJSONObject(Config.REQUEST_RESPONSE_KEYS.DATA.getKey());
-            CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
             Task taskFromJSONObject = taskFromJSONObject(taskData);
             Log.d(TAG, "Task creation updation done.");
 
@@ -415,6 +412,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             task.setGroup(false);
             task.setOwner(owner);
             task.setCollaborators(collaboratorDbHelper.getAllCollaborators(task));
+            task.updateTask(context);
         } else {
             Log.d(TAG, "Task does not exist so adding.");
             task = new Task(
