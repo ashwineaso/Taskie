@@ -250,8 +250,8 @@ public class UserDbHelper extends SQLiteOpenHelper {
         );
         Log.d(TAG, "Inserted to row: "+rowId);
         database.close();
-        User user = getUserByRowId(rowId);
-        return user;
+        newUser.setId(rowId);
+        return newUser;
     }
 
     /**
