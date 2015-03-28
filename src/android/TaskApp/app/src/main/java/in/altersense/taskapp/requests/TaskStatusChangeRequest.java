@@ -21,9 +21,11 @@ import in.altersense.taskapp.models.Task;
 public class TaskStatusChangeRequest extends AsyncTask<Void, Integer, JSONObject>{
 
     private static String CLASS_TAG = "TaskStatusChangeRequest ";
+    private Collaborator collaborator;
     private Context context;
     private int status;
     private Task task;
+    private Boolean isOwner = false;
     private Activity activity;
     private JSONObject requestObject;
 
@@ -32,13 +34,16 @@ public class TaskStatusChangeRequest extends AsyncTask<Void, Integer, JSONObject
         this.task = task;
         this.context = context;
         this.status = task.getStatus();
+        this.isOwner = true;
     }
 
     public TaskStatusChangeRequest(Task task, Collaborator collaborator, Context context) {
         Log.d(CLASS_TAG, "Created request for collaborator.");
         this.task = task;
         this.context = context;
+        this.collaborator = collaborator;
         this.status = collaborator.getStatus();
+        this.isOwner = false;
     }
 
     @Override
@@ -46,31 +51,67 @@ public class TaskStatusChangeRequest extends AsyncTask<Void, Integer, JSONObject
         JSONArray dataArray = new JSONArray();
         JSONObject dataObject = new JSONObject();
         this.requestObject = new JSONObject();
-        try {
-            dataObject.put(
-                    Config.REQUEST_RESPONSE_KEYS.UUID.getKey(),
-                    this.task.getUuid()
-            );
-            dataObject.put(
-                    Config.REQUEST_RESPONSE_KEYS.STATUS.getKey(),
-                    this.status
-            );
-            dataArray.put(dataObject);
-            this.requestObject.put(Config.REQUEST_RESPONSE_KEYS.DATA.getKey(), dataArray);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (isOwner) {
+            // Do if the change is made by the owner
+            try {
+                dataObject.put(
+                        Config.REQUEST_RESPONSE_KEYS.UUID.getKey(),
+                        this.task.getUuid()
+                );
+                dataObject.put(
+                        Config.REQUEST_RESPONSE_KEYS.STATUS.getKey(),
+                        this.status
+                );
+                dataArray.put(dataObject);
+                this.requestObject.put(Config.REQUEST_RESPONSE_KEYS.DATA.getKey(), dataArray);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
+        else {
+            // Do if the change is made by the collaborator
+            try {
+                dataObject.put(
+                        Config.REQUEST_RESPONSE_KEYS.UUID.getKey(),
+                        this.task.getUuid()
+                );
+                dataObject.put(
+                        Config.REQUEST_RESPONSE_KEYS.EMAIL.getKey(),
+                        this.collaborator.getEmail()
+                );
+                dataObject.put(
+                        Config.REQUEST_RESPONSE_KEYS.STATUS.getKey(),
+                        this.status
+                );
+                dataArray.put(dataObject);
+                this.requestObject.put(Config.REQUEST_RESPONSE_KEYS.DATA.getKey(), dataArray);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     @Override
     protected JSONObject doInBackground(Void... params) {
         String TAG = CLASS_TAG+"doInBackground";
         JSONObject responseObject = new JSONObject();
-        APIRequest changeStatusRequest = new APIRequest(
-                AltEngine.formURL("task/modifyTaskStatus"),
-                requestObject,
-                this.context
-        );
+        APIRequest changeStatusRequest;
+        if (isOwner) {
+            changeStatusRequest = new APIRequest(
+                    AltEngine.formURL("task/modifyTaskStatus"),
+                    requestObject,
+                    this.context
+            );
+        }
+        else {
+            changeStatusRequest = new APIRequest(
+                    AltEngine.formURL("task/modifyCollStatus"),
+                    requestObject,
+                    this.context
+            );
+        }
+        
         try {
             responseObject = changeStatusRequest.request();
             Log.d(TAG, "Made request.");

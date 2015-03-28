@@ -189,8 +189,8 @@ def modifyCollStatus():
 		data = {}
 		try:
 			taskObj.id = obj["id"]
-			taskObj.email = obj["collemail"]
-			taskObj.collstatus = obj["collstatus"]
+			taskObj.email = obj["email"]
+			taskObj.collstatus = obj["status"]
 			if checkAccessTokenValid(taskObj) is True:
 				task = bll.modifyCollStatus(taskObj)
 			response["status"] = RESPONSE_SUCCESS
@@ -300,18 +300,18 @@ def buzzCollaborators():
 	for obj in jsonObj["data"]:
 		response = {}
 		data = {}
-		try:
-			taskObj.id = obj
-			if checkAccessTokenValid(taskObj) is True:
-				flag = bll.buzzCollaborators(taskObj)
-			if (flag):
-				response["status"] = RESPONSE_SUCCESS
-			else:
-				response["status"] = RESPONSE_FAILED
-		except Exception as e:
+		# try:
+		taskObj.id = obj
+		if checkAccessTokenValid(taskObj) is True:
+			flag = bll.buzzCollaborators(taskObj)
+		if (flag):
+			response["status"] = RESPONSE_SUCCESS
+		else:
 			response["status"] = RESPONSE_FAILED
-			response["message"] = str(e)
-			if hasattr(e, 'code'):
-				response["code"] = e.code
+		# except Exception as e:
+		# response["status"] = RESPONSE_FAILED
+		# response["message"] = str(e)
+		# if hasattr(e, 'code'):
+		# 	response["code"] = e.code
 		jsonResponse["data"].append(response)
 	return jsonResponse

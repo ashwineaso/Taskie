@@ -127,6 +127,7 @@ def authorize_user(userObj):
 	user = getUserByEmail(userObj)
 	if not verify_password(userObj.password, user.password_hash):
 		match_flag = False
+		raise PasswordMismatch
 	return match_flag
 
 
