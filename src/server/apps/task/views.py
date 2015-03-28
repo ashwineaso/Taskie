@@ -189,8 +189,8 @@ def modifyCollStatus():
 		data = {}
 		try:
 			taskObj.id = obj["id"]
-			taskObj.email = obj["collemail"]
-			taskObj.collstatus = obj["collstatus"]
+			taskObj.email = obj["email"]
+			taskObj.collstatus = obj["status"]
 			if checkAccessTokenValid(taskObj) is True:
 				task = bll.modifyCollStatus(taskObj)
 			response["status"] = RESPONSE_SUCCESS
