@@ -116,16 +116,20 @@ public class BuzzCollaboratorRequest extends AsyncTask<Void, Integer, JSONObject
         }
 
         try {
+            JSONArray dataArray = new JSONArray();
+            for(Buzz buzz:buzzList) {
+                dataArray.put(buzz.getTaskUuid());
+            }
             this.requestObject.put(
                     Config.REQUEST_RESPONSE_KEYS.DATA.getKey(),
-                    buzzList
+                    dataArray
             );
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         APIRequest buzzCollabs = new APIRequest(
-                AltEngine.formURL("task/buzzCollaborators"),
+                    AltEngine.formURL("task/buzzCollaborators"),
                 this.requestObject,
                 this.context
         );

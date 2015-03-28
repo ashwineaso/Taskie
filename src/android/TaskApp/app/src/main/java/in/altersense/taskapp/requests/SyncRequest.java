@@ -118,7 +118,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
     }
 
     /**
-     * Constructor with list of users or list of tasks but not both.
+     * Constructor with list of users or list of tasks Nbut not both.
      * @param userList List of users to be synced
      * @param taskList List of users to be synced
      * @param context Current context.
