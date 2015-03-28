@@ -2,12 +2,14 @@ package in.altersense.taskapp.models;
 
 import android.util.Log;
 
+import com.google.android.gms.internal.eq;
+
 import java.util.ArrayList;
 
 /**
  * Created by mahesmohan on 2/17/15.
  */
-public class Collaborator extends User {
+public class Collaborator extends User implements Comparable {
 
     private String CLASS_TAG = "Collaborator ";
 
@@ -32,6 +34,24 @@ public class Collaborator extends User {
         String TAG = CLASS_TAG+"getUser";
         Log.d(TAG, "Returns Collaborator from user: "+super.getString());
         return user;
+    }
+
+    @Override
+    public int compareTo(Object another) {
+        return 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+    
+    public boolean equals(Collaborator another) {
+        boolean result = false;
+        if(this.getEmail().equals(another.getEmail())) {
+            result = true;
+        }
+        return result;
     }
 
     public static enum KEYS {
