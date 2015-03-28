@@ -30,7 +30,7 @@ public class User {
         return password;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -58,7 +58,7 @@ public class User {
         return isDeviceOwner;
     }
 
-    private int id;
+    private long id;
 
     private String uuid;
     private String email;
@@ -113,7 +113,7 @@ public class User {
         return columns;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

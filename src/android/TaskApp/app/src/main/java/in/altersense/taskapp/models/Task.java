@@ -392,7 +392,6 @@ public class Task {
                 null,
                 activity
         );
-        Log.d(CLASS_TAG, "Constructor3 called.");
     }
 
     public Task(

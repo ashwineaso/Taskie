@@ -274,14 +274,12 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
 
 //        Check whether task is displayed
         if(this.isQuickTaskCreationHidden) {
-//            Display quick task pane
-            this.quickCreateStageLinearLayout.setVisibility(View.VISIBLE);
-//            Request focus to edit text
-            newTaskTitle.requestFocus();
 
             // Initializing lists.
             this.collaboratorRemovalList = new ArrayList<>();
             this.collaboratorAdditionList = new ArrayList<>();
+
+            newTaskTitle.setText("");
 
             // Code to remove all the objects in the participants
             for(Object object:participantNameTCET.getObjects()) {
@@ -290,6 +288,13 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
 
 //            Set flag to show the layout is open
             this.isQuickTaskCreationHidden = false;
+
+//            Display quick task pane
+            this.quickCreateStageLinearLayout.setVisibility(View.VISIBLE);
+//            Request focus to edit text
+            newTaskTitle.requestFocus();
+
+
         } else {
             this.quickCreateStageLinearLayout.setVisibility(View.GONE);
             this.newTaskTitle.clearFocus();
@@ -379,7 +384,6 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                     taskAdapter.add(createdQuickTask);
                     taskAdapter.notifyDataSetChanged();
 
-                    newTaskTitle.setText("");
                     toggleQuickTaskLayout();
                 } else {
                     Toast.makeText(
