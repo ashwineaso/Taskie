@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="fill_parent"
-    android:background="@color/secondaryText"
+    android:background="@color/emptyBackground"
     tools:context="in.altersense.taskapp.TaskActivity"
     tools2:ignore="MissingPrefix"
     android:id="@+id/detailsScrollView">
@@ -105,7 +105,6 @@
                             android:layout_height="wrap_content"
                             android:textSize="16dp"
                             android:layout_below="@id/taskDescriptionTextView"
-                            android:textColor="@color/primaryText"
                             android:text="High Priority"
                             android:paddingRight="@dimen/thinMargin_xhdpi" />
 
