@@ -169,7 +169,14 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         List<Task> taskList = new ArrayList<Task>();
         if(resultCursor.moveToFirst()) {
             do {
-                taskList.add(new Task(resultCursor, this.context));
+                // Creates a task object to check status.
+                Task task = new Task(resultCursor, this.context);
+                int taskStatus = task.getStatus(this.context);
+                // Ignores tasks marked as declined or completed by the user.
+                if(taskStatus!=Config.COLLABORATOR_STATUS.DECLINED.getStatus()
+                        || taskStatus!=Config.COLLABORATOR_STATUS.COMPLETED.getStatus()) {
+                    taskList.add(new Task(resultCursor, this.context));
+                }
             } while(resultCursor.moveToNext());
         }
         // Close cursor.
@@ -282,11 +289,16 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         ArrayList<String> columnList = Task.getAllColumns();
         String[] columns = new String[columnList.size()];
         columns = columnList.toArray(columns);
+        // Queries for tasks which are still marked incomplete.
         Cursor resultCursor = readableDb.query(
                 Task.TABLE_NAME,
                 columns,
-                Task.KEYS.IS_GROUP.getName()+"=?",
-                new String[] {"0"},
+                Task.KEYS.IS_GROUP.getName()+"=? OR "+
+                Task.KEYS.STATUS.getName()+"=? OR",
+                new String[] {
+                        "0",
+                        Config.TASK_STATUS.INCOMPLETE.getStatus() + ""
+                },
                 null,
                 null,
                 null
