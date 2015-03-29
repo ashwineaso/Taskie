@@ -8,7 +8,7 @@
     <color name="createTaskTextWidgetsColor">#00acc1</color>
     <color name="createTaskSliderWidgetsColor">#43a047</color>
 
-    <color name="taskPrimaryActionBar">#d81b60</color>
+    <color name="taskPrimaryColor">#d81b60</color>
     <color name="taskAccentColor">#00acc1</color>
     <color name="taskSecondaryAccent">#C36CA4</color>
 
