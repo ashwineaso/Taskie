@@ -63,6 +63,7 @@
     </style>
 
     <style name="TaskTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowContentOverlay">@null</item>
         <item name="colorPrimary">@color/taskPrimaryColor</item>
     </style>
 

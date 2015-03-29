@@ -51,7 +51,6 @@
         </activity>
         <activity
             android:name=".TaskActivity"
-            android:label="@string/title_activity_task"
             android:theme="@style/TaskTheme" >
         </activity>
         <activity

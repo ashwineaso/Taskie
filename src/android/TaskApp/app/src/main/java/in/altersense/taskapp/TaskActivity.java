@@ -104,7 +104,7 @@ public class TaskActivity extends ActionBarActivity {
             collaboratorArrayList.add(collaborator);
         }
 
-        this.taskHeaderLL.setBackgroundResource(Task.getStatusColor(task.getStatus()));
+        //this.taskHeaderLL.setBackgroundResource(Task.getStatusColor(task.getStatus()));
 
         Resources res = getResources();
 

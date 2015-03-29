@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:background="@drawable/abc_popup_background_mtrl_mult"
     android:gravity="center_vertical"
     android:radius="10dip"
     android:padding="@dimen/smallMargin_xhdp">

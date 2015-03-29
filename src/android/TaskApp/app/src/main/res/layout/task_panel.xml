@@ -35,7 +35,6 @@
                     android:text="Boil Eggs"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:textColor="@color/primaryText"
                     fontPath="fonts/Cabin-Regular-TTF.ttf"
                     android:textSize="@dimen/text_subHeader_xhdpi"
                     android:paddingTop="@dimen/tinyMargin_xhdpi" />
@@ -141,8 +140,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         fontPath="fonts/Cabin-Regular-TTF.ttf"
-                        android:textColor="@color/duedatetime"
-                        android:textSize="@dimen/text_normal_xhdpi" />
+                        android:textSize="@dimen/text_small_xhdpi" />
 
                 </LinearLayout>
 
