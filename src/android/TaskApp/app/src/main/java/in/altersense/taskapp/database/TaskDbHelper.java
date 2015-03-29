@@ -175,7 +175,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 // Ignores tasks marked as declined or completed by the user.
                 if(taskStatus!=Config.COLLABORATOR_STATUS.DECLINED.getStatus()
                         || taskStatus!=Config.COLLABORATOR_STATUS.COMPLETED.getStatus()) {
-                    taskList.add(new Task(resultCursor, this.context));
+                    taskList.add(task);
                 }
             } while(resultCursor.moveToNext());
         }
@@ -293,8 +293,8 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         Cursor resultCursor = readableDb.query(
                 Task.TABLE_NAME,
                 columns,
-                Task.KEYS.IS_GROUP.getName()+"=? OR "+
-                Task.KEYS.STATUS.getName()+"=? OR",
+                Task.KEYS.IS_GROUP.getName()+"=? AND "+
+                Task.KEYS.STATUS.getName()+"=?",
                 new String[] {
                         "0",
                         Config.TASK_STATUS.INCOMPLETE.getStatus() + ""

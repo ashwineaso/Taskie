@@ -26,7 +26,6 @@ public class TaskStatusChangeRequest extends AsyncTask<Void, Integer, JSONObject
     private int status;
     private Task task;
     private Boolean isOwner = false;
-    private Activity activity;
     private JSONObject requestObject;
 
     public TaskStatusChangeRequest(Task task, Context context) {
@@ -128,9 +127,12 @@ public class TaskStatusChangeRequest extends AsyncTask<Void, Integer, JSONObject
         String status = "";
         try {
             status = result.getString(Config.REQUEST_RESPONSE_KEYS.STATUS.getKey());
+            if(status.equals(Config.RESPONSE_STATUS_SUCCESS)) {
+                this.task.setSyncStatus(true);
+                this.task.updateTask(this.context);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.d(TAG,"Response status "+status);
     }
 }

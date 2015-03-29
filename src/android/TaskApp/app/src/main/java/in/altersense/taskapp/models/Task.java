@@ -430,6 +430,7 @@ public class Task {
         this.priority = cursor.getInt(4);
         this.dueDateTime = cursor.getLong(5);
         this.status = cursor.getInt(6);
+        Log.d(CLASS_TAG, "Status of Task("+this.name+"): "+this.status);
         this.isGroup = cursor.getInt(7)==1;
         if(this.isGroup) {
             this.group = new TaskGroup(cursor.getString(8), context);
@@ -775,6 +776,7 @@ public class Task {
             this.status = status;
             // Update db
             TaskDbHelper taskDbHelper = new TaskDbHelper(activity);
+            // Set syncStatus to false.
             this.setSyncStatus(false);
             taskDbHelper.updateStatus(this, status);
             Log.d(TAG, "Updated in db.");

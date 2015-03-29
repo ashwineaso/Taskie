@@ -22,7 +22,7 @@ import java.io.IOException;
 import in.altersense.taskapp.common.Config;
 
 public class APIRequest {
-	
+
 	public static final String LOG_TAG = "APIRequest - ";
 
 	private String url;
@@ -138,7 +138,18 @@ public class APIRequest {
                 Toast.makeText(this.context, "Cannot reach server.", Toast.LENGTH_LONG).show();
             }
         } catch (HttpHostConnectException e) {
-            Toast.makeText(this.context, "Cannot reach server.", Toast.LENGTH_LONG).show();
+            responseObject.put(
+                    Config.REQUEST_RESPONSE_KEYS.STATUS.getKey(),
+                    Config.RESPONSE_STATUS_FAILED
+            );
+            responseObject.put(
+                    Config.REQUEST_RESPONSE_KEYS.MESSAGE.getKey(),
+                    Config.MESSAGES.CANT_REACH_SERVER.getMessage()
+            );
+            responseObject.put(
+                    Config.REQUEST_RESPONSE_KEYS.ERROR_CODE.getKey(),
+                    404
+            );
         } catch (Exception e) {
 			throw e;
 		}
