@@ -238,7 +238,7 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         }
         else if (dueDateTime - todayStartTime < 0) {
             holder.dueDateTimeTV.setText("Due on "+task.getDueDateTime());
-            holder.dueDateTimeTV.setTextColor(Color.rgb(245, 0, 87));
+            holder.dueDateTimeTV.setTextColor(Color.DKGRAY);
         }
         else if(dueDateTime - todayStartTime < 86400000) {
             holder.dueDateTimeTV.setText("Due Today");
@@ -250,7 +250,7 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         }
         else {
             holder.dueDateTimeTV.setText("Due on "+task.getDueDateTime());
-            holder.dueDateTimeTV.setTextColor(Color.rgb(0, 188, 213));
+            holder.dueDateTimeTV.setTextColor(Color.DKGRAY);
         }
 
         return convertView;
