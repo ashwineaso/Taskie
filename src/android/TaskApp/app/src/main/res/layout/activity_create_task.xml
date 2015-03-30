@@ -13,43 +13,40 @@
         android:layout_height="fill_parent"
         android:padding="@dimen/smallMargin_xhdp">
 
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Task Title"
-            android:id="@+id/lbl_title"
-            android:layout_margin="@dimen/tinyMargin_xhdpi"
-            android:textSize="@dimen/text_normal_xhdpi"
-            android:textColor="@color/headerText"
-            fontPath="fonts/Cabin-SemiBold-TTF.ttf"/>
+        <com.wrapp.floatlabelededittext.FloatLabeledEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <EditText android:id="@+id/taskTitleEditText"
-            android:hint="Task Title"
+            <EditText android:id="@+id/taskTitleEditText"
+                android:hint="Task Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:capitalize="sentences"
+                android:textColorHint="@color/taskPrimaryColor"
+                fontPath="fonts/Cabin-SemiBold-TTF.ttf"
+                android:inputType="textCapSentences"
+                android:textColor="@color/primaryText" />
+        </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+
+        <com.wrapp.floatlabelededittext.FloatLabeledEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:capitalize="sentences"
-            android:inputType="textCapSentences" />
+            android:paddingTop="@dimen/tinyMargin_xhdpi">
 
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Task Description"
-            android:id="@+id/lbl_desc"
-            android:layout_margin="@dimen/tinyMargin_xhdpi"
-            android:paddingTop="@dimen/smallMargin_xhdp"
-            android:textColor="@color/headerText"
-            android:textSize="@dimen/text_normal_xhdpi"
-            fontPath="fonts/Cabin-SemiBold-TTF.ttf"/>
-
-        <EditText android:id="@+id/taskDescriptionEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxHeight="@dimen/bigMargin_xhdp"
-            android:gravity="top"
-            android:inputType="textMultiLine"
-            android:hint="Task Description"
-            android:capitalize="sentences" />
+            <EditText android:id="@+id/taskDescriptionEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxHeight="@dimen/bigMargin_xhdp"
+                android:gravity="top"
+                android:inputType="textMultiLine"
+                android:hint="Task Description"
+                android:textColorHint="@color/taskPrimaryColor"
+                fontPath="fonts/Cabin-SemiBold-TTF.ttf"
+                android:capitalize="sentences"
+                android:textColor="@color/primaryText" />
+        </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
         <TextView
             android:layout_width="fill_parent"

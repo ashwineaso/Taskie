@@ -4,7 +4,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="in.altersense.taskapp.TasksAtHand">
+    tools:context="in.altersense.taskapp.TasksAtHand"
+    android:background="@color/emptyBackground">
 
     <LinearLayout android:id="@+id/mainStageLinearLayout"
         android:animateLayoutChanges="true"
@@ -23,7 +24,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="@dimen/smallMargin_xhdp">
+            android:padding="@dimen/smallMargin_xhdp"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"

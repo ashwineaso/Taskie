@@ -4,8 +4,8 @@
     <string name="app_name">Taskie</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_create_task">CreateTaskActivity</string>
-    <string name="title_activity_task">TaskActivity</string>
+    <string name="title_activity_create_task">Edit Task</string>
+    <string name="title_activity_task">Activity Details</string>
 
     <!-- Fonts -->
     <string name="font_textCondensed">fonts/Cabin-Regular-TTF.ttf</string>
@@ -22,9 +22,9 @@
         <item>Priority</item>
     </string-array>
 
-    <string name="title_activity_group">GroupActivity</string>
+    <string name="title_activity_group">Group Activity</string>
     <string name="quickTaskCreate">Quick Task Creation</string>
-    <string name="title_activity_user_registration">UserRegistrationActivity</string>
+    <string name="title_activity_user_registration">User Registration</string>
 
     <!-- Hints -->
     <string name="hint_FullName">Your Name</string>

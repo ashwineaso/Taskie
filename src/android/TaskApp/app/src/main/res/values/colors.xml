@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="tasksAtHandPrimaryActionBar">#fff50057</color>
+    <color name="tasksAtHandPrimaryActionBar">#d81b60</color>
 	<color name="tasksAtHandActionBarText">#FFFFFF</color>
 
-    <color name="createTaskPrimaryActionBar">#fff50057</color>
-    <color name="createTaskTextWidgetsColor">#ff21bbae</color>
-    <color name="createTaskSliderWidgetsColor">#0F9C57</color>
+    <color name="createTaskPrimaryActionBar">#d81b60</color>
+    <color name="createTaskTextWidgetsColor">#00acc1</color>
+    <color name="createTaskSliderWidgetsColor">#43a047</color>
 
-    <color name="taskPrimaryActionBar">#fff50057</color>
-    <color name="taskAccentColor">#63B0B8</color>
+    <color name="taskPrimaryColor">#d81b60</color>
+    <color name="taskAccentColor">#00acc1</color>
     <color name="taskSecondaryAccent">#C36CA4</color>
 
-    <color name="collaborationInvited">#fff50057</color>
+    <color name="collaborationInvited">#d81b60</color>
     <color name="taskUnattended">#607D88</color>
-    <color name="taskDoingColor">#ef6c00</color>
-    <color name="taskDone">#2e7d32</color>
+    <color name="taskDoingColor">#fb8c00</color>
+    <color name="taskDone">#43a047</color>
 
     <color name="lightText">#FFFFFF</color>
-    <color name="headerText">#fff50057</color>
-    <color name="primaryText">#ff212121</color>
+    <color name="headerText">#d81b60</color>
+    <color name="primaryText">#424242</color>
     <color name="secondaryText">#ABABAB</color>
 
     <color name="emptyBackground">#FFFFFF</color>
     <color name="lineColor">#ffebebeb</color>
 
-    <color name="positive">#48BA1A</color>
+    <color name="positive">#43a047</color>
     <color name="negative">#E91D62</color>
-    <color name="duedatetime">#fff50057</color>
+    <color name="duedatetime">#d81b60</color>
 
     <color name="transparent">#00000000</color>
 
-    <color name="button">#E91D62</color>
+    <color name="button">#d81b60</color>
     <color name="buttonPressed">#BA174E</color>
     <color name="transparent_buttonPressed">#22000000</color>
 
     <color name="status_declined">#ffc62828</color>
-    <color name="status_pending">#ef6c00</color>
-    <color name="status_accepted">#00838f</color>
-    <color name="status_done">#2e7d32</color>
+    <color name="status_pending">#fb8c00</color>
+    <color name="status_accepted">#ff00acc1</color>
+    <color name="status_done">#43a047</color>
 </resources>

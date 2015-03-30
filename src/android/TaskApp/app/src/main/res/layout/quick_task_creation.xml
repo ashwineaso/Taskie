@@ -2,20 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools2="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:padding="@dimen/smallMargin_xhdp"
-    android:layout_height="wrap_content" android:background="@drawable/abc_popup_background_mtrl_mult"
-    tools2:ignore="MissingPrefix">
+    android:layout_height="wrap_content"
+    tools2:ignore="MissingPrefix"
+    android:padding="@dimen/thinMargin_xhdpi">
 
-    <EditText android:id="@+id/newTaskTitle"
-        android:hint="Task Title"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
+    <com.wrapp.floatlabelededittext.FloatLabeledEditText
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/smallMargin_xhdp"
-        fontPath="fonts/Cabin-Medium-TTF.ttf"
-        tools2:ignore="MissingPrefix"
-        android:inputType="textCapSentences" />
+        android:layout_height="wrap_content">
+
+        <EditText android:id="@+id/newTaskTitle"
+            android:hint="Task Title"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            fontPath="fonts/Cabin-Medium-TTF.ttf"
+            tools2:ignore="MissingPrefix"
+            android:inputType="textCapSentences" />
+    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
     <in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText
         android:id="@+id/quickTaskParticipantName"
