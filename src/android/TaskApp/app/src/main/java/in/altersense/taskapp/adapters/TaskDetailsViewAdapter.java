@@ -3,11 +3,13 @@ package in.altersense.taskapp.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -58,7 +60,8 @@ public class TaskDetailsViewAdapter extends BaseAdapter {
     //Create a HOLDER CLASS to contain the inflated xml elements
     public static class ViewHolder {
         public TextView collName;
-        public ImageView statusCircle;
+        public TextView collInitials;
+        public LinearLayout collStatus;
     }
 
 
@@ -77,6 +80,7 @@ public class TaskDetailsViewAdapter extends BaseAdapter {
             //Assign the values to the ViewHolder object to be given to the elements
             holder = new ViewHolder();
             holder.collName = (TextView)vi.findViewById(R.id.collName);
+            holder.collInitials = (TextView)vi.findViewById(R.id.collInitials);
 
             //Set holder with layout inflater
             vi.setTag(holder);
@@ -89,14 +93,35 @@ public class TaskDetailsViewAdapter extends BaseAdapter {
         }
         else {
             collaborator = null;
-            collaborator = (Collaborator)data.get(position);
+            collaborator = data.get(position);
 
             //Set the Collaborator Model values in the Holder elements
             holder.collName.setText(collaborator.getName());
+            holder.collInitials.setText(collaborator.getInitials());
+            holder.collInitials.setBackgroundResource(getBgColor(collaborator.getStatus()));
         }
 
 
         //Finally return the view
         return vi;
+    }
+
+    private int getBgColor(int status) {
+        int backgroundResource = R.drawable.collaborator_status_declined;
+        switch (status) {
+            case -1:
+                backgroundResource = R.drawable.collaborator_status_declined;
+                break;
+            case 1:
+                backgroundResource = R.drawable.collaborator_status_accepted;
+                break;
+            case 2:
+                backgroundResource = R.drawable.collaborator_status_done;
+                break;
+            case 0:
+            default:
+                backgroundResource = R.drawable.collaborator_status_pending;
+        }
+        return backgroundResource;
     }
 }
