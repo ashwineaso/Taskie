@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.List;
@@ -136,6 +137,8 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         // Getting current task
         final Task task = this.taskList.get(position);
 
+        final boolean isOwnedByUser = task.isOwnedyDeviceUser(getContext());
+
         // Action clicklisteners.
         holder.action1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,19 +153,35 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         holder.action2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(activity.getApplicationContext(), CreateTaskActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey(),task.getId());
-                activity.startActivity(intent);
+                if(!isOwnedByUser) {
+                    Toast.makeText(
+                            getContext(),
+                            "Only owner can edit the task.",
+                            Toast.LENGTH_SHORT
+                    );
+                } else {
+                    Intent intent = new Intent(activity.getApplicationContext(), CreateTaskActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey(), task.getId());
+                    activity.startActivity(intent);
+                }
             }
         });
 
         holder.action3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Buzz buzz = new Buzz(task, activity);
-                BuzzCollaboratorRequest buzzCollaboratorRequest = new BuzzCollaboratorRequest(buzz, activity);
-                buzzCollaboratorRequest.execute();
+                if(!isOwnedByUser) {
+                    Toast.makeText(
+                            getContext(),
+                            "Only owner buzz collaborators of the task.",
+                            Toast.LENGTH_SHORT
+                    );
+                } else {
+                    Buzz buzz = new Buzz(task, activity);
+                    BuzzCollaboratorRequest buzzCollaboratorRequest = new BuzzCollaboratorRequest(buzz, activity);
+                    buzzCollaboratorRequest.execute();
+                }
             }
         });
 

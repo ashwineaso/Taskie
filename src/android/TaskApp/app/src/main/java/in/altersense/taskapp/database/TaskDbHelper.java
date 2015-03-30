@@ -34,6 +34,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
             Task.KEYS.STATUS.getName() + " " + Task.KEYS.STATUS.getType() + ", " +
             Task.KEYS.IS_GROUP.getName() + " " + Task.KEYS.IS_GROUP.getType() + ", " +
             Task.KEYS.GROUP_UUID.getName() + " " + Task.KEYS.GROUP_UUID.getType() +", "+
+            Task.KEYS.USER_PARTICIPATION_STATUS.getName() + " " + Task.KEYS.USER_PARTICIPATION_STATUS.getType() +", "+
             Task.KEYS.SYNC_STATUS.getName() + " "+ Task.KEYS.SYNC_STATUS.getType() + ");";
 
     private static String CREATION_STATEMENT_BUZZ = "CREATE TABLE " + Buzz.TABLE_NAME + " ( " +
@@ -57,14 +58,22 @@ public class TaskDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(
-                "ALTER TABLE "+ Task.TABLE_NAME+
-                        " ADD "+Task.KEYS.SYNC_STATUS.getName()+" "+
-                        Task.KEYS.SYNC_STATUS.getType()+";");
-        db.execSQL("DROP TABLE IF EXISTS "+Buzz.TABLE_NAME);
-        db.execSQL(
-                CREATION_STATEMENT_BUZZ
-        );
+        switch (oldVersion) {
+            case 1:
+                db.execSQL(
+                        "ALTER TABLE "+ Task.TABLE_NAME+
+                                " ADD "+Task.KEYS.SYNC_STATUS.getName()+" "+
+                                Task.KEYS.SYNC_STATUS.getType()+";");
+                db.execSQL("DROP TABLE IF EXISTS "+Buzz.TABLE_NAME);
+                db.execSQL(
+                        CREATION_STATEMENT_BUZZ
+                );
+            case 2:
+                db.execSQL(
+                        "ALTER TABLE "+ Task.TABLE_NAME+
+                                " ADD "+Task.KEYS.USER_PARTICIPATION_STATUS.getName()+" "+
+                                Task.KEYS.USER_PARTICIPATION_STATUS.getType()+";");
+        }
     }
 
     public void updateUUID(Task task) {
@@ -488,5 +497,25 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         unsyncedTasksCursor.close();
         // return tasks list
         return unSyncedTaskList;
+    }
+
+    public boolean updateParticipationStatus(Task task) {
+        String TAG = CLASS_TAG+"updateParticipationStatus";
+        // Open writable databse
+        SQLiteDatabase writableDb = this.getWritableDatabase();
+        // Setup content values.
+        ContentValues values = new ContentValues();
+        values.put(Task.KEYS.USER_PARTICIPATION_STATUS.getName(),task.getUserParticipationStatus());
+        // Run query
+        int affectedRows = writableDb.update(
+                Task.TABLE_NAME,
+                values,
+                "ROWID =?",
+                new String[] { task.getId()+"" }
+        );
+        // close Db
+        writableDb.close();
+        // return true if affectedRows > 0
+        return affectedRows>0;
     }
 }
