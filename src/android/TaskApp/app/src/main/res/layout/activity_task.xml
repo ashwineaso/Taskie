@@ -32,7 +32,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/imageView2"
-                        android:src="@drawable/abc_btn_check_material" />
+                        android:src="@drawable/ic_check_box_outline_blank_white_24dp" />
 
                     <TextView android:id="@+id/taskTitleTextView"
                         android:layout_width="wrap_content"
@@ -73,35 +73,6 @@
                             android:text="John Doe" />
 
                     </LinearLayout>
-
-                    <View
-                        android:layout_width="fill_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/lineColor"
-                        android:layout_marginTop="@dimen/tinyMargin_xhdpi"
-                        android:layout_marginBottom="@dimen/tinyMargin_xhdpi"
-                        android:orientation="horizontal" />
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:id="@+id/taskDueDateTimeLL">
-
-                        <TextView android:id="@+id/dueDateTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Due on 25 Dec, 2014"
-                            android:textSize="@dimen/text_normal_xhdpi"
-                            fontPath="fonts/Cabin-Medium-TTF.ttf"
-                            tools2:ignore="MissingPrefix"/>
-                    </LinearLayout>
-
-                    <TextView android:id="@+id/taskDescriptionTextView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_subHeader_xhdpi"
-                        android:text="Task Description" />
 
                     <View
                         android:layout_width="fill_parent"
@@ -161,6 +132,35 @@
                         </LinearLayout>
 
                     </LinearLayout>
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/lineColor"
+                        android:layout_marginTop="@dimen/tinyMargin_xhdpi"
+                        android:layout_marginBottom="@dimen/tinyMargin_xhdpi"
+                        android:orientation="horizontal" />
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/taskDueDateTimeLL">
+
+                        <TextView android:id="@+id/dueDateTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Due on 25 Dec, 2014"
+                            android:textSize="@dimen/text_normal_xhdpi"
+                            fontPath="fonts/Cabin-Medium-TTF.ttf"
+                            tools2:ignore="MissingPrefix"/>
+                    </LinearLayout>
+
+                    <TextView android:id="@+id/taskDescriptionTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_subHeader_xhdpi"
+                        android:text="Task Description" />
 
                     <View
                         android:layout_width="fill_parent"

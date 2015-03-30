@@ -3,31 +3,40 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:gravity="center_vertical"
     android:radius="10dip"
-    android:padding="@dimen/smallMargin_xhdp">
+    android:padding="@dimen/thinMargin_xhdpi">
 
-    <ImageView
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:src="@drawable/user_pic"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center_vertical|center_horizontal">
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginLeft="8dp"
-        android:textSize="16dp"
-        android:textColor="@color/primaryText"
-        android:text="Collaborator Name"
-        android:id="@+id/collName" />
+        <TextView android:id="@+id/collInitials"
+        android:layout_width="@dimen/collaboratorTokenRadius_xhdpi"
+        android:gravity="center"
+        android:layout_height="@dimen/collaboratorTokenRadius_xhdpi"
+        android:textSize="@dimen/collabortorStatusText_xhdpi"
+            android:textColor="@color/primaryText" />
 
-    <ImageView
-        android:layout_width="@dimen/statusCircleDiameter_xhdp"
-        android:layout_height="@dimen/statusCircleDiameter_xhdp"
-        android:src="@drawable/done_notif"
-        android:layout_marginRight="8dp"
-        android:id="@+id/statusCircle" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="8dp"
+            android:textSize="16dp"
+            android:textColor="@color/primaryText"
+            android:text="Collaborator Name"
+            android:id="@+id/collName" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/lineColor"
+        android:orientation="horizontal" />
 
 </LinearLayout>
