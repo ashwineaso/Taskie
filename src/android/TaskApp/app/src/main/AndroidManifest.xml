@@ -51,7 +51,7 @@
         </activity>
         <activity
             android:name=".TaskActivity"
-            android:theme="@style/TaskTheme"
+            android:theme="@style/TaskViewTheme"
             android:parentActivityName=".DashboardActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

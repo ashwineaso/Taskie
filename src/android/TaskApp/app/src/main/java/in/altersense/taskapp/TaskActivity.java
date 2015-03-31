@@ -2,25 +2,21 @@ package in.altersense.taskapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import in.altersense.taskapp.adapters.TaskDetailsViewAdapter;
@@ -40,14 +36,14 @@ public class TaskActivity extends ActionBarActivity {
     List<Collaborator> collaboratorList;
 
     //Adapter implementation
-    ListView collList;
-    TaskDetailsViewAdapter adapter;
-//    public TaskActivity activity;
+    private ListView collList;
+    private TaskDetailsViewAdapter adapter;
+
     public ArrayList<Collaborator> collaboratorArrayList = new ArrayList<Collaborator>();
-    private TextView taskTitleTV;
-    private TextView taskDescriptionTV;
+    private EditText taskTitleET;
+    private EditText taskDescriptionET;
     private TextView dueDateTV;
-    private TextView taskPriorityTV;
+    private Spinner taskPrioritySpinner;
     private TextView taskStatusTV;
     private TextView taskOwnerTV;
     private CompoundButton checkComplete;
@@ -82,19 +78,20 @@ public class TaskActivity extends ActionBarActivity {
 
 
         //Initialize the views
-        this.taskTitleTV = (TextView)findViewById(R.id.taskTitleTextView);
-        this.taskDescriptionTV = (TextView)findViewById(R.id.taskDescriptionTextView);
+        this.taskTitleET = (EditText) findViewById(R.id.taskTitleEditText);
+        this.taskDescriptionET = (EditText) findViewById(R.id.taskDescriptionEditText);
         this.dueDateTV = (TextView)findViewById(R.id.dueDateTextView);
-        this.taskPriorityTV = (TextView)findViewById(R.id.taskPriorityTextView);
+        this.taskPrioritySpinner = (Spinner) findViewById(R.id.taskPrioritySpineer);
         this.taskStatusTV = (TextView)findViewById(R.id.taskStatusTextView);
         this.taskOwnerTV = (TextView) findViewById(R.id.taskOwnerTV);
         this.checkComplete = (CompoundButton) findViewById(R.id.checkComplete);
 
         //Set the text views
-        this.taskTitleTV.setText(this.task.getName());
-        this.taskDescriptionTV.setText(this.task.getDescription());
+        this.taskTitleET.setText(this.task.getName());
+        this.taskDescriptionET.setText(this.task.getDescription());
         this.dueDateTV.setText(this.task.getDueDateTime());
-        this.taskPriorityTV.setText(priorityToString(this.task.getPriority()));
+        // TODO: Fix the task priority to function like a spinner.
+//        this.taskPrioritySpinner.setText(priorityToString(this.task.getPriority()));
         this.taskStatusTV.setText(statusToString(this.task.getStatus(getApplicationContext())));
         this.taskOwnerTV.setText(this.task.getOwner().getName());
 
@@ -207,4 +204,12 @@ public class TaskActivity extends ActionBarActivity {
         listView.setLayoutParams(params);
         listView.requestLayout();
     }
+
+    /**
+     * Sets up the activity to task view mode.
+     */
+    private void setUpViewMode() {
+
+    }
+
 }

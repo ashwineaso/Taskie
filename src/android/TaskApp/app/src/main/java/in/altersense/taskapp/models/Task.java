@@ -707,7 +707,7 @@ public class Task {
         LayoutInflater inflater = activity.getLayoutInflater();
         View taskView = inflater.inflate(R.layout.task_panel, null);
         TextView dueDateTime = (TextView) taskView.findViewById(R.id.dueDateTextView);
-        TextView taskTitle = (TextView) taskView.findViewById(R.id.taskTitleTextView);
+        TextView taskTitle = (TextView) taskView.findViewById(R.id.taskTitleEditText);
         LinearLayout collaboratorsLL = (LinearLayout) taskView.findViewById(R.id.collaboratorsList);
         LinearLayout taskStatus = (LinearLayout) taskView.findViewById(R.id.taskStatusLinearLayout);
 

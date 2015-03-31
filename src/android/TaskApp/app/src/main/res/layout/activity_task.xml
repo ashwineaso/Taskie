@@ -36,7 +36,7 @@
                         android:clickable="true"
                         android:checked="false" />
 
-                    <TextView android:id="@+id/taskTitleTextView"
+                    <EditText android:id="@+id/taskTitleEditText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/thinMargin_xhdpi"
@@ -103,11 +103,10 @@
                                 android:id="@+id/lbl_priority"
                                 android:textColor="@color/taskPrimaryColor" />
 
-                            <TextView android:id="@+id/taskPriorityTextView"
+                            <Spinner android:id="@+id/taskPrioritySpineer"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="@dimen/text_normal_xhdpi"
-                                android:text="High Priority" />
+                                android:textSize="@dimen/text_normal_xhdpi" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -158,7 +157,7 @@
                             tools2:ignore="MissingPrefix"/>
                     </LinearLayout>
 
-                    <TextView android:id="@+id/taskDescriptionTextView"
+                    <EditText android:id="@+id/taskDescriptionEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/text_subHeader_xhdpi"

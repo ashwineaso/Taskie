@@ -62,9 +62,14 @@
         <item name="colorAccent">@color/createTaskPrimaryActionBar</item>
     </style>
 
-    <style name="TaskTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="TaskViewTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:windowContentOverlay">@null</item>
         <item name="colorPrimary">@color/taskPrimaryColor</item>
+        <item name="android:editTextStyle">@style/TaskViewEditTextsTheme</item>
+    </style>
+
+    <style name="TaskViewEditTextsTheme" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@android:color/transparent</item>
     </style>
 
     <style name="RegisterTheme" parent="Theme.AppCompat.Light.DarkActionBar">
