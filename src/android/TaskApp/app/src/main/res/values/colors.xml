@@ -22,6 +22,8 @@
     <color name="primaryText">#424242</color>
     <color name="secondaryText">#ABABAB</color>
 
+    <color name="textViewDefault">#959595</color>
+
     <color name="emptyBackground">#FFFFFF</color>
     <color name="lineColor">#ffebebeb</color>
 
