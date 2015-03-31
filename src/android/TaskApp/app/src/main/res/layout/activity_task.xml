@@ -26,13 +26,15 @@
                     android:layout_height="wrap_content"
                     android:background="@color/createTaskPrimaryActionBar"
                     android:gravity="center_vertical"
-                    android:padding="@dimen/smallMargin_xhdp">
+                    android:padding="@dimen/smallMargin_xhdp"
+                    android:baselineAligned="false">
 
-                    <ImageView
+                    <CheckBox
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/imageView2"
-                        android:src="@drawable/ic_check_box_outline_blank_white_24dp" />
+                        android:id="@+id/checkComplete"
+                        android:clickable="true"
+                        android:checked="false" />
 
                     <TextView android:id="@+id/taskTitleTextView"
                         android:layout_width="wrap_content"
@@ -174,18 +176,30 @@
 
             </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/tinyMargin_xhdpi"
-                android:layout_marginBottom="@dimen/tinyMargin_xhdpi"
-                android:paddingLeft="@dimen/smallMargin_xhdp"
-                fontPath="fonts/Cabin-SemiBold-TTF.ttf"
-                tools2:ignore="MissingPrefix"
-                android:text="COLLABORATORS"
-                android:textSize="@dimen/text_normal_xhdpi"
-                android:textColor="@color/headerText"
-                android:id="@+id/headingCollaborators" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    fontPath="fonts/Cabin-SemiBold-TTF.ttf"
+                    tools2:ignore="MissingPrefix"
+                    android:text="COLLABORATORS"
+                    android:textSize="@dimen/text_subHeader_xhdpi"
+                    android:textColor="@color/headerText"
+                    android:id="@+id/headingCollaborators"
+                    android:paddingLeft="@dimen/smallMargin_xhdp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageView2"
+                    android:src="@drawable/ic_user" />
+            </LinearLayout>
 
             <ListView
                 android:layout_width="fill_parent"
