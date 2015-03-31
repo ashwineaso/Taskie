@@ -8,20 +8,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import in.altersense.taskapp.R;
 import in.altersense.taskapp.models.Collaborator;
+import in.altersense.taskapp.models.Task;
 
 /**
  * Created by ashwineaso on 2/25/15.
  */
 public class TaskDetailsViewAdapter extends BaseAdapter {
 
+    private Task task;
     //Declaring the variables used
     private Activity activity;
     private ArrayList<Collaborator> data;
@@ -30,11 +30,11 @@ public class TaskDetailsViewAdapter extends BaseAdapter {
     Collaborator collaborator;
 
     //Constructor of custom adapter
-    public TaskDetailsViewAdapter(Activity a, ArrayList d, Resources reslocal) {
+    public TaskDetailsViewAdapter(Activity a, ArrayList d, Task task) {
         //Assign the passed values
         this.activity = a;
         this.data = d;
-        this.res = reslocal;
+        this.task = task;
 
         //Layout inflater to call the external xml layout
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -61,7 +61,6 @@ public class TaskDetailsViewAdapter extends BaseAdapter {
     public static class ViewHolder {
         public TextView collName;
         public TextView collInitials;
-        public LinearLayout collStatus;
     }
 
 
@@ -70,7 +69,7 @@ public class TaskDetailsViewAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         View vi = convertView;
-        ViewHolder holder;
+        final ViewHolder holder;
 
         if (convertView == null) {
 
@@ -98,30 +97,11 @@ public class TaskDetailsViewAdapter extends BaseAdapter {
             //Set the Collaborator Model values in the Holder elements
             holder.collName.setText(collaborator.getName());
             holder.collInitials.setText(collaborator.getInitials());
-            holder.collInitials.setBackgroundResource(getBgColor(collaborator.getStatus()));
+            holder.collInitials.setBackgroundResource(task.collaboratorStatusBackground(collaborator.getStatus()));
         }
-
 
         //Finally return the view
         return vi;
     }
 
-    private int getBgColor(int status) {
-        int backgroundResource = R.drawable.collaborator_status_declined;
-        switch (status) {
-            case -1:
-                backgroundResource = R.drawable.collaborator_status_declined;
-                break;
-            case 1:
-                backgroundResource = R.drawable.collaborator_status_accepted;
-                break;
-            case 2:
-                backgroundResource = R.drawable.collaborator_status_done;
-                break;
-            case 0:
-            default:
-                backgroundResource = R.drawable.collaborator_status_pending;
-        }
-        return backgroundResource;
-    }
 }

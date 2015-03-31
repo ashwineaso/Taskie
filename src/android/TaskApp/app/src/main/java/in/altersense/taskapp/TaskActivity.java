@@ -11,6 +11,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -40,7 +42,7 @@ public class TaskActivity extends ActionBarActivity {
     //Adapter implementation
     ListView collList;
     TaskDetailsViewAdapter adapter;
-    public TaskActivity activity;
+//    public TaskActivity activity;
     public ArrayList<Collaborator> collaboratorArrayList = new ArrayList<Collaborator>();
     private TextView taskTitleTV;
     private TextView taskDescriptionTV;
@@ -48,7 +50,7 @@ public class TaskActivity extends ActionBarActivity {
     private TextView taskPriorityTV;
     private TextView taskStatusTV;
     private TextView taskOwnerTV;
-    private LinearLayout taskHeaderLL;
+    private CompoundButton checkComplete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +88,7 @@ public class TaskActivity extends ActionBarActivity {
         this.taskPriorityTV = (TextView)findViewById(R.id.taskPriorityTextView);
         this.taskStatusTV = (TextView)findViewById(R.id.taskStatusTextView);
         this.taskOwnerTV = (TextView) findViewById(R.id.taskOwnerTV);
-        this.taskHeaderLL = (LinearLayout) findViewById(R.id.taskHeaderLinearLayout);
+        this.checkComplete = (CompoundButton) findViewById(R.id.checkComplete);
 
         //Set the text views
         this.taskTitleTV.setText(this.task.getName());
@@ -96,6 +98,14 @@ public class TaskActivity extends ActionBarActivity {
         this.taskStatusTV.setText(statusToString(this.task.getStatus(getApplicationContext())));
         this.taskOwnerTV.setText(this.task.getOwner().getName());
 
+        //Set a listener for the checkbox
+        this.checkComplete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                task.toggleStatus(getParent());
+            }
+        });
+
         //Fill the ArrayList with the required data
         CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(getApplicationContext());
         this.collaboratorList = collaboratorDbHelper.getAllCollaborators(this.task);
@@ -104,13 +114,9 @@ public class TaskActivity extends ActionBarActivity {
             collaboratorArrayList.add(collaborator);
         }
 
-        //this.taskHeaderLL.setBackgroundResource(Task.getStatusColor(task.getStatus()));
-
-        Resources res = getResources();
-
         collList = (ListView)findViewById(R.id.collListView);
         //Create a custom adapter
-        adapter = new TaskDetailsViewAdapter(TaskActivity.this, collaboratorArrayList, res);
+        adapter = new TaskDetailsViewAdapter(TaskActivity.this, collaboratorArrayList, this.task);
         collList.setAdapter(adapter);
         //Adjust the height of the ListView to accommodate all the children
         setListViewHeightBasedOnChildren(collList);
