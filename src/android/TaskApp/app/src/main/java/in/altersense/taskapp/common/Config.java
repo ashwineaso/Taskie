@@ -10,7 +10,7 @@ public class Config {
 
     public static final boolean DEBUG = true;
 
-    public static int DATABASE_VERSION = 2;
+    public static int DATABASE_VERSION = 3;
 
     public static String getGCMSenderId() {
         if(Config.DEBUG) {
@@ -22,7 +22,7 @@ public class Config {
 
     public static int REQUEST_MAXOUT = 3;
 //    public static String SERVER_ADDRESS = "taskieserver-mahesmohan.rhcloud.com";
-    public static String SERVER_ADDRESS = "172.16.11.34:8080";
+    public static String SERVER_ADDRESS = IP.IP;
     public static String RESPONSE_STATUS_FAILED = "failed";
     public static String RESPONSE_STATUS_SUCCESS = "success";
 
@@ -87,7 +87,8 @@ public class Config {
         LOGIN_ERROR_TITLE("Oops"),
         TASK_TITLE_TOO_SHORT("Task title is too short."),
         INVALID_EMAIL("Invalid email."),
-        CONFIRM_TASK_DELETE("You are about to delete this task. Do you really want to ?");
+        CONFIRM_TASK_DELETE("You are about to delete this task. Do you really want to ?"),
+        CANT_REACH_SERVER("Cannot reach server. Check internet connection.");
 
         private String message;
 

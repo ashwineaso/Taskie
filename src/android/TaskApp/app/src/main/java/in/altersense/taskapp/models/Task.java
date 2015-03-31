@@ -62,6 +62,8 @@ public class Task {
 
     private boolean syncStatus;
 
+    private int userParticipationStatus;
+
     public Task() {
         Log.d(CLASS_TAG, "Constructor1 called.");
         this.name="";
@@ -134,6 +136,14 @@ public class Task {
     }
 
     public int getStatus() { return status; }
+
+    public int getUserParticipationStatus() {
+        return userParticipationStatus;
+    }
+
+    public void setUserParticipationStatus(int userParticipationStatus) {
+        this.userParticipationStatus = userParticipationStatus;
+    }
 
     /**
      * Gets the user's status in this task.
@@ -289,7 +299,8 @@ public class Task {
         STATUS("status", "INTEGER"),
         IS_GROUP("is_group", "INTEGER"),
         GROUP_UUID("group_uuid", "TEXT"),
-        SYNC_STATUS("sync_status", "INTEGER");
+        SYNC_STATUS("sync_status", "INTEGER"),
+        USER_PARTICIPATION_STATUS("user_participation_status", "INTEGER");
 
         public String getName() {
             return name;
@@ -437,7 +448,8 @@ public class Task {
             this.group = null;
         }
         this.setSyncStatus(cursor.getInt(9));
-        this.id = cursor.getLong(10);
+        this.userParticipationStatus = cursor.getInt(10);
+        this.id = cursor.getLong(11);
     }
 
     public String getUuid() {
@@ -736,14 +748,6 @@ public class Task {
         return R.color.status_pending;
     }
 
-    public View getPanelView() {
-        return panelView;
-    }
-
-    public LinearLayout getTaskActionsPlaceHolderView() {
-        return taskActionsPlaceHolderView;
-    }
-
     @Override
     public String toString() {
         String task ="";
@@ -775,6 +779,7 @@ public class Task {
             this.status = status;
             // Update db
             TaskDbHelper taskDbHelper = new TaskDbHelper(activity);
+            // Set syncStatus to false.
             this.setSyncStatus(false);
             taskDbHelper.updateStatus(this, status);
             Log.d(TAG, "Updated in db.");
@@ -827,12 +832,29 @@ public class Task {
      * @return Boolean isOwnedByDeviceUser
      */
     public boolean isOwnedyDeviceUser(Context context) {
-        String ownerUUID = AltEngine.readStringFromSharedPref(
-                context,
-                Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
-                ""
-        );
-        return this.getOwner().getUuid().equals(ownerUUID);
+
+        if(this.userParticipationStatus==PARTICIPATION_STATUS.OWNER.getStatus()) {
+            return true;
+        } else if(this.userParticipationStatus==PARTICIPATION_STATUS.COLLABORATOR.getStatus()) {
+            return false;
+        } else {
+            String userUUID = AltEngine.readStringFromSharedPref(
+                    context,
+                    Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
+                    ""
+            );
+            boolean isOwner = false;
+            if(this.getOwner().getUuid().equals(userUUID)) {
+                isOwner = true;
+                this.userParticipationStatus = PARTICIPATION_STATUS.OWNER.getStatus();
+            } else {
+                this.userParticipationStatus = PARTICIPATION_STATUS.COLLABORATOR.getStatus();
+            }
+            TaskDbHelper taskDbHelper = new TaskDbHelper(context);
+            taskDbHelper.updateParticipationStatus(this);
+            return isOwner;
+        }
+
     }
 
     public int collaboratorStatusBackground(int status) {
@@ -857,6 +879,22 @@ public class Task {
     public void setActionsView(Activity activity) {
         this.actionsView = createActionsView(activity);
         this.taskActionsPlaceHolderView.addView(this.actionsView);
+    }
+
+    public static enum PARTICIPATION_STATUS {
+        NON_PARTICIPANT(0),
+        OWNER(1),
+        COLLABORATOR(2);
+
+        private final int status;
+
+        private PARTICIPATION_STATUS(int status) {
+            this.status = status;
+        }
+
+        public int getStatus() {
+            return status;
+        }
     }
 
 }

@@ -102,7 +102,7 @@ public class TaskActivity extends ActionBarActivity {
         this.checkComplete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                task.toggleStatus(getParent());
+                task.toggleStatus(TaskActivity.this);
             }
         });
 

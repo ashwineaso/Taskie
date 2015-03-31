@@ -34,6 +34,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
             Task.KEYS.STATUS.getName() + " " + Task.KEYS.STATUS.getType() + ", " +
             Task.KEYS.IS_GROUP.getName() + " " + Task.KEYS.IS_GROUP.getType() + ", " +
             Task.KEYS.GROUP_UUID.getName() + " " + Task.KEYS.GROUP_UUID.getType() +", "+
+            Task.KEYS.USER_PARTICIPATION_STATUS.getName() + " " + Task.KEYS.USER_PARTICIPATION_STATUS.getType() +", "+
             Task.KEYS.SYNC_STATUS.getName() + " "+ Task.KEYS.SYNC_STATUS.getType() + ");";
 
     private static String CREATION_STATEMENT_BUZZ = "CREATE TABLE " + Buzz.TABLE_NAME + " ( " +
@@ -57,14 +58,22 @@ public class TaskDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(
-                "ALTER TABLE "+ Task.TABLE_NAME+
-                        " ADD "+Task.KEYS.SYNC_STATUS.getName()+" "+
-                        Task.KEYS.SYNC_STATUS.getType()+";");
-        db.execSQL("DROP TABLE IF EXISTS "+Buzz.TABLE_NAME);
-        db.execSQL(
-                CREATION_STATEMENT_BUZZ
-        );
+        switch (oldVersion) {
+            case 1:
+                db.execSQL(
+                        "ALTER TABLE "+ Task.TABLE_NAME+
+                                " ADD "+Task.KEYS.SYNC_STATUS.getName()+" "+
+                                Task.KEYS.SYNC_STATUS.getType()+";");
+                db.execSQL("DROP TABLE IF EXISTS "+Buzz.TABLE_NAME);
+                db.execSQL(
+                        CREATION_STATEMENT_BUZZ
+                );
+            case 2:
+                db.execSQL(
+                        "ALTER TABLE "+ Task.TABLE_NAME+
+                                " ADD "+Task.KEYS.USER_PARTICIPATION_STATUS.getName()+" "+
+                                Task.KEYS.USER_PARTICIPATION_STATUS.getType()+";");
+        }
     }
 
     public void updateUUID(Task task) {
@@ -169,7 +178,14 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         List<Task> taskList = new ArrayList<Task>();
         if(resultCursor.moveToFirst()) {
             do {
-                taskList.add(new Task(resultCursor, this.context));
+                // Creates a task object to check status.
+                Task task = new Task(resultCursor, this.context);
+                int taskStatus = task.getStatus(this.context);
+                // Ignores tasks marked as declined or completed by the user.
+                if(taskStatus!=Config.COLLABORATOR_STATUS.DECLINED.getStatus()
+                        || taskStatus!=Config.COLLABORATOR_STATUS.COMPLETED.getStatus()) {
+                    taskList.add(task);
+                }
             } while(resultCursor.moveToNext());
         }
         // Close cursor.
@@ -282,11 +298,16 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         ArrayList<String> columnList = Task.getAllColumns();
         String[] columns = new String[columnList.size()];
         columns = columnList.toArray(columns);
+        // Queries for tasks which are still marked incomplete.
         Cursor resultCursor = readableDb.query(
                 Task.TABLE_NAME,
                 columns,
-                Task.KEYS.IS_GROUP.getName()+"=?",
-                new String[] {"0"},
+                Task.KEYS.IS_GROUP.getName()+"=? AND "+
+                Task.KEYS.STATUS.getName()+"=?",
+                new String[] {
+                        "0",
+                        Config.TASK_STATUS.INCOMPLETE.getStatus() + ""
+                },
                 null,
                 null,
                 null
@@ -476,5 +497,25 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         unsyncedTasksCursor.close();
         // return tasks list
         return unSyncedTaskList;
+    }
+
+    public boolean updateParticipationStatus(Task task) {
+        String TAG = CLASS_TAG+"updateParticipationStatus";
+        // Open writable databse
+        SQLiteDatabase writableDb = this.getWritableDatabase();
+        // Setup content values.
+        ContentValues values = new ContentValues();
+        values.put(Task.KEYS.USER_PARTICIPATION_STATUS.getName(),task.getUserParticipationStatus());
+        // Run query
+        int affectedRows = writableDb.update(
+                Task.TABLE_NAME,
+                values,
+                "ROWID =?",
+                new String[] { task.getId()+"" }
+        );
+        // close Db
+        writableDb.close();
+        // return true if affectedRows > 0
+        return affectedRows>0;
     }
 }
