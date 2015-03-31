@@ -40,10 +40,13 @@ public class UserDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(
-                "ALTER TABLE "+ User.TABLE_NAME+
-                        " ADD "+User.KEYS.SYNC_STATUS.getName()+" "+
-                        User.KEYS.SYNC_STATUS.getType()+";");
+        switch (newVersion) {
+            case 2:
+                db.execSQL(
+                        "ALTER TABLE "+ User.TABLE_NAME+
+                                " ADD "+User.KEYS.SYNC_STATUS.getName()+" "+
+                                User.KEYS.SYNC_STATUS.getType()+";");
+        }
     }
 
     /**
