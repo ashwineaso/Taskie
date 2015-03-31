@@ -10,7 +10,7 @@ public class Config {
 
     public static final boolean DEBUG = true;
 
-    public static int DATABASE_VERSION = 2;
+    public static int DATABASE_VERSION = 3;
 
     public static String getGCMSenderId() {
         if(Config.DEBUG) {
@@ -22,7 +22,7 @@ public class Config {
 
     public static int REQUEST_MAXOUT = 3;
 //    public static String SERVER_ADDRESS = "taskieserver-mahesmohan.rhcloud.com";
-    public static String SERVER_ADDRESS = "192.168.1.101:8080";
+    public static String SERVER_ADDRESS = "172.16.11.34:8080";
     public static String RESPONSE_STATUS_FAILED = "failed";
     public static String RESPONSE_STATUS_SUCCESS = "success";
 
