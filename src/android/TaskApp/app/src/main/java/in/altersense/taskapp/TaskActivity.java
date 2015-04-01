@@ -313,6 +313,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         this.calendarIV.setVisibility(View.GONE);
         this.cancelIV.setVisibility(View.GONE);
         // display display views
+        this.checkComplete.setVisibility(View.VISIBLE);
         this.taskTitleTV.setVisibility(View.VISIBLE);
         this.taskDescriptionTV.setVisibility(View.VISIBLE);
         this.taskPriorityTV.setVisibility(View.VISIBLE);
@@ -333,6 +334,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         // update mode.
         this.isEditMode = true;
         // Hide dsiplay views
+        this.checkComplete.setVisibility(View.INVISIBLE);
         this.taskTitleTV.setVisibility(View.GONE);
         this.taskDescriptionTV.setVisibility(View.GONE);
         this.taskPriorityTV.setVisibility(View.GONE);
