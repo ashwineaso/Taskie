@@ -173,13 +173,13 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
             }
         });
 
-        this.editViewToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        this.editViewToggle.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
-                    setUpEditMode();
-                } else {
+            public void onClick(View v) {
+                if(isEditMode) {
                     setUpViewMode();
+                } else {
+                    setUpEditMode();
                 }
             }
         });
@@ -201,9 +201,6 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         //Adjust the height of the ListView to accommodate all the children
         setListViewHeightBasedOnChildren(collList);
         collList.setFocusable(false); //To set the focus to top #glitch
-
-        setUpViewMode();
-
     }
 
     /**
@@ -294,6 +291,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
      * Sets up the activity to task view mode.
      */
     private void setUpViewMode() {
+        String TAG = CLASS_TAG+"setUpViewMode";
         // Update task params
         this.task.setName(this.taskTitleET.getText().toString());
         this.task.setDescription(this.taskDescriptionET.getText().toString());
@@ -367,6 +365,34 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
             this.dueDateTV.setText(this.task.dateToString(this.duelong));
         } catch (ParseException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        String TAG = CLASS_TAG+"onBackPressed";
+        if(this.isEditMode) {
+            // Set mode.
+            this.isEditMode = false;
+            // Update TextViews
+            this.taskTitleET.setText(this.task.getName());
+            this.taskDescriptionET.setText(this.task.getDescription());
+            this.taskPrioritySpinner.setSelection(this.task.getPriority());
+            this.dueDateTV.setText(this.task.getDueDateTime());
+            // Hide edit views
+            this.taskTitleET.setVisibility(View.GONE);
+            this.taskDescriptionET.setVisibility(View.GONE);
+            this.taskPrioritySpinner.setVisibility(View.GONE);
+            this.calendarIV.setVisibility(View.GONE);
+            this.cancelIV.setVisibility(View.GONE);
+            // display display views
+            this.taskTitleTV.setVisibility(View.VISIBLE);
+            this.taskDescriptionTV.setVisibility(View.VISIBLE);
+            this.taskPriorityTV.setVisibility(View.VISIBLE);
+            // Set toggle button to off
+            this.editViewToggle.setChecked(false);
+        } else {
+            super.onBackPressed();
         }
     }
 }
