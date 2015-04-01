@@ -22,7 +22,7 @@ public class Config {
 
     public static int REQUEST_MAXOUT = 3;
 //    public static String SERVER_ADDRESS = "taskieserver-mahesmohan.rhcloud.com";
-    public static String SERVER_ADDRESS = IP.IP;
+    public static String SERVER_ADDRESS = "192.168.1.3:8080";
     public static String RESPONSE_STATUS_FAILED = "failed";
     public static String RESPONSE_STATUS_SUCCESS = "success";
 
@@ -88,6 +88,7 @@ public class Config {
         TASK_TITLE_TOO_SHORT("Task title is too short."),
         INVALID_EMAIL("Invalid email."),
         CONFIRM_TASK_DELETE("You are about to delete this task. Do you really want to ?"),
+        CONFIRM_REMOVE_COLLABORATOR("Remove collaborator from task. Confirm ?"),
         CANT_REACH_SERVER("Cannot reach server. Check internet connection.");
 
         private String message;

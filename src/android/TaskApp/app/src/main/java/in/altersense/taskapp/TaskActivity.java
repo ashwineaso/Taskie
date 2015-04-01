@@ -1,9 +1,12 @@
 package in.altersense.taskapp;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,15 +20,21 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+import android.widget.Toast;
 
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
 
+import com.fortysevendeg.swipelistview.BaseSwipeListViewListener;
+import com.fortysevendeg.swipelistview.SwipeListView;
+import com.fortysevendeg.swipelistview.SwipeListViewListener;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import in.altersense.taskapp.adapters.TaskDetailsViewAdapter;
 import in.altersense.taskapp.common.Config;
@@ -33,6 +42,7 @@ import in.altersense.taskapp.database.CollaboratorDbHelper;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.Task;
+import in.altersense.taskapp.models.User;
 import in.altersense.taskapp.requests.UpdateTaskRequest;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -48,9 +58,10 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
 
     private Task task;
+    List<Collaborator> collaboratorList;
 
     //Adapter implementation
-    private ListView collList;
+    private SwipeListView collList;
     private TaskDetailsViewAdapter adapter;
 
     public ArrayList<Collaborator> collaboratorArrayList = new ArrayList<Collaborator>();
@@ -64,6 +75,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
     private TextView taskStatusTV;
     private TextView taskOwnerTV;
     private CompoundButton checkComplete;
+    private List<User> userAdditonList, userRemovalList;
     private ToggleButton editViewToggle;
     private ImageView calendarIV, cancelIV;
 
@@ -88,7 +100,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
 
         //Get the intent
         Intent createViewIntent = getIntent();
-        final long taskId;
+        long taskId;
         //Check whether there is an EXTRA with the intent
         if (createViewIntent.hasExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey())) {
             Log.d(TAG, "Intent has taskID");
@@ -135,6 +147,9 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
                 false,
                 false
         );
+        //Initializing the lists
+        this.userAdditonList = new ArrayList<>();
+        this.userRemovalList = new ArrayList<>();
 
         //Set the text views
         this.taskTitleET.setText(this.task.getName());
@@ -187,20 +202,52 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         this.task.fetchAllCollaborators(this);
 
         //Fill the ArrayList with the required data
-//        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(getApplicationContext());
-//        this.task.getCollaborators() = collaboratorDbHelper.getAllCollaborators(this.task);
-        Log.d(TAG, "Fetched collaborator : " + this.task.getCollaborators().toString());
-        for (Collaborator collaborator: this.task.getCollaborators()) {
-            collaboratorArrayList.add(collaborator);
-        }
+        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(getApplicationContext());
+        this.collaboratorList = task.getCollaborators(this.task, getApplicationContext());
+        //TODO: Swipe should only occur if user is the task owner
+        //Add swipeListeners to the list to confirm when swiped
+        this.collList = (SwipeListView)findViewById(R.id.collListView);
+        this.collList.setSwipeListViewListener(new BaseSwipeListViewListener() {
+            @Override
+            public void onOpened(final int position, boolean toRight) {
+                collList.closeOpenedItems();
+                //Show confirmation dialogue to remove collaborator
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(TaskActivity.this);
+                dialogBuilder.setMessage(Config.MESSAGES.CONFIRM_REMOVE_COLLABORATOR.getMessage());
+                dialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Remove Collaborator
+                        Collaborator removedCollaborator = collaboratorList.get(position);
+                        Log.d(CLASS_TAG, "Collaborator to remove" + removedCollaborator.getName());
+                        userRemovalList.add(removedCollaborator);
+                        task.updateCollaborators(userAdditonList, userRemovalList, getApplicationContext());
+                        collaboratorList.remove(removedCollaborator);
+                        adapter.notifyDataSetChanged();
+                        Toast.makeText(getApplicationContext(), "Collaborator Removed", Toast.LENGTH_LONG ).show();
+                    }
+                });
+                dialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
-        collList = (ListView)findViewById(R.id.collListView);
+                    }
+                });
+                dialogBuilder.create();
+                dialogBuilder.show();
+            }
+        });
+        collList.setSwipeMode(SwipeListView.SWIPE_MODE_RIGHT);
+        collList.setSwipeActionRight(SwipeListView.SWIPE_ACTION_REVEAL);
+        collList.setSwipeActionLeft(SwipeListView.SWIPE_ACTION_NONE);
+
         //Create a custom adapter
-        adapter = new TaskDetailsViewAdapter(TaskActivity.this, collaboratorArrayList, this.task);
+        adapter = new TaskDetailsViewAdapter(TaskActivity.this, collaboratorList, this.task);
         collList.setAdapter(adapter);
         //Adjust the height of the ListView to accommodate all the children
         setListViewHeightBasedOnChildren(collList);
         collList.setFocusable(false); //To set the focus to top #glitch
+
     }
 
     /**

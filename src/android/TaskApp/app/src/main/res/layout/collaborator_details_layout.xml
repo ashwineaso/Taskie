@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,10 +9,37 @@
     android:padding="@dimen/thinMargin_xhdpi">
 
     <LinearLayout
+        android:id="@+id/collBack"
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="center_vertical|center_horizontal">
+        android:layout_height="match_parent"
+        android:background="@color/taskPrimaryColor"
+        android:gravity="center_vertical"
+        android:padding="@dimen/thinMargin_xhdpi">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView4"
+            android:src="@drawable/ic_delete_white_24dp"
+            android:layout_marginRight="@dimen/thinMargin_xhdpi" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Remove Collaborator"
+            android:id="@+id/textView"
+            android:textSize="@dimen/text_header_xhdpi"
+            android:textColor="@color/lightText" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/collFront"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|center_horizontal"
+        android:background="@color/emptyBackground">
 
         <TextView android:id="@+id/collInitials"
         android:layout_width="@dimen/collaboratorTokenRadius_xhdpi"
@@ -33,10 +60,4 @@
 
     </LinearLayout>
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/lineColor"
-        android:orientation="horizontal" />
-
-</LinearLayout>
+</FrameLayout>

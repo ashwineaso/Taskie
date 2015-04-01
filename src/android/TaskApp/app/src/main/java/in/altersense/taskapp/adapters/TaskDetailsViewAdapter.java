@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import in.altersense.taskapp.R;
 import in.altersense.taskapp.models.Collaborator;
@@ -24,13 +25,13 @@ public class TaskDetailsViewAdapter extends BaseAdapter {
     private Task task;
     //Declaring the variables used
     private Activity activity;
-    private ArrayList<Collaborator> data;
+    private List<Collaborator> data;
     private static LayoutInflater inflater = null;
     public Resources res;
     Collaborator collaborator;
 
     //Constructor of custom adapter
-    public TaskDetailsViewAdapter(Activity a, ArrayList d, Task task) {
+    public TaskDetailsViewAdapter(Activity a, List<Collaborator> d, Task task) {
         //Assign the passed values
         this.activity = a;
         this.data = d;
@@ -89,6 +90,8 @@ public class TaskDetailsViewAdapter extends BaseAdapter {
 
         if (data.size()<=0) {
             holder.collName.setText("No Collaborators");
+            holder.collInitials.setText("");
+            holder.collInitials.setBackgroundColor(Color.WHITE);
         }
         else {
             collaborator = null;
