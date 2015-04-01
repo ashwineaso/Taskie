@@ -16,6 +16,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.fortysevendeg.swipelistview.SwipeListView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +38,7 @@ public class TaskActivity extends ActionBarActivity {
     List<Collaborator> collaboratorList;
 
     //Adapter implementation
-    private ListView collList;
+    private SwipeListView collList;
     private TaskDetailsViewAdapter adapter;
 
     public ArrayList<Collaborator> collaboratorArrayList = new ArrayList<Collaborator>();
@@ -111,7 +113,7 @@ public class TaskActivity extends ActionBarActivity {
             collaboratorArrayList.add(collaborator);
         }
 
-        collList = (ListView)findViewById(R.id.collListView);
+        collList = (SwipeListView)findViewById(R.id.collListView);
         //Create a custom adapter
         adapter = new TaskDetailsViewAdapter(TaskActivity.this, collaboratorArrayList, this.task);
         collList.setAdapter(adapter);

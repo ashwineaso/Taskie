@@ -201,10 +201,24 @@
                     android:src="@drawable/ic_user" />
             </LinearLayout>
 
-            <ListView
+            <com.fortysevendeg.swipelistview.SwipeListView
+                xmlns:swipe="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/collListView"
+                android:listSelector="#00000000"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/collListView" />
+                android:footerDividersEnabled="true"
+                swipe:swipeFrontView="@+id/collFront"
+                swipe:swipeBackView="@+id/collBack"
+                swipe:swipeActionLeft="dismiss"
+                swipe:swipeActionRight="reveal"
+                swipe:swipeMode="right"
+                swipe:swipeCloseAllItemsWhenMoveList="true"
+                swipe:swipeOpenOnLongPress="false"
+                swipe:swipeAnimationTime="100"
+                swipe:swipeOffsetLeft="100dp"
+                swipe:swipeOffsetRight="100dp"
+                />
 
         </LinearLayout>
 
