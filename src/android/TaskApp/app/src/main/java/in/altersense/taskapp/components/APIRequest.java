@@ -8,6 +8,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -102,7 +103,7 @@ public class APIRequest {
 	
 	private JSONObject httpRequest() throws Exception {
 		
-		JSONObject responseObject = null;
+		JSONObject responseObject = new JSONObject();
 		
 		HttpClient client = new DefaultHttpClient();
 	    HttpParams clientParams = client.getParams();
@@ -113,6 +114,7 @@ public class APIRequest {
 	    String responseString;
 	    
 	    try {
+
 
             post = new HttpPost(this.url);
             post.setHeader("Content-type", "application/json");
@@ -137,6 +139,19 @@ public class APIRequest {
             } else {
                 Toast.makeText(this.context, "Cannot reach server.", Toast.LENGTH_LONG).show();
             }
+        } catch (ConnectTimeoutException e) {
+            responseObject.put(
+                    Config.REQUEST_RESPONSE_KEYS.STATUS.getKey(),
+                    Config.RESPONSE_STATUS_FAILED
+            );
+            responseObject.put(
+                    Config.REQUEST_RESPONSE_KEYS.MESSAGE.getKey(),
+                    Config.MESSAGES.CANT_REACH_SERVER.getMessage()
+            );
+            responseObject.put(
+                    Config.REQUEST_RESPONSE_KEYS.ERROR_CODE.getKey(),
+                    404
+            );
         } catch (HttpHostConnectException e) {
             responseObject.put(
                     Config.REQUEST_RESPONSE_KEYS.STATUS.getKey(),
