@@ -106,6 +106,7 @@
                             <Spinner android:id="@+id/taskPrioritySpineer"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginLeft="-10dp"
                                 android:textSize="@dimen/text_normal_xhdpi"
                                 android:entries="@array/priorityStringArray"/>
                         </LinearLayout>

@@ -65,6 +65,7 @@
     <style name="TaskViewTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:windowContentOverlay">@null</item>
         <item name="colorPrimary">@color/taskPrimaryColor</item>
+        <item name="android:textColor">@color/task_view_text_colors</item>
         <item name="android:editTextStyle">@style/TaskViewEditTextsTheme</item>
         <item name="android:spinnerStyle">@style/TaskViewSpinnersTheme</item>
     </style>
@@ -78,6 +79,8 @@
     <style name="TaskViewSpinnersTheme" parent="Widget.AppCompat.Spinner">
         <item name="android:textColor">@color/textViewDefault</item>
         <item name="android:background">@android:color/transparent</item>
+        <item name="android:clickable">false</item>
+        <item name="android:enabled">false</item>
     </style>
 
     <style name="RegisterTheme" parent="Theme.AppCompat.Light.DarkActionBar">

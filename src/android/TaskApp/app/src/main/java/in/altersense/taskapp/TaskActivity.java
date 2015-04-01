@@ -33,7 +33,6 @@ public class TaskActivity extends ActionBarActivity {
 
     private static final String CLASS_TAG = "TaskActivity";
     private Task task;
-    List<Collaborator> collaboratorList;
 
     //Adapter implementation
     private ListView collList;
@@ -50,6 +49,7 @@ public class TaskActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        String TAG = CLASS_TAG+ " OnCreate";
         super.onCreate(savedInstanceState);
         //        Setting up calligraphy
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
@@ -59,7 +59,6 @@ public class TaskActivity extends ActionBarActivity {
         );
         setContentView(R.layout.activity_task);
 
-        String TAG = CLASS_TAG+ " OnCreate";
         //Get the intent
         Intent createViewIntent = getIntent();
         long taskId;
@@ -103,11 +102,13 @@ public class TaskActivity extends ActionBarActivity {
             }
         });
 
+        this.task.fetchAllCollaborators(this);
+
         //Fill the ArrayList with the required data
         CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(getApplicationContext());
-        this.collaboratorList = collaboratorDbHelper.getAllCollaborators(this.task);
-        Log.d(TAG, "Fetched collaborator : " + collaboratorList.toString());
-        for (Collaborator collaborator: this.collaboratorList) {
+//        this.task.getCollaborators() = collaboratorDbHelper.getAllCollaborators(this.task);
+        Log.d(TAG, "Fetched collaborator : " + this.task.getCollaborators().toString());
+        for (Collaborator collaborator: this.task.getCollaborators()) {
             collaboratorArrayList.add(collaborator);
         }
 
@@ -118,6 +119,8 @@ public class TaskActivity extends ActionBarActivity {
         //Adjust the height of the ListView to accommodate all the children
         setListViewHeightBasedOnChildren(collList);
         collList.setFocusable(false); //To set the focus to top #glitch
+
+        setUpViewMode();
 
     }
 
@@ -209,7 +212,8 @@ public class TaskActivity extends ActionBarActivity {
      * Sets up the activity to task view mode.
      */
     private void setUpViewMode() {
-
+        this.setTheme(R.style.TaskViewTheme);
+        this.taskPrioritySpinner.setEnabled(false);
     }
 
 }
