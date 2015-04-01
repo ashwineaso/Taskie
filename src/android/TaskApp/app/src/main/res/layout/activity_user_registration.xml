@@ -1,6 +1,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools2="http://schemas.android.com/tools"
+    tools2:ignore="MissingPrefix"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/smallMargin_xhdp"
     android:paddingTop="@dimen/smallMargin_xhdp"
     android:paddingBottom="@dimen/smallMargin_xhdp"
@@ -10,12 +14,26 @@
     android:background="@color/white">
 
 
-    <TextView
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/hugeHeader_hdpi"
-        android:textColor="@color/createTaskPrimaryActionBar"
-        android:text="@string/app_name"/>
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/imageView3"
+            android:src="@drawable/ic_launcher"
+            android:padding="@dimen/tinyMargin_xhdpi" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fontPath="fonts/Cabin-SemiBold-TTF.ttf"
+            android:textColor="@color/createTaskPrimaryActionBar"
+            android:text="@string/app_name"
+            android:textSize="48sp" />
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
