@@ -210,7 +210,6 @@
                 android:footerDividersEnabled="true"
                 swipe:swipeFrontView="@+id/collFront"
                 swipe:swipeBackView="@+id/collBack"
-                swipe:swipeActionLeft="dismiss"
                 swipe:swipeActionRight="reveal"
                 swipe:swipeMode="right"
                 swipe:swipeCloseAllItemsWhenMoveList="true"

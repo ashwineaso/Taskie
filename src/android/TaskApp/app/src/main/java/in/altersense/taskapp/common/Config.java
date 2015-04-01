@@ -88,6 +88,7 @@ public class Config {
         TASK_TITLE_TOO_SHORT("Task title is too short."),
         INVALID_EMAIL("Invalid email."),
         CONFIRM_TASK_DELETE("You are about to delete this task. Do you really want to ?"),
+        CONFIRM_REMOVE_COLLABORATOR("Remove collaborator from task. Confirm ?"),
         CANT_REACH_SERVER("Cannot reach server. Check internet connection.");
 
         private String message;
