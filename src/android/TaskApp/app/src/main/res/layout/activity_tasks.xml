@@ -52,7 +52,6 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
-            android:descendantFocusability="blocksDescendants"
             swipe:swipeFrontView="@+id/taskFront"
             swipe:swipeBackView="@+id/taskBack"
             swipe:swipeActionRight="reveal"

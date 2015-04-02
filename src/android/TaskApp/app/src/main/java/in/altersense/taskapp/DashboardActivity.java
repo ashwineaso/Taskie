@@ -159,24 +159,25 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
 
         //Set a swipe listener to the taskList
         this.taskList.setSwipeListViewListener(new BaseSwipeListViewListener() {
+
             @Override
             public void onClickBackView(int position) {
                 Log.d(CLASS_TAG, "Clicked back view");
                 taskList.closeAnimate(position);//when you touch back view it will close
             }
-        });
 
-        this.taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TasksAdapter adapter = (TasksAdapter)parent.getAdapter();
-                if(adapter.getSelected()==position) {
-                    adapter.setSelected(-1);
-                } else {
-                    adapter.setSelected(position);
-                }
-                adapter.notifyDataSetChanged();
+            public void onClickFrontView(int position) {
+                Log.d("swipe", String.format("onClickFrontView %d", position));
+
+                Task selectedTask = taskAdapter.getItem(position);
+                Intent intent = new Intent(DashboardActivity.this, TaskActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey(),selectedTask.getId());
+                startActivity(intent);
+
             }
+
         });
 
     }
