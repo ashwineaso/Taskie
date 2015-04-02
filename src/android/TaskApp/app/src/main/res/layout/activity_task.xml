@@ -234,7 +234,7 @@
                 android:gravity="center_vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     fontPath="fonts/Cabin-SemiBold-TTF.ttf"
                     tools2:ignore="MissingPrefix"
