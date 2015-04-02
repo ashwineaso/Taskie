@@ -253,11 +253,6 @@ public class Task {
      */
     public static String TABLE_NAME = "TaskTable";
 
-    public void setTaskPanelView(View taskView) {
-        this.panelView = taskView;
-        this.taskActionsPlaceHolderView = (LinearLayout) panelView.findViewById(R.id.actionsPlaceHolderLinearLayout);
-    }
-
     public void delete(Context context) {
         String TAG = CLASS_TAG+"delete";
         // Check task ownership.
@@ -593,77 +588,6 @@ public class Task {
         updateCollaborators(userAdditionList,userRemovalList,context,true);
     }
 
-    private View createActionsView(final Activity activity) {
-        final LayoutInflater myInflater = activity.getLayoutInflater();
-        View actionsPanel = myInflater.inflate(R.layout.task_actions, null);
-
-        action1 = (LinearLayout) actionsPanel.findViewById(R.id.action1);
-        action2 = (LinearLayout) actionsPanel.findViewById(R.id.action2);
-        action3 = (LinearLayout) actionsPanel.findViewById(R.id.action3);
-        action4 = (LinearLayout) actionsPanel.findViewById(R.id.action4);
-
-        action1.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                //Create an intent to view the task
-                Intent viewTaskIntent = new Intent(
-                        activity.getApplicationContext(),
-                        TaskActivity.class
-                );
-                //Pass the task id to the intent.
-                viewTaskIntent.putExtra(
-                        Task.ID,
-                        id
-                );
-                //Start the activity
-                activity.startActivity(viewTaskIntent);
-
-            }
-        });
-
-        action2.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // Create an intent to edit screen.
-                Intent editTaskIntent = new Intent(
-                        activity.getApplicationContext(),
-                        CreateTaskActivity.class
-                );
-                // Pass the task id to the intent.
-                editTaskIntent.putExtra(
-                        Task.ID,
-                        id
-                );
-                // Set flags for activity creation.
-                editTaskIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                // Start the activity.
-                activity.startActivity(editTaskIntent);
-            }
-        });
-
-        action3.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(myInflater.getContext(), "Action3", Toast.LENGTH_SHORT)
-                        .show();
-            }
-        });
-
-        action4.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                String TAG=CLASS_TAG+"statusToggle onClick";
-                toggleStatus(activity);
-            }
-        });
-
-        return actionsPanel;
-    }
-
     public void toggleStatus(Activity activity) {
         String TAG = CLASS_TAG+"toggleStatus";
         int currentStatus = getStatus(activity.getApplicationContext());
@@ -874,11 +798,6 @@ public class Task {
                 backgroundResource = R.drawable.collaborator_status_pending;
         }
         return backgroundResource;
-    }
-
-    public void setActionsView(Activity activity) {
-        this.actionsView = createActionsView(activity);
-        this.taskActionsPlaceHolderView.addView(this.actionsView);
     }
 
     public static enum PARTICIPATION_STATUS {
