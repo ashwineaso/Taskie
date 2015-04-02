@@ -53,14 +53,13 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         public ImageView actionImage1, actionImage2, actionImage3, actionImage4;
 
         public TextView[] collaborators = new TextView[10];
-
+        public LinearLayout btnConfirm;
     }
 
     public TasksAdapter(Activity activity, List<Task> taskList) {
         super(activity.getApplicationContext(), R.layout.task_panel, taskList);
         this.activity = activity;
         this.taskList = taskList;
-
         this.inflater = activity.getLayoutInflater();
     }
 
@@ -121,6 +120,9 @@ public class TasksAdapter extends ArrayAdapter<Task>{
             holder.actionImage4 = (ImageView) holder.action4.findViewById(R.id.action4Image);
             //Due Date Time
             holder.dueDateTimeTV = (TextView) convertView.findViewById(R.id.dueDateTimeTextView);
+
+            //Swipe : Delete Confirm and Undo buttons
+            holder.btnConfirm = (LinearLayout) convertView.findViewById(R.id.btn_confirm);
 
             convertView.setTag(holder);
 
@@ -248,6 +250,15 @@ public class TasksAdapter extends ArrayAdapter<Task>{
             Log.d(TAG, "Cannot find collaborators");
         }
 
+        holder.btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(activity.getApplicationContext(), "Task Deleted", Toast.LENGTH_LONG).show();
+                task.delete(activity.getApplicationContext());
+                remove(task);
+                notifyDataSetChanged();
+            }
+        });
 
         //Display the Due Date time
         long dueDateTime = task.getDueDateTimeAsLong();

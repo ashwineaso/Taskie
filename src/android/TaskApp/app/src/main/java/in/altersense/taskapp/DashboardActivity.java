@@ -24,6 +24,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fortysevendeg.swipelistview.BaseSwipeListViewListener;
+import com.fortysevendeg.swipelistview.SwipeListView;
 import com.tokenautocomplete.FilteredArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView;
 
@@ -47,7 +49,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class DashboardActivity extends ActionBarActivity implements TokenCompleteTextView.TokenListener {
 
     private static final String CLASS_TAG = "DashboardActivity ";
-    private ListView taskList;  // For handling the main content area.
+    private SwipeListView taskList;  // For handling the main content area.
     private LinearLayout quickCreateStageLinearLayout; // Quick task creation area
     private TaskDbHelper taskDbHelper;
     private boolean isQuickTaskCreationHidden;
@@ -96,7 +98,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         this.quickCreateStageLinearLayout = (LinearLayout) findViewById(R.id.quickTaskCreation);
         this.quickCreateStageLinearLayout.setVisibility(View.GONE);
 
-        this.taskList = (ListView) findViewById(R.id.taskListStage);
+        this.taskList = (SwipeListView) findViewById(R.id.taskListView);
         this.taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasks());
         this.taskList.setAdapter(this.taskAdapter);
 
@@ -155,31 +157,12 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         // Inflate all the nonGroupTasks in the TasksListStage.
         Log.d(CLASS_TAG, "Done.");
 
-        this.taskList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        //Set a swipe listener to the taskList
+        this.taskList.setSwipeListViewListener(new BaseSwipeListViewListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(CLASS_TAG, "onItemLongClick triggered");
-                final TasksAdapter adapter = (TasksAdapter) parent.getAdapter();
-                final Task task = adapter.getItem(position);
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(DashboardActivity.this);
-                dialogBuilder.setMessage(Config.MESSAGES.CONFIRM_TASK_DELETE.getMessage());
-                dialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        task.delete(getApplicationContext());
-                        adapter.remove(task);
-                        adapter.notifyDataSetChanged();
-                    }
-                });
-                dialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-                dialogBuilder.create();
-                dialogBuilder.show();
-                return false;
+            public void onClickBackView(int position) {
+                Log.d(CLASS_TAG, "Clicked back view");
+                taskList.closeAnimate(position);//when you touch back view it will close
             }
         });
 
