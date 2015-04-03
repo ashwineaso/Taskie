@@ -28,6 +28,7 @@ import in.altersense.taskapp.requests.AddCollaboratorsRequest;
 import in.altersense.taskapp.requests.RemoveCollaboratorsRequest;
 import in.altersense.taskapp.requests.SyncRequest;
 import in.altersense.taskapp.requests.TaskStatusChangeRequest;
+import in.altersense.taskapp.requests.UpdateTaskRequest;
 
 /**
  * Created by mahesmohan on 1/13/15.
@@ -114,11 +115,11 @@ public class Task {
      * @tempDateTime = gets long format of the dueDateTime
      * @return dateTime - String format of dueDateTime
      */
-    private String dateToString(long dueDateTime) {
+    public String dateToString(long dueDateTime) {
         String dateTime = null;
         if (dueDateTime == 0) { return dateTime; }
         Date date = new Date(dueDateTime);
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM d, h:mm a");
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM d, yyyy h:mm a");
         dateTime = sdf.format(date);
         return dateTime;
     }

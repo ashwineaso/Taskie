@@ -25,6 +25,7 @@
     <dimen name="statusRingWidth_xhdpi">3dp</dimen>
     <dimen name="collaboratorTokenRadius_xhdpi">40dp</dimen>
     <dimen name="collaboratorTokenInnerRadius_xhdpi">12dp</dimen>
+    <dimen name="spinnerMarginLeft_xhdpi">-9dp</dimen>
 
     <!-- Text Sizes for xHdpi -->
     <dimen name="text_dueDats_xhdpi">30sp</dimen>

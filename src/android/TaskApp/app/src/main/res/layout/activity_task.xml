@@ -37,7 +37,9 @@
                         android:checked="false" />
 
                     <EditText android:id="@+id/taskTitleEditText"
-                        android:layout_width="wrap_content"
+                        android:visibility="gone"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/thinMargin_xhdpi"
                         android:textSize="@dimen/text_header_xhdpi"
@@ -45,6 +47,23 @@
                         fontPath="fonts/Cabin-SemiBold-TTF.ttf"
                         tools2:ignore="MissingPrefix"
                         android:textColor="@color/white" />
+
+                    <TextView android:id="@+id/taskTitleTextView"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/thinMargin_xhdpi"
+                        android:textSize="@dimen/text_header_xhdpi"
+                        android:text="Title of the Task"
+                        fontPath="fonts/Cabin-SemiBold-TTF.ttf"
+                        tools2:ignore="MissingPrefix"
+                        android:textColor="@color/white" />
+
+                    <ToggleButton android:id="@+id/taskEditViewToggleButton"
+                        android:text="ON"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
                 </LinearLayout>
 
                 <LinearLayout android:id="@+id/taskDetailsRelativeLayout"
@@ -59,11 +78,10 @@
                         android:orientation="horizontal"
                         android:layout_marginTop="@dimen/thinMargin_xhdpi">
 
-                        <TextView
+                        <TextView android:id="@+id/lbl_assigned_by"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Assigned by "
-                            android:id="@+id/lbl_assigned_by"
                             android:textSize="@dimen/text_subHeader_xhdpi" />
 
                         <TextView android:id="@+id/taskOwnerTV"
@@ -89,7 +107,6 @@
                         android:orientation="horizontal"
                         android:gravity="center_vertical" >
 
-
                         <LinearLayout
                             android:orientation="vertical"
                             android:layout_width="fill_parent"
@@ -103,9 +120,17 @@
                                 android:id="@+id/lbl_priority"
                                 android:textColor="@color/taskPrimaryColor" />
 
-                            <Spinner android:id="@+id/taskPrioritySpineer"
+                            <TextView android:id="@+id/taskPriorityTextView"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:textSize="@dimen/text_normal_xhdpi"
+                                android:entries="@array/priorityStringArray"/>
+
+                            <Spinner android:id="@+id/taskPrioritySpinner"
+                                android:visibility="gone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/spinnerMarginLeft_xhdpi"
                                 android:textSize="@dimen/text_normal_xhdpi"
                                 android:entries="@array/priorityStringArray"/>
                         </LinearLayout>
@@ -145,20 +170,46 @@
 
                     <LinearLayout
                         android:orientation="horizontal"
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
                         android:id="@+id/taskDueDateTimeLL">
 
-                        <TextView android:id="@+id/dueDateTextView"
+                        <ImageView
                             android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:layout_marginRight="@dimen/tinyMargin_xhdpi"
+                            android:id="@+id/calendarImageView"
+                            android:src="@drawable/ic_calender" />
+
+                        <TextView android:id="@+id/dueDateTextView"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:text="Due on 25 Dec, 2014"
                             android:textSize="@dimen/text_normal_xhdpi"
                             fontPath="fonts/Cabin-Medium-TTF.ttf"
                             tools2:ignore="MissingPrefix"/>
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:id="@+id/btnCancelDate"
+                            android:src="@drawable/ic_cancel"
+                            android:layout_gravity="right" />
+
                     </LinearLayout>
 
                     <EditText android:id="@+id/taskDescriptionEditText"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_subHeader_xhdpi"
+                        android:text="Task Description" />
+
+                    <TextView android:id="@+id/taskDescriptionTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/text_subHeader_xhdpi"
@@ -183,7 +234,7 @@
                 android:gravity="center_vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     fontPath="fonts/Cabin-SemiBold-TTF.ttf"
                     tools2:ignore="MissingPrefix"

@@ -2,6 +2,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="in.altersense.taskapp.TaskActivity">
+
+    <item
+        android:icon="@drawable/ic_edit_white"
+        android:id="@+id/action_edit"
+        android:title="Edit"
+        app:showAsAction="always" />
+
+    <item
+        android:icon="@drawable/ic_save_white_36dp"
+        android:id="@+id/action_save"
+        android:title="Save"
+        app:showAsAction="always" />
+
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
 </menu>
