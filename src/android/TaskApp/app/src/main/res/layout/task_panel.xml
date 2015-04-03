@@ -89,6 +89,7 @@
                         android:layout_width="wrap_content"
                         fontPath="fonts/Cabin-Regular-TTF.ttf"
                         android:textSize="@dimen/text_subHeader_xhdpi"
+                        android:paddingLeft="@dimen/thinMargin_xhdpi"
                         android:paddingTop="@dimen/tinyMargin_xhdpi" />
 
                     <LinearLayout
@@ -170,12 +171,15 @@
                             android:layout_height="match_parent"
                             android:orientation="horizontal"
                             android:layout_gravity="right"
-                            android:gravity="right">
+                            android:gravity="right"
+                            android:padding="@dimen/tinyMargin_xhdpi">
 
-                            <ImageView
+                            <CheckBox
                                 android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:src="@android:drawable/ic_input_get"/>
+                                android:layout_height="wrap_content"
+                                android:id="@+id/checkComplete"
+                                android:checked="false"
+                                android:button="@drawable/abc_btn_check_material" />
 
                         </LinearLayout>
 
