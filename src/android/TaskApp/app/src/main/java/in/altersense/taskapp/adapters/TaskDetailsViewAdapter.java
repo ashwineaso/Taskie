@@ -140,8 +140,13 @@ public class TaskDetailsViewAdapter extends ArraySwipeAdapter<Collaborator> {
             });
 
             this.collSwipeLayout = (SwipeLayout) vi.findViewById(R.id.collSwipe);
-            this.collSwipeLayout.setDragEdge(SwipeLayout.DragEdge.Left);
-            this.collSwipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
+            if(this.task.isOwnedyDeviceUser(activity.getApplicationContext())) {
+                this.collSwipeLayout.setDragEdge(SwipeLayout.DragEdge.Left);
+                this.collSwipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
+                this.collSwipeLayout.setSwipeEnabled(true);
+            }
+            else { this.collSwipeLayout.setSwipeEnabled(false); }
+
         }
 
         //Finally return the view
