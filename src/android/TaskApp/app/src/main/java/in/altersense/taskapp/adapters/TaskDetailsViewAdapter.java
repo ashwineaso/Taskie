@@ -4,11 +4,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.daimajia.swipe.SwipeLayout;
+import com.daimajia.swipe.adapters.ArraySwipeAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +22,14 @@ import java.util.List;
 import in.altersense.taskapp.R;
 import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.Task;
+import in.altersense.taskapp.models.User;
 
 /**
  * Created by ashwineaso on 2/25/15.
  */
-public class TaskDetailsViewAdapter extends BaseAdapter {
+public class TaskDetailsViewAdapter extends ArraySwipeAdapter<Collaborator> {
 
+    private static final String CLASS_TAG = "TaskDetailsViewAdapter";
     private Task task;
     //Declaring the variables used
     private Activity activity;
@@ -29,9 +37,12 @@ public class TaskDetailsViewAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;
     public Resources res;
     Collaborator collaborator;
+    private ArrayList<User> userAdditonList, userRemovalList;
+    private SwipeLayout collSwipeLayout;
 
     //Constructor of custom adapter
     public TaskDetailsViewAdapter(Activity a, List<Collaborator> d, Task task) {
+        super(a.getApplicationContext(), R.layout.collaborator_details_layout, d);
         //Assign the passed values
         this.activity = a;
         this.data = d;
@@ -58,10 +69,16 @@ public class TaskDetailsViewAdapter extends BaseAdapter {
         return position;
     }
 
+    @Override
+    public int getSwipeLayoutResourceId(int i) {
+        return R.id.collSwipe;
+    }
+
     //Create a HOLDER CLASS to contain the inflated xml elements
     public static class ViewHolder {
         public TextView collName;
         public TextView collInitials;
+        public LinearLayout btnConfirm;
     }
 
 
@@ -82,6 +99,9 @@ public class TaskDetailsViewAdapter extends BaseAdapter {
             holder.collName = (TextView)vi.findViewById(R.id.collName);
             holder.collInitials = (TextView)vi.findViewById(R.id.collInitials);
 
+            //Set the confirm button
+            holder.btnConfirm = (LinearLayout) vi.findViewById(R.id.btn_confirm);
+
             //Set holder with layout inflater
             vi.setTag(holder);
         }
@@ -101,6 +121,27 @@ public class TaskDetailsViewAdapter extends BaseAdapter {
             holder.collName.setText(collaborator.getName());
             holder.collInitials.setText(collaborator.getInitials());
             holder.collInitials.setBackgroundResource(task.collaboratorStatusBackground(collaborator.getStatus()));
+
+            //Initializing the lists
+            this.userAdditonList = new ArrayList<>();
+            this.userRemovalList = new ArrayList<>();
+
+            //Confirm collaborator delete
+            holder.btnConfirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(CLASS_TAG, "Collaborator to remove" + collaborator.getName());
+                    userRemovalList.add(collaborator);
+                    task.updateCollaborators(userAdditonList, userRemovalList, activity.getApplicationContext());
+                    data.remove(collaborator);
+                    notifyDataSetChanged();
+                    Toast.makeText(activity.getApplicationContext(), "Collaborator Removed", Toast.LENGTH_LONG ).show();
+                }
+            });
+
+            this.collSwipeLayout = (SwipeLayout) vi.findViewById(R.id.collSwipe);
+            this.collSwipeLayout.setDragEdge(SwipeLayout.DragEdge.Left);
+            this.collSwipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         }
 
         //Finally return the view

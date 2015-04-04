@@ -144,9 +144,6 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
                 false,
                 false
         );
-        //Initializing the lists
-        this.userAdditonList = new ArrayList<>();
-        this.userRemovalList = new ArrayList<>();
 
         //Set the text views
         this.taskTitleET.setText(this.task.getName());
