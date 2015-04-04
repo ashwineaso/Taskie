@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-
+<com.daimajia.swipe.SwipeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/taskSwipe"
     android:layout_height="wrap_content"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent" >
 
     <LinearLayout
         android:orientation="horizontal"
@@ -212,5 +212,5 @@
 
     </LinearLayout>
 
-</FrameLayout>
+</com.daimajia.swipe.SwipeLayout>
 

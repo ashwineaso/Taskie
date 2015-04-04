@@ -27,10 +27,6 @@ import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
 
-import com.fortysevendeg.swipelistview.BaseSwipeListViewListener;
-import com.fortysevendeg.swipelistview.SwipeListView;
-import com.fortysevendeg.swipelistview.SwipeListViewListener;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -62,7 +58,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
     List<Collaborator> collaboratorList;
 
     //Adapter implementation
-    private SwipeListView collList;
+    private ListView collList;
     private TaskDetailsViewAdapter adapter;
 
     public ArrayList<Collaborator> collaboratorArrayList = new ArrayList<Collaborator>();
@@ -207,40 +203,37 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         this.collaboratorList = task.getCollaborators(this.task, getApplicationContext());
         //TODO: Swipe should only occur if user is the task owner
         //Add swipeListeners to the list to confirm when swiped
-        this.collList = (SwipeListView)findViewById(R.id.collListView);
-        this.collList.setSwipeListViewListener(new BaseSwipeListViewListener() {
-            @Override
-            public void onOpened(final int position, boolean toRight) {
-                collList.closeOpenedItems();
-                //Show confirmation dialogue to remove collaborator
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(TaskActivity.this);
-                dialogBuilder.setMessage(Config.MESSAGES.CONFIRM_REMOVE_COLLABORATOR.getMessage());
-                dialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //Remove Collaborator
-                        Collaborator removedCollaborator = collaboratorList.get(position);
-                        Log.d(CLASS_TAG, "Collaborator to remove" + removedCollaborator.getName());
-                        userRemovalList.add(removedCollaborator);
-                        task.updateCollaborators(userAdditonList, userRemovalList, getApplicationContext());
-                        collaboratorList.remove(removedCollaborator);
-                        adapter.notifyDataSetChanged();
-                        Toast.makeText(getApplicationContext(), "Collaborator Removed", Toast.LENGTH_LONG ).show();
-                    }
-                });
-                dialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-                dialogBuilder.create();
-                dialogBuilder.show();
-            }
-        });
-        collList.setSwipeMode(SwipeListView.SWIPE_MODE_RIGHT);
-        collList.setSwipeActionRight(SwipeListView.SWIPE_ACTION_REVEAL);
-        collList.setSwipeActionLeft(SwipeListView.SWIPE_ACTION_NONE);
+        this.collList = (ListView)findViewById(R.id.collListView);
+//        this.collList.setSwipeListViewListener(new BaseSwipeListViewListener() {
+//            @Override
+//            public void onOpened(final int position, boolean toRight) {
+//                collList.closeOpenedItems();
+//                //Show confirmation dialogue to remove collaborator
+//                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(TaskActivity.this);
+//                dialogBuilder.setMessage(Config.MESSAGES.CONFIRM_REMOVE_COLLABORATOR.getMessage());
+//                dialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        //Remove Collaborator
+//                        Collaborator removedCollaborator = collaboratorList.get(position);
+//                        Log.d(CLASS_TAG, "Collaborator to remove" + removedCollaborator.getName());
+//                        userRemovalList.add(removedCollaborator);
+//                        task.updateCollaborators(userAdditonList, userRemovalList, getApplicationContext());
+//                        collaboratorList.remove(removedCollaborator);
+//                        adapter.notifyDataSetChanged();
+//                        Toast.makeText(getApplicationContext(), "Collaborator Removed", Toast.LENGTH_LONG ).show();
+//                    }
+//                });
+//                dialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//
+//                    }
+//                });
+//                dialogBuilder.create();
+//                dialogBuilder.show();
+//            }
+//        });
 
         //Create a custom adapter
         adapter = new TaskDetailsViewAdapter(TaskActivity.this, collaboratorList, this.task);

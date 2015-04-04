@@ -24,8 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fortysevendeg.swipelistview.BaseSwipeListViewListener;
-import com.fortysevendeg.swipelistview.SwipeListView;
+import com.daimajia.swipe.SwipeLayout;
 import com.tokenautocomplete.FilteredArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView;
 
@@ -49,7 +48,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class DashboardActivity extends ActionBarActivity implements TokenCompleteTextView.TokenListener {
 
     private static final String CLASS_TAG = "DashboardActivity ";
-    private SwipeListView taskList;  // For handling the main content area.
+    private ListView taskList;  // For handling the main content area.
     private LinearLayout quickCreateStageLinearLayout; // Quick task creation area
     private TaskDbHelper taskDbHelper;
     private boolean isQuickTaskCreationHidden;
@@ -98,9 +97,21 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         this.quickCreateStageLinearLayout = (LinearLayout) findViewById(R.id.quickTaskCreation);
         this.quickCreateStageLinearLayout.setVisibility(View.GONE);
 
-        this.taskList = (SwipeListView) findViewById(R.id.taskListView);
+        this.taskList = (ListView) findViewById(R.id.taskListView);
         this.taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasks());
         this.taskList.setAdapter(this.taskAdapter);
+
+        //Set onItemClickListener for the task list
+        this.taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Task selectedTask = taskAdapter.getItem(position);
+                Intent intent = new Intent(DashboardActivity.this, TaskActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey(), selectedTask.getId());
+                startActivity(intent);
+            }
+        });
 
         setUpQuickTaskLayout();
 
@@ -156,29 +167,6 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
 
         // Inflate all the nonGroupTasks in the TasksListStage.
         Log.d(CLASS_TAG, "Done.");
-
-        //Set a swipe listener to the taskList
-        this.taskList.setSwipeListViewListener(new BaseSwipeListViewListener() {
-
-            @Override
-            public void onClickBackView(int position) {
-                Log.d(CLASS_TAG, "Clicked back view");
-                taskList.closeAnimate(position);//when you touch back view it will close
-            }
-
-            @Override
-            public void onClickFrontView(int position) {
-                Log.d("swipe", String.format("onClickFrontView %d", position));
-
-                Task selectedTask = taskAdapter.getItem(position);
-                Intent intent = new Intent(DashboardActivity.this, TaskActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey(),selectedTask.getId());
-                startActivity(intent);
-
-            }
-
-        });
 
     }
 

@@ -17,6 +17,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.swipe.SwipeLayout;
+import com.daimajia.swipe.adapters.ArraySwipeAdapter;
+
 import java.util.Calendar;
 import java.util.List;
 
@@ -32,13 +35,19 @@ import in.altersense.taskapp.requests.BuzzCollaboratorRequest;
 /**
  * Created by mahesmohan on 2/26/15.
  */
-public class TasksAdapter extends ArrayAdapter<Task>{
+public class TasksAdapter extends ArraySwipeAdapter<Task>{
 
     private static final String CLASS_TAG = "TasksCursorAdapter ";
 
     private LayoutInflater inflater;
     private Activity activity;
     private List<Task> taskList;
+    private SwipeLayout taskSwipeLayout;
+
+    @Override
+    public int getSwipeLayoutResourceId(int position) {
+        return R.id.taskSwipe;
+    }
 
     public static class ViewHolder{
         public LinearLayout taskStatus;
@@ -54,6 +63,16 @@ public class TasksAdapter extends ArrayAdapter<Task>{
         this.activity = activity;
         this.taskList = taskList;
         this.inflater = activity.getLayoutInflater();
+    }
+
+    @Override
+    public Task getItem(int position) {
+        return taskList.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return taskList.get(position).getId();
     }
 
     @Override
@@ -155,6 +174,10 @@ public class TasksAdapter extends ArrayAdapter<Task>{
                 notifyDataSetChanged();
             }
         });
+
+        this.taskSwipeLayout = (SwipeLayout) convertView.findViewById(R.id.taskSwipe);
+        this.taskSwipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
+        this.taskSwipeLayout.setDragEdge(SwipeLayout.DragEdge.Left);
 
         //Display the Due Date time
         long dueDateTime = task.getDueDateTimeAsLong();
