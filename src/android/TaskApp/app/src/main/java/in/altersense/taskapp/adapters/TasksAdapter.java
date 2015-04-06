@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -56,6 +58,7 @@ public class TasksAdapter extends ArraySwipeAdapter<Task>{
 
         public TextView[] collaborators = new TextView[10];
         public LinearLayout btnConfirm;
+        public CheckBox checkComplete;
     }
 
     public TasksAdapter(Activity activity, List<Task> taskList) {
@@ -87,6 +90,7 @@ public class TasksAdapter extends ArraySwipeAdapter<Task>{
             holder.taskTitle = (TextView) convertView.findViewById(R.id.taskTitleTextView);
             holder.collaboratorList = (LinearLayout) convertView.findViewById(R.id.collaboratorsList);
             holder.taskStatus = (LinearLayout) convertView.findViewById(R.id.taskStatusLinearLayout);
+            holder.checkComplete = (CheckBox) convertView.findViewById(R.id.checkComplete);
 
             // Collaborators display
             holder.collaborators[0] = (TextView) convertView.findViewById(R.id.collaboratorName1);
@@ -178,6 +182,16 @@ public class TasksAdapter extends ArraySwipeAdapter<Task>{
         this.taskSwipeLayout = (SwipeLayout) convertView.findViewById(R.id.taskSwipe);
         this.taskSwipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         this.taskSwipeLayout.setDragEdge(SwipeLayout.DragEdge.Left);
+
+        //CheckBox to toggle task status
+        holder.checkComplete.setChecked(task.getStatus(activity.getApplicationContext()) == 2);
+        holder.checkComplete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                task.toggleStatus(activity);
+                notifyDataSetChanged();
+            }
+        });
 
         //Display the Due Date time
         long dueDateTime = task.getDueDateTimeAsLong();
