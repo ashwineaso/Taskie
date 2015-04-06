@@ -43,9 +43,15 @@ def pushSyncNotification(syncObj):
             if not coll.user.serverPushId in androidPayload:
                 androidPayload.append(str(coll.user.serverPushId))
 
+    def deleteBuzz():
+        """Notfiy all the task users that the owner has deleted the task """
+        task = taskdal.getTaskById(syncObj)
+        for coll in task.collaborators:
+            if not coll.user.serverPushId in androidPayload:
+                androidPayload.append(str(coll.user.serverPushId))
 
     #Define the lookup dictionary
-    choice = {"Task":caseTask, "Group":caseGroup, "Buzz":caseBuzz}
+    choice = {"Task":caseTask, "Group":caseGroup, "Buzz":caseBuzz, "Deleted":deleteBuzz}
 
     choice[syncObj.datatype]() #to call appropriate case    
     

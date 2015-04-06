@@ -143,7 +143,7 @@ def deleteTask(taskObj):
 	"""Delete a task and update all collaborators about the status"""
 	flag = dal.deleteTask(taskObj)
 	if flag is True:
-		syncObj = SyncClass("Task", str(task.id))
+		syncObj = SyncClass("Deleted", str(task.id))
 		pushSyncNotification(syncObj)
 	return flag
 
