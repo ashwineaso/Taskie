@@ -1,12 +1,9 @@
 package in.altersense.taskapp;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,7 +18,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-import android.widget.Toast;
 
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
@@ -73,7 +69,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
     private TextView taskOwnerTV;
     private CompoundButton checkComplete;
     private List<User> userAdditonList, userRemovalList;
-    private ToggleButton editViewToggle;
+    private ImageView editViewToggle;
     private ImageView calendarIV, cancelIV;
 
     private boolean isEditMode = false;
@@ -97,7 +93,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
 
         //Get the intent
         Intent createViewIntent = getIntent();
-        long taskId;
+        final long taskId;
         //Check whether there is an EXTRA with the intent
         if (createViewIntent.hasExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey())) {
             Log.d(TAG, "Intent has taskID");
@@ -123,7 +119,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         this.taskStatusTV = (TextView)findViewById(R.id.taskStatusTextView);
         this.taskOwnerTV = (TextView) findViewById(R.id.taskOwnerTV);
         this.checkComplete = (CompoundButton) findViewById(R.id.checkComplete);
-        this.editViewToggle = (ToggleButton) findViewById(R.id.taskEditViewToggleButton);
+        this.editViewToggle = (ImageView) findViewById(R.id.taskEditViewImageView);
         this.calendarIV = (ImageView) findViewById(R.id.calendarImageView);
         this.cancelIV = (ImageView) findViewById(R.id.btnCancelDate);
 
@@ -170,7 +166,9 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
             @Override
             public void onClick(View v) {
                 dueDateTV.setText("");
-                task.setDueDateTime(Long.parseLong(null));
+                duelong = 0;
+                dueString = task.dateToString(duelong);
+                dueDateTV.setText(dueString);
             }
         });
 
@@ -186,8 +184,10 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
             @Override
             public void onClick(View v) {
                 if(isEditMode) {
+                    editViewToggle.setImageResource(R.drawable.ic_edit_white);
                     setUpViewMode();
                 } else {
+                    editViewToggle.setImageResource(R.drawable.ic_save_white_36dp);
                     setUpEditMode();
                 }
             }
@@ -275,30 +275,6 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_task, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     /**** Method for Setting the Height of the ListView dynamically.
@@ -431,7 +407,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
             this.taskDescriptionTV.setVisibility(View.VISIBLE);
             this.taskPriorityTV.setVisibility(View.VISIBLE);
             // Set toggle button to off
-            this.editViewToggle.setChecked(false);
+            this.editViewToggle.setImageResource(R.drawable.ic_edit_white);
         } else {
             super.onBackPressed();
         }

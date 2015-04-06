@@ -54,6 +54,7 @@ public class GcmMessageHandler extends IntentService {
                 datatype = extras.getString("datatype");
                 id = extras.getString("id");
                 Log.i("GCM", "Recieved + ( " + MessageType + " ) + datatype : " +datatype + " , id : " + id);
+                TaskDbHelper taskDbHelper = new TaskDbHelper(getApplicationContext());
 
                 switch(datatype) {
                     case "Task" :
@@ -65,12 +66,13 @@ public class GcmMessageHandler extends IntentService {
                         break;
                     case "Buzz" :
                         //Implement showing a buzz
-                        TaskDbHelper taskDbHelper = new TaskDbHelper(getApplicationContext());
                         tempTask = taskDbHelper.getTaskByUUID(id);
                         sendNotification(tempTask.getOwner().getName()
                                 + "has reminded you to complete the task : "
                                 + tempTask.getName());
-
+                        break;
+                    case "deleted":
+                        // Implement deletion of the task
                 }
             }
         }

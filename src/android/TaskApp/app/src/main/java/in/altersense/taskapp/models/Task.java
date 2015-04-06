@@ -111,12 +111,12 @@ public class Task {
     }
 
     /**
-     * Converts the datetime from long to the format "Wed, Jun 6, 12:45 AM"
+     * Converts the datetime from long to the format "Wed, Jun 6, 2015 12:45 AM"
      * @tempDateTime = gets long format of the dueDateTime
      * @return dateTime - String format of dueDateTime
      */
     public String dateToString(long dueDateTime) {
-        String dateTime = null;
+        String dateTime = "Set a due date.";
         if (dueDateTime == 0) { return dateTime; }
         Date date = new Date(dueDateTime);
         SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM d, yyyy h:mm a");
@@ -233,6 +233,15 @@ public class Task {
 
     public void setDueDateTime(long dueDateTime) {
         this.dueDateTime = dueDateTime;
+    }
+
+    public void unsetDueDateTime(Activity activity) {
+        this.dueDateTime = new Task(
+                "",
+                "",
+                new User(),
+                activity
+        ).getDueDateTimeAsLong();
     }
 
     public boolean getSyncStatus() {
