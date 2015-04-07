@@ -65,6 +65,7 @@
     <style name="TaskTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:windowContentOverlay">@null</item>
         <item name="colorPrimary">@color/taskPrimaryColor</item>
+        <item name="android:buttonStyle">@style/primaryButton</item>
     </style>
 
     <style name="RegisterTheme" parent="Theme.AppCompat.Light.DarkActionBar">
