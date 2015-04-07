@@ -59,11 +59,6 @@
                         tools2:ignore="MissingPrefix"
                         android:textColor="@color/white" />
 
-                    <ImageView android:id="@+id/taskEditViewImageView"
-                        android:src="@drawable/ic_edit_white"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
                 </LinearLayout>
 
                 <LinearLayout android:id="@+id/taskDetailsRelativeLayout"
