@@ -5,9 +5,10 @@ import os
 
 from settings.constants import DEBUG, PROJECT_ROOT, PHOTOS_DIRECTORY, PHOTOS_DEBUG_DIRECTORY, ATTACHMENT_DIRECTORY
 
+from bottle import Bottle, debug, default_app
+
 print 'ROOT:', PROJECT_ROOT
 
-from bottle import Bottle, debug, default_app
 from settings import routes
 
 # In case of WSGI execution the following gets executed
@@ -20,5 +21,5 @@ debug(DEBUG)
 if __name__ == '__main__':
 	TaskApp.run(host='0.0.0.0', port=8080, reloader=True)
 else:
-	TaskApp = default_app()
-routes.set(TaskApp)
+	application = default_app()
+	routes.set(application)
