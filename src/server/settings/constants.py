@@ -84,7 +84,7 @@ class UrlPostThread(threading.Thread):
 	def run(self):
 		# Make a postRequest from the postObj
 		s = requests.Session()
-		s.mount('https://android.googleapis.com/', MyAdapter)
+		s.mount('https://android.googleapis.com/', MyAdapter())
 
 		response = s.post(
 			self.postObj.url,
