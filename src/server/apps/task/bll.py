@@ -82,6 +82,9 @@ def remCollaborators(taskObj):
 	:return : An object of task class
 	"""
 
+	syncObj = SyncClass("CollRemoved", str(taskObj.id))
+	pushSyncNotification(syncObj, taskObj)
+
 	task = dal.remCollaborators(taskObj)
 	#Send message to GCM server to notify collaborators of task
 	syncObj = SyncClass("Task", str(task.id))

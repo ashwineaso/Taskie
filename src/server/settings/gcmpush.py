@@ -6,7 +6,7 @@ from apps.task import dal as taskdal
 from apps.group import dal as groupdal
 from settings.altEngine import Collection, SyncClass
 
-def pushSyncNotification(syncObj):
+def pushSyncNotification(syncObj, taskObj = Collection()):
     """
     Initiates a server side push to all the collaborators
     of the task
@@ -43,15 +43,23 @@ def pushSyncNotification(syncObj):
             if not coll.user.serverPushId in androidPayload:
                 androidPayload.append(str(coll.user.serverPushId))
 
-    def deleteBuzz():
+    def caseDelete():
         """Notfiy all the task users that the owner has deleted the task """
         task = taskdal.getTaskById(syncObj)
         for coll in task.collaborators:
             if not coll.user.serverPushId in androidPayload:
                 androidPayload.append(str(coll.user.serverPushId))
 
+    def caseCollRem():
+        """Norify the collaborators that they have been removed"""
+        task = taskdal.getTaskById(syncObj)
+        for userObj.email in taskObj.collaborators:
+            coll = userdal.getUserByEmail(userObj)
+            if not coll.serverPushId in androidPayload:
+                androidPayload.append(str(coll.serverPushId))
+
     #Define the lookup dictionary
-    choice = {"Task":caseTask, "Group":caseGroup, "Buzz":caseBuzz, "Deleted":deleteBuzz}
+    choice = {"Task":caseTask, "Group":caseGroup, "Buzz":caseBuzz, "Deleted":caseDelete, "CollRemoved":caseCollRem}
 
     choice[syncObj.datatype]() #to call appropriate case    
     
