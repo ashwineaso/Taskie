@@ -128,7 +128,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/spinnerMarginLeft_xhdpi"
                                 android:textSize="@dimen/text_normal_xhdpi"
-                                android:entries="@array/priorityStringArray"/>
+                                android:entries="@array/priorityStringArray"
+                                android:popupBackground="@color/emptyBackground" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -183,10 +184,10 @@
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
-                            android:text="Due on 25 Dec, 2014"
                             android:textSize="@dimen/text_normal_xhdpi"
                             fontPath="fonts/Cabin-Medium-TTF.ttf"
-                            tools2:ignore="MissingPrefix"/>
+                            tools2:ignore="MissingPrefix"
+                            android:hint="No Due Date and Time" />
 
                         <ImageView
                             android:layout_width="wrap_content"
@@ -203,13 +204,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/text_subHeader_xhdpi"
-                        android:text="Task Description" />
+                        android:text="Task Description"
+                        android:hint="Task Description"
+                        android:inputType="textCapSentences" />
 
                     <TextView android:id="@+id/taskDescriptionTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/text_subHeader_xhdpi"
-                        android:text="Task Description" />
+                        android:hint="No Task Description" />
 
                     <View
                         android:layout_width="fill_parent"
@@ -251,8 +254,9 @@
             <LinearLayout android:id="@+id/addCollaboratorsLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="@dimen/thinMargin_xhdpi"
+                android:visibility="gone">
 
                 <in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText
                     android:id="@+id/collaboratorsTokenEditText"

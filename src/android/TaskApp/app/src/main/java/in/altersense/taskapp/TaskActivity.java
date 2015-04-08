@@ -56,6 +56,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
 
     private static final String DATEPICKER_TAG = "datePicker";
     private static final String TIMEPICKER_TAG = "timePicker";
+    private static final int EDIT_MENU = 0;
 
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
 
@@ -260,39 +261,6 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         //Fill the ArrayList with the required data
         CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(getApplicationContext());
         this.collaboratorList = task.getCollaborators(this.task, getApplicationContext());
-        //TODO: Swipe should only occur if user is the task owner
-        //Add swipeListeners to the list to confirm when swiped
-//        this.collList.setSwipeListViewListener(new BaseSwipeListViewListener() {
-//            @Override
-//            public void onOpened(final int position, boolean toRight) {
-//                collList.closeOpenedItems();
-//                //Show confirmation dialogue to remove collaborator
-//                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(TaskActivity.this);
-//                dialogBuilder.setMessage(Config.MESSAGES.CONFIRM_REMOVE_COLLABORATOR.getMessage());
-//                dialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        //Remove Collaborator
-//                        Collaborator removedCollaborator = collaboratorList.get(position);
-//                        Log.d(CLASS_TAG, "Collaborator to remove" + removedCollaborator.getName());
-//                        userRemovalList.add(removedCollaborator);
-//                        task.updateCollaborators(userAdditonList, userRemovalList, getApplicationContext());
-//                        collaboratorList.remove(removedCollaborator);
-//                        adapter.notifyDataSetChanged();
-//                        Toast.makeText(getApplicationContext(), "Collaborator Removed", Toast.LENGTH_LONG ).show();
-//                    }
-//                });
-//                dialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//
-//                    }
-//                });
-//                dialogBuilder.create();
-//                dialogBuilder.show();
-//            }
-//        });
-
         //Create a custom adapter
         adapter = new TaskDetailsViewAdapter(TaskActivity.this, collaboratorList, this.task);
         collList.setAdapter(adapter);
@@ -420,7 +388,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         // update mode.
         this.isEditMode = true;
         // Hide dsiplay views
-        this.checkComplete.setVisibility(View.INVISIBLE);
+        this.checkComplete.setVisibility(View.GONE);
         this.taskTitleTV.setVisibility(View.GONE);
         this.taskDescriptionTV.setVisibility(View.GONE);
         this.taskPriorityTV.setVisibility(View.GONE);
@@ -504,9 +472,11 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
             case R.id.action_toggle_view_edit:
                 if(isEditMode) {
                     editViewToggle.setIcon(R.drawable.ic_edit_white);
+                    editViewToggle.setTitle("Edit");
                     setUpViewMode();
                 } else {
                     editViewToggle.setIcon(R.drawable.ic_save_white_36dp);
+                    editViewToggle.setTitle("Save");
                     setUpEditMode();
                 }
                 break;
