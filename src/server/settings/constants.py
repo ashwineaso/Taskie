@@ -5,6 +5,9 @@ import threading
 import json
 from mongoengine import *
 import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.poolmanager import PoolManager
+import ssl
 
 #Database name
 def getDatabase():
@@ -59,6 +62,13 @@ class GCMPost(object):
 		self.payload = payload
 
 
+class MyAdapter(HTTPAdapter):
+    def init_poolmanager(self, connections, maxsize, block=False):
+        self.poolmanager = PoolManager(num_pools=connections,
+                                       maxsize=maxsize,
+                                       block=block,
+                                       ssl_version=ssl.PROTOCOL_TLSv1)
+
 ##################################
 ## Defining a class and functions
 ## to initiate a thread
@@ -73,6 +83,9 @@ class UrlPostThread(threading.Thread):
 
 	def run(self):
 		# Make a postRequest from the postObj
+		s = requests.Session()
+		s.mount('https://android.googleapis.com/', MyAdapter())
+
 		response = requests.post(
 			self.postObj.url,
 			data=json.dumps(self.postObj.payload),
