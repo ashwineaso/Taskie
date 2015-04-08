@@ -60,7 +60,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:hint="@string/hint_FullName"/>
+            android:hint="@string/hint_FullName"
+            android:capitalize="words"
+            android:inputType="textCapWords"
+            android:lines="1" />
 
         </LinearLayout>
 
