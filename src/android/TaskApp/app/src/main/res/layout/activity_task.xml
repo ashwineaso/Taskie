@@ -13,6 +13,7 @@
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
             android:id="@+id/scrollHolder">
 
             <LinearLayout
@@ -58,11 +59,6 @@
                         fontPath="fonts/Cabin-SemiBold-TTF.ttf"
                         tools2:ignore="MissingPrefix"
                         android:textColor="@color/white" />
-
-                    <ToggleButton android:id="@+id/taskEditViewToggleButton"
-                        android:text="ON"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
 
                 </LinearLayout>
 
@@ -248,9 +244,31 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/imageView2"
+                    android:id="@+id/addCollaboratorsImageView"
                     android:src="@drawable/ic_user" />
             </LinearLayout>
+
+            <LinearLayout android:id="@+id/addCollaboratorsLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="horizontal">
+
+                <in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText
+                    android:id="@+id/collaboratorsTokenEditText"
+                    android:hint="@string/addCollaboratorsMessage"
+                    android:singleLine="true"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <Button android:id="@+id/addCollaboratorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/smallMargin_xhdp"
+                    android:text="ADD"/>
+
+                </LinearLayout>
 
             <ListView
                 android:id="@+id/collListView"

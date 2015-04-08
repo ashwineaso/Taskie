@@ -1,31 +1,32 @@
 package in.altersense.taskapp;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 import android.widget.Toast;
 
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
+import com.tokenautocomplete.FilteredArrayAdapter;
+import com.tokenautocomplete.TokenCompleteTextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,8 +36,11 @@ import java.util.List;
 
 import in.altersense.taskapp.adapters.TaskDetailsViewAdapter;
 import in.altersense.taskapp.common.Config;
+import in.altersense.taskapp.components.AltEngine;
+import in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText;
 import in.altersense.taskapp.database.CollaboratorDbHelper;
 import in.altersense.taskapp.database.TaskDbHelper;
+import in.altersense.taskapp.database.UserDbHelper;
 import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.User;
@@ -45,7 +49,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
-public class TaskActivity extends ActionBarActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+public class TaskActivity extends ActionBarActivity implements DatePickerDialog.OnDateSetListener,
+        TimePickerDialog.OnTimeSetListener, TokenCompleteTextView.TokenListener {
 
     private static final String CLASS_TAG = "TaskActivity";
 
@@ -60,6 +65,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
     //Adapter implementation
     private ListView collList;
     private TaskDetailsViewAdapter adapter;
+    private FilteredArrayAdapter collabListAdapter;
 
     public ArrayList<Collaborator> collaboratorArrayList = new ArrayList<Collaborator>();
     private EditText taskTitleET;
@@ -73,15 +79,23 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
     private TextView taskOwnerTV;
     private CompoundButton checkComplete;
     private List<User> userAdditonList, userRemovalList;
-    private ToggleButton editViewToggle;
     private ImageView calendarIV, cancelIV;
+    private ImageView addCollabsIV;
+    private LinearLayout addCollabsLinearLayout;
+    private TokenCompleteCollaboratorsEditText collaboratorsTCET;
+    private Button addCollaboratorButton;
 
     private boolean isEditMode = false;
+    private boolean isCollabAdditionMode = false;
 
     private DatePickerDialog datePickerDialog;
     private TimePickerDialog timePickerDialog;
     private String dueString = "";
     private long duelong = 0;
+    private MenuItem editViewToggle;
+
+    private List<User> userList;
+    private List<User> collaboratorAdditionList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +111,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
 
         //Get the intent
         Intent createViewIntent = getIntent();
-        long taskId;
+        final long taskId;
         //Check whether there is an EXTRA with the intent
         if (createViewIntent.hasExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey())) {
             Log.d(TAG, "Intent has taskID");
@@ -123,9 +137,13 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         this.taskStatusTV = (TextView)findViewById(R.id.taskStatusTextView);
         this.taskOwnerTV = (TextView) findViewById(R.id.taskOwnerTV);
         this.checkComplete = (CompoundButton) findViewById(R.id.checkComplete);
-        this.editViewToggle = (ToggleButton) findViewById(R.id.taskEditViewToggleButton);
         this.calendarIV = (ImageView) findViewById(R.id.calendarImageView);
         this.cancelIV = (ImageView) findViewById(R.id.btnCancelDate);
+        this.addCollabsIV = (ImageView) findViewById(R.id.addCollaboratorsImageView);
+        this.addCollabsLinearLayout = (LinearLayout) findViewById(R.id.addCollaboratorsLinearLayout);
+        this.collaboratorsTCET = (TokenCompleteCollaboratorsEditText) findViewById(R.id.collaboratorsTokenEditText);
+        this.addCollaboratorButton = (Button) findViewById(R.id.addCollaboratorButton);
+        this.collList = (ListView)findViewById(R.id.collListView);
 
         // Initialize date time picker.
         final Calendar calendar = Calendar.getInstance();
@@ -155,6 +173,59 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         this.taskPriorityTV.setText(priorityToString(this.task.getPriority()));
         this.taskStatusTV.setText(statusToString(this.task.getStatus(getApplicationContext())));
         this.taskOwnerTV.setText(this.task.getOwner().getName());
+        this.collaboratorsTCET.setTokenListener(this);
+
+        // Setting up user list for token edit text
+        UserDbHelper userDbHelper = new UserDbHelper(this);
+        // Setting a Filtered Array Adapter to autocomplete with users in db
+        userList = userDbHelper.listAllUsers();
+        Log.d(CLASS_TAG, "User list: "+userList.toString());
+
+        collabListAdapter = new FilteredArrayAdapter<User>(this, R.layout.collaorator_list_layout, userList) {
+            @Override
+            protected boolean keepObject(User user, String s) {
+                s = s.toLowerCase();
+                return user.getName().toLowerCase().startsWith(s) || user.getEmail().toLowerCase().startsWith(s);
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                if(convertView==null) {
+                    LayoutInflater l = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                    convertView = l.inflate(R.layout.collaorator_list_layout, parent, false);
+                }
+
+                User u = getItem(position);
+                ((TextView)convertView.findViewById(R.id.name)).setText(u.getName());
+                ((TextView)convertView.findViewById(R.id.email)).setText(u.getEmail());
+
+                return convertView;
+            }
+        };
+        this.collaboratorsTCET.setAdapter(collabListAdapter);
+
+        this.addCollaboratorButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                task.updateCollaborators(
+                        collaboratorAdditionList,
+                        new ArrayList<User>(),
+                        getApplicationContext()
+                );
+                adapter.clear();
+                adapter.addAll(task.getCollaborators());
+                adapter.notifyDataSetChanged();
+                toggleAddCollaborators();
+                collaboratorsTCET.clear();
+            }
+        });
+
+        this.addCollabsIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleAddCollaborators();
+            }
+        });
 
         this.calendarIV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,7 +241,9 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
             @Override
             public void onClick(View v) {
                 dueDateTV.setText("");
-                task.setDueDateTime(Long.parseLong(null));
+                duelong = 0;
+                dueString = task.dateToString(duelong);
+                dueDateTV.setText(dueString);
             }
         });
 
@@ -182,17 +255,6 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
             }
         });
 
-        this.editViewToggle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(isEditMode) {
-                    setUpViewMode();
-                } else {
-                    setUpEditMode();
-                }
-            }
-        });
-
         this.task.fetchAllCollaborators(this);
 
         //Fill the ArrayList with the required data
@@ -200,7 +262,6 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         this.collaboratorList = task.getCollaborators(this.task, getApplicationContext());
         //TODO: Swipe should only occur if user is the task owner
         //Add swipeListeners to the list to confirm when swiped
-        this.collList = (ListView)findViewById(R.id.collListView);
 //        this.collList.setSwipeListViewListener(new BaseSwipeListViewListener() {
 //            @Override
 //            public void onOpened(final int position, boolean toRight) {
@@ -241,6 +302,16 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
 
     }
 
+    private void toggleAddCollaborators() {
+        if(this.isCollabAdditionMode) {
+            this.addCollabsLinearLayout.setVisibility(View.GONE);
+            this.isCollabAdditionMode = false;
+        } else {
+            this.addCollabsLinearLayout.setVisibility(View.VISIBLE);
+            this.isCollabAdditionMode = true;
+        }
+    }
+
     /**
      * Convert the priority from int format to apropriate string format
      */
@@ -275,30 +346,6 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_task, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     /**** Method for Setting the Height of the ListView dynamically.
@@ -431,9 +478,84 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
             this.taskDescriptionTV.setVisibility(View.VISIBLE);
             this.taskPriorityTV.setVisibility(View.VISIBLE);
             // Set toggle button to off
-            this.editViewToggle.setChecked(false);
+            this.editViewToggle.setIcon(R.drawable.ic_edit_white);
         } else {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_task, menu);
+        this.editViewToggle = menu.findItem(R.id.action_toggle_view_edit);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.action_toggle_view_edit:
+                if(isEditMode) {
+                    editViewToggle.setIcon(R.drawable.ic_edit_white);
+                    setUpViewMode();
+                } else {
+                    editViewToggle.setIcon(R.drawable.ic_save_white_36dp);
+                    setUpEditMode();
+                }
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onTokenAdded(Object o) {
+        String TAG = CLASS_TAG+"onTokenAdded";
+        try{
+            User userObject = (User) o;
+            if(AltEngine.verifyEmail(userObject.getEmail())) {
+                Log.d(TAG, "Valid email.");
+                this.collaboratorAdditionList.add((User) o);
+                Log.d(TAG, "Added: " + o.toString());
+                String listOfCollabs = "";
+                for(User user:this.collaboratorAdditionList) {
+                    listOfCollabs+=user.getEmail()+",";
+                }
+                Log.d(TAG, "New List: "+listOfCollabs);
+                adapter.notifyDataSetChanged();
+            } else {
+                Log.d(TAG, "Invalid email.");
+                collaboratorsTCET.removeObject(o);
+                Log.d(TAG, "Object removed.");
+                Toast.makeText(
+                        this,
+                        Config.MESSAGES.INVALID_EMAIL.getMessage(),
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+        } catch (NullPointerException e) {
+            Log.d(TAG, "Nothing added.");
+        }
+    }
+
+    @Override
+    public void onTokenRemoved(Object o) {
+        String TAG = CLASS_TAG+"onTokenRemoved";
+        try {
+            User userObject = (User) o;
+            if(this.collaboratorAdditionList.contains(userObject)) {
+                this.collaboratorAdditionList.remove(userObject);
+                Log.d(TAG, "Removed: " + userObject.getString());
+            }
+        } catch (NullPointerException e) {
+            Log.d(TAG, "Nothing removed.");
         }
     }
 }

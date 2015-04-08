@@ -38,6 +38,7 @@
     <string name="label_SignIn">SIGN IN</string>
     <string name="label_createTask">CREATE TASK</string>
     <string name="labbel_updateTask">UPDATE TASK</string>
+    <string name="addCollaboratorsMessage">Enter collaborator name or email seperated by comma.</string>
 
     <string-array name="country">
         <item >India</item>

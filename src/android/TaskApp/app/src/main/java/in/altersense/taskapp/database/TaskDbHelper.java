@@ -341,6 +341,22 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         }
     }
 
+    public boolean delete(String uuid) {
+        String TAG = CLASS_TAG+"delete(uuid)";
+        // Open writable database
+        SQLiteDatabase writableDatabse = getWritableDatabase();
+        // Delete row
+        int affectedRows = writableDatabse.delete(
+                Task.TABLE_NAME,
+                Task.KEYS.UUID.getName()+"=?",
+                new String[] { uuid }
+        );
+        // close db
+        writableDatabse.close();
+        // return affectedrows>0
+        return affectedRows > 1;
+    }
+
     public Buzz createBuzz(Buzz buzz) {
         String TAG = CLASS_TAG+"createBuzz";
         // Open writable datanase.

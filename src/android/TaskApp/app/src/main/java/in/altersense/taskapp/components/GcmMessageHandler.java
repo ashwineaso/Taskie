@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import in.altersense.taskapp.DashboardActivity;
 import in.altersense.taskapp.R;
 import in.altersense.taskapp.TaskActivity;
 import in.altersense.taskapp.database.TaskDbHelper;
@@ -54,6 +55,7 @@ public class GcmMessageHandler extends IntentService {
                 datatype = extras.getString("datatype");
                 id = extras.getString("id");
                 Log.i("GCM", "Recieved + ( " + MessageType + " ) + datatype : " +datatype + " , id : " + id);
+                TaskDbHelper taskDbHelper = new TaskDbHelper(getApplicationContext());
 
                 switch(datatype) {
                     case "Task" :
@@ -65,12 +67,24 @@ public class GcmMessageHandler extends IntentService {
                         break;
                     case "Buzz" :
                         //Implement showing a buzz
-                        TaskDbHelper taskDbHelper = new TaskDbHelper(getApplicationContext());
                         tempTask = taskDbHelper.getTaskByUUID(id);
                         sendNotification(tempTask.getOwner().getName()
                                 + "has reminded you to complete the task : "
-                                + tempTask.getName());
-
+                                + tempTask.getName(),
+                                "Reminder",
+                                true);
+                        break;
+                    case "deleted":
+                        // Display a notification
+                        task = taskDbHelper.getTaskByUUID(id);
+                        sendNotification(tempTask.getOwner().getName()
+                                + "removed you from collaborators of the task "
+                                + tempTask.getName(),
+                                "Collaboration removed.",
+                                false);
+                        // Implement deletion of the task
+                        taskDbHelper.delete(id);
+                        break;
                 }
             }
         }
@@ -80,17 +94,22 @@ public class GcmMessageHandler extends IntentService {
 
     }
 
-    private void sendNotification(String msg) {
+    private void sendNotification(String msg, String title, boolean showTask) {
 
         mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-        Intent intent  = new Intent(this, TaskActivity.class);
-        intent.putExtra(Task.ID, tempTask.getUuid());
+        Intent intent;
+        if(showTask) {
+            intent  = new Intent(this, TaskActivity.class);
+            intent.putExtra(Task.ID, tempTask.getUuid());
+        } else {
+            intent = new Intent(this, DashboardActivity.class);
+        }
         PendingIntent pendingIntent = PendingIntent.getActivity(this.getApplicationContext(), 0, intent, 0);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle("Reminder")
+                        .setContentTitle(title)
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
                         .setContentText(msg);
 
