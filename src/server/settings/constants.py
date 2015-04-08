@@ -86,7 +86,7 @@ class UrlPostThread(threading.Thread):
 		s = requests.Session()
 		s.mount('https://android.googleapis.com/', MyAdapter())
 
-		response = s.post(
+		response = requests.post(
 			self.postObj.url,
 			data=json.dumps(self.postObj.payload),
 			headers=self.postObj.headers
