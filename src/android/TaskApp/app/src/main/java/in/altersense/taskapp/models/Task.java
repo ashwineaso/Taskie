@@ -166,9 +166,14 @@ public class Task {
             int indexOfCollaborator = this.getCollaborators(this, context).indexOf(collaborator);
             Log.d(TAG, "Collaborators: "+this.getCollaborators().toString());
             Log.d(TAG, "IndexOfCollaborator: "+indexOfCollaborator);
-            collaborator = this.getCollaborators().get(indexOfCollaborator);
-            // Return collaborator status.
-            status = collaborator.getStatus();
+            try {
+                collaborator = this.getCollaborators().get(indexOfCollaborator);
+                // Return collaborator status.
+                status = collaborator.getStatus();
+            } catch (ArrayIndexOutOfBoundsException e) {
+                Log.d(TAG, "User no longer a collaborator.");
+                status = Config.COLLABORATOR_STATUS.DECLINED.getStatus();
+            }
         }
         return status;
     }

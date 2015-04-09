@@ -64,6 +64,7 @@ public class GcmMessageHandler extends IntentService {
                         //Implement syncing of a Task
                         Task task = new Task();
                         task.setUuid(id, GcmMessageHandler.this);
+                        Log.d("GCM", "Abbout tu sync task");
                         SyncRequest syncRequest = new SyncRequest(task, getApplicationContext());
                         syncRequest.execute();
                         break;
@@ -85,7 +86,7 @@ public class GcmMessageHandler extends IntentService {
                                 "Collaboration removed.",
                                 false);
                         // Implement deletion of the task
-                        taskDbHelper.delete(id);
+                        Log.d("GCM", "deletion status" + taskDbHelper.delete(id));
                         this.syncCompleteBroadcastIntent = new Intent(Config.SHARED_PREF_KEYS.SYNC_IN_PROGRESS.getKey());
                         getApplicationContext().sendBroadcast(syncCompleteBroadcastIntent);
                         break;
