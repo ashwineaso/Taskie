@@ -89,7 +89,7 @@ class UrlPostThread(threading.Thread):
 		response = requests.post(
 			self.postObj.url,
 			data=json.dumps(self.postObj.payload),
-			headers=self.postObj.headers
+			headers=postObj.headers
 		)
 		self.response = response
 		print(response.text)

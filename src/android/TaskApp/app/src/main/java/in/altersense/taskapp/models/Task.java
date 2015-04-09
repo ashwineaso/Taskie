@@ -224,6 +224,7 @@ public class Task {
             Log.d(TAG, "User is just a collaborator of the task.");
             // Finds the collaborator with the device user UUID.
             Collaborator collaborator = new Collaborator(User.getDeviceOwner(context));
+            collaborator.setStatus(status);
             CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
             // Updates the status of the collaborator.
             collaboratorDbHelper.updateStatus(this, collaborator);
@@ -598,27 +599,27 @@ public class Task {
         updateCollaborators(userAdditionList,userRemovalList,context,true);
     }
 
-    public void toggleStatus(Activity activity) {
+    public void toggleStatus(Context context) {
         String TAG = CLASS_TAG+"toggleStatus";
-        int currentStatus = getStatus(activity.getApplicationContext());
-        Log.d(TAG,"Current status "+currentStatus);
+        int currentStatus = getStatus(context.getApplicationContext());
+        Log.d(TAG,"Current status of "+this.name+": "+currentStatus);
         switch (currentStatus) {
             case -1:
-                setStatus(0, activity);
+                setStatus(0, context);
                 break;
             case 0:
-                setStatus(1, activity);
+                setStatus(1, context);
                 break;
             case 1:
-                setStatus(2, activity);
+                setStatus(2, context);
                 break;
             case 2:
-                setStatus(1, activity);
+                setStatus(1, context);
                 break;
         }
         // Make a TaskStatusChangeRequest.
         Log.d(TAG, "Making TaskStatusChangeRequest");
-        TaskStatusChangeRequest taskStatusChangeRequest = new TaskStatusChangeRequest(Task.this, activity);
+        TaskStatusChangeRequest taskStatusChangeRequest = new TaskStatusChangeRequest(Task.this, context);
         taskStatusChangeRequest.execute();
         Log.d(TAG, "TaskStatusChangeRequest complete.");
     }

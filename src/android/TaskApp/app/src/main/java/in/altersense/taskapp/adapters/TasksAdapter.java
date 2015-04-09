@@ -79,7 +79,7 @@ public class TasksAdapter extends ArraySwipeAdapter<Task>{
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         String TAG = CLASS_TAG+"getView";
         final ViewHolder holder;
         if(convertView==null) {
@@ -184,12 +184,19 @@ public class TasksAdapter extends ArraySwipeAdapter<Task>{
         this.taskSwipeLayout.setDragEdge(SwipeLayout.DragEdge.Left);
 
         //CheckBox to toggle task status
-        holder.checkComplete.setChecked(task.getStatus(activity.getApplicationContext()) == 2);
-        holder.checkComplete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.checkComplete.setChecked(task.getStatus(getContext()) == 2);
+        holder.checkComplete.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                task.toggleStatus(activity);
-                notifyDataSetChanged();
+            public void onClick(View v) {
+                task.toggleStatus(getContext());
+                holder.checkComplete.setChecked(task.getStatus(getContext()) == 2);
+                holder.taskStatus.setBackgroundResource(
+                        Task.getStatusColor(
+                                task.getStatus(
+                                        getContext()
+                                )
+                        )
+                );
             }
         });
 
