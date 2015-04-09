@@ -1,6 +1,6 @@
 __author__ = ["ashwineaso"]
 
-from settings.constants import GCMPost, TOKEN_GCM_REGISTRATION_IDS, UrlPostThread
+from settings.constants import GCMPost, TOKEN_GCM_REGISTRATION_IDS, UrlPostThread, UrlPost
 from apps.users import dal as userdal
 from apps.task import dal as taskdal
 from apps.group import dal as groupdal
@@ -70,9 +70,12 @@ def pushSyncNotification(syncObj, taskObj = Collection()):
 
 
         #Create UrlPoster Thread for GCM Push Start Thread
-        gcmPostThread = UrlPostThread(
-                                    threadID = 1,
-                                    name = 'gcmPostThread',
-                                    postObj = androidPush
-                                    )
-        gcmPostThread.start()
+        # gcmPostThread = UrlPostThread(
+        #                             threadID = 1,
+        #                             name = 'gcmPostThread',
+        #                             postObj = androidPush
+        #                             )
+        # gcmPostThread.start()
+
+        gcmPostThread = UrlPost( postObj = androidPush )
+        gcmPostThread.run()
