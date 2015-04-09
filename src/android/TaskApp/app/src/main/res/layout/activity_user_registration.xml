@@ -40,6 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="@string/label_SignUp"
+        fontPath="fonts/Cabin-SemiBold-TTF.ttf"
         android:textSize="@dimen/text_header_xhdpi"
         android:layout_marginBottom="@dimen/smallMargin_xhdp"
         android:textColor="@color/createTaskPrimaryActionBar"/>
@@ -61,6 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:hint="@string/hint_FullName"
+            fontPath="fonts/Cabin-SemiBold-TTF.ttf"
             android:capitalize="words"
             android:inputType="textCapWords"
             android:lines="1" />
@@ -84,7 +86,8 @@
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:layout_gravity="center_horizontal"
-            android:hint="@string/hint_Email"/>
+            android:hint="@string/hint_Email"
+            fontPath="fonts/Cabin-SemiBold-TTF.ttf"/>
 
         </LinearLayout>
 
@@ -105,7 +108,8 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:hint="@string/hint_Password"/>
+            android:hint="@string/hint_Password"
+            fontPath="fonts/Cabin-SemiBold-TTF.ttf"/>
 
         <ImageButton android:id="@+id/regShowPassButton"
             android:layout_width="wrap_content"

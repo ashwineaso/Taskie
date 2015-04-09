@@ -230,8 +230,8 @@ def syncAllTasks(taskObj):
 	Sync all tasks of user of which is he owner and collaborator
 	"""
 	user = userbll.getUserById(taskObj)
-	owner_list = list(Task.objects(Q(owner = user) & Q(status__status = 1)))
-	collaborator_list = list(Task.objects(Q(collaborators__user = user) & Q(status__status = 1)))
+	owner_list = list(Task.objects(owner = user))
+	collaborator_list = list(Task.objects(collaborators__user = user))
 	task_list = owner_list + collaborator_list
 	return task_list
 
