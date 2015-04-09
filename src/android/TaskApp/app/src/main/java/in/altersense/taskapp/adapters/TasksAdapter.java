@@ -32,6 +32,7 @@ import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.models.Buzz;
 import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.Task;
+import in.altersense.taskapp.models.User;
 import in.altersense.taskapp.requests.BuzzCollaboratorRequest;
 
 /**
@@ -40,11 +41,13 @@ import in.altersense.taskapp.requests.BuzzCollaboratorRequest;
 public class TasksAdapter extends ArraySwipeAdapter<Task>{
 
     private static final String CLASS_TAG = "TasksCursorAdapter ";
+    private static final int MAX_COLLABORATORS_DISPLAYED = 8;
 
     private LayoutInflater inflater;
     private Activity activity;
     private List<Task> taskList;
     private SwipeLayout taskSwipeLayout;
+    private final User deviceOwner;
 
     @Override
     public int getSwipeLayoutResourceId(int position) {
@@ -66,6 +69,7 @@ public class TasksAdapter extends ArraySwipeAdapter<Task>{
         this.activity = activity;
         this.taskList = taskList;
         this.inflater = activity.getLayoutInflater();
+        this.deviceOwner = User.getDeviceOwner(getContext());
     }
 
     @Override
@@ -145,9 +149,9 @@ public class TasksAdapter extends ArraySwipeAdapter<Task>{
 
         //Check whether the count of collaborators are more than 10 if not set number of colaborators to be displayed as 8
         //First populate all collaborators into a list
-        List<Collaborator> collaboratorList = task.getCollaborators(task, this.getContext());
+        final List<Collaborator> collaboratorList = task.getCollaborators(task, this.getContext());
         try {
-            int collaboratorsToBeDisplayedCount = collaboratorList.size()<8 ? collaboratorList.size() : 8;
+            int collaboratorsToBeDisplayedCount = collaboratorList.size()<MAX_COLLABORATORS_DISPLAYED ? collaboratorList.size() : MAX_COLLABORATORS_DISPLAYED;
 
             // display initials and status of the collaborators
             for(int ctr=0; ctr<collaboratorsToBeDisplayedCount; ctr++) {
@@ -197,6 +201,16 @@ public class TasksAdapter extends ArraySwipeAdapter<Task>{
                                 )
                         )
                 );
+                for(Collaborator collaborator:collaboratorList) {
+                    if(collaborator.getEmail().equals(deviceOwner.getEmail())) {
+                        int deviceUserPosition = collaboratorList.indexOf(collaborator);
+                        if(deviceUserPosition >=0 && deviceUserPosition < MAX_COLLABORATORS_DISPLAYED) {
+                            holder.collaborators[deviceUserPosition].setBackgroundResource(
+                                    task.collaboratorStatusBackground(collaborator.getStatus())
+                            );
+                        }
+                    }
+                }
             }
         });
 
