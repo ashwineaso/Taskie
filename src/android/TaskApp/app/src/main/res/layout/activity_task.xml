@@ -235,7 +235,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    fontPath="fonts/Cabin-SemiBold-TTF.ttf"
+                    fontPath="fonts/Cabin-Bold-TTF.ttf"
                     tools2:ignore="MissingPrefix"
                     android:text="COLLABORATORS"
                     android:textSize="@dimen/text_subHeader_xhdpi"
@@ -248,7 +248,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/addCollaboratorsImageView"
-                    android:src="@drawable/ic_user" />
+                    android:src="@drawable/ic_user_add_24dp" />
             </LinearLayout>
 
             <LinearLayout android:id="@+id/addCollaboratorsLinearLayout"
@@ -269,8 +269,7 @@
                 <Button android:id="@+id/addCollaboratorButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/smallMargin_xhdp"
-                    android:text="ADD"/>
+                    android:background="@drawable/ic_plus_pink_24dp" />
 
                 </LinearLayout>
 
