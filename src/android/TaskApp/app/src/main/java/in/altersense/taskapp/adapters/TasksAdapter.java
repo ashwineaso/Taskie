@@ -201,12 +201,13 @@ public class TasksAdapter extends ArraySwipeAdapter<Task>{
                                 )
                         )
                 );
+                task.getCollaborators(task, getContext());
                 for(Collaborator collaborator:collaboratorList) {
                     if(collaborator.getEmail().equals(deviceOwner.getEmail())) {
                         int deviceUserPosition = collaboratorList.indexOf(collaborator);
                         if(deviceUserPosition >=0 && deviceUserPosition < MAX_COLLABORATORS_DISPLAYED) {
-                            holder.collaborators[deviceUserPosition].setBackgroundResource(
-                                    task.collaboratorStatusBackground(collaborator.getStatus())
+                            holder.collaborators[deviceUserPosition+1].setBackgroundResource(
+                                    task.collaboratorStatusBackground(task.getStatus())
                             );
                         }
                     }
