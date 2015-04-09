@@ -35,14 +35,14 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/checkComplete"
                         android:clickable="true"
-                        android:checked="false" />
+                        android:checked="false"
+                        android:layout_marginRight="@dimen/thinMargin_xhdpi" />
 
                     <EditText android:id="@+id/taskTitleEditText"
                         android:visibility="gone"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/thinMargin_xhdpi"
                         android:textSize="@dimen/text_header_xhdpi"
                         android:text="Title of the Task"
                         fontPath="fonts/Cabin-SemiBold-TTF.ttf"
@@ -53,7 +53,6 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/thinMargin_xhdpi"
                         android:textSize="@dimen/text_header_xhdpi"
                         android:text="Title of the Task"
                         fontPath="fonts/Cabin-SemiBold-TTF.ttf"
@@ -272,6 +271,15 @@
                     android:background="@drawable/ic_plus_pink_24dp" />
 
                 </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/noCollText"
+                android:layout_gravity="center_horizontal"
+                android:text="No Collaborators"
+                android:textSize="@dimen/text_subHeader_xhdpi"
+                android:visibility="gone" />
 
             <ListView
                 android:id="@+id/collListView"

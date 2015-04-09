@@ -108,7 +108,11 @@ public class TaskDetailsViewAdapter extends ArraySwipeAdapter<Collaborator> {
         else
             holder = (ViewHolder)vi.getTag();
 
+        //Setting the swipe layout
+        this.collSwipeLayout = (SwipeLayout) vi.findViewById(R.id.collSwipe);
+
         if (data.size()<=0) {
+            this.collSwipeLayout.setSwipeEnabled(false);
             holder.collName.setText("No Collaborators");
             holder.collInitials.setText("");
             holder.collInitials.setBackgroundColor(Color.WHITE);
@@ -139,7 +143,6 @@ public class TaskDetailsViewAdapter extends ArraySwipeAdapter<Collaborator> {
                 }
             });
 
-            this.collSwipeLayout = (SwipeLayout) vi.findViewById(R.id.collSwipe);
             if(this.task.isOwnedyDeviceUser(activity.getApplicationContext())) {
                 this.collSwipeLayout.setDragEdge(SwipeLayout.DragEdge.Left);
                 this.collSwipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);

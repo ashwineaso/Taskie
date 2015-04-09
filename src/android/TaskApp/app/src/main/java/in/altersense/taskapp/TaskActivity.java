@@ -78,6 +78,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
     private TextView taskPriorityTV;
     private TextView taskStatusTV;
     private TextView taskOwnerTV;
+    private TextView noCollText;
     private CompoundButton checkComplete;
     private List<User> userAdditonList, userRemovalList;
     private ImageView calendarIV, cancelIV;
@@ -267,7 +268,6 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         //Adjust the height of the ListView to accommodate all the children
         setListViewHeightBasedOnChildren(collList);
         collList.setFocusable(false); //To set the focus to top #glitch
-
     }
 
     private void toggleAddCollaborators() {
