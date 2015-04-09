@@ -453,4 +453,9 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
             Log.d(TAG, "Nothing removed.");
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

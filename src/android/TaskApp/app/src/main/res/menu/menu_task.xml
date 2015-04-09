@@ -7,6 +7,6 @@
         android:icon="@drawable/ic_edit_white"
         android:id="@+id/action_toggle_view_edit"
         android:title="Edit"
-        app:showAsAction="always" />
+        app:showAsAction="withText|always" />
 
 </menu>

@@ -353,8 +353,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         );
         // close db
         writableDatabse.close();
-        // return affectedrows>0
-        return affectedRows > 1;
+        return affectedRows>0;
     }
 
     public Buzz createBuzz(Buzz buzz) {

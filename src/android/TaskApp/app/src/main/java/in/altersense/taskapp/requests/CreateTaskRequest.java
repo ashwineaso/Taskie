@@ -119,26 +119,29 @@ public class CreateTaskRequest extends AsyncTask<Void, Integer, JSONObject> {
                     Task task = this.taskList.get(ctr);
                     JSONObject taskdata = dataArray.getJSONObject(ctr);
                     JSONObject data = taskdata.getJSONObject(Config.REQUEST_RESPONSE_KEYS.DATA.getKey());
-                    task.setUuid(data.getString(Config.REQUEST_RESPONSE_KEYS.UUID.getKey()));
-                    task.setSyncStatus(true);
-                    task.updateTask(context);
+                    status = taskdata.getString(Config.REQUEST_RESPONSE_KEYS.STATUS.getKey());
+                    if(status.equals(Config.RESPONSE_STATUS_SUCCESS)) {
+                        task.setUuid(data.getString(Config.REQUEST_RESPONSE_KEYS.UUID.getKey()));
+                        task.setSyncStatus(true);
+                        task.updateTask(context);
 
-                    JSONArray collaboratorArray = data.getJSONArray(Config.REQUEST_RESPONSE_KEYS.TASK_COLLABOATORS.getKey());
-                    for(int colCtr=0; colCtr<collaboratorArray.length(); colCtr++) {
-                        JSONObject collaboratorObject = collaboratorArray.getJSONObject(colCtr);
+                        JSONArray collaboratorArray = data.getJSONArray(Config.REQUEST_RESPONSE_KEYS.TASK_COLLABOATORS.getKey());
+                        for(int colCtr=0; colCtr<collaboratorArray.length(); colCtr++) {
+                            JSONObject collaboratorObject = collaboratorArray.getJSONObject(colCtr);
 
-                        User user = userDbHelper.retrieve(collaboratorObject.getString(
-                                Config.REQUEST_RESPONSE_KEYS.EMAIL.getKey()
-                        ));
-                        user.setUuid(collaboratorObject.getString(
-                                Config.REQUEST_RESPONSE_KEYS.UUID.getKey()
-                        ));
-                        user.setName(collaboratorObject.getString(
-                                Config.REQUEST_RESPONSE_KEYS.NAME.getKey()
-                        ));
-                        user.setSyncStatus(true);
-                        userDbHelper.updateUser(user);
-                        // TODO: Check whether user exists
+                            User user = userDbHelper.retrieve(collaboratorObject.getString(
+                                    Config.REQUEST_RESPONSE_KEYS.EMAIL.getKey()
+                            ));
+                            user.setUuid(collaboratorObject.getString(
+                                    Config.REQUEST_RESPONSE_KEYS.UUID.getKey()
+                            ));
+                            user.setName(collaboratorObject.getString(
+                                    Config.REQUEST_RESPONSE_KEYS.NAME.getKey()
+                            ));
+                            user.setSyncStatus(true);
+                            userDbHelper.updateUser(user);
+                            // TODO: Check whether user exists
+                        }
                     }
                 }
             }
