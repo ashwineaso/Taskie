@@ -121,10 +121,10 @@ class UrlPost():
 		print(response.text)
 		if response.ok:
 			print 'request:', self.postObj.payload
-			print self.name+': POST is success.'
+			print ': POST is success.'
 			print 'content:', response.content
 		else:
-			print self.name+': POST failed.'
+			print ': POST failed.'
 
 #Current version of the API
 CURRENT_VERSION = 0.1
