@@ -104,7 +104,6 @@ class UrlPostThread(threading.Thread):
 
 class UrlPost():
 	def __init__(self, postObj):
-		self.threadID = threadID
 		self.postObj = postObj
 
 	def run(self):
