@@ -14,6 +14,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import in.altersense.taskapp.DashboardActivity;
 import in.altersense.taskapp.R;
 import in.altersense.taskapp.TaskActivity;
+import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.requests.SyncRequest;
@@ -26,6 +27,7 @@ public class GcmMessageHandler extends IntentService {
     String datatype, id;
     private NotificationManager mNotificationManager;
     private Task tempTask;
+    private Intent syncCompleteBroadcastIntent;
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
@@ -74,16 +76,18 @@ public class GcmMessageHandler extends IntentService {
                                 "Reminder",
                                 true);
                         break;
-                    case "deleted":
+                    case "CollRemoved":
                         // Display a notification
                         task = taskDbHelper.getTaskByUUID(id);
-                        sendNotification(tempTask.getOwner().getName()
-                                + "removed you from collaborators of the task "
-                                + tempTask.getName(),
+                        sendNotification(task.getOwner().getName()
+                                + " removed you from collaborators of the task: "
+                                + task.getName(),
                                 "Collaboration removed.",
                                 false);
                         // Implement deletion of the task
                         taskDbHelper.delete(id);
+                        this.syncCompleteBroadcastIntent = new Intent(Config.SHARED_PREF_KEYS.SYNC_IN_PROGRESS.getKey());
+                        getApplicationContext().sendBroadcast(syncCompleteBroadcastIntent);
                         break;
                 }
             }
