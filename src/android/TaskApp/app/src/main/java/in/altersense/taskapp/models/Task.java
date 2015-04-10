@@ -27,6 +27,7 @@ import in.altersense.taskapp.database.UserDbHelper;
 import in.altersense.taskapp.requests.AddCollaboratorsRequest;
 import in.altersense.taskapp.requests.RemoveCollaboratorsRequest;
 import in.altersense.taskapp.requests.SyncRequest;
+import in.altersense.taskapp.requests.TaskDeleteRequest;
 import in.altersense.taskapp.requests.TaskStatusChangeRequest;
 import in.altersense.taskapp.requests.UpdateTaskRequest;
 
@@ -281,6 +282,11 @@ public class Task {
             TaskDbHelper taskDbHelper = new TaskDbHelper(context);
             taskDbHelper.delete(this);
             // send deletion request to server
+            Log.d(CLASS_TAG, " Making Task Delete request to server");
+            TaskDeleteRequest taskDeleteRequest  = new TaskDeleteRequest(this, context);
+            taskDeleteRequest.execute();
+            Log.d(CLASS_TAG, "Task Delete Request Complete");
+
         } else {
             // If not owned by user
             Log.d(TAG,"Task not owned by user.");
