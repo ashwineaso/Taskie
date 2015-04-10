@@ -1,6 +1,5 @@
 package in.altersense.taskapp.database;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -13,6 +12,7 @@ import java.util.List;
 
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.models.Buzz;
+import in.altersense.taskapp.models.Notification;
 import in.altersense.taskapp.models.Task;
 
 /**
@@ -41,6 +41,11 @@ public class TaskDbHelper extends SQLiteOpenHelper {
             Buzz.KEYS.TASK_ID.getName() + " " + Buzz.KEYS.TASK_ID.getType() + ", " +
             Buzz.KEYS.TASK_UUID.getName() + " " + Buzz.KEYS.TASK_UUID.getType() + ");";
 
+    private static String CREATION_STATEMENT_NOTIFICATION = "CREATE TABLE " + Notification.TABLE_NAME + " ( " +
+            Notification.KEYS.TASK_ROW_ID.getName() + " " + Notification.KEYS.TASK_ROW_ID.getType() + ", " +
+            Notification.KEYS.MESSAGE.getName() + " " + Notification.KEYS.MESSAGE.getType() + ", " +
+            Notification.KEYS.SEEN.getName() + " " + Notification.KEYS.SEEN.getType() + ");";
+
     public TaskDbHelper(Context context) {
         super(context, Task.TABLE_NAME, null, Config.DATABASE_VERSION);
         this.context = context;
@@ -53,6 +58,9 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         );
         db.execSQL(
                 CREATION_STATEMENT_BUZZ
+        );
+        db.execSQL(
+                CREATION_STATEMENT_NOTIFICATION
         );
     }
 
@@ -414,7 +422,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         Cursor result = readableDb.query(
                 Buzz.TABLE_NAME,
                 Buzz.getAllColumns(),
-                Buzz.KEYS.TASK_UUID+"=? OR "+Buzz.KEYS.TASK_UUID+"=?",
+                Buzz.KEYS.TASK_ID+"=? OR "+Buzz.KEYS.TASK_UUID+"=?",
                 new String[]{
                         task.getUuid()+"",
                         task.getId()+""
@@ -532,5 +540,102 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         writableDb.close();
         // return true if affectedRows > 0
         return affectedRows>0;
+    }
+
+    public Notification createNotification(Notification notification) {
+        String TAG = CLASS_TAG+" creteNotification";
+        // Open writable database.
+        SQLiteDatabase writableDb = this.getWritableDatabase();
+        // Setup values
+        ContentValues values = new ContentValues();
+        values.put(Notification.KEYS.TASK_ROW_ID.getName(), notification.getTaskRowId());
+        values.put(Notification.KEYS.MESSAGE.getName(), notification.getMessage());
+        // Insert row
+        long id = writableDb.insert(
+                Notification.TABLE_NAME,
+                null,
+                values
+        );
+        // create new notification from the fetched row
+        notification.getId();
+        // close writable db
+        writableDb.close();
+        // return new buzz
+        return notification;
+    }
+
+    public List<Notification> retrieveNotification() {
+        String TAG = CLASS_TAG + "retrieveNotification()";
+        List<Notification> notificationList = new ArrayList<>();
+        //Open readable database
+        SQLiteDatabase readableDb = this.getReadableDatabase();
+        // Execute query
+        Cursor result = readableDb.query(
+                Notification.TABLE_NAME,
+                Notification.getAllColumns(),
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+        result.moveToFirst();
+        //loop through each cursor and add new notification to a list
+        do {
+            Notification notification = new Notification(result, this.context);
+            notificationList.add(notification);
+        } while (result.moveToNext());
+        //close the db, close the cursor
+        readableDb.close();
+        result.close();
+        //return list of all notification
+        return notificationList;
+    }
+
+    public Notification retrieveNotiifcation(Task task) {
+        String TAG = CLASS_TAG + "retrieveNotification (Task, Activity)";
+        //Open readable database
+        SQLiteDatabase readableDb = this.getReadableDatabase();
+        //Make query
+        Cursor result = readableDb.query(
+                Notification.TABLE_NAME,
+                Notification.getAllColumns(),
+                Notification.KEYS.TASK_ROW_ID + "=?",
+                new String[] {
+                        task.getId()+""
+                },
+                null,
+                null,
+                null
+        );
+        result.moveToFirst();
+        // Create notification from cursor
+        Notification notification;
+        if (result.getCount()!=0) {
+            notification = new Notification(result, this.context);
+        } else {
+            notification = null;
+        }
+        result.close();
+        readableDb.close();
+        // return notification
+        return notification;
+    }
+
+    public boolean deleteNotification(Notification notification) {
+        String TAG = CLASS_TAG + "deleteNotification";
+        //Open  writable database.
+        SQLiteDatabase writeableDb = this.getWritableDatabase();
+        // execute delete query
+        // find affected row count
+        int affectedRows = writeableDb.delete(
+                Notification.TABLE_NAME,
+                "ROWID =?",
+                new String[] { notification.getId()+"" }
+        );
+        // close db
+        writeableDb.close();
+        // if affected row greater than 0 return true
+        return affectedRows > 0;
     }
 }
