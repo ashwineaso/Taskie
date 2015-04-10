@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.APIRequest;
 import in.altersense.taskapp.components.AltEngine;
+import in.altersense.taskapp.database.CollaboratorDbHelper;
 import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.Task;
 
@@ -25,8 +26,9 @@ public class TaskStatusChangeRequest extends AsyncTask<Void, Integer, JSONObject
     private Context context;
     private int status;
     private Task task;
-    private Boolean isOwner = false;
+    private boolean isOwner = false;
     private JSONObject requestObject;
+    private String url;
 
     public TaskStatusChangeRequest(Task task, Context context) {
         Log.d(CLASS_TAG, "Created request for owner.");
@@ -41,7 +43,7 @@ public class TaskStatusChangeRequest extends AsyncTask<Void, Integer, JSONObject
         this.task = task;
         this.context = context;
         this.collaborator = collaborator;
-        this.status = collaborator.getStatus();
+        this.status = this.collaborator.getStatus();
         this.isOwner = false;
     }
 
@@ -50,7 +52,7 @@ public class TaskStatusChangeRequest extends AsyncTask<Void, Integer, JSONObject
         JSONArray dataArray = new JSONArray();
         JSONObject dataObject = new JSONObject();
         this.requestObject = new JSONObject();
-        if (isOwner) {
+        if (this.isOwner) {
             // Do if the change is made by the owner
             try {
                 dataObject.put(
@@ -63,6 +65,7 @@ public class TaskStatusChangeRequest extends AsyncTask<Void, Integer, JSONObject
                 );
                 dataArray.put(dataObject);
                 this.requestObject.put(Config.REQUEST_RESPONSE_KEYS.DATA.getKey(), dataArray);
+                this.url = "task/modifyTaskStatus";
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -84,6 +87,7 @@ public class TaskStatusChangeRequest extends AsyncTask<Void, Integer, JSONObject
                 );
                 dataArray.put(dataObject);
                 this.requestObject.put(Config.REQUEST_RESPONSE_KEYS.DATA.getKey(), dataArray);
+                this.url = "task/modifyCollStatus";
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -95,21 +99,11 @@ public class TaskStatusChangeRequest extends AsyncTask<Void, Integer, JSONObject
     protected JSONObject doInBackground(Void... params) {
         String TAG = CLASS_TAG+"doInBackground";
         JSONObject responseObject = new JSONObject();
-        APIRequest changeStatusRequest;
-        if (isOwner) {
-            changeStatusRequest = new APIRequest(
-                    AltEngine.formURL("task/modifyTaskStatus"),
-                    requestObject,
-                    this.context
-            );
-        }
-        else {
-            changeStatusRequest = new APIRequest(
-                    AltEngine.formURL("task/modifyCollStatus"),
-                    requestObject,
-                    this.context
-            );
-        }
+        APIRequest changeStatusRequest = new APIRequest(
+                AltEngine.formURL(this.url),
+                requestObject,
+                this.context
+        );
         
         try {
             responseObject = changeStatusRequest.request();

@@ -225,6 +225,8 @@ public class Task {
             // Updates the owners status
             Log.d(TAG,"User is the owner of the task.");
             this.status = status;
+            TaskDbHelper taskDbHelper = new TaskDbHelper(context);
+            taskDbHelper.updateStatus(this, status);
         } else {
             Log.d(TAG, "User is just a collaborator of the task.");
             // Finds the collaborator with the device user UUID.
@@ -624,8 +626,17 @@ public class Task {
         }
         // Make a TaskStatusChangeRequest.
         Log.d(TAG, "Making TaskStatusChangeRequest");
-        TaskStatusChangeRequest taskStatusChangeRequest = new TaskStatusChangeRequest(Task.this, context);
-        taskStatusChangeRequest.execute();
+        TaskStatusChangeRequest taskStatusChangeRequest;
+        if(this.isOwnedyDeviceUser(context)) {
+            taskStatusChangeRequest = new TaskStatusChangeRequest(Task.this, context);
+            taskStatusChangeRequest.execute();
+        } else {
+            Collaborator collaborator = new Collaborator(User.getDeviceOwner(context));
+            CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
+            collaborator = collaboratorDbHelper.getCollaborator(this, collaborator);
+            taskStatusChangeRequest = new TaskStatusChangeRequest(Task.this, collaborator, context);
+            taskStatusChangeRequest.execute();
+        }
         Log.d(TAG, "TaskStatusChangeRequest complete.");
     }
 

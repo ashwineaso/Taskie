@@ -29,6 +29,7 @@ import in.altersense.taskapp.CreateTaskActivity;
 import in.altersense.taskapp.R;
 import in.altersense.taskapp.TaskActivity;
 import in.altersense.taskapp.common.Config;
+import in.altersense.taskapp.database.CollaboratorDbHelper;
 import in.altersense.taskapp.models.Buzz;
 import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.Task;
@@ -42,6 +43,7 @@ public class TasksAdapter extends ArraySwipeAdapter<Task>{
 
     private static final String CLASS_TAG = "TasksCursorAdapter ";
     private static final int MAX_COLLABORATORS_DISPLAYED = 8;
+    private final CollaboratorDbHelper collaboratorDbHelper;
 
     private LayoutInflater inflater;
     private Activity activity;
@@ -70,6 +72,7 @@ public class TasksAdapter extends ArraySwipeAdapter<Task>{
         this.taskList = taskList;
         this.inflater = activity.getLayoutInflater();
         this.deviceOwner = User.getDeviceOwner(getContext());
+        this.collaboratorDbHelper = new CollaboratorDbHelper(getContext());
     }
 
     @Override
@@ -201,14 +204,20 @@ public class TasksAdapter extends ArraySwipeAdapter<Task>{
                                 )
                         )
                 );
-                task.getCollaborators(task, getContext());
-                for(Collaborator collaborator:collaboratorList) {
-                    if(collaborator.getEmail().equals(deviceOwner.getEmail())) {
-                        int deviceUserPosition = collaboratorList.indexOf(collaborator);
-                        if(deviceUserPosition >=0 && deviceUserPosition < MAX_COLLABORATORS_DISPLAYED) {
-                            holder.collaborators[deviceUserPosition+1].setBackgroundResource(
-                                    task.collaboratorStatusBackground(task.getStatus())
-                            );
+                if(task.isOwnedyDeviceUser(getContext())) {
+                    holder.collaborators[0].setBackgroundResource(
+                            Task.getStatusColor(task.getStatus(getContext()))
+                    );
+                } else {
+                    for(Collaborator collaborator:collaboratorList) {
+                        if(collaborator.getEmail().equals(deviceOwner.getEmail())) {
+                            collaborator = collaboratorDbHelper.getCollaborator(task, collaborator);
+                            int deviceUserPosition = collaboratorList.indexOf(collaborator);
+                            if(deviceUserPosition >=0 && deviceUserPosition < MAX_COLLABORATORS_DISPLAYED) {
+                                holder.collaborators[deviceUserPosition+1].setBackgroundResource(
+                                        task.collaboratorStatusBackground(collaborator.getStatus())
+                                );
+                            }
                         }
                     }
                 }
