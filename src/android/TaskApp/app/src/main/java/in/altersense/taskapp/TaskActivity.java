@@ -147,6 +147,10 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         this.addCollaboratorButton = (Button) findViewById(R.id.addCollaboratorButton);
         this.collList = (ListView)findViewById(R.id.collListView);
 
+        //Hide the addCollabsIV if the user is not owner
+        if (!this.task.isOwnedyDeviceUser(getApplicationContext())) {
+            this.addCollabsIV.setVisibility(View.GONE);
+        }
         // Initialize date time picker.
         final Calendar calendar = Calendar.getInstance();
 
@@ -458,6 +462,9 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_task, menu);
         this.editViewToggle = menu.findItem(R.id.action_toggle_view_edit);
+        if (!task.isOwnedyDeviceUser(getApplicationContext())) {
+            this.editViewToggle.setVisible(false);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
