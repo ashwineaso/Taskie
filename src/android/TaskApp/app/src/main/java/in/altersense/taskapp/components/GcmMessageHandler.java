@@ -5,17 +5,22 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import java.net.URI;
+
 import in.altersense.taskapp.DashboardActivity;
 import in.altersense.taskapp.R;
 import in.altersense.taskapp.TaskActivity;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.database.TaskDbHelper;
+import in.altersense.taskapp.models.Notification;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.requests.SyncRequest;
 
@@ -86,7 +91,7 @@ public class GcmMessageHandler extends IntentService {
                                 "Collaboration removed.",
                                 false);
                         // Implement deletion of the task
-                        Log.d("GCM", "deletion status" + taskDbHelper.delete(id));
+                        Log.d("GCM", "deletion status" + taskDbHelper.delete(task));
                         this.syncCompleteBroadcastIntent = new Intent(Config.SHARED_PREF_KEYS.SYNC_IN_PROGRESS.getKey());
                         getApplicationContext().sendBroadcast(syncCompleteBroadcastIntent);
                         break;
@@ -116,9 +121,12 @@ public class GcmMessageHandler extends IntentService {
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle(title)
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
+                        .setDefaults(android.app.Notification.DEFAULT_ALL)
                         .setContentText(msg);
 
         mBuilder.setContentIntent(pendingIntent);
+        mBuilder.setAutoCancel(true);
+        mBuilder.setStyle(new NotificationCompat.InboxStyle());
         mNotificationManager.notify(0, mBuilder.build());
 
     }
