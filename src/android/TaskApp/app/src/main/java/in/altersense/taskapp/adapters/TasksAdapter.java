@@ -195,8 +195,11 @@ public class TasksAdapter extends ArraySwipeAdapter<Task>{
         holder.checkComplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Toggle the status
                 task.toggleStatus(getContext());
+                // Set the checkbox checked state according to the status
                 holder.checkComplete.setChecked(task.getStatus(getContext()) == 2);
+                // Change the task status strip color
                 holder.taskStatus.setBackgroundResource(
                         Task.getStatusColor(
                                 task.getStatus(
@@ -204,16 +207,27 @@ public class TasksAdapter extends ArraySwipeAdapter<Task>{
                                 )
                         )
                 );
+                // Checks users ownnership of the task
                 if(task.isOwnedyDeviceUser(getContext())) {
+                    // if owner change the background resource of the first collaborator slot
+                    // with the task status color
                     holder.collaborators[0].setBackgroundResource(
-                            Task.getStatusColor(task.getStatus(getContext()))
+                            task.collaboratorStatusBackground(task.getStatus())
                     );
                 } else {
+                    // if collaborator find the slot and change the ring color
+                    // find the collaborator to find the slot position
                     for(Collaborator collaborator:collaboratorList) {
                         if(collaborator.getEmail().equals(deviceOwner.getEmail())) {
+                            // update the collaborator to get the status
                             collaborator = collaboratorDbHelper.getCollaborator(task, collaborator);
+                            // find the slot position.
                             int deviceUserPosition = collaboratorList.indexOf(collaborator);
+                            // check whether it is in the limits of the user.
                             if(deviceUserPosition >=0 && deviceUserPosition < MAX_COLLABORATORS_DISPLAYED) {
+                                // Set status ring color
+                                // Increments the slot position by 1 to account for the task owner
+                                /// being at postion 0
                                 holder.collaborators[deviceUserPosition+1].setBackgroundResource(
                                         task.collaboratorStatusBackground(collaborator.getStatus())
                                 );
