@@ -69,13 +69,13 @@ def pushSyncNotification(syncObj, taskObj = Collection()):
         androidPush.payload["data"] = syncObj.to_dict()
 
 
-        #Create UrlPoster Thread for GCM Push Start Thread
-        # gcmPostThread = UrlPostThread(
-        #                             threadID = 1,
-        #                             name = 'gcmPostThread',
-        #                             postObj = androidPush
-        #                             )
-        # gcmPostThread.start()
+        # Create UrlPoster Thread for GCM Push Start Thread
+        gcmPostThread = UrlPostThread(
+                                    threadID = 1,
+                                    name = 'gcmPostThread',
+                                    postObj = androidPush
+                                    )
+        gcmPostThread.start()
 
-        gcmPostThread = UrlPost( postObj = androidPush )
-        gcmPostThread.run()
+        # gcmPostThread = UrlPost( postObj = androidPush )
+        # gcmPostThread.run()
