@@ -86,10 +86,11 @@
                     <TextView android:id="@+id/taskTitleTextView"
                         android:text="Boil Eggs"
                         android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         fontPath="fonts/Cabin-Regular-TTF.ttf"
                         android:textSize="@dimen/text_subHeader_xhdpi"
                         android:paddingLeft="@dimen/thinMargin_xhdpi"
+                        android:paddingRight="@dimen/thinMargin_xhdpi"
                         android:paddingTop="@dimen/tinyMargin_xhdpi" />
 
                     <LinearLayout

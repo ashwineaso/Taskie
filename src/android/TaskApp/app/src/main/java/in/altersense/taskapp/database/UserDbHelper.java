@@ -152,13 +152,12 @@ public class UserDbHelper extends SQLiteOpenHelper {
     /**
      * Lists all users for collaborator addition purposes.
      * Purposely omits the device owner to be removed from the list.
-     * @return
+     * @return A list of all users in the db which user can add as collaborators.
      */
     public List<User> listAllUsers() {
         String TAG = CLASS_TAG+"listAllUsers";
         // Open readable database.
         SQLiteDatabase readableDb = this.getReadableDatabase();
-        Log.d(TAG, "Readable database opened");
         // Create array list
         List<User> userList = new ArrayList<User>();
         // Setup columns
@@ -173,7 +172,6 @@ public class UserDbHelper extends SQLiteOpenHelper {
                 null,
                 null
         );
-        Log.d(TAG, "Query returned "+cursor.getCount()+" rows");
         cursor.moveToFirst();
         int UUIDColNum = cursor.getColumnIndex(
                 User.KEYS.UUID.getName()
@@ -188,7 +186,6 @@ public class UserDbHelper extends SQLiteOpenHelper {
                 userList.add(new User(cursor));
             }
         } while (cursor.moveToNext());
-        Log.d(TAG, "Readable db closed.");
         readableDb.close();
         return userList;
     }
