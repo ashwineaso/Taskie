@@ -190,9 +190,10 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 Task task = new Task(resultCursor, this.context);
                 int taskStatus = task.getStatus(this.context);
                 // Ignores tasks marked as declined or completed by the user.
-                if(taskStatus!=Config.COLLABORATOR_STATUS.DECLINED.getStatus()
-                        || taskStatus!=Config.COLLABORATOR_STATUS.COMPLETED.getStatus()) {
+                if(taskStatus>Config.COLLABORATOR_STATUS.DECLINED.getStatus() &&
+                        taskStatus<Config.COLLABORATOR_STATUS.COMPLETED.getStatus()) {
                     taskList.add(task);
+                    Log.d(TAG, task.getName()+" has a status "+taskStatus);
                 }
             } while(resultCursor.moveToNext());
         }
