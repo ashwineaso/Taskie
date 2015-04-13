@@ -193,7 +193,6 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 if(taskStatus>Config.COLLABORATOR_STATUS.DECLINED.getStatus() &&
                         taskStatus<Config.COLLABORATOR_STATUS.COMPLETED.getStatus()) {
                     taskList.add(task);
-                    Log.d(TAG, task.getName()+" has a status "+taskStatus);
                 }
             } while(resultCursor.moveToNext());
         }
@@ -301,7 +300,6 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         String TAG = CLASS_TAG+"getAllNonGroupTasksAsCursor";
         // Open database.
         SQLiteDatabase readableDb = this.getReadableDatabase();
-        Log.d(TAG, "Readable database opened.");
         // Create a list of tasks.
         // Setup columns
         ArrayList<String> columnList = Task.getAllColumns();
@@ -321,7 +319,6 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 null,
                 null
         );
-        Log.d(TAG, "Returned "+resultCursor.getCount()+" rows.");
         // Close db.
         readableDb.close();
         return resultCursor;
