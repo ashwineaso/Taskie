@@ -43,7 +43,10 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
     private JSONObject requestObject;
     private String url;
 
+    private Collaborator deviceOwnerAsCollaborator;
+
     private int mode;
+    private boolean collaboratorAcceptedTask = false;
 
     /**
      * Base constructor called by all the constructors
@@ -98,6 +101,9 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
                 this.requestObject,
                 this.context
         );
+
+        deviceOwnerAsCollaborator = new Collaborator(User.getDeviceOwner(context));
+        deviceOwnerAsCollaborator.setStatus(Config.COLLABORATOR_STATUS.ACCEPTED.getStatus());
     }
 
     /**
@@ -342,6 +348,13 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
                 Log.d(TAG, "No collaborators.");
                 taskFromJSONObject.setCollaborators(new ArrayList<Collaborator>());
             }
+            // Check if the device user just accepted the task.
+            if(this.collaboratorAcceptedTask) {
+                TaskStatusChangeRequest taskStatusChangeRequest = new TaskStatusChangeRequest(
+                        taskFromJSONObject, deviceOwnerAsCollaborator,context
+
+                );
+            }
             Log.d(TAG, "Setting up collaborators done.");
             Log.d(TAG, "Task set: "+taskFromJSONObject.toString());
             int position = this.taskList.indexOf(task);
@@ -467,6 +480,16 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             User collaboratorUser = userFromJSONObject(collaboratorObject);
             Log.d(TAG, "Making collaborator out of user.");
             Collaborator collaborator = new Collaborator(collaboratorUser);
+            // Check if collaborator is the device user.
+            if(collaborator.getEmail().equals(User.getDeviceOwner(context).getEmail())) {
+                // if status is pending change to accepted
+                if(collStatus==Config.COLLABORATOR_STATUS.PENDING.getStatus()) {
+                    collStatus = Config.COLLABORATOR_STATUS.ACCEPTED.getStatus();
+                    // set a flag to push changes.
+                    this.collaboratorAcceptedTask = true;
+                }
+                // else leave as is
+            }
             collaborator.setStatus(collStatus);
             Log.d(TAG, "Adding collaborator to db.");
             this.collaboratorDbHelper.addCollaborator(task, collaborator);
