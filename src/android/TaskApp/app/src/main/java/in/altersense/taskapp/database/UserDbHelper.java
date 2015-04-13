@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.altersense.taskapp.common.Config;
+import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.User;
 
@@ -19,6 +20,8 @@ import in.altersense.taskapp.models.User;
  * Created by mahesmohan on 1/31/15.
  */
 public class UserDbHelper extends SQLiteOpenHelper {
+
+    private final Context context;
 
     private static String CREATION_STATEMENT = "CREATE TABLE " + User.TABLE_NAME + " ( " +
             User.KEYS.UUID.getName() + " " + User.KEYS.UUID.getType() + ", " +
@@ -29,6 +32,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
 
     public UserDbHelper(Context context) {
         super(context, User.TABLE_NAME, null, Config.DATABASE_VERSION);
+        this.context = context;
     }
 
     @Override
@@ -145,6 +149,11 @@ public class UserDbHelper extends SQLiteOpenHelper {
         return user;
     }
 
+    /**
+     * Lists all users for collaborator addition purposes.
+     * Purposely omits the device owner to be removed from the list.
+     * @return
+     */
     public List<User> listAllUsers() {
         String TAG = CLASS_TAG+"listAllUsers";
         // Open readable database.
@@ -166,14 +175,18 @@ public class UserDbHelper extends SQLiteOpenHelper {
         );
         Log.d(TAG, "Query returned "+cursor.getCount()+" rows");
         cursor.moveToFirst();
+        int UUIDColNum = cursor.getColumnIndex(
+                User.KEYS.UUID.getName()
+        );
+        String ownerUUID = AltEngine.readStringFromSharedPref(
+                this.context,
+                Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
+                "");
         do {
-            // Add each user to the list
-            userList.add(new User(cursor));
-            String cursorString = "Cursor: ";
-            for(int i=0; i<cursor.getColumnCount();i++) {
-                cursorString+=i+"="+cursor.getString(i)+", ";
+            if(!cursor.getString(UUIDColNum).equals(ownerUUID)) {
+                // Add each user to the list if user is not the owner.
+                userList.add(new User(cursor));
             }
-            Log.d(TAG, cursorString);
         } while (cursor.moveToNext());
         Log.d(TAG, "Readable db closed.");
         readableDb.close();

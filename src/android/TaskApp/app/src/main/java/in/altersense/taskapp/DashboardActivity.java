@@ -219,29 +219,6 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_tasks, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        // Catches every click on Menu
-        switch (id) {
-            case R.id.quickTaskCreate:
-                toggleQuickTaskLayout();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     public void toggleQuickTaskLayout() {
 
 //        Check whether task is displayed
