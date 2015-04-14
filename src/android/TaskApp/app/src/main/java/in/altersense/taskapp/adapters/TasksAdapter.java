@@ -1,8 +1,10 @@
 package in.altersense.taskapp.adapters;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.provider.CalendarContract;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,6 +24,7 @@ import android.widget.Toast;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.ArraySwipeAdapter;
+import com.daimajia.swipe.adapters.CursorSwipeAdapter;
 
 import java.util.Calendar;
 import java.util.List;
@@ -30,6 +34,7 @@ import in.altersense.taskapp.R;
 import in.altersense.taskapp.TaskActivity;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.database.CollaboratorDbHelper;
+import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.models.Buzz;
 import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.Task;
@@ -39,11 +44,13 @@ import in.altersense.taskapp.requests.BuzzCollaboratorRequest;
 /**
  * Created by mahesmohan on 2/26/15.
  */
-public class TasksAdapter extends ArraySwipeAdapter<Task>{
+public class TasksAdapter extends CursorSwipeAdapter{
 
     private static final String CLASS_TAG = "TasksCursorAdapter ";
     private static final int MAX_COLLABORATORS_DISPLAYED = 8;
     private final CollaboratorDbHelper collaboratorDbHelper;
+    private final Context context;
+    private final TaskDbHelper taskDbHelper;
 
     private LayoutInflater inflater;
     private Activity activity;
@@ -51,9 +58,18 @@ public class TasksAdapter extends ArraySwipeAdapter<Task>{
     private SwipeLayout taskSwipeLayout;
     private final User deviceOwner;
 
+    public Context getContext() {
+        return context;
+    }
+
     @Override
     public int getSwipeLayoutResourceId(int position) {
         return R.id.taskSwipe;
+    }
+
+    @Override
+    public void closeAllItems() {
+        
     }
 
     public static class ViewHolder{
@@ -66,18 +82,24 @@ public class TasksAdapter extends ArraySwipeAdapter<Task>{
         public CheckBox checkComplete;
     }
 
-    public TasksAdapter(Activity activity, List<Task> taskList) {
-        super(activity.getApplicationContext(), R.layout.task_panel, taskList);
+    public TasksAdapter(Activity activity, Cursor tasksAsCursor) {
+        super(
+                activity.getApplicationContext(),
+                tasksAsCursor,
+                CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER
+        );
         this.activity = activity;
-        this.taskList = taskList;
+        this.context = activity.getApplicationContext();
         this.inflater = activity.getLayoutInflater();
         this.deviceOwner = User.getDeviceOwner(getContext());
         this.collaboratorDbHelper = new CollaboratorDbHelper(getContext());
+        this.taskDbHelper = new TaskDbHelper(getContext());
     }
 
     @Override
     public Task getItem(int position) {
-        return taskList.get(position);
+        this.getCursor().moveToPosition(position);
+        return new Task(getCursor(), getContext());
     }
 
     @Override
@@ -181,7 +203,7 @@ public class TasksAdapter extends ArraySwipeAdapter<Task>{
             public void onClick(View v) {
                 Toast.makeText(activity.getApplicationContext(), "Task Deleted", Toast.LENGTH_LONG).show();
                 task.delete(activity.getApplicationContext());
-                remove(task);
+                changeCursor(taskDbHelper.getAllNonGroupTasksAsCursor());
                 notifyDataSetChanged();
             }
         });
@@ -262,6 +284,16 @@ public class TasksAdapter extends ArraySwipeAdapter<Task>{
         }
 
         return convertView;
+    }
+
+    @Override
+    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+        return LayoutInflater.from(getContext()).inflate(R.layout.task_panel, parent, false);
+    }
+
+    @Override
+    public void bindView(View view, Context context, Cursor cursor) {
+
     }
 
     private long getStartTime() {
