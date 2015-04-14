@@ -173,15 +173,12 @@ public class UserDbHelper extends SQLiteOpenHelper {
                 null
         );
         cursor.moveToFirst();
-        int UUIDColNum = cursor.getColumnIndex(
-                User.KEYS.UUID.getName()
+        String deviceUserEmail = User.getDeviceOwner(this.context).getEmail();
+        int emailColNum = cursor.getColumnIndex(
+                User.KEYS.EMAIL.getName()
         );
-        String ownerUUID = AltEngine.readStringFromSharedPref(
-                this.context,
-                Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
-                "");
         do {
-            if(!cursor.getString(UUIDColNum).equals(ownerUUID)) {
+            if(!cursor.getString(emailColNum).equals(deviceUserEmail)) {
                 // Add each user to the list if user is not the owner.
                 userList.add(new User(cursor));
             }

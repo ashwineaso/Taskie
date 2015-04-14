@@ -319,6 +319,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 null,
                 null
         );
+        Log.d(TAG, "Returned "+resultCursor.getCount()+" rows.");
         // Close db.
         readableDb.close();
         return resultCursor;
