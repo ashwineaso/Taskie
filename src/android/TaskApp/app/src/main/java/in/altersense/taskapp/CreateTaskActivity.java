@@ -34,7 +34,6 @@ import java.util.List;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText;
-import in.altersense.taskapp.database.CollaboratorDbHelper;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
 import in.altersense.taskapp.models.Collaborator;
@@ -299,8 +298,8 @@ public class CreateTaskActivity extends ActionBarActivity implements TokenComple
         priorityTV.setText(priority);
 
         Log.d(CLASS_TAG, "Fetching collaborators.");
-        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(this);
-        this.task.setCollaborators(collaboratorDbHelper.getAllCollaborators(this.task));
+        TaskDbHelper taskDbHelper = new TaskDbHelper(this);
+        this.task.setCollaborators(taskDbHelper.getAllCollaborators(this.task));
 
         Log.d(TAG, "Collaborators: "+task.getCollaborators());
         for(Collaborator collaborator:task.getCollaborators()) {

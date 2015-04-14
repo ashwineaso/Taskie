@@ -1,6 +1,5 @@
 package in.altersense.taskapp.requests;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -10,7 +9,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +16,6 @@ import java.util.List;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.APIRequest;
 import in.altersense.taskapp.components.AltEngine;
-import in.altersense.taskapp.database.CollaboratorDbHelper;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
 import in.altersense.taskapp.models.Collaborator;
@@ -35,7 +32,6 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
     private final Context context;
     private final TaskDbHelper taskDbHelper;
     private final UserDbHelper userDbHelper;
-    private final CollaboratorDbHelper collaboratorDbHelper;
     private APIRequest apiRequest;
     private List<User> userList;
     private List<Task> taskList;
@@ -92,7 +88,6 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
 
         this.taskDbHelper = new TaskDbHelper(this.context);
         this.userDbHelper = new UserDbHelper(this.context);
-        this.collaboratorDbHelper = new CollaboratorDbHelper(this.context);
 
         this.syncCompleteBroadcastIntent = new Intent(Config.SHARED_PREF_KEYS.SYNC_IN_PROGRESS.getKey());
 
@@ -313,7 +308,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
                     taskObject.getJSONArray(Config.REQUEST_RESPONSE_KEYS.TASK_COLLABOATORS.getKey()),
                     task
             );
-            task.setCollaborators(collaboratorDbHelper.getAllCollaborators(task));
+            task.setCollaborators(taskDbHelper.getAllCollaborators(task));
             Log.d(TAG, "Setting up collaborators done.");
             Log.d(TAG, "Task added to db: "+task.toString());
         }
@@ -335,7 +330,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             Log.d(TAG, "Task creation updation done.");
 
             Log.d(TAG, "Clearing all collaborators if any.");
-            collaboratorDbHelper.delete(taskFromJSONObject);
+            taskDbHelper.deleteCollaborator(taskFromJSONObject);
             Log.d(TAG, "Setting up collaborators.");
 
             try {
@@ -343,7 +338,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
                         taskData.getJSONArray(Config.REQUEST_RESPONSE_KEYS.TASK_COLLABOATORS.getKey()),
                         taskFromJSONObject
                 );
-                taskFromJSONObject.setCollaborators(collaboratorDbHelper.getAllCollaborators(taskFromJSONObject));
+                taskFromJSONObject.setCollaborators(taskDbHelper.getAllCollaborators(taskFromJSONObject));
             } catch (JSONException e) {
                 Log.d(TAG, "No collaborators.");
                 taskFromJSONObject.setCollaborators(new ArrayList<Collaborator>());
@@ -424,7 +419,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             task.setStatus(status);
             task.setGroup(false);
             task.setOwner(owner);
-            task.setCollaborators(collaboratorDbHelper.getAllCollaborators(task));
+            task.setCollaborators(taskDbHelper.getAllCollaborators(task));
             task.updateTask(context);
         } else {
             Log.d(TAG, "Task does not exist so adding.");
@@ -492,7 +487,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             }
             collaborator.setStatus(collStatus);
             Log.d(TAG, "Adding collaborator to db.");
-            this.collaboratorDbHelper.addCollaborator(task, collaborator);
+            this.taskDbHelper.addCollaborator(task, collaborator);
         }
     }
 }

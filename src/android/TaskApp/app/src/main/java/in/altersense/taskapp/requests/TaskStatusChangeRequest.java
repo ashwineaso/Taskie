@@ -12,7 +12,6 @@ import org.json.JSONObject;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.APIRequest;
 import in.altersense.taskapp.components.AltEngine;
-import in.altersense.taskapp.database.CollaboratorDbHelper;
 import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.Task;
 

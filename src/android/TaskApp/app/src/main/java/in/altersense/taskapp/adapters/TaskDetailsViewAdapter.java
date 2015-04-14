@@ -130,7 +130,7 @@ public class TaskDetailsViewAdapter extends ArraySwipeAdapter<Collaborator> {
             this.userAdditonList = new ArrayList<>();
             this.userRemovalList = new ArrayList<>();
 
-            //Confirm collaborator delete
+            //Confirm collaborator deleteCollaborator
             holder.btnConfirm.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

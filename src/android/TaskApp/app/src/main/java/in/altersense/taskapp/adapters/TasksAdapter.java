@@ -33,7 +33,6 @@ import in.altersense.taskapp.CreateTaskActivity;
 import in.altersense.taskapp.R;
 import in.altersense.taskapp.TaskActivity;
 import in.altersense.taskapp.common.Config;
-import in.altersense.taskapp.database.CollaboratorDbHelper;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.models.Buzz;
 import in.altersense.taskapp.models.Collaborator;
@@ -48,7 +47,6 @@ public class TasksAdapter extends CursorSwipeAdapter{
 
     private static final String CLASS_TAG = "TasksCursorAdapter ";
     private static final int MAX_COLLABORATORS_DISPLAYED = 8;
-    private final CollaboratorDbHelper collaboratorDbHelper;
     private final Context context;
     private final TaskDbHelper taskDbHelper;
 
@@ -92,7 +90,6 @@ public class TasksAdapter extends CursorSwipeAdapter{
         this.context = activity.getApplicationContext();
         this.inflater = activity.getLayoutInflater();
         this.deviceOwner = User.getDeviceOwner(getContext());
-        this.collaboratorDbHelper = new CollaboratorDbHelper(getContext());
         this.taskDbHelper = new TaskDbHelper(getContext());
     }
 
@@ -231,7 +228,7 @@ public class TasksAdapter extends CursorSwipeAdapter{
                     for(Collaborator collaborator:collaboratorList) {
                         if(collaborator.getEmail().equals(deviceOwner.getEmail())) {
                             // update the collaborator to get the status
-                            collaborator = collaboratorDbHelper.getCollaborator(task, collaborator);
+                            collaborator = taskDbHelper.getCollaborator(task, collaborator);
                             // find the slot position.
                             int deviceUserPosition = collaboratorList.indexOf(collaborator);
                             // check whether it is in the limits of the user.

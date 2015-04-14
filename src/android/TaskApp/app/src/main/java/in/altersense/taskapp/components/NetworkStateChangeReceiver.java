@@ -9,7 +9,6 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import in.altersense.taskapp.database.CollaboratorDbHelper;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
 import in.altersense.taskapp.models.Task;
@@ -24,7 +23,6 @@ public class NetworkStateChangeReceiver extends BroadcastReceiver {
 
     private Context context;
     private TaskDbHelper taskDbHelper;
-    private CollaboratorDbHelper collaboratorDbHelper;
     private UserDbHelper userDbHelper;
 
     @Override
@@ -32,7 +30,6 @@ public class NetworkStateChangeReceiver extends BroadcastReceiver {
         this.context = context;
 
         this.taskDbHelper = new TaskDbHelper(context);
-        this.collaboratorDbHelper = new CollaboratorDbHelper(context);
         this.userDbHelper = new UserDbHelper(context);
 
         final String TAG = CLASS_TAG+"onReceive";
