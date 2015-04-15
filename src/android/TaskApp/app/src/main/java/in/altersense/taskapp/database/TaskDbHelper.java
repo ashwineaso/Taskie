@@ -339,9 +339,10 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         );
         String query = "SELECT "+columnsFromTask + " FROM " + Task.TABLE_NAME + " A LEFT JOIN "+
                 Collaborator.TABLE_NAME + " B ON A.ROWID = B." + Collaborator.KEYS.TASK_ROWID.getName() +
-                " WHERE A."+Task.KEYS.STATUS.getName()+
+                " WHERE ( A." +Task.KEYS.OWNER_UUID.getName()+" LIKE \""+deviceOwnerUUID+"\" AND " +
+                "A."+Task.KEYS.STATUS.getName()+
                 " LIKE " + Config.TASK_STATUS.INCOMPLETE.getStatus() +
-                " OR ( B." + Collaborator.KEYS.USER_UUID + " LIKE \"" + deviceOwnerUUID + "\"" +
+                ") OR ( B." + Collaborator.KEYS.USER_UUID + " LIKE \"" + deviceOwnerUUID + "\"" +
                 " AND B." + Collaborator.KEYS.STATUS + " BETWEEN " + Config.COLLABORATOR_STATUS.PENDING.getStatus() +
                 " AND " + Config.COLLABORATOR_STATUS.ACCEPTED.getStatus() + ");";
         Cursor resultCursor = readableDb.rawQuery(query, null);
