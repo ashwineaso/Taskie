@@ -70,12 +70,12 @@ def pushSyncNotification(syncObj, taskObj = Collection()):
 
 
         # Create UrlPoster Thread for GCM Push Start Thread
-        gcmPostThread = UrlPostThread(
-                                    threadID = 1,
-                                    name = 'gcmPostThread',
-                                    postObj = androidPush
-                                    )
-        gcmPostThread.start()
+        # gcmPostThread = UrlPostThread(
+        #                             threadID = 1,
+        #                             name = 'gcmPostThread',
+        #                             postObj = androidPush
+        #                             )
+        # gcmPostThread.start()
 
-        # gcmPostThread = UrlPost( postObj = androidPush )
-        # gcmPostThread.run()
+        gcmPostThread = UrlPost( postObj = androidPush )
+        gcmPostThread.run()
