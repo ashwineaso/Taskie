@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -98,14 +99,19 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         this.quickCreateStageLinearLayout.setVisibility(View.GONE);
 
         this.taskList = (ListView) findViewById(R.id.taskListView);
-        this.taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasks());
+        this.taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasksAsCursor());
         this.taskList.setAdapter(this.taskAdapter);
 
         //Set onItemClickListener for the task list
         this.taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Task selectedTask = taskAdapter.getItem(position);
+                Cursor taskCursor = taskAdapter.getCursor();
+                taskCursor.moveToPosition(position);
+                Task selectedTask = new Task(
+                        taskCursor,
+                        getApplicationContext()
+                );
                 Intent intent = new Intent(DashboardActivity.this, TaskActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey(), selectedTask.getId());
@@ -159,7 +165,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.d(CLASS_TAG, "Received broadcast.");
-                taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasks());
+                taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasksAsCursor());
                 taskList.setAdapter(taskAdapter);
             }
         };
@@ -330,7 +336,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                     createTaskRequest.execute();
 
                     // Add task to the adapter.
-                    taskAdapter.add(createdQuickTask);
+                    taskAdapter.changeCursor(taskDbHelper.getAllNonGroupTasksAsCursor());
                     taskAdapter.notifyDataSetChanged();
 
                     toggleQuickTaskLayout();

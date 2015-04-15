@@ -38,7 +38,6 @@ import in.altersense.taskapp.adapters.TaskDetailsViewAdapter;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText;
-import in.altersense.taskapp.database.CollaboratorDbHelper;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
 import in.altersense.taskapp.models.Collaborator;
@@ -264,7 +263,6 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         this.task.fetchAllCollaborators(this);
 
         //Fill the ArrayList with the required data
-        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(getApplicationContext());
         this.collaboratorList = task.getCollaborators(this.task, getApplicationContext());
         //Create a custom adapter
         adapter = new TaskDetailsViewAdapter(TaskActivity.this, collaboratorList, this.task);

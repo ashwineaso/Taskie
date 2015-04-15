@@ -16,7 +16,6 @@ import java.util.List;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.APIRequest;
 import in.altersense.taskapp.components.AltEngine;
-import in.altersense.taskapp.database.CollaboratorDbHelper;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
 import in.altersense.taskapp.models.Buzz;
@@ -33,7 +32,6 @@ public class BuzzCollaboratorRequest extends AsyncTask<Void, Integer, JSONObject
     private JSONObject requestObject;
     private TaskDbHelper taskDbHelper;
     private UserDbHelper userDbHelper;
-    private CollaboratorDbHelper collaboratorDbHelper;
     private List<Buzz> buzzList;
 
     public BuzzCollaboratorRequest(Buzz buzz, Context context) {
@@ -54,7 +52,6 @@ public class BuzzCollaboratorRequest extends AsyncTask<Void, Integer, JSONObject
         this.requestObject = new JSONObject();
         this.taskDbHelper = new TaskDbHelper(context.getApplicationContext());
         this.userDbHelper = new UserDbHelper(context.getApplicationContext());
-        this.collaboratorDbHelper = new CollaboratorDbHelper(context.getApplicationContext());
     }
 
     @Override

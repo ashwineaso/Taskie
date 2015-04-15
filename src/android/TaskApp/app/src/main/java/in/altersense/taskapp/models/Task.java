@@ -21,7 +21,6 @@ import in.altersense.taskapp.R;
 import in.altersense.taskapp.TaskActivity;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.AltEngine;
-import in.altersense.taskapp.database.CollaboratorDbHelper;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
 import in.altersense.taskapp.requests.AddCollaboratorsRequest;
@@ -163,7 +162,6 @@ public class Task {
             // Find collaborator.
             Collaborator collaborator = new Collaborator(User.getDeviceOwner(context));
             Log.d(TAG, "CollaboratorName: "+collaborator.getName());
-            CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
             int indexOfCollaborator = this.getCollaborators(this, context).indexOf(collaborator);
             Log.d(TAG, "Collaborators: "+this.getCollaborators().toString());
             Log.d(TAG, "IndexOfCollaborator: "+indexOfCollaborator);
@@ -184,8 +182,8 @@ public class Task {
     }
 
     public List<Collaborator> getCollaborators(Task task, Context context) {
-        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
-        collaborators = collaboratorDbHelper.getAllCollaborators(task);
+        TaskDbHelper taskDbHelper = new TaskDbHelper(context);
+        collaborators = taskDbHelper.getAllCollaborators(task);
         return collaborators;
     }
 
@@ -214,6 +212,7 @@ public class Task {
      */
     public boolean setStatus(int status, Context context) {
         String TAG = CLASS_TAG+"setStatus";
+        TaskDbHelper taskDbHelper = new TaskDbHelper(context);
         // Checks if the status to be set is outside limit.
         if(status>Config.MAX_STATUS ||
                 status<Config.MIN_STATUS) {
@@ -226,16 +225,14 @@ public class Task {
             // Updates the owners status
             Log.d(TAG,"User is the owner of the task.");
             this.status = status;
-            TaskDbHelper taskDbHelper = new TaskDbHelper(context);
             taskDbHelper.updateStatus(this, status);
         } else {
             Log.d(TAG, "User is just a collaborator of the task.");
             // Finds the collaborator with the device user UUID.
             Collaborator collaborator = new Collaborator(User.getDeviceOwner(context));
             collaborator.setStatus(status);
-            CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
             // Updates the status of the collaborator.
-            collaboratorDbHelper.updateStatus(this, collaborator);
+            taskDbHelper.updateStatus(this, collaborator);
         }
         return true;
     }
@@ -393,8 +390,8 @@ public class Task {
 
     public void fetchAllCollaborators(Context context) {
         Log.d(CLASS_TAG, "Fetching collaborators.");
-        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
-        this.setCollaborators(collaboratorDbHelper.getAllCollaborators(this));
+        TaskDbHelper taskDbHelper = new TaskDbHelper(context);
+        this.setCollaborators(taskDbHelper.getAllCollaborators(this));
     }
 
     /**
@@ -508,7 +505,7 @@ public class Task {
     ) {
         String TAG = CLASS_TAG+"updateCollaborators";
         UserDbHelper userDbHelper = new UserDbHelper(context);
-        CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
+        TaskDbHelper taskDbHelper = new TaskDbHelper(context);
 
         Log.d(TAG, "Addition List: "+ userAdditionList.toString());
         Log.d(TAG, "Removal List: "+ userRemovalList.toString());
@@ -573,7 +570,7 @@ public class Task {
         Log.d(TAG, "Removed collaborators: "+collaboratorsRemoved.toString());
         // Add all collaborators in additionList to db
         for(Collaborator collaborator:collaboratorsAdded) {
-            collaboratorDbHelper.addCollaborator(this,collaborator);
+            taskDbHelper.addCollaborator(this,collaborator);
         }
 
         if(informServer) {
@@ -585,7 +582,7 @@ public class Task {
             addCollaboratorsRequest.execute();
             // Remove all collaborators in removal list from db
             for(Collaborator collaborator:collaboratorsRemoved) {
-                collaboratorDbHelper.removeCollaborator(this, collaborator);
+                taskDbHelper.removeCollaborator(this, collaborator);
             }
             RemoveCollaboratorsRequest removeCollaboratorsRequest = new RemoveCollaboratorsRequest(
                     this,
@@ -638,8 +635,8 @@ public class Task {
             taskStatusChangeRequest.execute();
         } else {
             Collaborator collaborator = new Collaborator(User.getDeviceOwner(context));
-            CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(context);
-            collaborator = collaboratorDbHelper.getCollaborator(this, collaborator);
+            TaskDbHelper taskDbHelper = new TaskDbHelper(context);
+            collaborator = taskDbHelper.getCollaborator(this, collaborator);
             taskStatusChangeRequest = new TaskStatusChangeRequest(Task.this, collaborator, context);
             taskStatusChangeRequest.execute();
         }
@@ -760,8 +757,8 @@ public class Task {
                     collaborator.setStatus(status);
                     this.setSyncStatus(false);
                     // Update database.
-                    CollaboratorDbHelper collaboratorDbHelper = new CollaboratorDbHelper(activity);
-                    collaboratorDbHelper.updateStatus(this, collaborator);
+                    TaskDbHelper taskDbHelper = new TaskDbHelper(activity);
+                    taskDbHelper.updateStatus(this, collaborator);
                     Log.d(TAG, "Updated in db.");
                     // Make an APIRequest for setting task Request.
                     TaskStatusChangeRequest taskStatusChangeRequest = new TaskStatusChangeRequest(
