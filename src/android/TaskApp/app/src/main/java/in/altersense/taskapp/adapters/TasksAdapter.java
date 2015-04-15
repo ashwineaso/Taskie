@@ -2,43 +2,29 @@ package in.altersense.taskapp.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.CursorAdapter;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daimajia.swipe.SwipeLayout;
-import com.daimajia.swipe.adapters.ArraySwipeAdapter;
 import com.daimajia.swipe.adapters.CursorSwipeAdapter;
 
 import java.util.Calendar;
 import java.util.List;
 
-import in.altersense.taskapp.CreateTaskActivity;
 import in.altersense.taskapp.R;
-import in.altersense.taskapp.TaskActivity;
-import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.database.TaskDbHelper;
-import in.altersense.taskapp.models.Buzz;
 import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.User;
-import in.altersense.taskapp.requests.BuzzCollaboratorRequest;
 
 /**
  * Created by mahesmohan on 2/26/15.
@@ -216,7 +202,7 @@ public class TasksAdapter extends CursorSwipeAdapter{
                         )
                 );
                 // Checks users ownnership of the task
-                if(task.isOwnedyDeviceUser(getContext())) {
+                if (task.isOwnedyDeviceUser(getContext())) {
                     // if owner change the background resource of the first collaborator slot
                     // with the task status color
                     holder.collaborators[0].setBackgroundResource(
@@ -225,18 +211,18 @@ public class TasksAdapter extends CursorSwipeAdapter{
                 } else {
                     // if collaborator find the slot and change the ring color
                     // find the collaborator to find the slot position
-                    for(Collaborator collaborator:collaboratorList) {
-                        if(collaborator.getEmail().equals(deviceOwner.getEmail())) {
+                    for (Collaborator collaborator : collaboratorList) {
+                        if (collaborator.getEmail().equals(deviceOwner.getEmail())) {
                             // update the collaborator to get the status
                             collaborator = taskDbHelper.getCollaborator(task, collaborator);
                             // find the slot position.
                             int deviceUserPosition = collaboratorList.indexOf(collaborator);
                             // check whether it is in the limits of the user.
-                            if(deviceUserPosition >=0 && deviceUserPosition < MAX_COLLABORATORS_DISPLAYED) {
+                            if (deviceUserPosition >= 0 && deviceUserPosition < MAX_COLLABORATORS_DISPLAYED) {
                                 // Set status ring color
                                 // Increments the slot position by 1 to account for the task owner
                                 /// being at postion 0
-                                holder.collaborators[deviceUserPosition+1].setBackgroundResource(
+                                holder.collaborators[deviceUserPosition + 1].setBackgroundResource(
                                         task.collaboratorStatusBackground(collaborator.getStatus())
                                 );
                             }

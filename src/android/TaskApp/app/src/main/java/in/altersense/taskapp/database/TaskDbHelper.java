@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.altersense.taskapp.common.Config;
+import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.models.Buzz;
 import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.Notification;
@@ -321,19 +322,29 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         String[] columns = new String[columnList.size()];
         columns = columnList.toArray(columns);
         // Queries for tasks which are still marked incomplete.
-        Cursor resultCursor = readableDb.query(
-                Task.TABLE_NAME,
-                columns,
-                Task.KEYS.IS_GROUP.getName()+"=? AND "+
-                Task.KEYS.STATUS.getName()+"=?",
-                new String[] {
-                        "0",
-                        Config.TASK_STATUS.INCOMPLETE.getStatus() + ""
-                },
-                null,
-                null,
-                null
+        String columnsFromTask = "";
+        for(int ctr=0; ctr<columns.length; ctr++) {
+            String col = columns[ctr];
+            columnsFromTask = columnsFromTask+"A."+col;
+            if(ctr!=columns.length-1) {
+                columnsFromTask+=", ";
+            } else {
+                columnsFromTask+=" ";
+            }
+        }
+        String deviceOwnerUUID = AltEngine.readStringFromSharedPref(
+                this.context,
+                Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
+                ""
         );
+        String query = "SELECT "+columnsFromTask + " FROM " + Task.TABLE_NAME + " A LEFT JOIN "+
+                Collaborator.TABLE_NAME + " B ON A.ROWID = B." + Collaborator.KEYS.TASK_ROWID.getName() +
+                " WHERE A."+Task.KEYS.STATUS.getName()+
+                " LIKE " + Config.TASK_STATUS.INCOMPLETE.getStatus() +
+                " OR ( B." + Collaborator.KEYS.USER_UUID + " LIKE \"" + deviceOwnerUUID + "\"" +
+                " AND B." + Collaborator.KEYS.STATUS + " BETWEEN " + Config.COLLABORATOR_STATUS.PENDING.getStatus() +
+                " AND " + Config.COLLABORATOR_STATUS.ACCEPTED.getStatus() + ");";
+        Cursor resultCursor = readableDb.rawQuery(query, null);
         Log.d(TAG, "Returned "+resultCursor.getCount()+" rows.");
         // Close db.
         readableDb.close();
