@@ -115,7 +115,7 @@ class UrlPost():
 		response = s.post(
 			self.postObj.url,
 			data=json.dumps(self.postObj.payload),
-			headers=postObj.headers
+			headers=self.postObj.headers
 		)
 		self.response = response
 		print(response.text)
