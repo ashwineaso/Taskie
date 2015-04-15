@@ -92,18 +92,37 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        style="@style/primaryButton"
         android:layout_marginTop="@dimen/smallMargin_xhdp"
         android:text="@string/label_SignIn"
-        android:textSize="@dimen/text_subHeader_xhdpi" />
+        android:textSize="@dimen/text_subHeader_xhdpi"
+        android:background="@color/taskPrimaryColor"
+        android:textColor="@color/lightText" />
 
     <Button android:id="@+id/regButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
         style="@style/transparentButton"
-        android:layout_marginTop="@dimen/bigMargin_xhdp"
+        android:layout_marginTop="@dimen/smallMargin_xhdp"
         android:text="@string/label_CreateAccount"
         android:textSize="@dimen/text_subHeader_xhdpi" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/lineColor"
+        android:layout_marginTop="@dimen/thinMargin_xhdpi"
+        android:layout_marginBottom="@dimen/thinMargin_xhdpi"
+        android:orientation="horizontal" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sign In using Google Account"
+        android:id="@+id/button"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/common_signin_btn_text_dark"
+        android:textColor="@color/lightText"
+        android:layout_marginTop="@dimen/thinMargin_xhdpi" />
 
 </LinearLayout>
