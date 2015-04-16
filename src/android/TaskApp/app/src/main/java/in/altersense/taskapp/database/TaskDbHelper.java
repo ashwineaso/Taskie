@@ -74,6 +74,9 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         db.execSQL(
                 CREATION_STATEMENT_NOTIFICATION
         );
+        db.execSQL(
+                CREATION_STATEMENT_COLLABORATOR
+        );
     }
 
     @Override
