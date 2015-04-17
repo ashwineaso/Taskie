@@ -45,7 +45,6 @@ def pushSyncNotification(syncObj, taskObj = Collection()):
 
     def caseDelete():
         """Notfiy all the task users that the owner has deleted the task """
-        task = taskdal.getTaskById(syncObj)
         for coll in taskObj.collaborators:
             if not coll.user.serverPushId in androidPayload:
                 androidPayload.append(str(coll.user.serverPushId))
