@@ -17,12 +17,13 @@ class Collection():
 
 
 class SyncClass():
-    def __init__(self, datatype , type_id ):
+    def __init__(self, datatype , type_id, notification ):
         self.datatype = datatype
         self.id = type_id
+        self.notification = notification
 
     def to_dict(self):
-        return {"datatype":self.datatype, "id":self.id}
+        return {"datatype":self.datatype, "id":self.id, "notification":self.notification}
 
 
 
