@@ -297,6 +297,10 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         participantNameTCET =
                 (TokenCompleteCollaboratorsEditText) taskCreationView.findViewById(R.id.quickTaskParticipantName);
         participantNameTCET.setTokenListener(this);
+        participantNameTCET.allowDuplicates(false);
+        char[] splitChars = {',', ' ', ';'};
+        participantNameTCET.setSplitChar(splitChars);
+
         final Button createQuickTask = (Button) taskCreationView.findViewById(R.id.createQuickTaskButton);
         createQuickTask.setOnClickListener(new View.OnClickListener() {
             @Override

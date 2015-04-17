@@ -340,7 +340,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
                 ""
         );
-        String query = "SELECT "+columnsFromTask + " FROM " + Task.TABLE_NAME + " A LEFT JOIN "+
+        String query = "SELECT DISTINCT "+columnsFromTask + " FROM " + Task.TABLE_NAME + " A LEFT JOIN "+
                 Collaborator.TABLE_NAME + " B ON A.ROWID = B." + Collaborator.KEYS.TASK_ROWID.getName() +
                 " WHERE ( A." +Task.KEYS.OWNER_UUID.getName()+" LIKE \""+deviceOwnerUUID+"\" AND " +
                 "A."+Task.KEYS.STATUS.getName()+
