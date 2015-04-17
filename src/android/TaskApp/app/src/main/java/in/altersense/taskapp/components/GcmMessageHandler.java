@@ -95,6 +95,18 @@ public class GcmMessageHandler extends IntentService {
                         this.syncCompleteBroadcastIntent = new Intent(Config.SHARED_PREF_KEYS.SYNC_IN_PROGRESS.getKey());
                         getApplicationContext().sendBroadcast(syncCompleteBroadcastIntent);
                         break;
+                    case "Deleted":
+                        //Delete the task from the users db
+                        task = taskDbHelper.getTaskByUUID(id);
+                        sendNotification(task.getOwner().getName()
+                                        + " has delete the task: "
+                                        + task.getName(),
+                                "Task Deleted.",
+                                false);
+                        Log.d("GCM", "deletion status" + taskDbHelper.delete(task));
+                        this.syncCompleteBroadcastIntent = new Intent(Config.SHARED_PREF_KEYS.SYNC_IN_PROGRESS.getKey());
+                        getApplicationContext().sendBroadcast(syncCompleteBroadcastIntent);
+                        break;
                 }
             }
         }

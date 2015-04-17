@@ -8,80 +8,76 @@ class Notification():
 	"""docstring for Notification"""
 
 	NOTIFICATION_TYPE = {
-		"New_Task" = "newTask"
-		"Task_Update" = "taskUpdate"
-		"Task_Status_Change" = "taskStatusChange"
-		"Task_Deleted" = "taskDeletion"
-		"Collaborator_Added" = "collAddition"
-		"Collaborator_Deleted" = "collDeletion"
+		"New_Task" : "newTask",
+		"Task_Update" : "taskUpdate",
+		"Task_Status_Change" : "taskStatusChange",
+		"Task_Deleted" : "taskDeletion",
+		"Collaborator_Added" : "collAddition",
+		"Collaborator_Deleted" : "collDeletion"
 	}
 
-	message = Collection()
+	message = {}
 
-	def __init__(self, arg):
-		super(Notification, self).__init__()
-		self.arg = arg
-
-	def taskAdded(task):
-		message["type"] = NOTIFICATION_TYPE["New_Task"]
-		message["ownerName"] = str(task.owner.name)
-		message["taskName"] = str(task.name)
-		message["dateTime"] = time.time()
-		return message
+	def taskAdded(self,task):
+		self.message["type"] = self.NOTIFICATION_TYPE["New_Task"]
+		self.message["ownerName"] = str(task.owner.name)
+		self.message["taskName"] = str(task.name)
+		self.message["dateTime"] = time.time()
+		return self.message
 
 
 	def taskDetailsChange(task):
-		message["type"] = NOTIFICATION_TYPE["Task_Update"]
-		message["ownerName"] = str(task.owner.name)
-		message["taskName"] = str(task.name)
-		message["dateTime"] = time.time()
-		return message
+		self.message["type"] = self.NOTIFICATION_TYPE["Task_Update"]
+		self.message["ownerName"] = str(task.owner.name)
+		self.message["taskName"] = str(task.name)
+		self.message["dateTime"] = time.time()
+		return self.message
 
 
 	def taskStatusChange(task):
-		message["type"] = NOTIFICATION_TYPE["Task_Status_Change"]
-		message["ownerName"] = str(task.owner.name)
-		message["taskName"] = str(task.name)
-		message["status"] = task.status.status
-		message["dateTime"] = time.time()
-		return message		
+		self.message["type"] = self.NOTIFICATION_TYPE["Task_Status_Change"]
+		self.message["ownerName"] = str(task.owner.name)
+		self.message["taskName"] = str(task.name)
+		self.message["status"] = task.status.status
+		self.message["dateTime"] = time.time()
+		return self.message		
 
 
 	def taskDeletion(task):
-		message["type"] = NOTIFICATION_TYPE["Task_Deleted"]
-		message["ownerName"] = str(task.owner.name)
-		message["taskName"] = str(task.name)
-		message["dateTime"] = time.time()
-		return message		
+		self.message["type"] = self.NOTIFICATION_TYPE["Task_Deleted"]
+		self.message["ownerName"] = str(task.owner.name)
+		self.message["taskName"] = str(task.name)
+		self.message["dateTime"] = time.time()
+		return self.message		
 
 
 	def collAddition(taskObj, task):
-		message["type"] = NOTIFICATION_TYPE["Collaborator_Added"]
-		message["ownerName"] = str(task.owner.name)
-		message["unknown"] = 0
-		message["dateTime"] = time.time()
+		self.message["type"] = self.NOTIFICATION_TYPE["Collaborator_Added"]
+		self.message["ownerName"] = str(task.owner.name)
+		self.message["unknown"] = 0
+		self.message["dateTime"] = time.time()
 
 		#Get the removed Collaborator using his mail
 		for userObj.email in taskObj.Collaborators:
 			user = userbll.getUserByEmail(userObj)
 			if (user.name == null) :
-				message["unknown"] +=1
+				self.message["unknown"] +=1
 			else:
-				message["removedColl"].append(user.name)
-		return message
+				self.message["removedColl"].append(user.name)
+		return self.message
 
 
 	def collDeletion(taskObj, task):
-		message["type"] = NOTIFICATION_TYPE["Collaborator_Deleted"]
-		message["ownerName"] = str(task.owner.name)
-		message["unknown"] = 0
-		message["dateTime"] = time.time()
+		self.message["type"] = self.NOTIFICATION_TYPE["Collaborator_Deleted"]
+		self.message["ownerName"] = str(task.owner.name)
+		self.message["unknown"] = 0
+		self.message["dateTime"] = time.time()
 
 		#Get the removed Collaborator using his mail
 		for userObj.email in taskObj.Collaborators:
 			user = userbll.getUserByEmail(userObj)
 			if (user.name == null) :
-				message["unknown"] +=1
+				self.message["unknown"] +=1
 			else:
-				message["removedColl"].append(user.name)
+				self.message["removedColl"].append(user.name)
 		return message
