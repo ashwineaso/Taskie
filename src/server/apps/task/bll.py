@@ -6,7 +6,7 @@ from settings.altEngine import Collection, SyncClass
 from settings.gcmpush import *
 from datetime import datetime
 from bottle import request
-
+from settings.notification import *
 
 def addNewTask(taskObj):
 	"""
@@ -26,8 +26,10 @@ def addNewTask(taskObj):
 	"""
 	#Add a task to the servers task list
 	task = dal.addNewTask(taskObj)
+	notificationObj = Notification()
+	notificationDict = notificationObj.taskAdded(task) #Create a notification dict
 	#Send message to GCM server to notify collaborators of task
-	syncObj = SyncClass("Task", str(task.id))
+	syncObj = SyncClass("Task", str(task.id), notificationDict)
 	pushSyncNotification(syncObj)
 	return task
 
@@ -47,8 +49,10 @@ def editTask(taskObj):
 	"""
 	#Update database with task information
 	task = dal.editTask(taskObj)
+	notificationObj = Notification()
+	notificationDict = notificationObj.taskAdded(task) #Create a notification dict
 	#Send message to GCM server to notify collaborators of task
-	syncObj = SyncClass("Task", str(task.id))
+	syncObj = SyncClass("Task", str(task.id), notificationDict)
 	pushSyncNotification(syncObj)
 	return task
 
@@ -65,8 +69,10 @@ def addCollaborators(taskObj):
 	"""
 
 	task = dal.addCollaborators(taskObj)
+	notificationObj = Notification()
+	notificationDict = notificationObj.taskAdded(task) #Create a notification dict
 	#Send message to GCM server to notify collaborators of task
-	syncObj = SyncClass("Task", str(task.id))
+	syncObj = SyncClass("Task", str(task.id), notificationDict)
 	pushSyncNotification(syncObj)
 	return task
 
@@ -86,8 +92,10 @@ def remCollaborators(taskObj):
 	pushSyncNotification(syncObj, taskObj)
 
 	task = dal.remCollaborators(taskObj)
+	notificationObj = Notification()
+	notificationDict = notificationObj.taskAdded(task) #Create a notification dict
 	#Send message to GCM server to notify collaborators of task
-	syncObj = SyncClass("Task", str(task.id))
+	syncObj = SyncClass("Task", str(task.id), notificationDict)
 	pushSyncNotification(syncObj)
 	return task
 
@@ -105,8 +113,10 @@ def modifyTaskStatus(taskObj):
 	"""
 
 	task = dal.modifyTaskStatus(taskObj)
+	notificationObj = Notification()
+	notificationDict = notificationObj.taskAdded(task) #Create a notification dict
 	#Send message to GCM server to notify collaborators of task
-	syncObj = SyncClass("Task", str(task.id))
+	syncObj = SyncClass("Task", str(task.id), notificationDict)
 	pushSyncNotification(syncObj)
 	return task
 
@@ -125,8 +135,10 @@ def modifyCollStatus(taskObj):
 	"""
 
 	task = dal.modifyCollStatus(taskObj)
+	notificationObj = Notification()
+	notificationDict = notificationObj.taskAdded(task) #Create a notification dict
 	#Send message to GCM server to notify collaborators of task
-	syncObj = SyncClass("Task", str(task.id))
+	syncObj = SyncClass("Task", str(task.id), notificationDict)
 	pushSyncNotification(syncObj)
 	return task
 
