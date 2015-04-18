@@ -39,8 +39,6 @@ public class TasksAdapter extends CursorSwipeAdapter{
 
     private LayoutInflater inflater;
     private Activity activity;
-    private List<Task> taskList;
-    private SwipeLayout taskSwipeLayout;
     private final User deviceOwner;
 
     public Context getContext() {
@@ -54,7 +52,6 @@ public class TasksAdapter extends CursorSwipeAdapter{
 
     @Override
     public void closeAllItems() {
-
     }
 
     public static class ViewHolder{
@@ -65,6 +62,7 @@ public class TasksAdapter extends CursorSwipeAdapter{
         public TextView[] collaborators = new TextView[10];
         public LinearLayout btnConfirm;
         public CheckBox checkComplete;
+        public SwipeLayout taskSwipeLayout;
     }
 
     public TasksAdapter(Activity activity, Cursor tasksAsCursor) {
@@ -90,6 +88,7 @@ public class TasksAdapter extends CursorSwipeAdapter{
         holder.collaboratorList = (LinearLayout) convertView.findViewById(R.id.collaboratorsList);
         holder.taskStatus = (LinearLayout) convertView.findViewById(R.id.taskStatusLinearLayout);
         holder.checkComplete = (CheckBox) convertView.findViewById(R.id.checkComplete);
+        holder.taskSwipeLayout = (SwipeLayout) convertView.findViewById(R.id.taskSwipe);
 
         // Collaborators display
         holder.collaborators[0] = (TextView) convertView.findViewById(R.id.collaboratorName1);
@@ -106,6 +105,10 @@ public class TasksAdapter extends CursorSwipeAdapter{
         //Due Date Time
         holder.dueDateTimeTV = (TextView) convertView.findViewById(R.id.dueDateTimeTextView);
 
+        //Swipe : Configuring the swipe view.
+        holder.taskSwipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
+        holder.taskSwipeLayout.setDragEdge(SwipeLayout.DragEdge.Left);
+
         //Swipe : Delete Confirm and Undo buttons
         holder.btnConfirm = (LinearLayout) convertView.findViewById(R.id.btn_confirm);
 
@@ -114,7 +117,7 @@ public class TasksAdapter extends CursorSwipeAdapter{
     }
 
     @Override
-    public void bindView(final View view, Context context, Cursor cursor) {
+    public void bindView(View view, Context context, Cursor cursor) {
         String TAG = CLASS_TAG+"getView";
         final ViewHolder holder = (ViewHolder) view.getTag();
 
@@ -174,7 +177,7 @@ public class TasksAdapter extends CursorSwipeAdapter{
         holder.btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                taskSwipeLayout.close(true, true); //Close the list item smoothly
+                holder.taskSwipeLayout.close(true); //Close the list item smoothly
                 Toast.makeText(activity.getApplicationContext(), "Task Deleted", Toast.LENGTH_LONG).show();
                 task.setStatus(Config.TASK_STATUS.DELETED.getStatus(), activity); //Change the task status to deleted
                 changeCursor(taskDbHelper.getAllNonGroupTasksAsCursor());
@@ -182,9 +185,7 @@ public class TasksAdapter extends CursorSwipeAdapter{
             }
         });
 
-        this.taskSwipeLayout = (SwipeLayout) view.findViewById(R.id.taskSwipe);
-        this.taskSwipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
-        this.taskSwipeLayout.setDragEdge(SwipeLayout.DragEdge.Left);
+
 
         //CheckBox to toggle task status
         holder.checkComplete.setChecked(task.getStatus(getContext()) == 2);

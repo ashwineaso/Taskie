@@ -53,9 +53,8 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
     private LinearLayout quickCreateStageLinearLayout; // Quick task creation area
     private TaskDbHelper taskDbHelper;
     private boolean isQuickTaskCreationHidden;
-    private View taskCreationView;
     private EditText newTaskTitle;
-    private LinearLayout groupListStageLL;
+    private Button createQuickTask;
     private TokenCompleteCollaboratorsEditText participantNameTCET;
     private FilteredArrayAdapter adapter;
 
@@ -155,10 +154,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                 return convertView;
             }
         };
-        participantNameTCET.setAdapter(adapter);
-
-        this.groupListStageLL = (LinearLayout) findViewById(R.id.groupListStage);
-        Log.d(CLASS_TAG,"Settng adapter to listview.");
+        this.participantNameTCET.setAdapter(adapter);
 
         // Initialize a receiver
         syncCompletionReceiver = new BroadcastReceiver() {
@@ -264,18 +260,9 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
     }
 
     private void setUpQuickTaskLayout() {
-//        Setting up layout inflater
-        LayoutInflater inflater = getLayoutInflater();
-//        Inflate task creation view
-        this.taskCreationView = inflater.inflate(
-                R.layout.quick_task_creation,
-                null
-        );
 
-//        Add view to placeholder
-        this.quickCreateStageLinearLayout.addView(taskCreationView);
-//        Identify edit text
-        this.newTaskTitle = (EditText) taskCreationView.findViewById(R.id.newTaskTitle);
+        // Setting initial views.
+        this.newTaskTitle = (EditText) findViewById(R.id.newTaskTitle);
         this.newTaskTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -294,15 +281,15 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                 }
             }
         });
-        participantNameTCET =
-                (TokenCompleteCollaboratorsEditText) taskCreationView.findViewById(R.id.quickTaskParticipantName);
-        participantNameTCET.setTokenListener(this);
-        participantNameTCET.allowDuplicates(false);
+        this.participantNameTCET =
+                (TokenCompleteCollaboratorsEditText) findViewById(R.id.quickTaskParticipantName);
+        this.participantNameTCET.setTokenListener(this);
+        this.participantNameTCET.allowDuplicates(false);
         char[] splitChars = {',', ' ', ';'};
-        participantNameTCET.setSplitChar(splitChars);
+        this.participantNameTCET.setSplitChar(splitChars);
 
-        final Button createQuickTask = (Button) taskCreationView.findViewById(R.id.createQuickTaskButton);
-        createQuickTask.setOnClickListener(new View.OnClickListener() {
+        this.createQuickTask = (Button) findViewById(R.id.createQuickTaskButton);
+        this.createQuickTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String TAG = CLASS_TAG+" createQuickTask OnClickListener.";
