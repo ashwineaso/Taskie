@@ -114,7 +114,7 @@ public class TasksAdapter extends CursorSwipeAdapter{
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(final View view, Context context, Cursor cursor) {
         String TAG = CLASS_TAG+"getView";
         final ViewHolder holder = (ViewHolder) view.getTag();
 
@@ -174,7 +174,7 @@ public class TasksAdapter extends CursorSwipeAdapter{
         holder.btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                taskSwipeLayout.close(true); //Close the list item smoothly
+                taskSwipeLayout.close(true, true); //Close the list item smoothly
                 Toast.makeText(activity.getApplicationContext(), "Task Deleted", Toast.LENGTH_LONG).show();
                 task.setStatus(Config.TASK_STATUS.DELETED.getStatus(), activity); //Change the task status to deleted
                 changeCursor(taskDbHelper.getAllNonGroupTasksAsCursor());
