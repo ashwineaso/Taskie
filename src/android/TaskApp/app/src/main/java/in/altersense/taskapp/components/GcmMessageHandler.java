@@ -90,7 +90,8 @@ public class GcmMessageHandler extends IntentService {
                                 + task.getName(),
                                 "Collaboration removed.",
                                 false);
-                        // Implement deletion of the task
+                        // Implement deletion of the task since the collaborator has been removed
+                        taskDbHelper.deleteCollaborator(task);
                         Log.d("GCM", "deletion status" + taskDbHelper.delete(task));
                         this.syncCompleteBroadcastIntent = new Intent(Config.SHARED_PREF_KEYS.SYNC_IN_PROGRESS.getKey());
                         getApplicationContext().sendBroadcast(syncCompleteBroadcastIntent);
@@ -103,6 +104,8 @@ public class GcmMessageHandler extends IntentService {
                                         + task.getName(),
                                 "Task Deleted.",
                                 false);
+                        // Delete the task from the database
+                        taskDbHelper.deleteCollaborator(task);
                         Log.d("GCM", "deletion status" + taskDbHelper.delete(task));
                         this.syncCompleteBroadcastIntent = new Intent(Config.SHARED_PREF_KEYS.SYNC_IN_PROGRESS.getKey());
                         getApplicationContext().sendBroadcast(syncCompleteBroadcastIntent);

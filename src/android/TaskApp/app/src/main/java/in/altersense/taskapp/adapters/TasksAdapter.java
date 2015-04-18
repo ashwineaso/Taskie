@@ -21,6 +21,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import in.altersense.taskapp.R;
+import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.Task;
@@ -173,8 +174,9 @@ public class TasksAdapter extends CursorSwipeAdapter{
         holder.btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                taskSwipeLayout.close(true); //Close the list item smoothly
                 Toast.makeText(activity.getApplicationContext(), "Task Deleted", Toast.LENGTH_LONG).show();
-                task.delete(activity.getApplicationContext());
+                task.setStatus(Config.TASK_STATUS.DELETED.getStatus(), activity); //Change the task status to deleted
                 changeCursor(taskDbHelper.getAllNonGroupTasksAsCursor());
                 notifyDataSetChanged();
             }
