@@ -55,7 +55,10 @@ public class TaskDbHelper extends SQLiteOpenHelper {
 
     private static String CREATION_STATEMENT_NOTIFICATION = "CREATE TABLE " + Notification.TABLE_NAME + " ( " +
             Notification.KEYS.TASK_ROW_ID.getName() + " " + Notification.KEYS.TASK_ROW_ID.getType() + ", " +
+            Notification.KEYS.TASK_UUID.getName() + " " + Notification.KEYS.TASK_UUID.getType() + ", " +
+            Notification.KEYS.OWNER_NAME.getName() + " " + Notification.KEYS.OWNER_NAME.getType() + ", " +
             Notification.KEYS.MESSAGE.getName() + " " + Notification.KEYS.MESSAGE.getType() + ", " +
+            Notification.KEYS.DATE_TIME.getName() + " " + Notification.KEYS.DATE_TIME.getType() + ", " +
             Notification.KEYS.SEEN.getName() + " " + Notification.KEYS.SEEN.getType() + ");";
 
     public TaskDbHelper(Context context) {

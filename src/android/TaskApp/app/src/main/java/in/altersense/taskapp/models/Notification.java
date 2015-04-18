@@ -17,11 +17,11 @@ public class Notification {
      * Table name for Notification
      */
     public static final String TABLE_NAME = "Notification";
+    private String ownerName, message, taskUuid;
     private Context context;
-    private String message;
     private Task task;
     private boolean seen;
-    private long taskRowId;
+    private long taskRowId, dateTime;
     private long id;
 
     /**
@@ -30,7 +30,11 @@ public class Notification {
     public static enum KEYS {
 
         TASK_ROW_ID("task_row_id", "INTEGER"),
+        TASK_UUID("task_uuid", "TEXT"),
+        TYPE("type", "TEXT"),
+        OWNER_NAME("owner_name", "TEXT"),
         MESSAGE("message","TEXT"),
+        DATE_TIME("message", "INTEGER"),
         SEEN("seen","INTEGER");
 
         private final String name;
@@ -53,10 +57,16 @@ public class Notification {
      * @param context the current context
      * @param message the message for notification
      */
-    public Notification(Task task, Context context, String message) {
+    public Notification(Task task,
+                        Context context,
+                        String message,
+                        String ownerName,
+                        long dateTime) {
         this.task = task;
         this.context = context;
         this.message = message;
+        this.ownerName = ownerName;
+        this.dateTime = dateTime;
         this.seen = false;
         this.id = 0;
     }
@@ -69,8 +79,11 @@ public class Notification {
     public Notification(Cursor cursor, Context context) {
         TaskDbHelper taskDbHelper = new TaskDbHelper(context);
         this.taskRowId = cursor.getLong(0);
-        this.message = cursor.getString(1);
-        this.setSeen(cursor.getInt(2));
+        this.taskUuid = cursor.getString(1);
+        this.ownerName = cursor.getString(2);
+        this.message = cursor.getString(3);
+        this.dateTime = cursor.getLong(4);
+        this.setSeen(cursor.getInt(5));
         this.task = taskDbHelper.getTaskByRowId(this.taskRowId);
 
     }
