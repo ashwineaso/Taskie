@@ -18,7 +18,7 @@ class Collection():
 
 class SyncClass():
     syncObj = {}
-    def __init__(self, datatype , type_id, notification ):
+    def __init__(self, datatype , type_id, notification = {}):
         self.datatype = datatype
         self.id = type_id
         self.notification = notification
