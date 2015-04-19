@@ -91,9 +91,9 @@ def remCollaborators(taskObj):
 	syncObj = SyncClass("CollRemoved", str(taskObj.id))
 	pushSyncNotification(syncObj, taskObj)
 
-	task = dal.remCollaborators(self, taskObj, task)
+	task = dal.remCollaborators(taskObj)
 	notificationObj = Notification()
-	notificationDict = notificationObj.collDeletion(task) #Create a notification dict
+	notificationDict = notificationObj.collDeletion(taskObj, task) #Create a notification dict
 	#Send message to GCM server to notify collaborators of task
 	syncObj = SyncClass("Task", str(task.id), notificationDict)
 	pushSyncNotification(syncObj)
