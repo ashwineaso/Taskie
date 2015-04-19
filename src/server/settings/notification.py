@@ -82,4 +82,4 @@ class Notification():
 				self.message["unknown"] +=1
 			else:
 				self.message["removedColl"].append(user.name)
-		return message
+		return self.message
