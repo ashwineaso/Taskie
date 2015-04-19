@@ -46,7 +46,7 @@ public class NotificationHandler {
         taskUuid = this.extras.getString("id");
         ownerName = this.extras.getString("ownerName");
         taskName = this.extras.getString("taskName");
-        dateTime = this.extras.getInt("dateTime");
+        dateTime = Integer.valueOf(this.extras.getString("dateTime"));
         //Choose create function based on the notification type
         switch (type) {
 
@@ -63,12 +63,9 @@ public class NotificationHandler {
 
     private void newTaskNotification() {
         message = "" + ownerName + " has assigned you a new task : " + taskName + ".";
-        //Retrieve the task from the db
-        task = taskDbHelper.getTaskByUUID(taskUuid);
-        //Create a new Notification object
-        Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
-        //Call the create notification method
-        taskDbHelper.createNotification(newTaskNotification);
+        sendNotification(message,
+                        "Task Assigned");
+        //Since the task has not been added yet
     }
 
     private void taskUpdateNotification() {
@@ -138,6 +135,33 @@ public class NotificationHandler {
         Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
         //Call the create notification method
         taskDbHelper.createNotification(newTaskNotification);
+
+    }
+
+    private void sendNotification(String msg, String title) {
+
+        mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        Intent intent;
+        if(task.getUuid()!=null) {
+            intent  = new Intent(context, TaskActivity.class);
+            intent.putExtra(Task.ID, task.getUuid());
+        } else {
+            intent = new Intent(context, DashboardActivity.class);
+        }
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(context)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle(title)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
+                        .setDefaults(android.app.Notification.DEFAULT_ALL)
+                        .setContentText(msg);
+
+        mBuilder.setContentIntent(pendingIntent);
+        mBuilder.setAutoCancel(true);
+        mBuilder.setStyle(new NotificationCompat.InboxStyle());
+        mNotificationManager.notify(0, mBuilder.build());
 
     }
 }

@@ -59,7 +59,7 @@ class Notification():
 		self.message["addedColl"] = []
 
 		#Get the removed Collaborator using his mail
-		for userObj.email in taskObj.Collaborators:
+		for userObj.email in taskObj.collaborators:
 			user = userbll.getUserByEmail(userObj)
 			if (user.name == null) :
 				self.message["unknown"] +=1
@@ -76,7 +76,7 @@ class Notification():
 		self.message["removedColl"] = []
 
 		#Get the removed Collaborator using his mail
-		for userObj.email in taskObj.Collaborators:
+		for userObj.email in taskObj.collaborators:
 			user = userbll.getUserByEmail(userObj)
 			if (user.name == null) :
 				self.message["unknown"] +=1
