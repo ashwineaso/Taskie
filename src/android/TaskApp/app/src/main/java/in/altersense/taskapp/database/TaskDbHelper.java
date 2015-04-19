@@ -56,7 +56,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
     private static String CREATION_STATEMENT_NOTIFICATION = "CREATE TABLE " + Notification.TABLE_NAME + " ( " +
             Notification.KEYS.TASK_ROW_ID.getName() + " " + Notification.KEYS.TASK_ROW_ID.getType() + ", " +
             Notification.KEYS.TASK_UUID.getName() + " " + Notification.KEYS.TASK_UUID.getType() + ", " +
-            Notification.KEYS.OWNER_NAME.getName() + " " + Notification.KEYS.OWNER_NAME.getType() + ", " +
+            Notification.KEYS.TYPE.getName() + " " + Notification.KEYS.TYPE.getType() + ", " +
             Notification.KEYS.MESSAGE.getName() + " " + Notification.KEYS.MESSAGE.getType() + ", " +
             Notification.KEYS.DATE_TIME.getName() + " " + Notification.KEYS.DATE_TIME.getType() + ", " +
             Notification.KEYS.SEEN.getName() + " " + Notification.KEYS.SEEN.getType() + ");";
@@ -581,7 +581,11 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         // Setup values
         ContentValues values = new ContentValues();
         values.put(Notification.KEYS.TASK_ROW_ID.getName(), notification.getTaskRowId());
+        values.put(Notification.KEYS.TASK_UUID.getName(), notification.getTaskUuid());
+        values.put(Notification.KEYS.TYPE.getName(), notification.getType());
         values.put(Notification.KEYS.MESSAGE.getName(), notification.getMessage());
+        values.put(Notification.KEYS.DATE_TIME.getName(), notification.getDateTime());
+        values.put(Notification.KEYS.SEEN.getName(), notification.getSeenAsInt());
         // Insert row
         long id = writableDb.insert(
                 Notification.TABLE_NAME,

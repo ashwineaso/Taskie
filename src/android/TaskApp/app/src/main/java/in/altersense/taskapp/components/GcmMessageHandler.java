@@ -61,8 +61,6 @@ public class GcmMessageHandler extends IntentService {
                 //perform the operation
                 datatype = extras.getString("datatype");
                 id = extras.getString("id");
-                // Get info required for notification
-                String notificationType = extras.getString("type");
                 Log.i("GCM", "Recieved + ( " + MessageType + " ) + datatype : " +datatype + " , id : " + id);
                 TaskDbHelper taskDbHelper = new TaskDbHelper(getApplicationContext());
 
@@ -113,7 +111,8 @@ public class GcmMessageHandler extends IntentService {
                         getApplicationContext().sendBroadcast(syncCompleteBroadcastIntent);
                         break;
                 }
-
+                NotificationHandler notificationHandler = new NotificationHandler();
+                notificationHandler.createNotification(extras, getApplicationContext());
 
             }
         }

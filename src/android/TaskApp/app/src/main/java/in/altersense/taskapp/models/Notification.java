@@ -17,7 +17,7 @@ public class Notification {
      * Table name for Notification
      */
     public static final String TABLE_NAME = "Notification";
-    private String ownerName, message, taskUuid;
+    private String message, taskUuid, type;
     private Context context;
     private Task task;
     private boolean seen;
@@ -32,7 +32,6 @@ public class Notification {
         TASK_ROW_ID("task_row_id", "INTEGER"),
         TASK_UUID("task_uuid", "TEXT"),
         TYPE("type", "TEXT"),
-        OWNER_NAME("owner_name", "TEXT"),
         MESSAGE("message","TEXT"),
         DATE_TIME("message", "INTEGER"),
         SEEN("seen","INTEGER");
@@ -55,20 +54,25 @@ public class Notification {
      * Constructor with task,
      * @param task Task whose notification is being added,
      * @param context the current context
+     * @param type
      * @param message the message for notification
      */
     public Notification(Task task,
                         Context context,
+                        String type,
                         String message,
-                        String ownerName,
                         long dateTime) {
         this.task = task;
         this.context = context;
+        this.type = type;
         this.message = message;
-        this.ownerName = ownerName;
         this.dateTime = dateTime;
+        //Manually set seen as false
         this.seen = false;
         this.id = 0;
+        //retrieve the uuid and row_id from the task
+        this.taskRowId = this.task.getId();
+        this.taskUuid = this.task.getUuid();
     }
 
     /**
@@ -80,7 +84,7 @@ public class Notification {
         TaskDbHelper taskDbHelper = new TaskDbHelper(context);
         this.taskRowId = cursor.getLong(0);
         this.taskUuid = cursor.getString(1);
-        this.ownerName = cursor.getString(2);
+        this.type = cursor.getString(2);
         this.message = cursor.getString(3);
         this.dateTime = cursor.getLong(4);
         this.setSeen(cursor.getInt(5));
@@ -103,14 +107,23 @@ public class Notification {
         return columns;
     }
 
+
     public long getTaskRowId() {return taskRowId;}
+
+    public String getTaskUuid() {return taskUuid;}
+
+    public String getType() {return type;}
 
     public String getMessage() {return message;}
 
+    public long getDateTime() {return dateTime;}
+
     public boolean getSeen() {return seen;}
+
     public  int getSeenAsInt() {return getSeen() == true? 1: 0;}
 
     public void setSeen(boolean seen) {this.seen = seen;}
+
     public void setSeen(int seen) {this.seen = seen ==1;}
 
     public void setId(long id) {this.id = id;}
