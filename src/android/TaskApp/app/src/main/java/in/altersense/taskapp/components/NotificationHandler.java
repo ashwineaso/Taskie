@@ -1,9 +1,16 @@
 package in.altersense.taskapp.components;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.widget.Switch;
 
+import in.altersense.taskapp.DashboardActivity;
+import in.altersense.taskapp.R;
+import in.altersense.taskapp.TaskActivity;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.models.Notification;
@@ -22,6 +29,8 @@ public class NotificationHandler {
     private String message;
     private Task task;
     private Context context;
+    private String collNames;
+    private NotificationManager mNotificationManager;
 
     public void createNotification(Bundle extras, Context context) {
 
@@ -98,10 +107,32 @@ public class NotificationHandler {
     }
 
     private void collAdditionNotification() {
+        String[] addedCollList = extras.getStringArray("removedColl");
+        int unknownColl = extras.getInt("unknown");
+        for (String s: addedCollList) { collNames += "" + s + "others, "; }
+        if (unknownColl > 0) { collNames += "and " + unknownColl + " collaborators";}
+        message = "" + ownerName + " has added " + collNames + " to the task : " + taskName;
+        //Retrieve the task from the db
+        task = taskDbHelper.getTaskByUUID(taskUuid);
+        //Create a new Notification object
+        Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
+        //Call the create notification method
+        taskDbHelper.createNotification(newTaskNotification);
 
     }
 
     private void collDeletionNotification() {
+        String[] addedCollList = extras.getStringArray("removedColl");
+        int unknownColl = extras.getInt("unknown");
+        for (String s: addedCollList) { collNames += "" + s + "others, "; }
+        if (unknownColl > 0) { collNames += "and " + unknownColl + " collaborators";}
+        message = "" + ownerName + " has removed " + collNames + " from the task : " + taskName;
+        //Retrieve the task from the db
+        task = taskDbHelper.getTaskByUUID(taskUuid);
+        //Create a new Notification object
+        Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
+        //Call the create notification method
+        taskDbHelper.createNotification(newTaskNotification);
 
     }
 }
