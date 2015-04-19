@@ -24,7 +24,7 @@ def pushSyncNotification(syncObj, taskObj = Collection()):
         """ Task is to be synced and message to be sent to owner and collaborators """
         task = taskdal.getTaskById(syncObj)
         for coll in task.collaborators:
-            if not coll.user.serverPushId in androidPayload:
+            if not coll.user.serverPushId in androidPayload and coll.status.status > -1:
                 androidPayload.append(str(coll.user.serverPushId))
         androidPayload.append(str(task.owner.serverPushId))
 
@@ -32,7 +32,7 @@ def pushSyncNotification(syncObj, taskObj = Collection()):
         """ Group is to be synced and message to be sent to all group members"""
         group = groupdal.getGroupById(syncObj)
         for member in group.members:
-            if not member.serverPushId in androidPayload:
+            if not member.serverPushId in androidPayload and member.status.status > -1:
                 androidPayload.append(str(member.serverPushId))
         androidPayload.append(str(group.owner.serverPushId))
 
@@ -40,13 +40,13 @@ def pushSyncNotification(syncObj, taskObj = Collection()):
         """Buzz all the collaborators of a task """
         task = taskdal.getTaskById(syncObj)
         for coll in task.collaborators:
-            if not coll.user.serverPushId in androidPayload:
+            if not coll.user.serverPushId in androidPayload and coll.status.status > -1:
                 androidPayload.append(str(coll.user.serverPushId))
 
     def caseDelete():
         """Notfiy all the task users that the owner has deleted the task """
         for coll in taskObj.collaborators:
-            if not coll.user.serverPushId in androidPayload:
+            if not coll.user.serverPushId in androidPayload and coll.status.status > -1:
                 androidPayload.append(str(coll.user.serverPushId))
 
     def caseCollRem():
@@ -54,7 +54,7 @@ def pushSyncNotification(syncObj, taskObj = Collection()):
         task = taskdal.getTaskById(syncObj)
         for userObj.email in taskObj.collaborators:
             coll = userdal.getUserByEmail(userObj)
-            if not coll.serverPushId in androidPayload:
+            if not coll.serverPushId in androidPayload and coll.status.status > -1:
                 androidPayload.append(str(coll.serverPushId))
 
     #Define the lookup dictionary

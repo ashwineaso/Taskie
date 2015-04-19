@@ -56,6 +56,7 @@ class Notification():
 		self.message["ownerName"] = str(task.owner.name)
 		self.message["unknown"] = 0
 		self.message["dateTime"] = time.time()
+		self.message["addedColl"] = []
 
 		#Get the removed Collaborator using his mail
 		for userObj.email in taskObj.Collaborators:
@@ -63,7 +64,7 @@ class Notification():
 			if (user.name == null) :
 				self.message["unknown"] +=1
 			else:
-				self.message["removedColl"].append(user.name)
+				self.message["addedColl"].append(user.name)
 		return self.message
 
 
@@ -72,6 +73,7 @@ class Notification():
 		self.message["ownerName"] = str(task.owner.name)
 		self.message["unknown"] = 0
 		self.message["dateTime"] = time.time()
+		self.message["removedColl"] = []
 
 		#Get the removed Collaborator using his mail
 		for userObj.email in taskObj.Collaborators:

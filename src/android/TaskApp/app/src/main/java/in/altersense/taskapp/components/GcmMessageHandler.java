@@ -111,6 +111,9 @@ public class GcmMessageHandler extends IntentService {
                         getApplicationContext().sendBroadcast(syncCompleteBroadcastIntent);
                         break;
                 }
+                NotificationHandler notificationHandler = new NotificationHandler();
+                notificationHandler.createNotification(extras, getApplicationContext());
+
             }
         }
 
