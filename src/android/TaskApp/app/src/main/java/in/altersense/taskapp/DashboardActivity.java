@@ -1,11 +1,7 @@
 package in.altersense.taskapp;
 
-import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -17,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -25,7 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.daimajia.swipe.SwipeLayout;
+import com.squareup.otto.Subscribe;
 import com.tokenautocomplete.FilteredArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView;
 
@@ -35,10 +30,12 @@ import java.util.List;
 import in.altersense.taskapp.adapters.TasksAdapter;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.AltEngine;
+import in.altersense.taskapp.components.BaseApplication;
 import in.altersense.taskapp.components.GCMHandler;
 import in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
+import in.altersense.taskapp.events.ChangeInTasksEvent;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.User;
 import in.altersense.taskapp.requests.CreateTaskRequest;
@@ -61,8 +58,6 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
     private TasksAdapter taskAdapter;
 
     private GCMHandler gcmHandler;
-
-    private BroadcastReceiver syncCompletionReceiver;
 
 //    Authenticated user details.
     private String ownerId;
@@ -88,6 +83,9 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         }
 
         setContentView(R.layout.activity_tasks);
+
+        // Register eventBus
+        BaseApplication.getEventBus().register(this);
 
         // Initializing the dbhelper.
         this.taskDbHelper = new TaskDbHelper(this.getApplicationContext());
@@ -155,17 +153,6 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
             }
         };
         this.participantNameTCET.setAdapter(adapter);
-
-        // Initialize a receiver
-        syncCompletionReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.d(CLASS_TAG, "Received broadcast.");
-                taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasksAsCursor());
-                taskList.setAdapter(taskAdapter);
-            }
-        };
-        registerReceiver(syncCompletionReceiver, new IntentFilter(Config.SHARED_PREF_KEYS.SYNC_IN_PROGRESS.getKey()));
 
         // Inflate all the nonGroupTasks in the TasksListStage.
         Log.d(CLASS_TAG, "Done.");
@@ -455,5 +442,11 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Subscribe
+    public void onChangeInTaskList(ChangeInTasksEvent changeInTasksEvent) {
+        taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasksAsCursor());
+        taskList.setAdapter(taskAdapter);
     }
 }

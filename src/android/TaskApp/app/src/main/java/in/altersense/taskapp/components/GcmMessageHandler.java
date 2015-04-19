@@ -5,22 +5,19 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-import java.net.URI;
-
 import in.altersense.taskapp.DashboardActivity;
 import in.altersense.taskapp.R;
 import in.altersense.taskapp.TaskActivity;
-import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.database.TaskDbHelper;
-import in.altersense.taskapp.models.Notification;
+import in.altersense.taskapp.events.ChangeInTasksEvent;
+import in.altersense.taskapp.events.UserRemovedFromCollaboratorsEvent;
+import in.altersense.taskapp.events.TaskDeletedEvent;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.requests.SyncRequest;
 
@@ -69,7 +66,7 @@ public class GcmMessageHandler extends IntentService {
                         //Implement syncing of a Task
                         Task task = new Task();
                         task.setUuid(id, GcmMessageHandler.this);
-                        Log.d("GCM", "Abbout tu sync task");
+                        Log.d("GCM", "About to sync task");
                         SyncRequest syncRequest = new SyncRequest(task, getApplicationContext());
                         syncRequest.execute();
                         break;
@@ -82,6 +79,7 @@ public class GcmMessageHandler extends IntentService {
                                 "Reminder",
                                 true);
                         break;
+
                     case "CollRemoved":
                         // Display a notification
                         task = taskDbHelper.getTaskByUUID(id);
@@ -93,9 +91,14 @@ public class GcmMessageHandler extends IntentService {
                         // Implement deletion of the task since the collaborator has been removed
                         taskDbHelper.deleteCollaborator(task);
                         Log.d("GCM", "deletion status" + taskDbHelper.delete(task));
-                        this.syncCompleteBroadcastIntent = new Intent(Config.SHARED_PREF_KEYS.SYNC_IN_PROGRESS.getKey());
-                        getApplicationContext().sendBroadcast(syncCompleteBroadcastIntent);
+
+                        // Event post for refreshing task list in dashboard.
+                        BaseApplication.getEventBus().post(new ChangeInTasksEvent("Collaborator removed."));
+
+                        // Event post for moving user away from TaskView if user is viewing the particular task.
+                        BaseApplication.getEventBus().post(new UserRemovedFromCollaboratorsEvent(id));
                         break;
+
                     case "Deleted":
                         //Delete the task from the users db
                         task = taskDbHelper.getTaskByUUID(id);
@@ -107,8 +110,12 @@ public class GcmMessageHandler extends IntentService {
                         // Delete the task from the database
                         taskDbHelper.deleteCollaborator(task);
                         Log.d("GCM", "deletion status" + taskDbHelper.delete(task));
-                        this.syncCompleteBroadcastIntent = new Intent(Config.SHARED_PREF_KEYS.SYNC_IN_PROGRESS.getKey());
-                        getApplicationContext().sendBroadcast(syncCompleteBroadcastIntent);
+
+                        // Event post for refreshing task list in dashboard.
+                        BaseApplication.getEventBus().post(new ChangeInTasksEvent("Collaborator removed."));
+
+                        // Event post for moving user away from TaskView if user is viewing the particular task.
+                        BaseApplication.getEventBus().post(new TaskDeletedEvent(id));
                         break;
                 }
             }
