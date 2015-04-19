@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.widget.Switch;
 
 import in.altersense.taskapp.DashboardActivity;
@@ -21,10 +22,12 @@ import in.altersense.taskapp.models.Task;
  */
 public class NotificationHandler {
 
+    private static final String CLASS_TAG = "NotificationHandler";
+
     String type;
     private Bundle extras;
     private String ownerName, taskName, taskUuid;
-    private long dateTime;
+    private Integer dateTime;
     private TaskDbHelper taskDbHelper;
     private String message;
     private Task task;
@@ -34,14 +37,16 @@ public class NotificationHandler {
 
     public void createNotification(Bundle extras, Context context) {
 
+        String TAG = CLASS_TAG + " createNotification()";
         taskDbHelper = new TaskDbHelper(context);
         this.context = context;
         this.extras = extras;
         type = this.extras.getString("type");
+        Log.d(TAG, "Type of notification : " + type);
         taskUuid = this.extras.getString("id");
         ownerName = this.extras.getString("ownerName");
         taskName = this.extras.getString("taskName");
-        dateTime = Long.parseLong(this.extras.getString("dateTime"));
+        dateTime = this.extras.getInt("dateTime");
         //Choose create function based on the notification type
         switch (type) {
 

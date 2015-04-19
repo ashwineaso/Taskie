@@ -21,7 +21,8 @@ public class Notification {
     private Context context;
     private Task task;
     private boolean seen;
-    private long taskRowId, dateTime;
+    private long taskRowId;
+    private int dateTime;
     private long id;
 
     /**
@@ -56,12 +57,13 @@ public class Notification {
      * @param context the current context
      * @param type
      * @param message the message for notification
+     * @param dateTime
      */
     public Notification(Task task,
                         Context context,
                         String type,
                         String message,
-                        long dateTime) {
+                        int dateTime) {
         this.task = task;
         this.context = context;
         this.type = type;
@@ -86,7 +88,7 @@ public class Notification {
         this.taskUuid = cursor.getString(1);
         this.type = cursor.getString(2);
         this.message = cursor.getString(3);
-        this.dateTime = cursor.getLong(4);
+        this.dateTime = cursor.getInt(4);
         this.setSeen(cursor.getInt(5));
         this.task = taskDbHelper.getTaskByRowId(this.taskRowId);
 

@@ -18,7 +18,7 @@ class Notification():
 
 	message = {}
 
-	def taskAdded(self,task):
+	def taskAdded(self, task):
 		self.message["type"] = self.NOTIFICATION_TYPE["New_Task"]
 		self.message["ownerName"] = str(task.owner.name)
 		self.message["taskName"] = str(task.name)
@@ -26,7 +26,7 @@ class Notification():
 		return self.message
 
 
-	def taskDetailsChange(task):
+	def taskDetailsChange(self, task):
 		self.message["type"] = self.NOTIFICATION_TYPE["Task_Update"]
 		self.message["ownerName"] = str(task.owner.name)
 		self.message["taskName"] = str(task.name)
@@ -34,7 +34,7 @@ class Notification():
 		return self.message
 
 
-	def taskStatusChange(task):
+	def taskStatusChange(self, task):
 		self.message["type"] = self.NOTIFICATION_TYPE["Task_Status_Change"]
 		self.message["ownerName"] = str(task.owner.name)
 		self.message["taskName"] = str(task.name)
@@ -43,7 +43,7 @@ class Notification():
 		return self.message		
 
 
-	def taskDeletion(task):
+	def taskDeletion(self, task):
 		self.message["type"] = self.NOTIFICATION_TYPE["Task_Deleted"]
 		self.message["ownerName"] = str(task.owner.name)
 		self.message["taskName"] = str(task.name)
@@ -51,7 +51,7 @@ class Notification():
 		return self.message		
 
 
-	def collAddition(taskObj, task):
+	def collAddition(self, taskObj, task):
 		self.message["type"] = self.NOTIFICATION_TYPE["Collaborator_Added"]
 		self.message["ownerName"] = str(task.owner.name)
 		self.message["unknown"] = 0
@@ -68,7 +68,7 @@ class Notification():
 		return self.message
 
 
-	def collDeletion(taskObj, task):
+	def collDeletion(self, taskObj, task):
 		self.message["type"] = self.NOTIFICATION_TYPE["Collaborator_Deleted"]
 		self.message["ownerName"] = str(task.owner.name)
 		self.message["unknown"] = 0
