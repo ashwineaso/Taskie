@@ -81,11 +81,12 @@ public class NotificationHandler {
         Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
         //Call the create notification method
         taskDbHelper.createNotification(newTaskNotification);
+        sendNotification(message, "Task Updated");
 
     }
 
     private void taskStatusChangeNotification() {
-        int status = this.extras.getInt("status");
+        int status = Integer.parseInt(this.extras.getString("status"));
         String statusAsString = Config.TASK_STATUS.INCOMPLETE.getStatusText();
         switch (status) {
             case 1 : statusAsString = Config.TASK_STATUS.INCOMPLETE.getStatusText(); break;
@@ -99,6 +100,8 @@ public class NotificationHandler {
         Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
         //Call the create notification method
         taskDbHelper.createNotification(newTaskNotification);
+        //If user is not device owner, send a push notification
+        if(!task.isOwnedyDeviceUser(context)) {sendNotification(message, "Task Status");}
 
     }
 
@@ -110,37 +113,47 @@ public class NotificationHandler {
         Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
         //Call the create notification method
         taskDbHelper.createNotification(newTaskNotification);
+        //If user is not device owner, send a push notification
+        if(!task.isOwnedyDeviceUser(context)) {sendNotification(message, "Task Deleted");}
 
     }
 
     private void collAdditionNotification() {
-        String[] addedCollList = extras.getString("removedColl").split(",");
-        int unknownColl = Integer.parseInt(extras.getString("unknown"));
-        for (String s: addedCollList) { collNames += "" + s + "others, "; }
-        if (unknownColl > 0) { collNames += "and " + unknownColl + " collaborators";}
-        message = "" + ownerName + " has added " + collNames + " to the task : " + taskName;
-        //Retrieve the task from the db
-        task = taskDbHelper.getTaskByUUID(taskUuid);
-        //Create a new Notification object
-        Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
-        //Call the create notification method
-        taskDbHelper.createNotification(newTaskNotification);
-
+        //Check if the string is empty or not and then perform operation
+        if (!extras.getString("addedColl").equals("")) {
+            String[] addedCollList = extras.getString("addedColl").split(",");
+            int unknownColl = Integer.parseInt(extras.getString("unknown"));
+            for (String s: addedCollList) { collNames += "" + s + "others, "; }
+            if (unknownColl > 0) { collNames += "and " + unknownColl + " collaborators";}
+            message = "" + ownerName + " has added " + collNames + " to the task : " + taskName;
+            //Retrieve the task from the db
+            task = taskDbHelper.getTaskByUUID(taskUuid);
+            //Create a new Notification object
+            Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
+            //Call the create notification method
+            taskDbHelper.createNotification(newTaskNotification);
+            //If user is not device owner, send a push notification
+            if(!task.isOwnedyDeviceUser(context)) {sendNotification(message, "Collaborator Added");}
+        }
     }
 
     private void collDeletionNotification() {
-        String[] addedCollList = extras.getString("removedColl").split(",");
-        int unknownColl = Integer.parseInt(extras.getString("unknown"));
-        for (String s: addedCollList) { collNames += "" + s + "others, "; }
-        if (unknownColl > 0) { collNames += "and " + unknownColl + " collaborators";}
-        message = "" + ownerName + " has removed " + collNames + " from the task : " + taskName;
-        //Retrieve the task from the db
-        task = taskDbHelper.getTaskByUUID(taskUuid);
-        //Create a new Notification object
-        Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
-        //Call the create notification method
-        taskDbHelper.createNotification(newTaskNotification);
-
+        //Check if the string is empty or not and then perform the operation
+        if (!extras.getString("removedColl").equals("")) {
+            String[] addedCollList = extras.getString("removedColl").split(",");
+            int unknownColl = Integer.parseInt(extras.getString("unknown"));
+            for (String s: addedCollList) { collNames += "" + s + "others, "; }
+            if (unknownColl > 0) { collNames += "and " + unknownColl + " collaborators";}
+            message = "" + ownerName + " has removed " + collNames + " from the task : " + taskName;
+            //Retrieve the task from the db
+            task = taskDbHelper.getTaskByUUID(taskUuid);
+            //Create a new Notification object
+            Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
+            //Call the create notification method
+            taskDbHelper.createNotification(newTaskNotification);
+            //If user is not device owner, send a push notification
+            if(!task.isOwnedyDeviceUser(context)) {sendNotification(message, "Collaborator Removed");}
+        }
     }
 
     private void sendNotification(String msg, String title) {

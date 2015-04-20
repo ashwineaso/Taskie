@@ -62,15 +62,15 @@ class Notification():
 		message["ownerName"] = str(task.owner.name)
 		message["unknown"] = 0
 		message["dateTime"] = self.seconds_time
-		message["addedColl"] = []
+		message["addedColl"] = ""
 
 		#Get the removed Collaborator using his mail
 		for userObj.email in taskObj.collaborators:
 			user = userbll.getUserByEmail(userObj)
-			if (user.name == null) :
+			if not (user.name) :
 				message["unknown"] +=1
 			else:
-				message["addedColl"].append(user.name)
+				message["addedColl"] += user.name + ", "
 		return message
 
 
@@ -81,13 +81,13 @@ class Notification():
 		message["ownerName"] = str(task.owner.name)
 		message["unknown"] = 0
 		message["dateTime"] = self.seconds_time
-		message["removedColl"] = []
+		message["removedColl"] = ""
 
 		#Get the removed Collaborator using his mail
 		for userObj.email in taskObj.collaborators:
 			user = userbll.getUserByEmail(userObj)
-			if (user.name == null) :
+			if not (user.name) :
 				message["unknown"] +=1
 			else:
-				message["removedColl"].append(user.name)
+				message["removedColl"] += user.name + ", "
 		return message
