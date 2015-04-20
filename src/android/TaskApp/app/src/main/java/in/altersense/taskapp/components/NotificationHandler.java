@@ -9,6 +9,8 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Switch;
 
+import java.util.List;
+
 import in.altersense.taskapp.DashboardActivity;
 import in.altersense.taskapp.R;
 import in.altersense.taskapp.TaskActivity;
@@ -187,29 +189,32 @@ public class NotificationHandler {
     }
 
     private void sendNotification(String msg, String title) {
-
         mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Intent intent;
-        try {
-            taskUuid = task.getUuid();
-            intent  = new Intent(context, TaskActivity.class);
-            intent.putExtra(Task.ID, taskUuid);
-        } catch (NullPointerException e){
-            intent = new Intent(context, DashboardActivity.class);
-        }
+        Intent intent =  new Intent(context, DashboardActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle(title)
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
-                        .setDefaults(android.app.Notification.DEFAULT_ALL)
-                        .setContentText(msg);
+                        .setContentText(msg)
+                        .setDefaults(1);
+
+        //Retrieve all the unseen notifications
+        List<Notification> notificationList = taskDbHelper.retrieveUnseenNotiifcation();
+        //Set the big notification style
+        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+        //Set a big content title
+        inboxStyle.setBigContentTitle("Taskie");
+
+        //Move the events to the bigview
+        for (Notification notification: notificationList) {
+            inboxStyle.addLine(notification.getMessage());
+        }
 
         mBuilder.setContentIntent(pendingIntent);
         mBuilder.setAutoCancel(true);
-        mBuilder.setStyle(new NotificationCompat.InboxStyle());
+        mBuilder.setStyle(inboxStyle);
         mNotificationManager.notify(0, mBuilder.build());
 
     }

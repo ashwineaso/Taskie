@@ -659,6 +659,38 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         return notification;
     }
 
+    public List<Notification> retrieveUnseenNotiifcation() {
+        String TAG = CLASS_TAG + "retrieveUnseenNotification()";
+        List<Notification> notificationList = new ArrayList<>();
+        //Open readable database
+        SQLiteDatabase readableDb = this.getReadableDatabase();
+        //Make query
+        Cursor result = readableDb.query(
+                Notification.TABLE_NAME,
+                Notification.getAllColumns(),
+                Notification.KEYS.SEEN + "=?",
+                new String[] {
+                        String.valueOf(0)
+                },
+                null,
+                null,
+                null
+        );
+        result.moveToFirst();
+        //loop through each cursor and add new notification to a list
+        do {
+            Notification notification = new Notification(result, this.context);
+            notificationList.add(notification);
+        } while (result.moveToNext());
+        //close the db, close the cursor
+        readableDb.close();
+        result.close();
+        //return list of all notification
+        return notificationList;
+    }
+
+
+
     public boolean deleteNotification(Notification notification) {
         String TAG = CLASS_TAG + "deleteNotification";
         //Open  writable database.
