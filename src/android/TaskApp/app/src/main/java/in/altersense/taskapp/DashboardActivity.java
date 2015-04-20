@@ -112,7 +112,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                 Intent intent = new Intent(DashboardActivity.this, TaskActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey(), selectedTask.getId());
-                startActivity(intent);
+                startActivityForResult(intent,0);
             }
         });
 
@@ -129,7 +129,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         UserDbHelper userDbHelper = new UserDbHelper(this);
         // Setting a Filtered Array Adapter to autocomplete with users in db
         userList = userDbHelper.listAllUsers();
-        Log.d(CLASS_TAG, "User list: "+userList.toString());
+        Log.d(CLASS_TAG, "User list: " + userList.toString());
 
         adapter = new FilteredArrayAdapter<User>(this, R.layout.collaorator_list_layout, userList) {
             @Override
@@ -374,7 +374,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
      */
     private Task addQuickTaskToDb(Task quickTask) {
         String TAG = CLASS_TAG+" addQuickTaskToDb";
-        Log.d(TAG, "adding QuickTask: "+quickTask.toString()+" to db,");
+        Log.d(TAG, "adding QuickTask: " + quickTask.toString() + " to db,");
         TaskDbHelper taskDbHelper = new TaskDbHelper(this);
         // Add task to database.
         Task createdTask = taskDbHelper.createTask(
@@ -384,6 +384,20 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
 
         Log.d(TAG, "createdTask: "+createdTask.toString());
         return createdTask;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode==RESULT_OK) {
+            boolean updateTaskList = data.getExtras().getBoolean(
+                    Config.SHARED_PREF_KEYS.UPDATE_LIST.getKey(),
+                    false
+            );
+            if(updateTaskList) {
+                taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasksAsCursor());
+                taskList.setAdapter(taskAdapter);
+            }
+        }
     }
 
     @Override
@@ -429,7 +443,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                 for(User user:this.collaboratorRemovalList) {
                     listOfCollabs+=user.getEmail()+",";
                 }
-                Log.d(TAG, "New List: "+listOfCollabs);
+                Log.d(TAG, "New List: " + listOfCollabs);
             } else {
                 Log.d(TAG, "Invalid email.");
                 Log.d(TAG, "Nothing removed.");
@@ -445,7 +459,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
     }
 
     @Subscribe
-    public void onChangeInTaskList(ChangeInTasksEvent changeInTasksEvent) {
+    public void onChangeInTasksEvent(ChangeInTasksEvent changeInTasksEvent) {
         taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasksAsCursor());
         taskList.setAdapter(taskAdapter);
     }

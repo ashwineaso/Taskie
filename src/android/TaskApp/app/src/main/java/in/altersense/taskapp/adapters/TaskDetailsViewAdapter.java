@@ -38,7 +38,7 @@ public class TaskDetailsViewAdapter extends ArraySwipeAdapter<Collaborator> {
     public Resources res;
     Collaborator collaborator;
     private ArrayList<User> userAdditonList, userRemovalList;
-    private SwipeLayout collSwipeLayout;
+
 
     //Constructor of custom adapter
     public TaskDetailsViewAdapter(Activity a, List<Collaborator> d, Task task) {
@@ -79,12 +79,12 @@ public class TaskDetailsViewAdapter extends ArraySwipeAdapter<Collaborator> {
         public TextView collName;
         public TextView collInitials;
         public LinearLayout btnConfirm;
+        public SwipeLayout collSwipeLayout;
     }
-
 
     //Depending upon the data size called for each row, Create each listview row
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         View vi = convertView;
         final ViewHolder holder;
@@ -109,10 +109,10 @@ public class TaskDetailsViewAdapter extends ArraySwipeAdapter<Collaborator> {
             holder = (ViewHolder)vi.getTag();
 
         //Setting the swipe layout
-        this.collSwipeLayout = (SwipeLayout) vi.findViewById(R.id.collSwipe);
+        holder.collSwipeLayout = (SwipeLayout) vi.findViewById(R.id.collSwipe);
 
         if (data.size()<=0) {
-            this.collSwipeLayout.setSwipeEnabled(false);
+            holder.collSwipeLayout.setSwipeEnabled(false);
             holder.collName.setText("No Collaborators");
             holder.collInitials.setText("");
             holder.collInitials.setBackgroundColor(Color.WHITE);
@@ -127,28 +127,27 @@ public class TaskDetailsViewAdapter extends ArraySwipeAdapter<Collaborator> {
             holder.collInitials.setBackgroundResource(task.collaboratorStatusBackground(collaborator.getStatus()));
 
             //Initializing the lists
-            this.userAdditonList = new ArrayList<>();
-            this.userRemovalList = new ArrayList<>();
 
             //Confirm collaborator deleteCollaborator
             holder.btnConfirm.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.d(CLASS_TAG, "Collaborator to remove" + collaborator.getName());
+                    userRemovalList = new ArrayList<User>();
                     userRemovalList.add(collaborator);
-                    task.updateCollaborators(userAdditonList, userRemovalList, activity.getApplicationContext());
-                    data.remove(collaborator);
+                    task.updateCollaborators(new ArrayList<User>(), userRemovalList, activity.getApplicationContext());
+                    data.remove(position);
                     notifyDataSetChanged();
                     Toast.makeText(activity.getApplicationContext(), "Collaborator Removed", Toast.LENGTH_LONG ).show();
                 }
             });
 
             if(this.task.isOwnedyDeviceUser(activity.getApplicationContext())) {
-                this.collSwipeLayout.setDragEdge(SwipeLayout.DragEdge.Left);
-                this.collSwipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
-                this.collSwipeLayout.setSwipeEnabled(true);
+                holder.collSwipeLayout.setDragEdge(SwipeLayout.DragEdge.Left);
+                holder.collSwipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
+                holder.collSwipeLayout.setSwipeEnabled(true);
             }
-            else { this.collSwipeLayout.setSwipeEnabled(false); }
+            else { holder.collSwipeLayout.setSwipeEnabled(false); }
 
         }
 

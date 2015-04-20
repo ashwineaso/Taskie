@@ -1,5 +1,6 @@
 package in.altersense.taskapp;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -93,6 +94,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
 
     private boolean isEditMode = false;
     private boolean isCollabAdditionMode = false;
+    private Intent resultIntent;
 
     private DatePickerDialog datePickerDialog;
     private TimePickerDialog timePickerDialog;
@@ -123,6 +125,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
 
         //Get the intent
         Intent createViewIntent = getIntent();
+
         final long taskId;
         //Check whether there is an EXTRA with the intent
         if (createViewIntent.hasExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey())) {
@@ -255,6 +258,10 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         //Adjust the height of the ListView to accommodate all the children
         setListViewHeightBasedOnChildren(collList);
         collList.setFocusable(false); //To set the focus to top #glitch
+
+        this.resultIntent = new Intent();
+        setResult(Activity.RESULT_OK, resultIntent);
+
     }
 
     private void setUpCollabsList() {
@@ -403,6 +410,10 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
                 getApplicationContext()
         );
         updateTaskRequest.execute();
+
+        // Update resultIntent flag to re-query the list of tasks in dashboard
+        this.resultIntent.putExtra(Config.SHARED_PREF_KEYS.UPDATE_LIST.getKey(), true);
+
     }
 
     /**
@@ -566,6 +577,11 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
             setUpTextViews();
             setUpCollabsList();
             this.collabListAdapter.notifyDataSetChanged();
+            // Set the resultIntent with a flag to update the task list.
+            this.resultIntent.putExtra(
+                    Config.SHARED_PREF_KEYS.UPDATE_LIST.getKey(),
+                    true
+            );
         }
     }
 
@@ -577,7 +593,12 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
                     "You have been removed from list of collaborators of the task.",
                     Toast.LENGTH_SHORT
             ).show();
-            super.onBackPressed();
+            // Set the resultIntent with a flag to update the task list.
+            this.resultIntent.putExtra(
+                    Config.SHARED_PREF_KEYS.UPDATE_LIST.getKey(),
+                    true
+            );
+            this.finish();
         }
     }
 
@@ -589,7 +610,12 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
                     "The task was deleted by the owner.",
                     Toast.LENGTH_SHORT
             ).show();
-            super.onBackPressed();
+            // Set the resultIntent with a flag to update the task list.
+            this.resultIntent.putExtra(
+                    Config.SHARED_PREF_KEYS.UPDATE_LIST.getKey(),
+                    true
+            );
+            this.finish();
         }
     }
 }
