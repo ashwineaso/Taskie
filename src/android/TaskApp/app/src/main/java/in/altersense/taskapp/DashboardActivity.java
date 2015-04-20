@@ -1,11 +1,7 @@
 package in.altersense.taskapp;
 
-import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -17,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -25,7 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.daimajia.swipe.SwipeLayout;
+import com.squareup.otto.Subscribe;
 import com.tokenautocomplete.FilteredArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView;
 
@@ -35,10 +30,12 @@ import java.util.List;
 import in.altersense.taskapp.adapters.TasksAdapter;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.AltEngine;
+import in.altersense.taskapp.components.BaseApplication;
 import in.altersense.taskapp.components.GCMHandler;
 import in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
+import in.altersense.taskapp.events.ChangeInTasksEvent;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.User;
 import in.altersense.taskapp.requests.CreateTaskRequest;
@@ -61,8 +58,6 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
     private TasksAdapter taskAdapter;
 
     private GCMHandler gcmHandler;
-
-    private BroadcastReceiver syncCompletionReceiver;
 
 //    Authenticated user details.
     private String ownerId;
@@ -89,6 +84,9 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
 
         setContentView(R.layout.activity_tasks);
 
+        // Register eventBus
+        BaseApplication.getEventBus().register(this);
+
         // Initializing the dbhelper.
         this.taskDbHelper = new TaskDbHelper(this.getApplicationContext());
 
@@ -114,7 +112,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                 Intent intent = new Intent(DashboardActivity.this, TaskActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey(), selectedTask.getId());
-                startActivity(intent);
+                startActivityForResult(intent,0);
             }
         });
 
@@ -131,7 +129,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         UserDbHelper userDbHelper = new UserDbHelper(this);
         // Setting a Filtered Array Adapter to autocomplete with users in db
         userList = userDbHelper.listAllUsers();
-        Log.d(CLASS_TAG, "User list: "+userList.toString());
+        Log.d(CLASS_TAG, "User list: " + userList.toString());
 
         adapter = new FilteredArrayAdapter<User>(this, R.layout.collaorator_list_layout, userList) {
             @Override
@@ -155,17 +153,6 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
             }
         };
         this.participantNameTCET.setAdapter(adapter);
-
-        // Initialize a receiver
-        syncCompletionReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.d(CLASS_TAG, "Received broadcast.");
-                taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasksAsCursor());
-                taskList.setAdapter(taskAdapter);
-            }
-        };
-        registerReceiver(syncCompletionReceiver, new IntentFilter(Config.SHARED_PREF_KEYS.SYNC_IN_PROGRESS.getKey()));
 
         // Inflate all the nonGroupTasks in the TasksListStage.
         Log.d(CLASS_TAG, "Done.");
@@ -387,7 +374,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
      */
     private Task addQuickTaskToDb(Task quickTask) {
         String TAG = CLASS_TAG+" addQuickTaskToDb";
-        Log.d(TAG, "adding QuickTask: "+quickTask.toString()+" to db,");
+        Log.d(TAG, "adding QuickTask: " + quickTask.toString() + " to db,");
         TaskDbHelper taskDbHelper = new TaskDbHelper(this);
         // Add task to database.
         Task createdTask = taskDbHelper.createTask(
@@ -397,6 +384,20 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
 
         Log.d(TAG, "createdTask: "+createdTask.toString());
         return createdTask;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode==RESULT_OK) {
+            boolean updateTaskList = data.getExtras().getBoolean(
+                    Config.SHARED_PREF_KEYS.UPDATE_LIST.getKey(),
+                    false
+            );
+            if(updateTaskList) {
+                taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasksAsCursor());
+                taskList.setAdapter(taskAdapter);
+            }
+        }
     }
 
     @Override
@@ -442,7 +443,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                 for(User user:this.collaboratorRemovalList) {
                     listOfCollabs+=user.getEmail()+",";
                 }
-                Log.d(TAG, "New List: "+listOfCollabs);
+                Log.d(TAG, "New List: " + listOfCollabs);
             } else {
                 Log.d(TAG, "Invalid email.");
                 Log.d(TAG, "Nothing removed.");
@@ -455,5 +456,15 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    public void updateList() {
+        taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasksAsCursor());
+        taskList.setAdapter(taskAdapter);
+    }
+
+    @Subscribe
+    public void onChangeInTasksEvent(ChangeInTasksEvent changeInTasksEvent) {
+        updateList();
     }
 }

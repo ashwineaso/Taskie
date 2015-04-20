@@ -16,11 +16,16 @@ import java.util.List;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.APIRequest;
 import in.altersense.taskapp.components.AltEngine;
+import in.altersense.taskapp.components.BaseApplication;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
+import in.altersense.taskapp.events.ChangeInTaskEvent;
+import in.altersense.taskapp.events.ChangeInTasksEvent;
 import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.User;
+
+import static in.altersense.taskapp.components.BaseApplication.*;
 
 /**
  * Created by mahesmohan on 3/10/15.
@@ -218,8 +223,9 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             default:
                 // Hell breaks loose.
         }
-        this.context.sendBroadcast(syncCompleteBroadcastIntent);
-        Log.d(TAG, "Broadcast sent.");
+
+        getEventBus().post(new ChangeInTasksEvent("Sync Completed."));
+
     }
 
     /**
@@ -354,6 +360,10 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             }
             Log.d(TAG, "Setting up collaborators done.");
             Log.d(TAG, "Task set: "+taskFromJSONObject.toString());
+
+            // Post an event of task change.
+            BaseApplication.getEventBus().post(new ChangeInTaskEvent(taskFromJSONObject.getId()));
+
             int position = this.taskList.indexOf(task);
             this.taskList.remove(position);
             this.taskList.add(position, taskFromJSONObject);

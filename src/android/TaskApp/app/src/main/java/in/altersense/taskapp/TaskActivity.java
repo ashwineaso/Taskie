@@ -1,5 +1,6 @@
 package in.altersense.taskapp;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
+import com.squareup.otto.Subscribe;
 import com.tokenautocomplete.FilteredArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView;
 
@@ -37,9 +39,13 @@ import java.util.List;
 import in.altersense.taskapp.adapters.TaskDetailsViewAdapter;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.AltEngine;
+import in.altersense.taskapp.components.BaseApplication;
 import in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
+import in.altersense.taskapp.events.ChangeInTaskEvent;
+import in.altersense.taskapp.events.TaskDeletedEvent;
+import in.altersense.taskapp.events.UserRemovedFromCollaboratorsEvent;
 import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.User;
@@ -88,12 +94,15 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
 
     private boolean isEditMode = false;
     private boolean isCollabAdditionMode = false;
+    private Intent resultIntent;
 
     private DatePickerDialog datePickerDialog;
     private TimePickerDialog timePickerDialog;
     private String dueString = "";
     private long duelong = 0;
     private MenuItem editViewToggle;
+
+    private TaskDbHelper taskDbHelper;
 
     private List<User> userList;
     private List<User> collaboratorAdditionList = new ArrayList<>();
@@ -110,8 +119,13 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         );
         setContentView(R.layout.activity_task);
 
+        taskDbHelper = new TaskDbHelper(TaskActivity.this);
+
+        BaseApplication.getEventBus().register(this);
+
         //Get the intent
         Intent createViewIntent = getIntent();
+
         final long taskId;
         //Check whether there is an EXTRA with the intent
         if (createViewIntent.hasExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey())) {
@@ -120,7 +134,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
                     Task.ID
             );
             Log.d(TAG, "TaskID: "+taskId);
-            TaskDbHelper taskDbHelper = new TaskDbHelper(TaskActivity.this);
+
             // If yes fetch task from the uuid
             Log.d(TAG, "Fetching row from the db");
             this.task = taskDbHelper.getTaskByRowId(taskId);
@@ -169,16 +183,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         );
 
         //Set the text views
-        this.taskTitleET.setText(this.task.getName());
-        this.taskTitleTV.setText(this.task.getName());
-        this.taskDescriptionET.setText(this.task.getDescription());
-        this.taskDescriptionTV.setText(this.task.getDescription());
-        this.dueDateTV.setText(this.task.getDueDateTime());
-        this.taskPrioritySpinner.setSelection(this.task.getPriority());
-        this.taskPriorityTV.setText(priorityToString(this.task.getPriority()));
-        this.taskStatusTV.setText(statusToString(this.task.getStatus(getApplicationContext())));
-        this.taskOwnerTV.setText(this.task.getOwner().getName());
-        this.collaboratorsTCET.setTokenListener(this);
+        setUpTextViews();
 
         // Setting up user list for token edit text
         UserDbHelper userDbHelper = new UserDbHelper(this);
@@ -186,28 +191,9 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         userList = userDbHelper.listAllUsers();
         Log.d(CLASS_TAG, "User list: "+userList.toString());
 
-        collabListAdapter = new FilteredArrayAdapter<User>(this, R.layout.collaorator_list_layout, userList) {
-            @Override
-            protected boolean keepObject(User user, String s) {
-                s = s.toLowerCase();
-                return user.getName().toLowerCase().startsWith(s) || user.getEmail().toLowerCase().startsWith(s);
-            }
 
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                if(convertView==null) {
-                    LayoutInflater l = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                    convertView = l.inflate(R.layout.collaorator_list_layout, parent, false);
-                }
-
-                User u = getItem(position);
-                ((TextView)convertView.findViewById(R.id.name)).setText(u.getName());
-                ((TextView)convertView.findViewById(R.id.email)).setText(u.getEmail());
-
-                return convertView;
-            }
-        };
-        this.collaboratorsTCET.setAdapter(collabListAdapter);
+        // Setup collaborator list
+        setUpCollabsList();
 
         this.addCollaboratorButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -224,6 +210,8 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
                 collaboratorsTCET.clear();
             }
         });
+
+        this.collaboratorsTCET.setTokenListener(this);
 
         this.addCollabsIV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -270,6 +258,47 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         //Adjust the height of the ListView to accommodate all the children
         setListViewHeightBasedOnChildren(collList);
         collList.setFocusable(false); //To set the focus to top #glitch
+
+        this.resultIntent = new Intent();
+        setResult(Activity.RESULT_OK, resultIntent);
+
+    }
+
+    private void setUpCollabsList() {
+        this.collabListAdapter = new FilteredArrayAdapter<User>(this, R.layout.collaorator_list_layout, userList) {
+            @Override
+            protected boolean keepObject(User user, String s) {
+                s = s.toLowerCase();
+                return user.getName().toLowerCase().startsWith(s) || user.getEmail().toLowerCase().startsWith(s);
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                if(convertView==null) {
+                    LayoutInflater l = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                    convertView = l.inflate(R.layout.collaorator_list_layout, parent, false);
+                }
+
+                User u = getItem(position);
+                ((TextView)convertView.findViewById(R.id.name)).setText(u.getName());
+                ((TextView)convertView.findViewById(R.id.email)).setText(u.getEmail());
+
+                return convertView;
+            }
+        };
+        this.collaboratorsTCET.setAdapter(collabListAdapter);
+    }
+
+    private void setUpTextViews() {
+        this.taskTitleET.setText(this.task.getName());
+        this.taskTitleTV.setText(this.task.getName());
+        this.taskDescriptionET.setText(this.task.getDescription());
+        this.taskDescriptionTV.setText(this.task.getDescription());
+        this.dueDateTV.setText(this.task.getDueDateTime());
+        this.taskPrioritySpinner.setSelection(this.task.getPriority());
+        this.taskPriorityTV.setText(priorityToString(this.task.getPriority()));
+        this.taskStatusTV.setText(statusToString(this.task.getStatus(getApplicationContext())));
+        this.taskOwnerTV.setText(this.task.getOwner().getName());
     }
 
     private void toggleAddCollaborators() {
@@ -381,6 +410,10 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
                 getApplicationContext()
         );
         updateTaskRequest.execute();
+
+        // Update resultIntent flag to re-query the list of tasks in dashboard
+        this.resultIntent.putExtra(Config.SHARED_PREF_KEYS.UPDATE_LIST.getKey(), true);
+
     }
 
     /**
@@ -479,6 +512,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
                     editViewToggle.setIcon(R.drawable.ic_edit_white);
                     editViewToggle.setTitle("Edit");
                     setUpViewMode();
+
                 } else {
                     editViewToggle.setIcon(R.drawable.ic_save_white_36dp);
                     editViewToggle.setTitle("Save");
@@ -531,6 +565,57 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
             }
         } catch (NullPointerException e) {
             Log.d(TAG, "Nothing removed.");
+        }
+    }
+
+    @Subscribe
+    public void onChangeInTaskEvent(ChangeInTaskEvent changeInTaskEvent) {
+        if(this.task.getId() == changeInTaskEvent.getTaskId()) {
+            // User is viewing the task
+            // Make changes
+            this.task = taskDbHelper.getTaskByRowId(changeInTaskEvent.getTaskId());
+            setUpTextViews();
+            setUpCollabsList();
+            this.collabListAdapter.notifyDataSetChanged();
+            // Set the resultIntent with a flag to update the task list.
+            this.resultIntent.putExtra(
+                    Config.SHARED_PREF_KEYS.UPDATE_LIST.getKey(),
+                    true
+            );
+        }
+    }
+
+    @Subscribe
+    public void onUserRemovedFromCollaboratorsEvent(UserRemovedFromCollaboratorsEvent userRemovedFromCollaboratorsEvent) {
+        if(this.task.getUuid().equals(userRemovedFromCollaboratorsEvent.getUuid())) {
+            Toast.makeText(
+                    this,
+                    "You have been removed from list of collaborators of the task.",
+                    Toast.LENGTH_SHORT
+            ).show();
+            // Set the resultIntent with a flag to update the task list.
+            this.resultIntent.putExtra(
+                    Config.SHARED_PREF_KEYS.UPDATE_LIST.getKey(),
+                    true
+            );
+            this.finish();
+        }
+    }
+
+    @Subscribe
+    public void onTaskDeletedEvent(TaskDeletedEvent taskDeletedEvent) {
+        if(this.task.getUuid().equals(taskDeletedEvent.getUuid())) {
+            Toast.makeText(
+                    this,
+                    "The task was deleted by the owner.",
+                    Toast.LENGTH_SHORT
+            ).show();
+            // Set the resultIntent with a flag to update the task list.
+            this.resultIntent.putExtra(
+                    Config.SHARED_PREF_KEYS.UPDATE_LIST.getKey(),
+                    true
+            );
+            this.finish();
         }
     }
 }
