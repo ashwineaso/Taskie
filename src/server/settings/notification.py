@@ -16,7 +16,7 @@ class Notification():
 		"Collaborator_Deleted" : "collDeletion"
 	}
 
-	current_seconds_time = lambda: int(round(time.time() * 1000)
+	current_seconds_time = lambda: int(round(time.time() * 1000))
 
 	message = {}
 
