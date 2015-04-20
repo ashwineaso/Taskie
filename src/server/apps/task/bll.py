@@ -50,7 +50,7 @@ def editTask(taskObj):
 	#Update database with task information
 	task = dal.editTask(taskObj)
 	notificationObj = Notification()
-	notificationDict = notificationObj.taskAdded(task) #Create a notification dict
+	notificationDict = notificationObj.taskDetailsChange(task) #Create a notification dict
 	#Send message to GCM server to notify collaborators of task
 	syncObj = SyncClass("Task", str(task.id), notificationDict)
 	pushSyncNotification(syncObj)
@@ -70,7 +70,7 @@ def addCollaborators(taskObj):
 
 	task = dal.addCollaborators(taskObj)
 	notificationObj = Notification()
-	notificationDict = notificationObj.taskAdded(task) #Create a notification dict
+	notificationDict = notificationObj.collAddition(taskObj, task) #Create a notification dict
 	#Send message to GCM server to notify collaborators of task
 	syncObj = SyncClass("Task", str(task.id), notificationDict)
 	pushSyncNotification(syncObj)
@@ -93,7 +93,7 @@ def remCollaborators(taskObj):
 
 	task = dal.remCollaborators(taskObj)
 	notificationObj = Notification()
-	notificationDict = notificationObj.taskAdded(task) #Create a notification dict
+	notificationDict = notificationObj.collDeletion(taskObj, task) #Create a notification dict
 	#Send message to GCM server to notify collaborators of task
 	syncObj = SyncClass("Task", str(task.id), notificationDict)
 	pushSyncNotification(syncObj)
@@ -114,7 +114,7 @@ def modifyTaskStatus(taskObj):
 
 	task = dal.modifyTaskStatus(taskObj)
 	notificationObj = Notification()
-	notificationDict = notificationObj.taskAdded(task) #Create a notification dict
+	notificationDict = notificationObj.taskStatusChange(task) #Create a notification dict
 	#Send message to GCM server to notify collaborators of task
 	syncObj = SyncClass("Task", str(task.id), notificationDict)
 	pushSyncNotification(syncObj)
@@ -136,7 +136,7 @@ def modifyCollStatus(taskObj):
 
 	task = dal.modifyCollStatus(taskObj)
 	notificationObj = Notification()
-	notificationDict = notificationObj.taskAdded(task) #Create a notification dict
+	notificationDict = notificationObj.taskDetailsChange(task) #Create a notification dict
 	#Send message to GCM server to notify collaborators of task
 	syncObj = SyncClass("Task", str(task.id), notificationDict)
 	pushSyncNotification(syncObj)

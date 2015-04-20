@@ -30,6 +30,7 @@ public class GcmMessageHandler extends IntentService {
     private NotificationManager mNotificationManager;
     private Task tempTask;
     private Intent syncCompleteBroadcastIntent;
+    NotificationHandler notificationHandler = new NotificationHandler();
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
@@ -69,6 +70,7 @@ public class GcmMessageHandler extends IntentService {
                         Log.d("GCM", "About to sync task");
                         SyncRequest syncRequest = new SyncRequest(task, getApplicationContext());
                         syncRequest.execute();
+                        notificationHandler.createNotification(extras, getApplicationContext());
                         break;
                     case "Buzz" :
                         //Implement showing a buzz

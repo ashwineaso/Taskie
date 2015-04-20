@@ -4,14 +4,11 @@
     tools2:ignore="MissingPrefix"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/smallMargin_xhdp"
-    android:paddingTop="@dimen/smallMargin_xhdp"
-    android:paddingBottom="@dimen/smallMargin_xhdp"
-    android:gravity="center"
     android:orientation="vertical"
     tools:context="in.altersense.taskapp.UserRegistrationActivity"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:gravity="center_vertical|center_horizontal"
+    android:padding="@dimen/smallMargin_xhdp">
 
 
     <LinearLayout

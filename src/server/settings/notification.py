@@ -16,68 +16,78 @@ class Notification():
 		"Collaborator_Deleted" : "collDeletion"
 	}
 
-	message = {}
+	seconds_time = int(round(time.time()))
 
-	def taskAdded(self,task):
-		self.message["type"] = self.NOTIFICATION_TYPE["New_Task"]
-		self.message["ownerName"] = str(task.owner.name)
-		self.message["taskName"] = str(task.name)
-		self.message["dateTime"] = time.time()
-		return self.message
-
-
-	def taskDetailsChange(task):
-		self.message["type"] = self.NOTIFICATION_TYPE["Task_Update"]
-		self.message["ownerName"] = str(task.owner.name)
-		self.message["taskName"] = str(task.name)
-		self.message["dateTime"] = time.time()
-		return self.message
+	def taskAdded(self, task):
+		message = {}
+		message["type"] = self.NOTIFICATION_TYPE["New_Task"]
+		message["ownerName"] = str(task.owner.name)
+		message["taskName"] = str(task.name)
+		message["dateTime"] = self.seconds_time
+		return message
 
 
-	def taskStatusChange(task):
-		self.message["type"] = self.NOTIFICATION_TYPE["Task_Status_Change"]
-		self.message["ownerName"] = str(task.owner.name)
-		self.message["taskName"] = str(task.name)
-		self.message["status"] = task.status.status
-		self.message["dateTime"] = time.time()
-		return self.message		
+	def taskDetailsChange(self, task):
+		message = {}
+		message["type"] = self.NOTIFICATION_TYPE["Task_Update"]
+		message["ownerName"] = str(task.owner.name)
+		message["taskName"] = str(task.name)
+		message["dateTime"] = self.seconds_time
+		return message
 
 
-	def taskDeletion(task):
-		self.message["type"] = self.NOTIFICATION_TYPE["Task_Deleted"]
-		self.message["ownerName"] = str(task.owner.name)
-		self.message["taskName"] = str(task.name)
-		self.message["dateTime"] = time.time()
-		return self.message		
+	def taskStatusChange(self, task):
+		message = {}
+		message["type"] = self.NOTIFICATION_TYPE["Task_Status_Change"]
+		message["ownerName"] = str(task.owner.name)
+		message["taskName"] = str(task.name)
+		message["status"] = task.status.status
+		message["dateTime"] = self.seconds_time
+		return message		
 
 
-	def collAddition(taskObj, task):
-		self.message["type"] = self.NOTIFICATION_TYPE["Collaborator_Added"]
-		self.message["ownerName"] = str(task.owner.name)
-		self.message["unknown"] = 0
-		self.message["dateTime"] = time.time()
-
-		#Get the removed Collaborator using his mail
-		for userObj.email in taskObj.Collaborators:
-			user = userbll.getUserByEmail(userObj)
-			if (user.name == null) :
-				self.message["unknown"] +=1
-			else:
-				self.message["removedColl"].append(user.name)
-		return self.message
+	def taskDeletion(self, task):
+		message = {}
+		message["type"] = self.NOTIFICATION_TYPE["Task_Deleted"]
+		message["ownerName"] = str(task.owner.name)
+		message["taskName"] = str(task.name)
+		message["dateTime"] = self.seconds_time
+		return message		
 
 
-	def collDeletion(taskObj, task):
-		self.message["type"] = self.NOTIFICATION_TYPE["Collaborator_Deleted"]
-		self.message["ownerName"] = str(task.owner.name)
-		self.message["unknown"] = 0
-		self.message["dateTime"] = time.time()
+	def collAddition(self, taskObj, task):
+		message = {}
+		userObj = Collection()
+		message["type"] = self.NOTIFICATION_TYPE["Collaborator_Added"]
+		message["ownerName"] = str(task.owner.name)
+		message["unknown"] = 0
+		message["dateTime"] = self.seconds_time
+		message["addedColl"] = []
 
 		#Get the removed Collaborator using his mail
-		for userObj.email in taskObj.Collaborators:
+		for userObj.email in taskObj.collaborators:
 			user = userbll.getUserByEmail(userObj)
 			if (user.name == null) :
-				self.message["unknown"] +=1
+				message["unknown"] +=1
 			else:
-				self.message["removedColl"].append(user.name)
+				message["addedColl"].append(user.name)
+		return message
+
+
+	def collDeletion(self, taskObj, task):
+		message = {}
+		userObj = Collection()
+		message["type"] = self.NOTIFICATION_TYPE["Collaborator_Deleted"]
+		message["ownerName"] = str(task.owner.name)
+		message["unknown"] = 0
+		message["dateTime"] = self.seconds_time
+		message["removedColl"] = []
+
+		#Get the removed Collaborator using his mail
+		for userObj.email in taskObj.collaborators:
+			user = userbll.getUserByEmail(userObj)
+			if (user.name == null) :
+				message["unknown"] +=1
+			else:
+				message["removedColl"].append(user.name)
 		return message
