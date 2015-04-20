@@ -18,70 +18,74 @@ class Notification():
 
 	seconds_time = int(round(time.time()))
 
-	message = {}
-
 	def taskAdded(self, task):
-		self.message["type"] = self.NOTIFICATION_TYPE["New_Task"]
-		self.message["ownerName"] = str(task.owner.name)
-		self.message["taskName"] = str(task.name)
-		self.message["dateTime"] = self.seconds_time
-		return self.message
+		message = {}
+		message["type"] = self.NOTIFICATION_TYPE["New_Task"]
+		message["ownerName"] = str(task.owner.name)
+		message["taskName"] = str(task.name)
+		message["dateTime"] = self.seconds_time
+		return message
 
 
 	def taskDetailsChange(self, task):
-		self.message["type"] = self.NOTIFICATION_TYPE["Task_Update"]
-		self.message["ownerName"] = str(task.owner.name)
-		self.message["taskName"] = str(task.name)
-		self.message["dateTime"] = self.seconds_time
-		return self.message
+		message = {}
+		message["type"] = self.NOTIFICATION_TYPE["Task_Update"]
+		message["ownerName"] = str(task.owner.name)
+		message["taskName"] = str(task.name)
+		message["dateTime"] = self.seconds_time
+		return message
 
 
 	def taskStatusChange(self, task):
-		self.message["type"] = self.NOTIFICATION_TYPE["Task_Status_Change"]
-		self.message["ownerName"] = str(task.owner.name)
-		self.message["taskName"] = str(task.name)
-		self.message["status"] = task.status.status
-		self.message["dateTime"] = self.seconds_time
-		return self.message		
+		message = {}
+		message["type"] = self.NOTIFICATION_TYPE["Task_Status_Change"]
+		message["ownerName"] = str(task.owner.name)
+		message["taskName"] = str(task.name)
+		message["status"] = task.status.status
+		message["dateTime"] = self.seconds_time
+		return message		
 
 
 	def taskDeletion(self, task):
-		self.message["type"] = self.NOTIFICATION_TYPE["Task_Deleted"]
-		self.message["ownerName"] = str(task.owner.name)
-		self.message["taskName"] = str(task.name)
-		self.message["dateTime"] = self.seconds_time
-		return self.message		
+		message = {}
+		message["type"] = self.NOTIFICATION_TYPE["Task_Deleted"]
+		message["ownerName"] = str(task.owner.name)
+		message["taskName"] = str(task.name)
+		message["dateTime"] = self.seconds_time
+		return message		
 
 
 	def collAddition(self, taskObj, task):
-		self.message["type"] = self.NOTIFICATION_TYPE["Collaborator_Added"]
-		self.message["ownerName"] = str(task.owner.name)
-		self.message["unknown"] = 0
-		self.message["dateTime"] = self.seconds_time
-		self.message["addedColl"] = []
+		message = {}
+		message["type"] = self.NOTIFICATION_TYPE["Collaborator_Added"]
+		message["ownerName"] = str(task.owner.name)
+		message["unknown"] = 0
+		message["dateTime"] = self.seconds_time
+		message["addedColl"] = []
 
 		#Get the removed Collaborator using his mail
 		for userObj.email in taskObj.collaborators:
 			user = userbll.getUserByEmail(userObj)
 			if (user.name == null) :
-				self.message["unknown"] +=1
+				message["unknown"] +=1
 			else:
-				self.message["addedColl"].append(user.name)
-		return self.message
+				message["addedColl"].append(user.name)
+		return message
 
 
 	def collDeletion(self, taskObj, task):
-		self.message["type"] = self.NOTIFICATION_TYPE["Collaborator_Deleted"]
-		self.message["ownerName"] = str(task.owner.name)
-		self.message["unknown"] = 0
-		self.message["dateTime"] = self.seconds_time
-		self.message["removedColl"] = []
+		message = {}
+		message["type"] = self.NOTIFICATION_TYPE["Collaborator_Deleted"]
+		message["ownerName"] = str(task.owner.name)
+		message["unknown"] = 0
+		message["dateTime"] = self.seconds_time
+		message["removedColl"] = []
 
 		#Get the removed Collaborator using his mail
 		for userObj.email in taskObj.collaborators:
 			user = userbll.getUserByEmail(userObj)
 			if (user.name == null) :
-				self.message["unknown"] +=1
+				message["unknown"] +=1
 			else:
-				self.message["removedColl"].append(user.name)
-		return self.message
+				message["removedColl"].append(user.name)
+		return message
