@@ -67,7 +67,7 @@ class Notification():
 		#Get the removed Collaborator using his mail
 		for userObj.email in taskObj.collaborators:
 			user = userbll.getUserByEmail(userObj)
-			if (user.name == null) :
+			if (user.name) :
 				message["unknown"] +=1
 			else:
 				message["addedColl"] += user.name + ", "
@@ -86,7 +86,7 @@ class Notification():
 		#Get the removed Collaborator using his mail
 		for userObj.email in taskObj.collaborators:
 			user = userbll.getUserByEmail(userObj)
-			if (user.name == null) :
+			if (user.name) :
 				message["unknown"] +=1
 			else:
 				message["removedColl"] += user.name + ", "

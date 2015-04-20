@@ -114,33 +114,37 @@ public class NotificationHandler {
     }
 
     private void collAdditionNotification() {
-        String[] addedCollList = extras.getString("removedColl").split(",");
-        int unknownColl = Integer.parseInt(extras.getString("unknown"));
-        for (String s: addedCollList) { collNames += "" + s + "others, "; }
-        if (unknownColl > 0) { collNames += "and " + unknownColl + " collaborators";}
-        message = "" + ownerName + " has added " + collNames + " to the task : " + taskName;
-        //Retrieve the task from the db
-        task = taskDbHelper.getTaskByUUID(taskUuid);
-        //Create a new Notification object
-        Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
-        //Call the create notification method
-        taskDbHelper.createNotification(newTaskNotification);
-
+        //Check if the string is empty or not and then perform operation
+        if (!extras.getString("addedColl").equals("")) {
+            String[] addedCollList = extras.getString("addedColl").split(",");
+            int unknownColl = Integer.parseInt(extras.getString("unknown"));
+            for (String s: addedCollList) { collNames += "" + s + "others, "; }
+            if (unknownColl > 0) { collNames += "and " + unknownColl + " collaborators";}
+            message = "" + ownerName + " has added " + collNames + " to the task : " + taskName;
+            //Retrieve the task from the db
+            task = taskDbHelper.getTaskByUUID(taskUuid);
+            //Create a new Notification object
+            Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
+            //Call the create notification method
+            taskDbHelper.createNotification(newTaskNotification);
+        }
     }
 
     private void collDeletionNotification() {
-        String[] addedCollList = extras.getString("removedColl").split(",");
-        int unknownColl = Integer.parseInt(extras.getString("unknown"));
-        for (String s: addedCollList) { collNames += "" + s + "others, "; }
-        if (unknownColl > 0) { collNames += "and " + unknownColl + " collaborators";}
-        message = "" + ownerName + " has removed " + collNames + " from the task : " + taskName;
-        //Retrieve the task from the db
-        task = taskDbHelper.getTaskByUUID(taskUuid);
-        //Create a new Notification object
-        Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
-        //Call the create notification method
-        taskDbHelper.createNotification(newTaskNotification);
-
+        //Check if the string is empty or not and then perform the operation
+        if (!extras.getString("removedColl").equals("")) {
+            String[] addedCollList = extras.getString("removedColl").split(",");
+            int unknownColl = Integer.parseInt(extras.getString("unknown"));
+            for (String s: addedCollList) { collNames += "" + s + "others, "; }
+            if (unknownColl > 0) { collNames += "and " + unknownColl + " collaborators";}
+            message = "" + ownerName + " has removed " + collNames + " from the task : " + taskName;
+            //Retrieve the task from the db
+            task = taskDbHelper.getTaskByUUID(taskUuid);
+            //Create a new Notification object
+            Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
+            //Call the create notification method
+            taskDbHelper.createNotification(newTaskNotification);
+        }
     }
 
     private void sendNotification(String msg, String title) {
