@@ -81,7 +81,7 @@ class Notification():
 		message["ownerName"] = str(task.owner.name)
 		message["unknown"] = 0
 		message["dateTime"] = self.seconds_time
-		message["removedColl"] = []
+		message["removedColl"] = ""
 
 		#Get the removed Collaborator using his mail
 		for userObj.email in taskObj.collaborators:

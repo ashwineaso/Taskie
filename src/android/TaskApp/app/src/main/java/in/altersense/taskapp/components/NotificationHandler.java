@@ -81,11 +81,12 @@ public class NotificationHandler {
         Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
         //Call the create notification method
         taskDbHelper.createNotification(newTaskNotification);
+        sendNotification(message, "Task Updated");
 
     }
 
     private void taskStatusChangeNotification() {
-        int status = this.extras.getInt("status");
+        int status = Integer.parseInt(this.extras.getString("status"));
         String statusAsString = Config.TASK_STATUS.INCOMPLETE.getStatusText();
         switch (status) {
             case 1 : statusAsString = Config.TASK_STATUS.INCOMPLETE.getStatusText(); break;
@@ -99,6 +100,8 @@ public class NotificationHandler {
         Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
         //Call the create notification method
         taskDbHelper.createNotification(newTaskNotification);
+        //If user is not device owner, send a push notification
+        if(!task.isOwnedyDeviceUser(context)) {sendNotification(message, "Task Status");}
 
     }
 
@@ -110,6 +113,8 @@ public class NotificationHandler {
         Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
         //Call the create notification method
         taskDbHelper.createNotification(newTaskNotification);
+        //If user is not device owner, send a push notification
+        if(!task.isOwnedyDeviceUser(context)) {sendNotification(message, "Task Deleted");}
 
     }
 
@@ -127,6 +132,8 @@ public class NotificationHandler {
             Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
             //Call the create notification method
             taskDbHelper.createNotification(newTaskNotification);
+            //If user is not device owner, send a push notification
+            if(!task.isOwnedyDeviceUser(context)) {sendNotification(message, "Collaborator Added");}
         }
     }
 
@@ -144,6 +151,8 @@ public class NotificationHandler {
             Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
             //Call the create notification method
             taskDbHelper.createNotification(newTaskNotification);
+            //If user is not device owner, send a push notification
+            if(!task.isOwnedyDeviceUser(context)) {sendNotification(message, "Collaborator Removed");}
         }
     }
 
