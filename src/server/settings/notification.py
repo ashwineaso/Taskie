@@ -11,6 +11,7 @@ class Notification():
 		"New_Task" : "newTask",
 		"Task_Update" : "taskUpdate",
 		"Task_Status_Change" : "taskStatusChange",
+		"Collaborator_Status_Change" : "collStatusChange",
 		"Task_Deleted" : "taskDeletion",
 		"Collaborator_Added" : "collAddition",
 		"Collaborator_Deleted" : "collDeletion"
@@ -42,6 +43,18 @@ class Notification():
 		message["ownerName"] = str(task.owner.name)
 		message["taskName"] = str(task.name)
 		message["status"] = task.status.status
+		message["dateTime"] = self.seconds_time
+		return message
+
+
+	def collStatusChange(self, taskObj, task):
+		message = {}
+		#Retrive the collaborators
+		user = userbll.getUserByEmail(taskObj)
+		message["type"] = self.NOTIFICATION_TYPE["Collaborator_Status_Change"]
+		message["ownerName"] = str(user.name)
+		message["taskName"] = str(task.name)
+		message["status"] = taskObj.status
 		message["dateTime"] = self.seconds_time
 		return message		
 

@@ -53,6 +53,7 @@ public class NotificationHandler {
             case "newTask" : newTaskNotification(); break;
             case "taskUpdate" : taskUpdateNotification(); break;
             case "taskStatusChange" : taskStatusChangeNotification(); break;
+            case "collStatusChange" : collStatusChangeNotification(); break;
             case "taskDeletion" : taskDeletion(); break;
             case "collAddition" : collAdditionNotification(); break;
             case "collDeletion" : collDeletionNotification(); break;
@@ -102,6 +103,26 @@ public class NotificationHandler {
         taskDbHelper.createNotification(newTaskNotification);
         //If user is not device owner, send a push notification
         if(!task.isOwnedyDeviceUser(context)) {sendNotification(message, "Task Status");}
+
+    }
+
+    private void collStatusChangeNotification() {
+        int status = Integer.parseInt(this.extras.getString("status"));
+        String statusAsString = Config.COLLABORATOR_STATUS.PENDING.getStatusText();
+        switch (status) {
+            case 1 : statusAsString = Config.COLLABORATOR_STATUS.ACCEPTED.getStatusText(); break;
+            case 2 : statusAsString = Config.COLLABORATOR_STATUS.COMPLETED.getStatusText(); break;
+            case -1 : statusAsString = Config.COLLABORATOR_STATUS.DECLINED.getStatusText(); break;
+        }
+        message = "" + ownerName + " has " + statusAsString + " the task : " + taskName + ".";
+        //Retrieve the task from the db
+        task = taskDbHelper.getTaskByUUID(taskUuid);
+        //Create a new Notification object
+        Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
+        //Call the create notification method
+        taskDbHelper.createNotification(newTaskNotification);
+        //If user is not device owner, send a push notification
+        if(!task.isOwnedyDeviceUser(context)) {sendNotification(message, "Collaborator Status");}
 
     }
 

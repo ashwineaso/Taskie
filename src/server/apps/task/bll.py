@@ -136,7 +136,7 @@ def modifyCollStatus(taskObj):
 
 	task = dal.modifyCollStatus(taskObj)
 	notificationObj = Notification()
-	notificationDict = notificationObj.taskDetailsChange(task) #Create a notification dict
+	notificationDict = notificationObj.collStatusChange(taskObj, task) #Create a notification dict
 	#Send message to GCM server to notify collaborators of task
 	syncObj = SyncClass("Task", str(task.id), notificationDict)
 	pushSyncNotification(syncObj)
