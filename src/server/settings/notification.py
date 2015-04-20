@@ -54,7 +54,7 @@ class Notification():
 		message["type"] = self.NOTIFICATION_TYPE["Collaborator_Status_Change"]
 		message["ownerName"] = str(user.name)
 		message["taskName"] = str(task.name)
-		message["status"] = taskObj.status
+		message["status"] = taskObj.collstatus
 		message["dateTime"] = self.seconds_time
 		return message		
 
