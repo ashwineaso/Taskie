@@ -64,9 +64,13 @@ public class NotificationHandler {
     private void newTaskNotification() {
         message = "" + ownerName + " has assigned you a new task : " + taskName + ".";
         task = taskDbHelper.getTaskByUUID(taskUuid);
-        Log.d(CLASS_TAG, "Searching for task in db");
-        sendNotification(message,
+        if (AltEngine.readStringFromSharedPref(context,
+                Config.SHARED_PREF_KEYS.OWNER_NAME.getKey(),
+                "") == ownerName) {
+            Log.d(CLASS_TAG, "Searching for task in db");
+            sendNotification(message,
                     "Task Assigned");
+        }
     }
 
     private void taskUpdateNotification() {

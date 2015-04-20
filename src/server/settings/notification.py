@@ -57,6 +57,7 @@ class Notification():
 
 	def collAddition(self, taskObj, task):
 		message = {}
+		userObj = Collection()
 		message["type"] = self.NOTIFICATION_TYPE["Collaborator_Added"]
 		message["ownerName"] = str(task.owner.name)
 		message["unknown"] = 0
@@ -75,6 +76,7 @@ class Notification():
 
 	def collDeletion(self, taskObj, task):
 		message = {}
+		userObj = Collection()
 		message["type"] = self.NOTIFICATION_TYPE["Collaborator_Deleted"]
 		message["ownerName"] = str(task.owner.name)
 		message["unknown"] = 0
