@@ -16,7 +16,7 @@ class Notification():
 		"Collaborator_Deleted" : "collDeletion"
 	}
 
-	current_seconds_time = lambda: int(round(time.time() * 1000))
+	seconds_time = int(round(time.time()))
 
 	message = {}
 
@@ -24,7 +24,7 @@ class Notification():
 		self.message["type"] = self.NOTIFICATION_TYPE["New_Task"]
 		self.message["ownerName"] = str(task.owner.name)
 		self.message["taskName"] = str(task.name)
-		self.message["dateTime"] = current_seconds_time()
+		self.message["dateTime"] = self.seconds_time
 		return self.message
 
 
@@ -32,7 +32,7 @@ class Notification():
 		self.message["type"] = self.NOTIFICATION_TYPE["Task_Update"]
 		self.message["ownerName"] = str(task.owner.name)
 		self.message["taskName"] = str(task.name)
-		self.message["dateTime"] = current_seconds_time()
+		self.message["dateTime"] = self.seconds_time
 		return self.message
 
 
@@ -41,7 +41,7 @@ class Notification():
 		self.message["ownerName"] = str(task.owner.name)
 		self.message["taskName"] = str(task.name)
 		self.message["status"] = task.status.status
-		self.message["dateTime"] = current_seconds_time()
+		self.message["dateTime"] = self.seconds_time
 		return self.message		
 
 
@@ -49,7 +49,7 @@ class Notification():
 		self.message["type"] = self.NOTIFICATION_TYPE["Task_Deleted"]
 		self.message["ownerName"] = str(task.owner.name)
 		self.message["taskName"] = str(task.name)
-		self.message["dateTime"] = current_seconds_time()
+		self.message["dateTime"] = self.seconds_time
 		return self.message		
 
 
@@ -57,7 +57,7 @@ class Notification():
 		self.message["type"] = self.NOTIFICATION_TYPE["Collaborator_Added"]
 		self.message["ownerName"] = str(task.owner.name)
 		self.message["unknown"] = 0
-		self.message["dateTime"] = tcurrent_seconds_time()
+		self.message["dateTime"] = self.seconds_time
 		self.message["addedColl"] = []
 
 		#Get the removed Collaborator using his mail
@@ -74,7 +74,7 @@ class Notification():
 		self.message["type"] = self.NOTIFICATION_TYPE["Collaborator_Deleted"]
 		self.message["ownerName"] = str(task.owner.name)
 		self.message["unknown"] = 0
-		self.message["dateTime"] = current_seconds_time()
+		self.message["dateTime"] = self.seconds_time
 		self.message["removedColl"] = []
 
 		#Get the removed Collaborator using his mail
