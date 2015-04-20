@@ -63,9 +63,10 @@ public class NotificationHandler {
 
     private void newTaskNotification() {
         message = "" + ownerName + " has assigned you a new task : " + taskName + ".";
+        task = taskDbHelper.getTaskByUUID(taskUuid);
+        Log.d(CLASS_TAG, "Searching for task in db");
         sendNotification(message,
-                        "Task Assigned");
-        //Since the task has not been added yet
+                    "Task Assigned");
     }
 
     private void taskUpdateNotification() {
@@ -109,8 +110,8 @@ public class NotificationHandler {
     }
 
     private void collAdditionNotification() {
-        String[] addedCollList = extras.getStringArray("removedColl");
-        int unknownColl = extras.getInt("unknown");
+        String[] addedCollList = extras.getString("removedColl").split(",");
+        int unknownColl = Integer.parseInt(extras.getString("unknown"));
         for (String s: addedCollList) { collNames += "" + s + "others, "; }
         if (unknownColl > 0) { collNames += "and " + unknownColl + " collaborators";}
         message = "" + ownerName + " has added " + collNames + " to the task : " + taskName;
@@ -124,8 +125,8 @@ public class NotificationHandler {
     }
 
     private void collDeletionNotification() {
-        String[] addedCollList = extras.getStringArray("removedColl");
-        int unknownColl = extras.getInt("unknown");
+        String[] addedCollList = extras.getString("removedColl").split(",");
+        int unknownColl = Integer.parseInt(extras.getString("unknown"));
         for (String s: addedCollList) { collNames += "" + s + "others, "; }
         if (unknownColl > 0) { collNames += "and " + unknownColl + " collaborators";}
         message = "" + ownerName + " has removed " + collNames + " from the task : " + taskName;
@@ -142,10 +143,11 @@ public class NotificationHandler {
 
         mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Intent intent;
-        if(task.getUuid()!=null) {
+        try {
+            taskUuid = task.getUuid();
             intent  = new Intent(context, TaskActivity.class);
-            intent.putExtra(Task.ID, task.getUuid());
-        } else {
+            intent.putExtra(Task.ID, taskUuid);
+        } catch (NullPointerException e){
             intent = new Intent(context, DashboardActivity.class);
         }
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
