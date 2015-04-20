@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -30,7 +32,8 @@ public class GcmMessageHandler extends IntentService {
     private NotificationManager mNotificationManager;
     private Task tempTask;
     private Intent syncCompleteBroadcastIntent;
-    NotificationHandler notificationHandler = new NotificationHandler();
+    private NotificationHandler notificationHandler = new NotificationHandler();
+    private Handler handler;
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
@@ -39,6 +42,7 @@ public class GcmMessageHandler extends IntentService {
      */
     public GcmMessageHandler() {
         super("GcmMessageHandler");
+        this.handler = new Handler(Looper.getMainLooper());
     }
 
     @Override
@@ -94,11 +98,17 @@ public class GcmMessageHandler extends IntentService {
                         taskDbHelper.deleteCollaborator(task);
                         Log.d("GCM", "deletion status" + taskDbHelper.delete(task));
 
-                        // Event post for refreshing task list in dashboard.
-                        BaseApplication.getEventBus().post(new ChangeInTasksEvent("Collaborator removed."));
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Event post for refreshing task list in dashboard.
+                                BaseApplication.getEventBus().post(new ChangeInTasksEvent("Collaborator removed."));
 
-                        // Event post for moving user away from TaskView if user is viewing the particular task.
-                        BaseApplication.getEventBus().post(new UserRemovedFromCollaboratorsEvent(id));
+                                // Event post for moving user away from TaskView if user is viewing the particular task.
+                                BaseApplication.getEventBus().post(new UserRemovedFromCollaboratorsEvent(id));
+                            }
+                        });
+
                         break;
 
                     case "Deleted":
@@ -113,11 +123,16 @@ public class GcmMessageHandler extends IntentService {
                         taskDbHelper.deleteCollaborator(task);
                         Log.d("GCM", "deletion status" + taskDbHelper.delete(task));
 
-                        // Event post for refreshing task list in dashboard.
-                        BaseApplication.getEventBus().post(new ChangeInTasksEvent("Collaborator removed."));
+                        this.handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Event post for refreshing task list in dashboard.
+                                BaseApplication.getEventBus().post(new ChangeInTasksEvent("Collaborator removed."));
 
-                        // Event post for moving user away from TaskView if user is viewing the particular task.
-                        BaseApplication.getEventBus().post(new TaskDeletedEvent(id));
+                                // Event post for moving user away from TaskView if user is viewing the particular task.
+                                BaseApplication.getEventBus().post(new TaskDeletedEvent(id));
+                            }
+                        });
                         break;
                 }
             }

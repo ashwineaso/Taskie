@@ -458,9 +458,13 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         super.onDestroy();
     }
 
-    @Subscribe
-    public void onChangeInTasksEvent(ChangeInTasksEvent changeInTasksEvent) {
+    public void updateList() {
         taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasksAsCursor());
         taskList.setAdapter(taskAdapter);
+    }
+
+    @Subscribe
+    public void onChangeInTasksEvent(ChangeInTasksEvent changeInTasksEvent) {
+        updateList();
     }
 }

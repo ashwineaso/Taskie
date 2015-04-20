@@ -20,6 +20,6 @@ public class BaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        eventBus = new Bus(ThreadEnforcer.ANY);
+        eventBus = new Bus(ThreadEnforcer.MAIN);
     }
 }
