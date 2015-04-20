@@ -122,7 +122,7 @@ public class NotificationHandler {
         //Call the create notification method
         taskDbHelper.createNotification(newTaskNotification);
         //If user is not device owner, send a push notification
-        if(!task.isOwnedyDeviceUser(context)) {sendNotification(message, "Collaborator Status");}
+        if(task.isOwnedyDeviceUser(context)) {sendNotification(message, "Collaborator Status");}
 
     }
 
@@ -150,12 +150,19 @@ public class NotificationHandler {
             message = "" + ownerName + " has added " + collNames + " to the task : " + taskName;
             //Retrieve the task from the db
             task = taskDbHelper.getTaskByUUID(taskUuid);
-            //Create a new Notification object
-            Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
-            //Call the create notification method
-            taskDbHelper.createNotification(newTaskNotification);
-            //If user is not device owner, send a push notification
-            if(!task.isOwnedyDeviceUser(context)) {sendNotification(message, "Collaborator Added");}
+            try {
+                //Create a new Notification object
+                Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
+                //Call the create notification method
+                taskDbHelper.createNotification(newTaskNotification);
+                //If user is not device owner, send a push notification
+                if(!task.isOwnedyDeviceUser(context)) {sendNotification(message, "Collaborator Added");}
+            } catch (NullPointerException e) {
+                Log.d(CLASS_TAG, "Task is not in db");
+                //Since the task is not in db, then the user is being assigned the task
+                String newmessage = "" + ownerName + " has assigned you a new task : " + taskName + ".";
+                sendNotification(newmessage, "Task Assigned");
+            }
         }
     }
 
