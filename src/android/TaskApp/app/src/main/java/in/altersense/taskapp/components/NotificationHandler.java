@@ -121,10 +121,11 @@ public class NotificationHandler {
     private void collAdditionNotification() {
         //Check if the string is empty or not and then perform operation
         if (!extras.getString("addedColl").equals("")) {
-            String[] addedCollList = extras.getString("addedColl").split(",");
+            //Get the collaborator names and number of unNamed collaborators
+            collNames = extras.getString("addedColl");
             int unknownColl = Integer.parseInt(extras.getString("unknown"));
-            for (String s: addedCollList) { collNames += "" + s + "others, "; }
-            if (unknownColl > 0) { collNames += "and " + unknownColl + " collaborators";}
+            if (unknownColl > 0) { collNames += "and " + unknownColl + " others";}
+            //merge it all into a single message
             message = "" + ownerName + " has added " + collNames + " to the task : " + taskName;
             //Retrieve the task from the db
             task = taskDbHelper.getTaskByUUID(taskUuid);
@@ -140,10 +141,11 @@ public class NotificationHandler {
     private void collDeletionNotification() {
         //Check if the string is empty or not and then perform the operation
         if (!extras.getString("removedColl").equals("")) {
-            String[] addedCollList = extras.getString("removedColl").split(",");
+            //Get the collaborator names and number of unNamed collaborators
+            collNames = extras.getString("removedColl");
             int unknownColl = Integer.parseInt(extras.getString("unknown"));
-            for (String s: addedCollList) { collNames += "" + s + "others, "; }
-            if (unknownColl > 0) { collNames += "and " + unknownColl + " collaborators";}
+            if (unknownColl > 0) { collNames += "and " + unknownColl + " others";}
+            //merge it all into a single message
             message = "" + ownerName + " has removed " + collNames + " from the task : " + taskName;
             //Retrieve the task from the db
             task = taskDbHelper.getTaskByUUID(taskUuid);
