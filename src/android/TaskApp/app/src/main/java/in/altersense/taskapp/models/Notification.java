@@ -22,7 +22,7 @@ public class Notification {
     private Task task;
     private boolean seen;
     private long taskRowId;
-    private int dateTime;
+    private Long dateTime;
     private long id;
 
     /**
@@ -34,7 +34,7 @@ public class Notification {
         TASK_UUID("task_uuid", "TEXT"),
         TYPE("type", "TEXT"),
         MESSAGE("message","TEXT"),
-        DATE_TIME("message", "INTEGER"),
+        DATE_TIME("dateTime", "INTEGER"),
         SEEN("seen","INTEGER");
 
         private final String name;
@@ -63,7 +63,7 @@ public class Notification {
                         Context context,
                         String type,
                         String message,
-                        int dateTime) {
+                        Long dateTime) {
         this.task = task;
         this.context = context;
         this.type = type;
@@ -88,7 +88,7 @@ public class Notification {
         this.taskUuid = cursor.getString(1);
         this.type = cursor.getString(2);
         this.message = cursor.getString(3);
-        this.dateTime = cursor.getInt(4);
+        this.dateTime = cursor.getLong(4);
         this.setSeen(cursor.getInt(5));
         this.task = taskDbHelper.getTaskByRowId(this.taskRowId);
 

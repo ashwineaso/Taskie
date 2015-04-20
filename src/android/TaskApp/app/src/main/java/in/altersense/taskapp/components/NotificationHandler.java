@@ -27,7 +27,7 @@ public class NotificationHandler {
     String type;
     private Bundle extras;
     private String ownerName, taskName, taskUuid;
-    private Integer dateTime;
+    private Long dateTime;
     private TaskDbHelper taskDbHelper;
     private String message;
     private Task task;
@@ -46,7 +46,7 @@ public class NotificationHandler {
         taskUuid = this.extras.getString("id");
         ownerName = this.extras.getString("ownerName");
         taskName = this.extras.getString("taskName");
-        dateTime = Integer.valueOf(this.extras.getString("dateTime"));
+        dateTime = Long.valueOf(this.extras.getString("dateTime"));
         //Choose create function based on the notification type
         switch (type) {
 
