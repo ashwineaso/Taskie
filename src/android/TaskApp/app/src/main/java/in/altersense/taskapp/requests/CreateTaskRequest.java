@@ -67,7 +67,7 @@ public class CreateTaskRequest extends AsyncTask<Void, Integer, JSONObject> {
 
                 this.collaborators = new JSONArray();
 
-                if(task.getCollaborators().size()>0) {
+                if(task.getCollaborators(task, this.context).size()>0) {
                     for(User collaborator : task.getCollaborators()) {
                         this.collaborators.put(collaborator.getEmail());
                     }
