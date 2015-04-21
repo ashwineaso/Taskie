@@ -34,9 +34,9 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
 
     private static final String CLASS_TAG = "SyncRequest ";
 
-    private final Context context;
-    private final TaskDbHelper taskDbHelper;
-    private final UserDbHelper userDbHelper;
+    private Context context;
+    private TaskDbHelper taskDbHelper;
+    private UserDbHelper userDbHelper;
     private APIRequest apiRequest;
     private List<User> userList;
     private List<Task> taskList;
@@ -131,6 +131,30 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
      */
     public SyncRequest(List<User> userList, List<Task> taskList, Context context) {
         this(context,userList.toArray(new User[userList.size()]),taskList.toArray(new Task[taskList.size()]),userList!=null,taskList!=null,false);
+    }
+
+    /**
+     * Sync requst for multiple tasks.
+     * @param tasks Array of tasks to sync.
+     * @param context Current context.
+     */
+    public SyncRequest(Task[] tasks, Context context) {
+        this.context = context;
+        this.taskList = new ArrayList<>(Arrays.asList(tasks));
+        this.mode = 2;
+        prepareSyncTask();
+    }
+
+    /**
+     * Sync request for multiple users.
+     * @param users Array of users to sync.
+     * @param context Current context.
+     */
+    public SyncRequest(User[] users, Context context) {
+        this.context = context;
+        this.userList = new ArrayList<>(Arrays.asList(users));;
+        this.mode = 1;
+        prepareSyncUser();
     }
 
     /**
