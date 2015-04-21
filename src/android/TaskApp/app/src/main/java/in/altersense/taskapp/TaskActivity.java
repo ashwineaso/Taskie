@@ -138,6 +138,8 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
             // If yes fetch task from the uuid
             Log.d(TAG, "Fetching row from the db");
             this.task = taskDbHelper.getTaskByRowId(taskId);
+            //Mark the notiifcations as seen
+            taskDbHelper.markNotificationSeen(this.task);
         }
 
 
