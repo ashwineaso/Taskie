@@ -659,6 +659,57 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         return notification;
     }
 
+    public List<Notification> retrieveUnseenNotiifcation() {
+        String TAG = CLASS_TAG + "retrieveUnseenNotification()";
+        List<Notification> notificationList = new ArrayList<>();
+        //Open readable database
+        SQLiteDatabase readableDb = this.getReadableDatabase();
+        //Make query
+        Cursor result = readableDb.query(
+                Notification.TABLE_NAME,
+                Notification.getAllColumns(),
+                Notification.KEYS.SEEN + "=?",
+                new String[] {
+                        String.valueOf(0)
+                },
+                null,
+                null,
+                null
+        );
+        result.moveToFirst();
+        //loop through each cursor and add new notification to a list
+        do {
+            Notification notification = new Notification(result, this.context);
+            notificationList.add(notification);
+        } while (result.moveToNext());
+        //close the db, close the cursor
+        readableDb.close();
+        result.close();
+        //return list of all notification
+        return notificationList;
+    }
+
+    public boolean markNotificationSeen(Task task) {
+        String TAG = CLASS_TAG+" markNotificationSeen";
+        Log.d(TAG, "Marking all notifications as seen");
+        // Open a writable database.
+        SQLiteDatabase writableDb = this.getWritableDatabase();
+        // make query
+        ContentValues values = new ContentValues();
+        values.put(Notification.KEYS.SEEN.getName(),1);
+        // execute update
+        int affectedRows = writableDb.update(
+                Notification.TABLE_NAME,
+                values,
+                Notification.KEYS.TASK_ROW_ID + "=?",
+                new String[] { task.getId()+"" }
+        );
+        // close db
+        writableDb.close();
+        // return status
+        return (affectedRows>0);
+    }
+
     public boolean deleteNotification(Notification notification) {
         String TAG = CLASS_TAG + "deleteNotification";
         //Open  writable database.
