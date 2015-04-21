@@ -4,14 +4,17 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import in.altersense.taskapp.CreateTaskActivity;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
 import in.altersense.taskapp.models.Task;
+import in.altersense.taskapp.requests.CreateTaskRequest;
 import in.altersense.taskapp.requests.SyncRequest;
 
 /**
@@ -36,28 +39,22 @@ public class NetworkStateChangeReceiver extends BroadcastReceiver {
         final ConnectivityManager connMgr = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        final android.net.NetworkInfo wifi = connMgr
-                .getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
-        final android.net.NetworkInfo mobile = connMgr
-                .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-
-        if (wifi.isAvailable() || mobile.isAvailable()) {
-            // Do something
-
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo!=null && networkInfo.isConnectedOrConnecting()) {
             onNetworkAvailable();
-
         } else {
-
             onNetworkLost();
-
         }
+
     }
 
     /**
      * Executed when connection is lost.
      */
     private void onNetworkLost() {
+        final String TAG = CLASS_TAG + "onNetworkLost";
+        Log.d(TAG, "NetworkConnection Lost.");
 
     }
 
@@ -77,6 +74,29 @@ public class NetworkStateChangeReceiver extends BroadcastReceiver {
             } else {
                 tasksNeedUpdation.add(task);
             }
+        }
+
+        // Checks id there are tasks to be added to thr server
+        if(tasksNotAddedToServer.size()>0) {
+            Log.d(TAG, "Adding newly created tasks to server.");
+            Task[] tasksNotAddedToServerArray = new Task[tasksNotAddedToServer.size()];
+            tasksNotAddedToServerArray = tasksNotAddedToServer.toArray(tasksNotAddedToServerArray);
+
+            CreateTaskRequest createTaskRequest = new CreateTaskRequest(
+                    tasksNotAddedToServerArray,
+                    this.context
+            );
+            createTaskRequest.execute();
+        }
+
+
+        // Checking for tasks that need updation.
+        if (tasksNeedUpdation.size()>0) {
+            Log.d(TAG, "Updating tasks that need to be synced.");
+            Task[] tasksNeedUpdationArray = new Task[tasksNeedUpdation.size()];
+            tasksNeedUpdationArray = tasksNeedUpdation.toArray(tasksNeedUpdationArray);
+            SyncRequest syncRequest = new SyncRequest(tasksNeedUpdationArray, this.context);
+            syncRequest.execute();
         }
 
     }
