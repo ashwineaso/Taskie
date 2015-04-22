@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import in.altersense.taskapp.adapters.TaskTabsAdapter;
 import in.altersense.taskapp.common.Config;
@@ -24,6 +25,7 @@ public class TaskFragmentsActivity extends ActionBarActivity implements ActionBa
 
     private ViewPager tabsViewPager;
     private ActionBar actionBar;
+    private MenuItem editViewToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,12 +56,12 @@ public class TaskFragmentsActivity extends ActionBarActivity implements ActionBa
         tabsViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                actionBar.setSelectedNavigationItem(position);
+
             }
 
             @Override
             public void onPageSelected(int position) {
-
+                actionBar.setSelectedNavigationItem(position);
             }
 
             @Override
@@ -92,41 +94,4 @@ public class TaskFragmentsActivity extends ActionBarActivity implements ActionBa
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
 
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        MenuInflater menuInflater = getActivity().getMenuInflater();
-//        menuInflater.inflate(R.menu.menu_task, menu);
-//        this.editViewToggle = menu.findItem(R.id.action_toggle_view_edit);
-//        if (!task.isOwnedyDeviceUser(getActivity().getApplicationContext())) {
-//            this.editViewToggle.setVisible(false);
-//        }
-//        return super.onCreateOptionsMenu(menu, menuInflater);
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        switch (id) {
-//            case R.id.action_toggle_view_edit:
-//                if(isEditMode) {
-//                    editViewToggle.setIcon(R.drawable.ic_edit_white);
-//                    editViewToggle.setTitle("Edit");
-//                    setUpViewMode();
-//
-//                } else {
-//                    editViewToggle.setIcon(R.drawable.ic_save_white_36dp);
-//                    editViewToggle.setTitle("Save");
-//                    setUpEditMode();
-//                }
-//                break;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
 }

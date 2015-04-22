@@ -115,41 +115,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        String TAG = CLASS_TAG + " OnCreate";
-        if (container == null) {
-            // Currently in a layout without a container, so no
-            // reason to create our view.
-            return null;
-        }
-
-        super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.activity_task, container, false);
-
-        context = container.getContext();
-
-        taskDbHelper = new TaskDbHelper(context);
-        BaseApplication.getEventBus().register(this);
-
-        //Get the Intent
-        createViewIntent = getActivity().getIntent();
-
-        final long taskId;
-        //Check whether there is an EXTRA with the intent
-        if (createViewIntent.hasExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey())) {
-            Log.d(TAG, "Intent has taskID");
-            taskId = createViewIntent.getExtras().getLong(
-                    Task.ID
-            );
-            Log.d(TAG, "TaskID: "+taskId);
-
-            // If yes fetch task from the uuid
-            Log.d(TAG, "Fetching row from the db");
-            this.task = taskDbHelper.getTaskByRowId(taskId);
-            //Mark the notiifcations as seen
-            taskDbHelper.markNotificationSeen(this.task);
-        }
-
-
         //Initialize the views
         this.taskTitleET = (EditText) view.findViewById(R.id.taskTitleEditText);
         this.taskTitleTV = (TextView) view.findViewById(R.id.taskTitleTextView);
@@ -169,37 +135,13 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         this.addCollaboratorButton = (Button) view.findViewById(R.id.addCollaboratorButton);
         this.collList = (ListView) view.findViewById(R.id.collListView);
 
+        //Set the text views
+        setUpTextViews();
+
         //Hide the addCollabsIV if the user is not owner
         if (!this.task.isOwnedyDeviceUser(getActivity())) {
             this.addCollabsIV.setVisibility(View.GONE);
         }
-        // Initialize date time picker.
-        final Calendar calendar = Calendar.getInstance();
-
-        this.datePickerDialog = DatePickerDialog.newInstance(
-                this,
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH),
-                false
-        );
-        this.timePickerDialog = TimePickerDialog.newInstance(
-                this,
-                calendar.get(Calendar.HOUR_OF_DAY),
-                calendar.get(Calendar.MINUTE),
-                false,
-                false
-        );
-
-        //Set the text views
-        setUpTextViews();
-
-        // Setting up user list for token edit text
-        UserDbHelper userDbHelper = new UserDbHelper(getActivity());
-        // Setting a Filtered Array Adapter to autocomplete with users in db
-        userList = userDbHelper.listAllUsers();
-        Log.d(CLASS_TAG, "User list: "+userList.toString());
-
 
         // Setup collaborator list
         setUpCollabsList();
@@ -229,6 +171,24 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
             }
         });
 
+        // Initialize date time picker.
+        final Calendar calendar = Calendar.getInstance();
+
+        this.datePickerDialog = DatePickerDialog.newInstance(
+                this,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH),
+                false
+        );
+        this.timePickerDialog = TimePickerDialog.newInstance(
+                this,
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE),
+                false,
+                false
+        );
+
         this.calendarIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -257,8 +217,6 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
             }
         });
 
-        this.task.fetchAllCollaborators(getActivity().getApplicationContext());
-
         //Fill the ArrayList with the required data
         this.collaboratorList = task.getCollaborators(this.task, getActivity().getApplicationContext());
         //Create a custom adapter
@@ -268,11 +226,61 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         setListViewHeightBasedOnChildren(collList);
         collList.setFocusable(false); //To set the focus to top #glitch
 
+        return view;
+    }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        String TAG = CLASS_TAG + " OnCreate";
+        super.onCreate(savedInstanceState);
+
+        //        Setting up calligraphy
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                        .setDefaultFontPath("fonts/Cabin-Medium-TTF.ttf")
+                        .setFontAttrId(R.attr.fontPath)
+                        .build()
+        );
+
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
+        //Obtain the context
+        context = getActivity().getApplicationContext();
+
+        taskDbHelper = new TaskDbHelper(context);
+        BaseApplication.getEventBus().register(this);
+
+        //Get the Intent from the Parent Activity
+        createViewIntent = getActivity().getIntent();
+
+        final long taskId;
+        //Check whether there is an EXTRA with the intent
+        if (createViewIntent.hasExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey())) {
+            Log.d(TAG, "Intent has taskID");
+            taskId = createViewIntent.getExtras().getLong(
+                    Task.ID
+            );
+            Log.d(TAG, "TaskID: "+taskId);
+
+            // If yes fetch task from the uuid
+            Log.d(TAG, "Fetching row from the db");
+            this.task = taskDbHelper.getTaskByRowId(taskId);
+            //Mark the notiifcations as seen
+            taskDbHelper.markNotificationSeen(this.task);
+        }
+
+
+        // Setting up user list for token edit text
+        UserDbHelper userDbHelper = new UserDbHelper(getActivity());
+        // Setting a Filtered Array Adapter to autocomplete with users in db
+        userList = userDbHelper.listAllUsers();
+        Log.d(CLASS_TAG, "User list: "+userList.toString());
+
+        this.task.fetchAllCollaborators(getActivity().getApplicationContext());
+
         this.resultIntent = new Intent();
         this.getActivity().setResult(Activity.RESULT_OK, resultIntent);
-
-        return view;
-
     }
 
     private void setUpCollabsList() {
@@ -462,34 +470,6 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         }
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        String TAG = CLASS_TAG+"onBackPressed";
-//        if(this.isEditMode) {
-//            // Set mode.
-//            this.isEditMode = false;
-//            // Update TextViews
-//            this.taskTitleET.setText(this.task.getName());
-//            this.taskDescriptionET.setText(this.task.getDescription());
-//            this.taskPrioritySpinner.setSelection(this.task.getPriority());
-//            this.dueDateTV.setText(this.task.getDueDateTime());
-//            // Hide edit views
-//            this.taskTitleET.setVisibility(View.GONE);
-//            this.taskDescriptionET.setVisibility(View.GONE);
-//            this.taskPrioritySpinner.setVisibility(View.GONE);
-//            this.calendarIV.setVisibility(View.GONE);
-//            this.cancelIV.setVisibility(View.GONE);
-//            // display display views
-//            this.taskTitleTV.setVisibility(View.VISIBLE);
-//            this.taskDescriptionTV.setVisibility(View.VISIBLE);
-//            this.taskPriorityTV.setVisibility(View.VISIBLE);
-//            // Set toggle button to off
-//            this.editViewToggle.setIcon(R.drawable.ic_edit_white);
-//        } else {
-//            super.onBackPressed();
-//        }
-//    }
-
     @Override
     public void onTokenAdded(Object o) {
         String TAG = CLASS_TAG+"onTokenAdded";
@@ -585,5 +565,69 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+//        MenuInflater menuInflater = getActivity().getMenuInflater();
+        menuInflater.inflate(R.menu.menu_task, menu);
+        this.editViewToggle = menu.findItem(R.id.action_toggle_view_edit);
+        if (!task.isOwnedyDeviceUser(context)) {
+            this.editViewToggle.setVisible(false);
+        }
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_toggle_view_edit:
+                if(isEditMode) {
+                    this.editViewToggle.setIcon(R.drawable.ic_edit_white);
+                    this.editViewToggle.setTitle("Edit");
+                    this.setUpViewMode();
+
+                } else {
+                    this.editViewToggle.setIcon(R.drawable.ic_save_white_36dp);
+                    this.editViewToggle.setTitle("Save");
+                    this.setUpEditMode();
+                }
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+//    @Override
+//    public void onBackPressed() {
+//        String TAG = CLASS_TAG+"onBackPressed";
+//        if(this.isEditMode) {
+//            // Set mode.
+//            this.isEditMode = false;
+//            // Update TextViews
+//            this.taskTitleET.setText(this.task.getName());
+//            this.taskDescriptionET.setText(this.task.getDescription());
+//            this.taskPrioritySpinner.setSelection(this.task.getPriority());
+//            this.dueDateTV.setText(this.task.getDueDateTime());
+//            // Hide edit views
+//            this.taskTitleET.setVisibility(View.GONE);
+//            this.taskDescriptionET.setVisibility(View.GONE);
+//            this.taskPrioritySpinner.setVisibility(View.GONE);
+//            this.calendarIV.setVisibility(View.GONE);
+//            this.cancelIV.setVisibility(View.GONE);
+//            // display display views
+//            this.taskTitleTV.setVisibility(View.VISIBLE);
+//            this.taskDescriptionTV.setVisibility(View.VISIBLE);
+//            this.taskPriorityTV.setVisibility(View.VISIBLE);
+//            // Set toggle button to off
+//            this.editViewToggle.setIcon(R.drawable.ic_edit_white);
+//        } else {
+//            getActivity().onBackPressed();
+//        }
+//    }
 }
