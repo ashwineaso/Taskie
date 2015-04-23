@@ -1,0 +1,309 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools2="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="fill_parent"
+    tools:context="in.altersense.taskapp.TaskActivity"
+    tools2:ignore="MissingPrefix"
+    android:id="@+id/detailsScrollView"
+    android:background="@color/emptyBackground">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:id="@+id/scrollHolder">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout android:id="@+id/taskHeaderLinearLayout"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/createTaskPrimaryActionBar"
+                android:gravity="center_vertical"
+                android:padding="@dimen/smallMargin_xhdp"
+                android:baselineAligned="false">
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/checkComplete"
+                    android:clickable="true"
+                    android:checked="false"
+                    android:layout_marginRight="@dimen/thinMargin_xhdpi" />
+
+                <EditText android:id="@+id/taskTitleEditText"
+                    android:visibility="gone"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_header_xhdpi"
+                    android:text="Title of the Task"
+                    fontPath="fonts/Cabin-SemiBold-TTF.ttf"
+                    tools2:ignore="MissingPrefix"
+                    android:textColor="@color/white" />
+
+                <TextView android:id="@+id/taskTitleTextView"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_header_xhdpi"
+                    android:text="Title of the Task"
+                    fontPath="fonts/Cabin-SemiBold-TTF.ttf"
+                    tools2:ignore="MissingPrefix"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/taskDetailsRelativeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/smallMargin_xhdp">
+
+                <LinearLayout android:id="@+id/taskAssignedLL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/thinMargin_xhdpi">
+
+                    <TextView android:id="@+id/lbl_assigned_by"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Assigned by "
+                        android:textSize="@dimen/text_subHeader_xhdpi" />
+
+                    <TextView android:id="@+id/taskOwnerTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_subHeader_xhdpi"
+                        fontPath="fonts/Cabin-SemiBold-TTF.ttf"
+                        tools2:ignore="MissingPrefix"
+                        android:text="John Doe" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/lineColor"
+                    android:layout_marginTop="@dimen/tinyMargin_xhdpi"
+                    android:layout_marginBottom="@dimen/tinyMargin_xhdpi"
+                    android:orientation="horizontal" />
+
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical" >
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Priority"
+                            android:id="@+id/lbl_priority"
+                            android:textColor="@color/taskPrimaryColor" />
+
+                        <TextView android:id="@+id/taskPriorityTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/text_normal_xhdpi"
+                            android:entries="@array/priorityStringArray"/>
+
+                        <Spinner android:id="@+id/taskPrioritySpinner"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/spinnerMarginLeft_xhdpi"
+                            android:textSize="@dimen/text_normal_xhdpi"
+                            android:entries="@array/priorityStringArray"
+                            android:popupBackground="@color/emptyBackground" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Status"
+                            android:id="@+id/textView2"
+                            android:layout_gravity="right"
+                            android:textColor="@color/taskPrimaryColor" />
+
+                        <TextView android:id="@+id/taskStatusTextView"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/text_normal_xhdpi"
+                            fontPath="fonts/Cabin-SemiBold-TTF.ttf"
+                            android:text="Status Unavailable"
+                            android:gravity="right" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/lineColor"
+                    android:layout_marginTop="@dimen/tinyMargin_xhdpi"
+                    android:layout_marginBottom="@dimen/tinyMargin_xhdpi"
+                    android:orientation="horizontal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Due Date and Time"
+                    android:id="@+id/lbl_dueDateTime"
+                    android:textColor="@color/taskPrimaryColor"
+                    android:layout_marginTop="@dimen/thinMargin_xhdpi" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:id="@+id/taskDueDateTimeLL">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:layout_marginRight="@dimen/tinyMargin_xhdpi"
+                        android:id="@+id/calendarImageView"
+                        android:src="@drawable/ic_calender" />
+
+                    <TextView android:id="@+id/dueDateTextView"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_normal_xhdpi"
+                        fontPath="fonts/Cabin-Medium-TTF.ttf"
+                        tools2:ignore="MissingPrefix"
+                        android:hint="No Due Date and Time" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:id="@+id/btnCancelDate"
+                        android:src="@drawable/ic_cancel"
+                        android:layout_gravity="right" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Task Description"
+                    android:id="@+id/lbl_description"
+                    android:textColor="@color/taskPrimaryColor"
+                    android:layout_marginTop="@dimen/thinMargin_xhdpi" />
+
+                <EditText android:id="@+id/taskDescriptionEditText"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_subHeader_xhdpi"
+                    android:hint="Task Description"
+                    android:inputType="textCapSentences" />
+
+                <TextView android:id="@+id/taskDescriptionTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_subHeader_xhdpi"
+                    android:hint="No Task Description" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/lineColor"
+                    android:layout_marginTop="@dimen/tinyMargin_xhdpi"
+                    android:layout_marginBottom="@dimen/tinyMargin_xhdpi"
+                    android:orientation="horizontal" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                fontPath="fonts/Cabin-Bold-TTF.ttf"
+                tools2:ignore="MissingPrefix"
+                android:text="COLLABORATORS"
+                android:textSize="@dimen/text_subHeader_xhdpi"
+                android:textColor="@color/headerText"
+                android:id="@+id/headingCollaborators"
+                android:paddingLeft="@dimen/smallMargin_xhdp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/addCollaboratorsImageView"
+                android:src="@drawable/ic_user_add_24dp" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/addCollaboratorsLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/thinMargin_xhdpi"
+            android:visibility="gone">
+
+            <in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText
+                android:id="@+id/collaboratorsTokenEditText"
+                android:hint="@string/addCollaboratorsMessage"
+                android:singleLine="true"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+            <Button android:id="@+id/addCollaboratorButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_plus_pink_24dp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/noCollText"
+            android:layout_gravity="center_horizontal"
+            android:text="No Collaborators"
+            android:textSize="@dimen/text_subHeader_xhdpi"
+            android:visibility="gone" />
+
+        <ListView
+            android:id="@+id/collListView"
+            android:listSelector="#00000000"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:footerDividersEnabled="true" />
+
+    </LinearLayout>
+
+
+</ScrollView>

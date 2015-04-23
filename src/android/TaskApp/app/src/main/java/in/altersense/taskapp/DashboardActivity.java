@@ -109,7 +109,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                         taskCursor,
                         getApplicationContext()
                 );
-                Intent intent = new Intent(DashboardActivity.this, TaskActivity.class);
+                Intent intent = new Intent(DashboardActivity.this, TaskFragmentsActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey(), selectedTask.getId());
                 startActivityForResult(intent,0);

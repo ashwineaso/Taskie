@@ -59,8 +59,8 @@
         </activity>
         <activity
             android:name=".TaskActivity"
-            android:theme="@style/TaskTheme"
-            android:parentActivityName=".DashboardActivity" >
+            android:parentActivityName=".DashboardActivity"
+            android:theme="@style/TaskTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".DashboardActivity" />
@@ -77,8 +77,15 @@
         </activity>
         <activity
             android:name=".UserLoginActivity"
-            android:theme="@style/RegisterTheme"
-            android:label="@string/title_activity_user_login" >
+            android:label="@string/title_activity_user_login"
+            android:theme="@style/RegisterTheme" >
+        </activity>
+        <activity
+            android:name=".TaskFragmentsActivity"
+            android:theme="@style/TaskTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="in.altersense.taskapp.DashboardActivity" />
         </activity>
     </application>
 
