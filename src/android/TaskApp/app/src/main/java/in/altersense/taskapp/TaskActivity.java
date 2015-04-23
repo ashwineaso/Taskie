@@ -117,7 +117,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
                         .setFontAttrId(R.attr.fontPath)
                         .build()
         );
-        setContentView(R.layout.activity_task);
+        setContentView(R.layout.task_fragment_view);
 
         taskDbHelper = new TaskDbHelper(TaskActivity.this);
 

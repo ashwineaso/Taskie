@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -53,7 +51,6 @@ import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.User;
 import in.altersense.taskapp.requests.UpdateTaskRequest;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
  * Created by ashwineaso on 4/22/15.
@@ -115,7 +112,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_task, container, false);
+        View view = inflater.inflate(R.layout.task_fragment_view, container, false);
         //Initialize the views
         this.taskTitleET = (EditText) view.findViewById(R.id.taskTitleEditText);
         this.taskTitleTV = (TextView) view.findViewById(R.id.taskTitleTextView);
