@@ -629,17 +629,18 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         return notificationList;
     }
 
-    public Notification retrieveNotiifcation(Task task) {
+    public List<Notification> retrieveNotification(Task task) {
         String TAG = CLASS_TAG + "retrieveNotification (Task, Activity)";
         //Open readable database
         SQLiteDatabase readableDb = this.getReadableDatabase();
+        List<Notification> notificationList = new ArrayList<>();
         //Make query
         Cursor result = readableDb.query(
                 Notification.TABLE_NAME,
                 Notification.getAllColumns(),
-                Notification.KEYS.TASK_ROW_ID + "=?",
+                Notification.KEYS.TASK_UUID + "=?",
                 new String[] {
-                        task.getId()+""
+                        task.getUuid()+""
                 },
                 null,
                 null,
@@ -649,14 +650,19 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         // Create notification from cursor
         Notification notification;
         if (result.getCount()!=0) {
-            notification = new Notification(result, this.context);
+            //loop through each cursor and add new notification to a list
+            do {
+                notification = new Notification(result, this.context);
+                Log.d(TAG, "Notification:" + notification.getMessage());
+                notificationList.add(notification);
+            } while (result.moveToNext());
         } else {
             notification = null;
         }
         result.close();
         readableDb.close();
         // return notification
-        return notification;
+        return notificationList;
     }
 
     public List<Notification> retrieveUnseenNotiifcation() {

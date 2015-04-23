@@ -79,11 +79,10 @@
         </activity>
         <activity
             android:name=".TaskFragmentsActivity"
-            android:label="@string/title_activity_task_fragments"
             android:theme="@style/TaskTheme" >
-            <!--<meta-data-->
-                <!--android:name="android.support.PARENT_ACTIVITY"-->
-                <!--android:value="in.altersense.taskapp.DashboardActivity" />-->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="in.altersense.taskapp.DashboardActivity" />
         </activity>
     </application>
 

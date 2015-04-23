@@ -242,7 +242,6 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                         .build()
         );
 
-        super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
         //Obtain the context
