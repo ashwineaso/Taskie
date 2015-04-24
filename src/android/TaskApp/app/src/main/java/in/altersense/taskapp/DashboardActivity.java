@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -81,6 +82,10 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
             this.finish();
             return;
         }
+
+        //Messing with the actionbar present shadow in API 21
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setElevation(0);
 
         setContentView(R.layout.activity_tasks);
 

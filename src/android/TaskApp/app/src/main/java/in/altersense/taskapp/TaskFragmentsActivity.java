@@ -48,7 +48,7 @@ public class TaskFragmentsActivity extends ActionBarActivity implements ActionBa
         actionBar.setHomeButtonEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        ActionBar.Tab TaskViewTab = actionBar.newTab().setText("Task Details").setTabListener(this);
+        ActionBar.Tab TaskViewTab = actionBar.newTab().setText("Details").setTabListener(this);
         ActionBar.Tab NotificationTab = actionBar.newTab().setText("Notifications").setTabListener(this);
 
         actionBar.addTab(TaskViewTab);

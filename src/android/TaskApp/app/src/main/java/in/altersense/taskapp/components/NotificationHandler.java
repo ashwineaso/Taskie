@@ -65,7 +65,7 @@ public class NotificationHandler {
     }
 
     private void newTaskNotification() {
-        message = "" + ownerName + " has assigned you a new task : " + taskName + ".";
+        message = "" + ownerName + " has assigned you a new task \" " + taskName + " \".";
         task = taskDbHelper.getTaskByUUID(taskUuid);
         if (AltEngine.readStringFromSharedPref(context,
                 Config.SHARED_PREF_KEYS.OWNER_NAME.getKey(),
@@ -77,7 +77,7 @@ public class NotificationHandler {
     }
 
     private void taskUpdateNotification() {
-        message = "" + ownerName + " has updated the task : " + taskName + ".";
+        message = "" + ownerName + " has updated the task \" " + taskName + " \".";
         //Retrieve the task from the db
         task = taskDbHelper.getTaskByUUID(taskUuid);
         //Update notification is shown only to the collaborators
@@ -99,7 +99,7 @@ public class NotificationHandler {
             case 2 : statusAsString = Config.TASK_STATUS.COMPLETE.getStatusText(); break;
             case -1 : statusAsString = Config.TASK_STATUS.DELETED.getStatusText(); break;
         }
-        message = "" + ownerName + " has marked the task : " + taskName + " as " + statusAsString;
+        message = "" + ownerName + " has marked the task \"" + taskName + " \" as " + statusAsString;
         //Retrieve the task from the db
         task = taskDbHelper.getTaskByUUID(taskUuid);
         //Status change notification is shown only to the collaborators
@@ -122,7 +122,7 @@ public class NotificationHandler {
             case 2 : statusAsString = Config.COLLABORATOR_STATUS.COMPLETED.getStatusText(); break;
             case -1 : statusAsString = Config.COLLABORATOR_STATUS.DECLINED.getStatusText(); break;
         }
-        message = "" + ownerName + " has " + statusAsString + " the task : " + taskName + ".";
+        message = "" + ownerName + " has " + statusAsString + " the task \" " + taskName + " \".";
         //Retrieve the task from the db
         task = taskDbHelper.getTaskByUUID(taskUuid);
         //Create a new Notification object
@@ -135,7 +135,7 @@ public class NotificationHandler {
     }
 
     private void taskDeletion() {
-        message = "" + ownerName + " has deleted the task : " + taskName + ".";
+        message = "" + ownerName + " has deleted the task \" " + taskName + " \".";
         //Retrieve the task from the db
         task = taskDbHelper.getTaskByUUID(taskUuid);
         //Task Deleted notification goes only to the collaborators
@@ -158,7 +158,7 @@ public class NotificationHandler {
             int unknownColl = Integer.parseInt(extras.getString("unknown"));
             if (unknownColl > 0) { collNames += "and " + unknownColl + " others";}
             //merge it all into a single message
-            message = "" + ownerName + " has added " + collNames + " to the task : " + taskName;
+            message = "" + ownerName + " has added " + collNames + " to the task \" " + taskName + " \".";
             //Retrieve the task from the db
             task = taskDbHelper.getTaskByUUID(taskUuid);
             try {
@@ -171,7 +171,7 @@ public class NotificationHandler {
             } catch (NullPointerException e) {
                 Log.d(CLASS_TAG, "Task is not in db");
                 //Since the task is not in db, then the user is being assigned the task
-                String newmessage = "" + ownerName + " has assigned you a new task : " + taskName + ".";
+                String newmessage = "" + ownerName + " has assigned you a new task \" " + taskName + " \".";
                 sendNotification(newmessage, "Task Assigned");
             }
         }
@@ -185,7 +185,7 @@ public class NotificationHandler {
             int unknownColl = Integer.parseInt(extras.getString("unknown"));
             if (unknownColl > 0) { collNames += "and " + unknownColl + " others";}
             //merge it all into a single message
-            message = "" + ownerName + " has removed " + collNames + " from the task : " + taskName;
+            message = "" + ownerName + " has removed " + collNames + " from the task \" " + taskName + " \".";
             //Retrieve the task from the db
             task = taskDbHelper.getTaskByUUID(taskUuid);
             //Create a new Notification object
