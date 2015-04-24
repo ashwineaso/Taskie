@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -210,12 +211,12 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         this.checkComplete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                task.toggleStatus(getActivity().getApplicationContext());
+                task.toggleStatus(context);
             }
         });
 
         //Fill the ArrayList with the required data
-        this.collaboratorList = task.getCollaborators(this.task, getActivity().getApplicationContext());
+        this.collaboratorList = task.getCollaborators(this.task, this.context);
         //Create a custom adapter
         adapter = new TaskDetailsViewAdapter(getActivity(), collaboratorList, this.task);
         collList.setAdapter(adapter);
@@ -226,6 +227,11 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         return view;
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.context = activity.getApplicationContext();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -240,9 +246,6 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         );
 
         setHasOptionsMenu(true);
-
-        //Obtain the context
-        context = getActivity().getApplicationContext();
 
         taskDbHelper = new TaskDbHelper(context);
         BaseApplication.getEventBus().register(this);
@@ -273,14 +276,14 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         userList = userDbHelper.listAllUsers();
         Log.d(CLASS_TAG, "User list: "+userList.toString());
 
-        this.task.fetchAllCollaborators(getActivity().getApplicationContext());
+        this.task.fetchAllCollaborators(this.context);
 
         this.resultIntent = new Intent();
         this.getActivity().setResult(Activity.RESULT_OK, resultIntent);
     }
 
     private void setUpCollabsList() {
-        this.collabListAdapter = new FilteredArrayAdapter<User>(getActivity().getApplicationContext(), R.layout.collaorator_list_layout, userList) {
+        this.collabListAdapter = new FilteredArrayAdapter<User>(this.context, R.layout.collaorator_list_layout, userList) {
             @Override
             protected boolean keepObject(User user, String s) {
                 s = s.toLowerCase();
@@ -312,7 +315,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         this.dueDateTV.setText(this.task.getDueDateTime());
         this.taskPrioritySpinner.setSelection(this.task.getPriority());
         this.taskPriorityTV.setText(priorityToString(this.task.getPriority()));
-        this.taskStatusTV.setText(statusToString(this.task.getStatus(getActivity().getApplicationContext())));
+        this.taskStatusTV.setText(statusToString(this.task.getStatus(this.context)));
         this.taskOwnerTV.setText(this.task.getOwner().getName());
     }
 
@@ -414,7 +417,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         this.task.updateTask(getActivity());
         UpdateTaskRequest updateTaskRequest = new UpdateTaskRequest(
                 this.task,
-                getActivity().getApplicationContext()
+                this.context
         );
         updateTaskRequest.execute();
 
@@ -528,8 +531,8 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     }
 
     @Subscribe
-    public void onUserRemovedFromCollaboratorsEvent(UserRemovedFromCollaboratorsEvent userRemovedFromCollaboratorsEvent) {
-        if(this.task.getUuid().equals(userRemovedFromCollaboratorsEvent.getUuid())) {
+    public void onUserRemovedFromCollaboratorsEvent(UserRemovedFromCollaboratorsEvent event) {
+        if(this.task.getUuid().equals(event.getUuid())) {
             Toast.makeText(
                     getActivity(),
                     "You have been removed from list of collaborators of the task.",
