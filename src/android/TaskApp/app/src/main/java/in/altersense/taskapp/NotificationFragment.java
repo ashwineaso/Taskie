@@ -16,6 +16,7 @@ import java.util.List;
 
 import in.altersense.taskapp.adapters.NotificationAdapter;
 import in.altersense.taskapp.common.Config;
+import in.altersense.taskapp.components.BaseApplication;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.models.Notification;
 import in.altersense.taskapp.models.Task;
@@ -92,6 +93,7 @@ public class NotificationFragment extends Fragment {
 
         //Get the TaskDbHelper
         taskDbHelper = new TaskDbHelper(context);
+        BaseApplication.getEventBus().register(this);
         //Get the Intent from the Parent Activity
         createViewIntent = getActivity().getIntent();
 

@@ -2,12 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/thinMargin_xhdpi">
+    android:padding="@dimen/thinMargin_xhdpi"
+    xmlns:tools2="http://schemas.android.com/tools"
+    tools2:ignore="MissingPrefix">
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Notification Message"
+        fontPath="fonts/Cabin-Medium-TTF.ttf"
         android:id="@+id/txt_message"
         android:textSize="@dimen/text_normal_xhdpi" />
 
@@ -15,5 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Time Stamp"
-        android:id="@+id/txt_timeStamp" />
+        fontPath="fonts/Cabin-Medium-TTF.ttf"
+        android:id="@+id/txt_timeStamp"
+        android:textSize="@dimen/text_small_xhdpi" />
 </LinearLayout>
