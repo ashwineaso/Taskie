@@ -188,6 +188,15 @@ public class UserLoginActivity extends ActionBarActivity implements
                     email+":"+personName,
                     Toast.LENGTH_SHORT
             ).show();
+            UserLoginRequest userLoginRequest = new UserLoginRequest(
+                    new User(
+                            "",
+                            email,
+                            personName
+                    ),
+                    this,
+                    true
+            );
         }
 
     }

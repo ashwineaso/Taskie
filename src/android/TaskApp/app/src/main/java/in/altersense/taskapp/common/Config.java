@@ -164,7 +164,8 @@ public class Config {
         DUE_DATE_TIME("dueDateTime"),
         PRIORITY("priority"),
         SERVER_PUSH_ID("serverPushId"),
-        ERROR_CODE("code");
+        ERROR_CODE("code"),
+        AUTHMETHOD("authMethod");
 
         private String key;
 

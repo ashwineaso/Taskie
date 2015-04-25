@@ -23,12 +23,17 @@ import in.altersense.taskapp.models.User;
  */
 public class UserLoginRequest extends AsyncTask<Void, Integer, JSONObject> {
 
+    private static final String TAG = "UserLoginRequest";
+
+    private String authMethod;
     private boolean startActivity;
     private User user;
     private ProgressDialog dialog;
     private JSONObject requestObject;
     private Activity activity;
-    private String TAG = "UserLoginRequest";
+
+    private static final String GOOGLE_AUTH = "google";
+    private static final String TASKIE_AUTH = "taskie";
 
     public UserLoginRequest(User user, Activity activity, boolean startActivity) {
         Log.d(TAG, "Creating login request");
@@ -53,6 +58,33 @@ public class UserLoginRequest extends AsyncTask<Void, Integer, JSONObject> {
                 activity,
                 true
         );
+    }
+
+    public UserLoginRequest(User user, Activity activity, String authMethod, boolean startActivity) {
+        this.user = user;
+        this.activity = activity;
+        this.authMethod = authMethod;
+        this.dialog = new ProgressDialog(
+                activity
+        );
+        this.requestObject = new JSONObject();
+        try {
+            this.requestObject.put(Config.REQUEST_RESPONSE_KEYS.EMAIL.getKey(),user.getEmail());
+            switch (this.authMethod) {
+                case GOOGLE_AUTH:
+                    this.requestObject.put(Config.REQUEST_RESPONSE_KEYS.NAME.getKey(),user.getName());
+                    this.requestObject.put(Config.REQUEST_RESPONSE_KEYS.AUTHMETHOD.getKey(),this.authMethod);
+                    break;
+                case TASKIE_AUTH:
+                    this.requestObject.put(Config.REQUEST_RESPONSE_KEYS.PASSWORD.getKey(),user.getPassword());
+                    break;
+                default:
+                    this.requestObject.put(Config.REQUEST_RESPONSE_KEYS.PASSWORD.getKey(),user.getPassword());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        this.startActivity = startActivity;
     }
 
     @Override
