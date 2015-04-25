@@ -39,8 +39,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
     @SuppressLint("InlinedApi")
     private static final String[] PROJECTION =
             {
-                    ContactsContract.Contacts._ID,
-                    ContactsContract.Contacts.LOOKUP_KEY,
+                    ContactsContract.RawContacts._ID,
                     Build.VERSION.SDK_INT
                             >= Build.VERSION_CODES.HONEYCOMB ?
                             ContactsContract.Contacts.DISPLAY_NAME_PRIMARY :
@@ -226,7 +225,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
         do {
             userFromContacts = new User(
                     "",
-                    usersFromContactsCursor.getString(3),
+                    usersFromContactsCursor.getString(2),
                     usersFromContactsCursor.getString(1)
             );
             if(!userList.contains(userFromContacts)) {
