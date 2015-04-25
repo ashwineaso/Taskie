@@ -183,11 +183,7 @@ public class UserLoginActivity extends ActionBarActivity implements
         if(currentPerson != null) {
             String personName = currentPerson.getDisplayName();
             String email = Plus.AccountApi.getAccountName(googleApiClient);
-            Toast.makeText(
-                    this,
-                    email+":"+personName,
-                    Toast.LENGTH_SHORT
-            ).show();
+            
             UserLoginRequest userLoginRequest = new UserLoginRequest(
                     new User(
                             "",
@@ -197,6 +193,7 @@ public class UserLoginActivity extends ActionBarActivity implements
                     this,
                     true
             );
+            userLoginRequest.execute();
         }
 
     }
