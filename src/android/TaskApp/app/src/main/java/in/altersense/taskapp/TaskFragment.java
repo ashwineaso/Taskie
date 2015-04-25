@@ -210,12 +210,12 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         this.checkComplete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                task.toggleStatus(getActivity().getApplicationContext());
+                task.toggleStatus(context);
             }
         });
 
         //Fill the ArrayList with the required data
-        this.collaboratorList = task.getCollaborators(this.task, getActivity().getApplicationContext());
+        this.collaboratorList = task.getCollaborators(this.task, context);
         //Create a custom adapter
         adapter = new TaskDetailsViewAdapter(getActivity(), collaboratorList, this.task);
         collList.setAdapter(adapter);
@@ -273,14 +273,14 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         userList = userDbHelper.listAllUsers();
         Log.d(CLASS_TAG, "User list: "+userList.toString());
 
-        this.task.fetchAllCollaborators(getActivity().getApplicationContext());
+        this.task.fetchAllCollaborators(context);
 
         this.resultIntent = new Intent();
         this.getActivity().setResult(Activity.RESULT_OK, resultIntent);
     }
 
     private void setUpCollabsList() {
-        this.collabListAdapter = new FilteredArrayAdapter<User>(getActivity().getApplicationContext(), R.layout.collaorator_list_layout, userList) {
+        this.collabListAdapter = new FilteredArrayAdapter<User>(context, R.layout.collaorator_list_layout, userList) {
             @Override
             protected boolean keepObject(User user, String s) {
                 s = s.toLowerCase();
@@ -312,7 +312,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         this.dueDateTV.setText(this.task.getDueDateTime());
         this.taskPrioritySpinner.setSelection(this.task.getPriority());
         this.taskPriorityTV.setText(priorityToString(this.task.getPriority()));
-        this.taskStatusTV.setText(statusToString(this.task.getStatus(getActivity().getApplicationContext())));
+        this.taskStatusTV.setText(statusToString(this.task.getStatus(context)));
         this.taskOwnerTV.setText(this.task.getOwner().getName());
     }
 
@@ -411,10 +411,10 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         this.taskPriorityTV.setVisibility(View.VISIBLE);
         // Update task
         this.task.setSyncStatus(false);
-        this.task.updateTask(getActivity());
+        this.task.updateTask(context);
         UpdateTaskRequest updateTaskRequest = new UpdateTaskRequest(
                 this.task,
-                getActivity().getApplicationContext()
+                context
         );
         updateTaskRequest.execute();
 
@@ -486,7 +486,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                 collaboratorsTCET.removeObject(o);
                 Log.d(TAG, "Object removed.");
                 Toast.makeText(
-                        getActivity(),
+                        context,
                         Config.MESSAGES.INVALID_EMAIL.getMessage(),
                         Toast.LENGTH_SHORT
                 ).show();
@@ -531,7 +531,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     public void onUserRemovedFromCollaboratorsEvent(UserRemovedFromCollaboratorsEvent userRemovedFromCollaboratorsEvent) {
         if(this.task.getUuid().equals(userRemovedFromCollaboratorsEvent.getUuid())) {
             Toast.makeText(
-                    getActivity(),
+                    context,
                     "You have been removed from list of collaborators of the task.",
                     Toast.LENGTH_SHORT
             ).show();
