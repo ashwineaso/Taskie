@@ -1,11 +1,16 @@
 package in.altersense.taskapp.database;
 
+import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
+import android.os.Build;
+import android.provider.ContactsContract;
+import android.support.v4.content.CursorLoader;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -21,6 +26,8 @@ import in.altersense.taskapp.models.User;
  */
 public class UserDbHelper extends SQLiteOpenHelper {
 
+    private static String CLASS_TAG = "UserDbHelper ";
+
     private final Context context;
 
     private static String CREATION_STATEMENT = "CREATE TABLE " + User.TABLE_NAME + " ( " +
@@ -28,7 +35,29 @@ public class UserDbHelper extends SQLiteOpenHelper {
             User.KEYS.EMAIL.getName() + " " + User.KEYS.EMAIL.getType() + ", " +
             User.KEYS.NAME.getName() + " " + User.KEYS.NAME.getType() + ", "+
             User.KEYS.SYNC_STATUS.getName() + " " + User.KEYS.SYNC_STATUS.getType() + ");";
-    private static String CLASS_TAG = "UserDbHelper ";
+
+    @SuppressLint("InlinedApi")
+    private static final String[] PROJECTION =
+            {
+                    ContactsContract.Contacts._ID,
+                    ContactsContract.Contacts.LOOKUP_KEY,
+                    Build.VERSION.SDK_INT
+                            >= Build.VERSION_CODES.HONEYCOMB ?
+                            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY :
+                            ContactsContract.Contacts.DISPLAY_NAME,
+                    ContactsContract.CommonDataKinds.Email.DATA
+            };
+
+    private static final String order = "CASE WHEN "
+            + ContactsContract.Contacts.DISPLAY_NAME
+            + " NOT LIKE '%@%' THEN 1 ELSE 2 END, "
+            + ContactsContract.Contacts.DISPLAY_NAME
+            + ", "
+            + ContactsContract.CommonDataKinds.Email.DATA
+            + " COLLATE NOCASE";
+
+    private static final String filter = ContactsContract.CommonDataKinds.Email.DATA + " NOT LIKE ''";
+
 
     public UserDbHelper(Context context) {
         super(context, User.TABLE_NAME, null, Config.DATABASE_VERSION);
@@ -184,6 +213,26 @@ public class UserDbHelper extends SQLiteOpenHelper {
             }
         } while (cursor.moveToNext());
         readableDb.close();
+        ContentResolver cr = this.context.getContentResolver();
+        Cursor usersFromContactsCursor = cr.query(
+                ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+                PROJECTION,
+                filter,
+                null,
+                order
+        );
+        User userFromContacts;
+        usersFromContactsCursor.moveToFirst();
+        do {
+            userFromContacts = new User(
+                    "",
+                    usersFromContactsCursor.getString(3),
+                    usersFromContactsCursor.getString(1)
+            );
+            if(!userList.contains(userFromContacts)) {
+                userList.add(userFromContacts);
+            }
+        } while (usersFromContactsCursor.moveToNext());
         return userList;
     }
 
