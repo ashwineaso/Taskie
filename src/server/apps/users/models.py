@@ -5,8 +5,7 @@ from passlib.hash import sha256_crypt
 from hashlib import sha512
 from uuid import uuid4
 import time
-from settings.constants import CLIENT_KEY_LENGTH, CLIENT_SECRET_LENGTH,\
-	CODE_KEY_LENGTH, ACCESS_TOKEN_LENGTH, REFRESH_TOKEN_LENGTH, ACCESS_TOKEN_EXPIRATION, ACCOUNT_NOT_VERIFIED, ACCOUNT_INVITED_UNREGISTERED, ACCOUNT_ACTIVE
+from settings.constants import *
 
 connect()
 
@@ -60,6 +59,7 @@ class User(Document):
 	serverPushId = StringField(required = False)
 	status = IntField(default = 0) ## 1 - Active ## 0 - Not Verified ## -1 - Pending registration 
 	createdOn = LongField(default = time.time())
+	authMethod = StringField()
 	invite = EmbeddedDocumentField(Invite, required = False)
 
 	def to_dict(self):

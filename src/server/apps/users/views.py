@@ -24,6 +24,10 @@ def register():
 		userObj.name = obj["name"]
 		userObj.password = obj["password"]
 		try:
+			userObj.authMethod = obj["authMethod"]
+		except KeyError as e:
+			userObj.authMethod = "taskieAuth"
+		try:
 			userObj.serverPushId = obj["serverPushId"]
 		except KeyError as e:
 			userObj.serverPushId = ''
@@ -160,7 +164,15 @@ def authorize_user():
 	obj = request.json
 	try:
 		userObj.email = obj["email"]
-		userObj.password = obj["password"]
+		userObj.authMethod = obj["authMethod"]
+		try:
+			userObj.password = obj["password"]
+		except KeyError as e:
+			userObj.password = ''
+		try:
+			userObj.name = obj["name"]
+		except KeyError as e:
+			userObj.name = ''
 		cred_valid_flag = bll.authorize_user(userObj)
 		if cred_valid_flag:
 			userObj.user = bll.getUserByEmail(userObj)

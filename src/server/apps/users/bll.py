@@ -2,8 +2,9 @@ __author__ = ["ashwineaso"]
 from passlib.hash import sha256_crypt as pwd_context
 from . import dal
 from settings.exceptions import AuthenticationError
-from settings.constants import PROJECT_ROOT
+from settings.constants import *
 from . import mailing
+from models import *
 
 
 def createUser(userObj):
@@ -20,9 +21,15 @@ def createUser(userObj):
 	::return user : An instance of user class
 	"""
 
-	userObj.password_hash = hash_password(userObj.password)
-	user = dal.createUser(userObj)
-	mailing.sendVerification(user)
+	#Create paasword_hash only is created via taskie
+	if userObj.authMethod == TASKIE_AUTH:
+		userObj.password_hash = hash_password(userObj.password)
+		user = dal.createUser(userObj)
+		mailing.sendVerification(user)
+	else:
+		userObj.password_hash = ""
+		userObj.serverPushId = ""
+		user = dal.createUser(userObj)
 	return user
 
 
@@ -123,12 +130,21 @@ def authorize_user(userObj):
 	:return userObj : with extra attribute
 						response
 	"""
+	
 	match_flag = True
-	user = getUserByEmail(userObj)
-	if not verify_password(userObj.password, user.password_hash):
-		match_flag = False
-		raise PasswordMismatch
-	return match_flag
+	if userObj.authMethod == TASKIE_AUTH:
+		user = getUserByEmail(userObj)
+		if not verify_password(userObj.password, user.password_hash):
+			match_flag = False
+			raise PasswordMismatch
+		return match_flag
+	#Case 2: Google Auth
+	elif userObj.authMethod == GOOGLE_AUTH:
+		try:
+			user = User.objects.get(email = userObj.email)
+		except Exception as e:
+			createUser(userObj)
+		return match_flag
 
 
 def authenticate(userObj):
