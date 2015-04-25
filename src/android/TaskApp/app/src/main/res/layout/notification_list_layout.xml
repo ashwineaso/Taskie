@@ -12,13 +12,17 @@
         android:text="Notification Message"
         fontPath="fonts/Cabin-Medium-TTF.ttf"
         android:id="@+id/txt_message"
-        android:textSize="@dimen/text_normal_xhdpi" />
+        android:textSize="@dimen/text_normal_xhdpi"
+        android:textColor="#1e1e1e" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Time Stamp"
         fontPath="fonts/Cabin-Medium-TTF.ttf"
         android:id="@+id/txt_timeStamp"
-        android:textSize="@dimen/text_small_xhdpi" />
+        android:textSize="@dimen/text_small_xhdpi"
+        android:paddingTop="@dimen/tinyMargin_xhdpi"
+        android:gravity="right"
+        android:textColor="#1e1e1e" />
 </LinearLayout>
