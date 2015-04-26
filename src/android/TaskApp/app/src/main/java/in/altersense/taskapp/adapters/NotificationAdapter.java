@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -44,6 +45,7 @@ public class NotificationAdapter extends ArrayAdapter<Notification> {
     public static class ViewHolder {
         public TextView notificationMessage;
         public TextView timeStamp;
+        public ImageView imgNotif;
     }
 
     @Override
@@ -59,6 +61,7 @@ public class NotificationAdapter extends ArrayAdapter<Notification> {
             holder = new ViewHolder();
             holder.notificationMessage = (TextView) vi.findViewById(R.id.txt_message);
             holder.timeStamp = (TextView) vi.findViewById(R.id.txt_timeStamp);
+            holder.imgNotif = (ImageView) vi.findViewById(R.id.imgNotif);
 
             vi.setTag(holder);
         }
@@ -70,6 +73,7 @@ public class NotificationAdapter extends ArrayAdapter<Notification> {
         notification = notificationList.get(position);
         holder.notificationMessage.setText(notification.getMessage());
         holder.timeStamp.setText(dateToString(notification.getDateTime()));
+        holder.imgNotif.setImageResource(notification.getSymbol(notification.getType()));
         Log.d(CLASS_TAG, "Notification timestap" + notification.getDateTime());
         return vi;
     }
