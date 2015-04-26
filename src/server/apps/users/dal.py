@@ -36,6 +36,7 @@ def createUser(userObj):
 			password_hash = userObj.password_hash,
 			status = ACCOUNT_NOT_VERIFIED,
 			serverPushId = userObj.serverPushId,
+			authMethod = userObj.authMethod,
 			invite = invite
 			)
 		user.save()
@@ -44,7 +45,7 @@ def createUser(userObj):
 		token = Token(user = user)
 		token.save()
 		return user
-	except Exception:
+	except Exception as e:
 		person = getUserByEmail(userObj)
 		#If status = 1 - User already exists and active
 		if person.status == ACCOUNT_ACTIVE:

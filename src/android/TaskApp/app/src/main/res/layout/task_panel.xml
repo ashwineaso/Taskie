@@ -87,11 +87,15 @@
                         android:text="Boil Eggs"
                         android:layout_height="wrap_content"
                         android:layout_width="match_parent"
-                        fontPath="fonts/Cabin-Regular-TTF.ttf"
+                        fontPath="fonts/Cabin-Medium-TTF.ttf"
                         android:textSize="@dimen/text_subHeader_xhdpi"
                         android:paddingLeft="@dimen/thinMargin_xhdpi"
                         android:paddingRight="@dimen/thinMargin_xhdpi"
-                        android:paddingTop="@dimen/tinyMargin_xhdpi" />
+                        android:paddingTop="@dimen/tinyMargin_xhdpi"
+                        android:ellipsize="end"
+                        android:lines="1"
+                        android:singleLine="true"
+                        android:textColor="#1e1e1e" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -197,7 +201,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             fontPath="fonts/Cabin-Regular-TTF.ttf"
-                            android:textSize="@dimen/text_small_xhdpi" />
+                            android:textSize="@dimen/text_small_xhdpi"
+                            android:paddingLeft="@dimen/thinMargin_xhdpi"
+                            android:paddingRight="@dimen/thinMargin_xhdpi" />
 
                     </LinearLayout>
 

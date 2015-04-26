@@ -629,17 +629,18 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         return notificationList;
     }
 
-    public Notification retrieveNotiifcation(Task task) {
+    public List<Notification> retrieveNotification(Task task) {
         String TAG = CLASS_TAG + "retrieveNotification (Task, Activity)";
         //Open readable database
         SQLiteDatabase readableDb = this.getReadableDatabase();
+        List<Notification> notificationList = new ArrayList<>();
         //Make query
         Cursor result = readableDb.query(
                 Notification.TABLE_NAME,
                 Notification.getAllColumns(),
-                Notification.KEYS.TASK_ROW_ID + "=?",
+                Notification.KEYS.TASK_UUID + "=?",
                 new String[] {
-                        task.getId()+""
+                        task.getUuid()+""
                 },
                 null,
                 null,
@@ -649,14 +650,70 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         // Create notification from cursor
         Notification notification;
         if (result.getCount()!=0) {
-            notification = new Notification(result, this.context);
+            //loop through each cursor and add new notification to a list
+            do {
+                notification = new Notification(result, this.context);
+                Log.d(TAG, "Notification:" + notification.getMessage());
+                notificationList.add(notification);
+            } while (result.moveToNext());
         } else {
             notification = null;
         }
         result.close();
         readableDb.close();
         // return notification
-        return notification;
+        return notificationList;
+    }
+
+    public List<Notification> retrieveUnseenNotiifcation() {
+        String TAG = CLASS_TAG + "retrieveUnseenNotification()";
+        List<Notification> notificationList = new ArrayList<>();
+        //Open readable database
+        SQLiteDatabase readableDb = this.getReadableDatabase();
+        //Make query
+        Cursor result = readableDb.query(
+                Notification.TABLE_NAME,
+                Notification.getAllColumns(),
+                Notification.KEYS.SEEN + "=?",
+                new String[] {
+                        String.valueOf(0)
+                },
+                null,
+                null,
+                null
+        );
+        result.moveToFirst();
+        //loop through each cursor and add new notification to a list
+        do {
+            Notification notification = new Notification(result, this.context);
+            notificationList.add(notification);
+        } while (result.moveToNext());
+        //close the db, close the cursor
+        readableDb.close();
+        result.close();
+        //return list of all notification
+        return notificationList;
+    }
+
+    public boolean markNotificationSeen(Task task) {
+        String TAG = CLASS_TAG+" markNotificationSeen";
+        Log.d(TAG, "Marking all notifications as seen");
+        // Open a writable database.
+        SQLiteDatabase writableDb = this.getWritableDatabase();
+        // make query
+        ContentValues values = new ContentValues();
+        values.put(Notification.KEYS.SEEN.getName(),1);
+        // execute update
+        int affectedRows = writableDb.update(
+                Notification.TABLE_NAME,
+                values,
+                Notification.KEYS.TASK_ROW_ID + "=?",
+                new String[] { task.getId()+"" }
+        );
+        // close db
+        writableDb.close();
+        // return status
+        return (affectedRows>0);
     }
 
     public boolean deleteNotification(Notification notification) {

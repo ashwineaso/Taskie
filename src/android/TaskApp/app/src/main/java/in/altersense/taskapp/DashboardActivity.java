@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -82,6 +83,10 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
             return;
         }
 
+        //Messing with the actionbar present shadow in API 21
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setElevation(0);
+
         setContentView(R.layout.activity_tasks);
 
         // Register eventBus
@@ -109,7 +114,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                         taskCursor,
                         getApplicationContext()
                 );
-                Intent intent = new Intent(DashboardActivity.this, TaskActivity.class);
+                Intent intent = new Intent(DashboardActivity.this, TaskFragmentsActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey(), selectedTask.getId());
                 startActivityForResult(intent,0);

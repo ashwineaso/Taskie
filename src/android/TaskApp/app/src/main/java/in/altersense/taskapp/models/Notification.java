@@ -6,6 +6,7 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
+import in.altersense.taskapp.R;
 import in.altersense.taskapp.database.TaskDbHelper;
 
 /**
@@ -135,6 +136,19 @@ public class Notification {
     public void setTaskRowId() {this.taskRowId = taskRowId;}
 
     public void setMessage() {this.message = message;}
+
+    public int getSymbol(String type) {
+        switch (type) {
+            case "newTask" : return R.drawable.ic_notif_new_task;
+            case "taskUpdate" : return R.drawable.ic_notif_update;
+            case "taskStatusChange" : return R.drawable.ic_notif_complete;
+            case "collStatusChange" : return R.drawable.ic_notif_complete;
+            case "taskDeletion" : return  R.drawable.ic_notif_delete;
+            case "collAddition" : return R.drawable.ic_notif_coll_add;
+            case "collDeletion" : return R.drawable.ic_notif_coll_rem;
+            default: return R.drawable.ic_notif_update;
+        }
+    }
 
 
 }

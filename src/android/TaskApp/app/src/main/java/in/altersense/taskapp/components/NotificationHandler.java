@@ -9,6 +9,8 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Switch;
 
+import java.util.List;
+
 import in.altersense.taskapp.DashboardActivity;
 import in.altersense.taskapp.R;
 import in.altersense.taskapp.TaskActivity;
@@ -63,7 +65,7 @@ public class NotificationHandler {
     }
 
     private void newTaskNotification() {
-        message = "" + ownerName + " has assigned you a new task : " + taskName + ".";
+        message = "" + ownerName + " has assigned you a new task \" " + taskName + " \".";
         task = taskDbHelper.getTaskByUUID(taskUuid);
         if (AltEngine.readStringFromSharedPref(context,
                 Config.SHARED_PREF_KEYS.OWNER_NAME.getKey(),
@@ -75,14 +77,17 @@ public class NotificationHandler {
     }
 
     private void taskUpdateNotification() {
-        message = "" + ownerName + " has updated the task : " + taskName + ".";
+        message = "" + ownerName + " has updated the task \" " + taskName + " \".";
         //Retrieve the task from the db
         task = taskDbHelper.getTaskByUUID(taskUuid);
-        //Create a new Notification object
-        Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
-        //Call the create notification method
-        taskDbHelper.createNotification(newTaskNotification);
-        sendNotification(message, "Task Updated");
+        //Update notification is shown only to the collaborators
+        if(!task.isOwnedyDeviceUser(context)) {
+            //Create a new Notification object
+            Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
+            //Call the create notification method
+            taskDbHelper.createNotification(newTaskNotification);
+            sendNotification(message, "Task Updated");
+        }
 
     }
 
@@ -94,15 +99,18 @@ public class NotificationHandler {
             case 2 : statusAsString = Config.TASK_STATUS.COMPLETE.getStatusText(); break;
             case -1 : statusAsString = Config.TASK_STATUS.DELETED.getStatusText(); break;
         }
-        message = "" + ownerName + " has marked the task : " + taskName + " as " + statusAsString;
+        message = "" + ownerName + " has marked the task \"" + taskName + " \" as " + statusAsString;
         //Retrieve the task from the db
         task = taskDbHelper.getTaskByUUID(taskUuid);
-        //Create a new Notification object
-        Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
-        //Call the create notification method
-        taskDbHelper.createNotification(newTaskNotification);
-        //If user is not device owner, send a push notification
-        if(!task.isOwnedyDeviceUser(context)) {sendNotification(message, "Task Status");}
+        //Status change notification is shown only to the collaborators
+        if(!task.isOwnedyDeviceUser(context)) {
+            //Create a new Notification object
+            Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
+            //Call the create notification method
+            taskDbHelper.createNotification(newTaskNotification);
+            //If user is not device owner, send a push notification
+            sendNotification(message, "Task Status");
+        }
 
     }
 
@@ -114,7 +122,7 @@ public class NotificationHandler {
             case 2 : statusAsString = Config.COLLABORATOR_STATUS.COMPLETED.getStatusText(); break;
             case -1 : statusAsString = Config.COLLABORATOR_STATUS.DECLINED.getStatusText(); break;
         }
-        message = "" + ownerName + " has " + statusAsString + " the task : " + taskName + ".";
+        message = "" + ownerName + " has " + statusAsString + " the task \" " + taskName + " \".";
         //Retrieve the task from the db
         task = taskDbHelper.getTaskByUUID(taskUuid);
         //Create a new Notification object
@@ -122,20 +130,23 @@ public class NotificationHandler {
         //Call the create notification method
         taskDbHelper.createNotification(newTaskNotification);
         //If user is not device owner, send a push notification
-        if(!task.isOwnedyDeviceUser(context)) {sendNotification(message, "Collaborator Status");}
+        if(task.isOwnedyDeviceUser(context)) {sendNotification(message, "Collaborator Status");}
 
     }
 
     private void taskDeletion() {
-        message = "" + ownerName + " has deleted the task : " + taskName + ".";
+        message = "" + ownerName + " has deleted the task \" " + taskName + " \".";
         //Retrieve the task from the db
         task = taskDbHelper.getTaskByUUID(taskUuid);
-        //Create a new Notification object
-        Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
-        //Call the create notification method
-        taskDbHelper.createNotification(newTaskNotification);
-        //If user is not device owner, send a push notification
-        if(!task.isOwnedyDeviceUser(context)) {sendNotification(message, "Task Deleted");}
+        //Task Deleted notification goes only to the collaborators
+        if(!task.isOwnedyDeviceUser(context)) {
+            //Create a new Notification object
+            Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
+            //Call the create notification method
+            taskDbHelper.createNotification(newTaskNotification);
+            //send a push notification
+            sendNotification(message, "Task Deleted");
+        }
 
     }
 
@@ -147,15 +158,22 @@ public class NotificationHandler {
             int unknownColl = Integer.parseInt(extras.getString("unknown"));
             if (unknownColl > 0) { collNames += "and " + unknownColl + " others";}
             //merge it all into a single message
-            message = "" + ownerName + " has added " + collNames + " to the task : " + taskName;
+            message = "" + ownerName + " has added " + collNames + " to the task \" " + taskName + " \".";
             //Retrieve the task from the db
             task = taskDbHelper.getTaskByUUID(taskUuid);
-            //Create a new Notification object
-            Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
-            //Call the create notification method
-            taskDbHelper.createNotification(newTaskNotification);
-            //If user is not device owner, send a push notification
-            if(!task.isOwnedyDeviceUser(context)) {sendNotification(message, "Collaborator Added");}
+            try {
+                //Create a new Notification object
+                Notification newTaskNotification = new Notification(task, context, type, message, dateTime);
+                //Call the create notification method
+                taskDbHelper.createNotification(newTaskNotification);
+                //If user is not device owner, send a push notification
+                if(!task.isOwnedyDeviceUser(context)) {sendNotification(message, "Collaborator Added");}
+            } catch (NullPointerException e) {
+                Log.d(CLASS_TAG, "Task is not in db");
+                //Since the task is not in db, then the user is being assigned the task
+                String newmessage = "" + ownerName + " has assigned you a new task \" " + taskName + " \".";
+                sendNotification(newmessage, "Task Assigned");
+            }
         }
     }
 
@@ -167,7 +185,7 @@ public class NotificationHandler {
             int unknownColl = Integer.parseInt(extras.getString("unknown"));
             if (unknownColl > 0) { collNames += "and " + unknownColl + " others";}
             //merge it all into a single message
-            message = "" + ownerName + " has removed " + collNames + " from the task : " + taskName;
+            message = "" + ownerName + " has removed " + collNames + " from the task \" " + taskName + " \".";
             //Retrieve the task from the db
             task = taskDbHelper.getTaskByUUID(taskUuid);
             //Create a new Notification object
@@ -180,29 +198,32 @@ public class NotificationHandler {
     }
 
     private void sendNotification(String msg, String title) {
-
         mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Intent intent;
-        try {
-            taskUuid = task.getUuid();
-            intent  = new Intent(context, TaskActivity.class);
-            intent.putExtra(Task.ID, taskUuid);
-        } catch (NullPointerException e){
-            intent = new Intent(context, DashboardActivity.class);
-        }
+        Intent intent =  new Intent(context, DashboardActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle(title)
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
-                        .setDefaults(android.app.Notification.DEFAULT_ALL)
-                        .setContentText(msg);
+                        .setContentText(msg)
+                        .setDefaults(1);
+
+        //Retrieve all the unseen notifications
+        List<Notification> notificationList = taskDbHelper.retrieveUnseenNotiifcation();
+        //Set the big notification style
+        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+        //Set a big content title
+        inboxStyle.setBigContentTitle("Taskie");
+
+        //Move the events to the bigview
+        for (Notification notification: notificationList) {
+            inboxStyle.addLine(notification.getMessage());
+        }
 
         mBuilder.setContentIntent(pendingIntent);
         mBuilder.setAutoCancel(true);
-        mBuilder.setStyle(new NotificationCompat.InboxStyle());
+        mBuilder.setStyle(inboxStyle);
         mNotificationManager.notify(0, mBuilder.build());
 
     }

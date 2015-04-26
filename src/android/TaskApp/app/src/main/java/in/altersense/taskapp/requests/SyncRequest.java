@@ -34,13 +34,12 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
 
     private static final String CLASS_TAG = "SyncRequest ";
 
-    private final Context context;
-    private final TaskDbHelper taskDbHelper;
-    private final UserDbHelper userDbHelper;
+    private Context context;
+    private TaskDbHelper taskDbHelper;
+    private UserDbHelper userDbHelper;
     private APIRequest apiRequest;
     private List<User> userList;
     private List<Task> taskList;
-    private Intent syncCompleteBroadcastIntent;
     private JSONObject requestObject;
     private String url;
 
@@ -91,19 +90,8 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             this.mode=0;
         }
 
-        this.taskDbHelper = new TaskDbHelper(this.context);
-        this.userDbHelper = new UserDbHelper(this.context);
+        initializeRequest();
 
-        this.syncCompleteBroadcastIntent = new Intent(Config.SHARED_PREF_KEYS.SYNC_IN_PROGRESS.getKey());
-
-        this.apiRequest = new APIRequest(
-                this.url,
-                this.requestObject,
-                this.context
-        );
-
-        deviceOwnerAsCollaborator = new Collaborator(User.getDeviceOwner(context));
-        deviceOwnerAsCollaborator.setStatus(Config.COLLABORATOR_STATUS.ACCEPTED.getStatus());
     }
 
     /**
@@ -134,12 +122,57 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
     }
 
     /**
+     * Sync requst for multiple tasks.
+     * @param tasks Array of tasks to sync.
+     * @param context Current context.
+     */
+    public SyncRequest(Task[] tasks, Context context) {
+        this.requestObject = new JSONObject();
+        this.context = context;
+        this.taskList = new ArrayList<>(Arrays.asList(tasks));
+        this.mode = 2;
+        prepareSyncTask();
+        initializeRequest();
+    }
+
+    /**
+     * Sync request for multiple users.
+     * @param users Array of users to sync.
+     * @param context Current context.
+     */
+    public SyncRequest(User[] users, Context context) {
+        this.requestObject = new JSONObject();
+        this.context = context;
+        this.userList = new ArrayList<>(Arrays.asList(users));;
+        this.mode = 1;
+        prepareSyncUser();
+        initializeRequest();
+    }
+
+    /**
      * SyncRequest to sync a single task.
      * @param task Task to be synced.
      * @param context Current activity.
      */
     public SyncRequest(Task task, Context context) {
         this(context,null,new Task[] {task},false,true,false);
+    }
+
+    /**
+     * Initializes the request components.
+     */
+    private void initializeRequest() {
+        this.taskDbHelper = new TaskDbHelper(this.context);
+        this.userDbHelper = new UserDbHelper(this.context);
+
+        this.apiRequest = new APIRequest(
+                this.url,
+                this.requestObject,
+                this.context
+        );
+
+        deviceOwnerAsCollaborator = new Collaborator(User.getDeviceOwner(context));
+        deviceOwnerAsCollaborator.setStatus(Config.COLLABORATOR_STATUS.ACCEPTED.getStatus());
     }
 
     public User getUser() {
@@ -367,6 +400,9 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             int position = this.taskList.indexOf(task);
             this.taskList.remove(position);
             this.taskList.add(position, taskFromJSONObject);
+
+            task.setSyncStatus(true);
+            task.updateTask(this.context);
         }
     }
 
