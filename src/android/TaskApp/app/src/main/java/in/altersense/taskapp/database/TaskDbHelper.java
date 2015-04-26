@@ -1066,6 +1066,32 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         return rsn;
     }
 
+    public boolean updateRSN(RemindSyncNotification rsn) {
+        // Open writable database
+        SQLiteDatabase writableDatbase = this.getWritableDatabase();
+        // Set up query values
+        ContentValues values = new ContentValues();
+        values.put(
+                RemindSyncNotification.KEYS.TASK_ID.getName(),
+                rsn.getTaskId()
+        );
+        values.put(
+                RemindSyncNotification.KEYS.HIDE_NOTIF.getName(),
+                rsn.getHideNotification()
+        );
+        // Make updation query
+        int affectedRows = writableDatbase.update(
+                RemindSyncNotification.TABLE_NAME,
+                values,
+                RemindSyncNotification.KEYS.TASK_ID.getName()+"=?",
+                new String[] { rsn.getTaskId()+"" }
+        );
+        // Close database
+        writableDatbase.close();
+        // return affectedRows > 1
+        return affectedRows>0;
+    }
+
     public boolean deleteRSN(long taskId) {
         // Open writable database.
         SQLiteDatabase writableDb = this.getWritableDatabase();
