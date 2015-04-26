@@ -73,6 +73,7 @@ class Notification():
 		userObj = Collection()
 		message["type"] = self.NOTIFICATION_TYPE["Collaborator_Added"]
 		message["ownerName"] = str(task.owner.name)
+		message["taskName"] = str(task.name)
 		message["unknown"] = 0
 		message["dateTime"] = self.seconds_time
 		message["addedColl"] = ""
@@ -92,6 +93,7 @@ class Notification():
 		userObj = Collection()
 		message["type"] = self.NOTIFICATION_TYPE["Collaborator_Deleted"]
 		message["ownerName"] = str(task.owner.name)
+		message["taskName"] = str(task.name)
 		message["unknown"] = 0
 		message["dateTime"] = self.seconds_time
 		message["removedColl"] = ""
