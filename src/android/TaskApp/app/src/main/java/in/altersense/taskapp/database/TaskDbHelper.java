@@ -16,6 +16,7 @@ import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.models.Buzz;
 import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.Notification;
+import in.altersense.taskapp.models.RemindSyncNotification;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.User;
 
@@ -61,6 +62,10 @@ public class TaskDbHelper extends SQLiteOpenHelper {
             Notification.KEYS.DATE_TIME.getName() + " " + Notification.KEYS.DATE_TIME.getType() + ", " +
             Notification.KEYS.SEEN.getName() + " " + Notification.KEYS.SEEN.getType() + ");";
 
+    private static String CREATION_STATEMENT_REMINDSYNCNOTIFY = "CREATE TABLE " + RemindSyncNotification.TABLE_NAME + " ( " +
+            RemindSyncNotification.KEYS.TASK_ID.getName() + " " + RemindSyncNotification.KEYS.TASK_ID.getType() + ", " +
+            RemindSyncNotification.KEYS.HIDE_NOTIF.getName() + " " + RemindSyncNotification.KEYS.HIDE_NOTIF.getType() + ");";
+
     public TaskDbHelper(Context context) {
         super(context, Task.TABLE_NAME, null, Config.DATABASE_VERSION);
         this.context = context;
@@ -79,6 +84,9 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         );
         db.execSQL(
                 CREATION_STATEMENT_COLLABORATOR
+        );
+        db.execSQL(
+                CREATION_STATEMENT_REMINDSYNCNOTIFY
         );
     }
 
@@ -102,6 +110,10 @@ public class TaskDbHelper extends SQLiteOpenHelper {
             case 3:
                 db.execSQL(
                         CREATION_STATEMENT_COLLABORATOR
+                );
+            case 4:
+                db.execSQL(
+                        CREATION_STATEMENT_REMINDSYNCNOTIFY
                 );
         }
     }
@@ -978,4 +990,95 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         Log.d(TAG, "Cleared "+affectedRows+" rows.");
         return affectedRows>0;
     }
+
+    /*************************************************
+     * Remind Sync Notifier Table CRUD
+     *************************************************/
+
+    public RemindSyncNotification createRSN(RemindSyncNotification newRemindSyncNotification) {
+        // Open writable database
+        SQLiteDatabase writableDatabase = this.getWritableDatabase();
+        // Set values
+        ContentValues values = new ContentValues();
+        values.put(
+                RemindSyncNotification.KEYS.TASK_ID.getName(),
+                newRemindSyncNotification.getTaskId()
+        );
+        values.put(
+                RemindSyncNotification.KEYS.HIDE_NOTIF.getName(),
+                newRemindSyncNotification.getHideNotification()
+        );
+        // Insert into database
+        long rowId = writableDatabase.insert(
+                RemindSyncNotification.TABLE_NAME,
+                null,
+                values
+        );
+        // Set row id in the object
+        newRemindSyncNotification.setId(rowId);
+        // Close database
+        writableDatabase.close();
+        // Return RSN
+        return newRemindSyncNotification;
+    }
+
+    public RemindSyncNotification createRSN(Task task) {
+        // Setup a RSN object
+        RemindSyncNotification rsn = new RemindSyncNotification(
+                task.getId(),
+                false,
+                this.context
+        );
+        // Insert into database
+        rsn = createRSN(rsn);
+        // Return RSN object
+        return rsn;
+    }
+
+    public RemindSyncNotification retreiveRSN(long taskId) {
+        // Open readable data
+        SQLiteDatabase readableDb = this.getReadableDatabase();
+        // Query the database with task id.
+        Cursor cursor = readableDb.query(
+                RemindSyncNotification.TABLE_NAME,
+                RemindSyncNotification.getAllColumns(),
+                RemindSyncNotification.KEYS.TASK_ID.getName()+" =?",
+                new String[] { taskId+"" },
+                null,
+                null,
+                null
+        );
+        // Create RSN object from the cursor
+        RemindSyncNotification rsn = new RemindSyncNotification(
+                cursor,
+                this.context
+        );
+        // Close database
+        readableDb.close();
+        // Return RSN object.
+        return rsn;
+    }
+
+    public RemindSyncNotification retreiveRSN(Task task) {
+        // Retreive RSN by getting task id
+        RemindSyncNotification rsn = retreiveRSN(task.getId());
+        // Return rsn object
+        return rsn;
+    }
+
+    public boolean deleteRSN(long taskId) {
+        // Open writable database.
+        SQLiteDatabase writableDb = this.getWritableDatabase();
+        // Call delete query with task id
+        int affectedRows = writableDb.delete(
+                RemindSyncNotification.TABLE_NAME,
+                RemindSyncNotification.KEYS.TASK_ID.getName()+" =?",
+                new String[] { taskId+"" }
+        );
+        // Close database
+        writableDb.close();
+        // return true if affectedRows>0
+        return  affectedRows > 0;
+    }
+
 }

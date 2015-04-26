@@ -3,6 +3,8 @@ package in.altersense.taskapp.models;
 import android.content.Context;
 import android.database.Cursor;
 
+import java.util.ArrayList;
+
 import in.altersense.taskapp.database.TaskDbHelper;
 
 /**
@@ -10,7 +12,7 @@ import in.altersense.taskapp.database.TaskDbHelper;
  */
 public class RemindSyncNotification {
 
-    public static final String TABLE_NAME = "RemindCollaboratorTable";
+    public static final String TABLE_NAME = "RemindSyncNotificationTable";
     /**
      * Table Structure for Task
      */
@@ -46,6 +48,7 @@ public class RemindSyncNotification {
     private Context context;
     private TaskDbHelper taskDbHelper;
     private Task task;
+    private long id;
 
     public RemindSyncNotification(long taskId, boolean hideNotification, Context context) {
         this.context = context;
@@ -61,5 +64,42 @@ public class RemindSyncNotification {
                 cursor.getInt(cursor.getColumnIndex(KEYS.HIDE_NOTIF.getName()))==1,
                 context
         );
+        this.id = cursor.getLong(cursor.getColumnIndex("ROWID"));
+    }
+
+    public long getTaskId() {
+        return taskId;
+    }
+
+    public boolean isHideNotification() {
+        return hideNotification;
+    }
+
+    public int getHideNotification() {
+        return hideNotification == true ? 1 : 0;
+    }
+
+    public Task getTask() {
+        return task;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public static String[] getAllColumns() {
+        ArrayList<String> columnsList = new ArrayList<String>();
+        for(KEYS key: KEYS.values()) {
+            columnsList.add(key.getName());
+        }
+        // Add row id to list of columns.
+        columnsList.add("ROWID as _id");
+        String[] columns = new String[columnsList.size()];
+        columns = columnsList.toArray(columns);
+        return columns;
     }
 }
