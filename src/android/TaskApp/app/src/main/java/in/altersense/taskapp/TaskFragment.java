@@ -274,6 +274,19 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
             this.task = taskDbHelper.getTaskByRowId(taskId);
             //Mark the notiifcations as seen
             taskDbHelper.markNotificationSeen(this.task);
+
+            if(createViewIntent.getExtras().getBoolean(RemindSyncNotification.KEYS.HIDE_NOTIF.getName(),false)) {
+                RemindSyncNotification rsn = taskDbHelper.retreiveRSN(taskId);
+                rsn.setHideNotification(true);
+                taskDbHelper.updateRSN(rsn);
+                Toast.makeText(
+                        this.context,
+                        "No more reminders of this task will be displayed.",
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+
+
         }
 
 

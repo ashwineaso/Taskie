@@ -36,7 +36,10 @@ public class ReminderNotifier extends BroadcastReceiver {
         // Fetch RSN from task id in the intent
         long taskId = intent.getExtras().getLong(Config.REQUEST_RESPONSE_KEYS.UUID.getKey());
         this.rsn = taskDbHelper.retreiveRSN(taskId);
-        if(taskDbHelper.hasPendingCollaborators(rsn.getTask())) {
+        if(taskDbHelper.hasPendingCollaborators(rsn.getTask())
+                &&
+                !rsn.isHideNotification()
+                ) {
             // Set next alarm
             setNextAlarm(intent);
             // display notification

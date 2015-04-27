@@ -83,6 +83,10 @@ public class RemindSyncNotification {
         return hideNotification == true ? 1 : 0;
     }
 
+    public void setHideNotification(boolean hideNotification) {
+        this.hideNotification = hideNotification;
+    }
+
     public Task getTask() {
         return task;
     }
