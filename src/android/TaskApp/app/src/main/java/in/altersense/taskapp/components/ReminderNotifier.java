@@ -7,18 +7,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import in.altersense.taskapp.R;
-import in.altersense.taskapp.TaskActivity;
-import in.altersense.taskapp.TaskFragment;
+import in.altersense.taskapp.TaskFragmentsActivity;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.database.TaskDbHelper;
-import in.altersense.taskapp.models.Notification;
 import in.altersense.taskapp.models.RemindSyncNotification;
 import in.altersense.taskapp.models.Task;
 
@@ -50,7 +47,7 @@ public class ReminderNotifier extends BroadcastReceiver {
     private void displayNotification() {
         Log.d("displayNotification", "Started");
         // Set up pending intent to display task when clicking the notification.
-        Intent showTaskFragmentIntent = new Intent(this.context, TaskActivity.class);
+        Intent showTaskFragmentIntent = new Intent(this.context, TaskFragmentsActivity.class);
         showTaskFragmentIntent.putExtra(Task.ID, this.rsn.getTaskId());
         PendingIntent showTaskFragmentPendingIntent = PendingIntent.getActivity(
                 this.context,
