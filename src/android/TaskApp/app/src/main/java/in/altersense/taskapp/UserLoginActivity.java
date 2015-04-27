@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -39,6 +40,7 @@ public class UserLoginActivity extends ActionBarActivity implements
     private EditText passwordET;
     private Button loginButton;
     private ImageButton showPasswordButton;
+    private ImageButton moreButton;
     private Button regButton;
     private GoogleApiClient googleApiClient;
     private Button googleAuthButton;
@@ -74,6 +76,7 @@ public class UserLoginActivity extends ActionBarActivity implements
         this.loginButton = (Button) findViewById(R.id.loginButton);
         this.regButton = (Button) findViewById(R.id.regButton);
         this.googleAuthButton = (Button) findViewById(R.id.googleAuthButton);
+        this.moreButton = (ImageButton) findViewById(R.id.moreButton);
 
         this.googleAuthButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,6 +130,13 @@ public class UserLoginActivity extends ActionBarActivity implements
                     );
                     imageButton.setImageResource(R.drawable.ic_action_showpassword);
                 }
+            }
+        });
+
+        this.moreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPopupMenu();
             }
         });
 
@@ -230,6 +240,27 @@ public class UserLoginActivity extends ActionBarActivity implements
             intentInProgress = false;
 
         }
+    }
+
+    public void showPopupMenu() {
+        PopupMenu popupMenu = new PopupMenu(this, this.moreButton);
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_forgotPassword:
+                        Intent forgotPasswordIntent = new Intent(
+                                getApplicationContext(),
+                                ForgotPasswordActivity.class
+                        );
+                        startActivity(forgotPasswordIntent);
+                        break;
+                }
+                return true;
+            }
+        });
+        popupMenu.inflate(R.menu.menu_user_login);
+        popupMenu.show();
     }
 
 }
