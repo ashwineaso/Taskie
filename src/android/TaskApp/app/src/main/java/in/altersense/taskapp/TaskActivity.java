@@ -44,6 +44,8 @@ import in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
 import in.altersense.taskapp.events.ChangeInTaskEvent;
+import in.altersense.taskapp.events.FellFromHighPriorityEvent;
+import in.altersense.taskapp.events.RoseToHighPriorityEvent;
 import in.altersense.taskapp.events.TaskDeletedEvent;
 import in.altersense.taskapp.events.UserRemovedFromCollaboratorsEvent;
 import in.altersense.taskapp.models.Collaborator;
@@ -107,6 +109,9 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
     private List<User> userList;
     private List<User> collaboratorAdditionList = new ArrayList<>();
 
+    private int prevPriority;
+    private int newPriority;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         String TAG = CLASS_TAG+ " OnCreate";
@@ -161,6 +166,8 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         this.collaboratorsTCET = (TokenCompleteCollaboratorsEditText) findViewById(R.id.collaboratorsTokenEditText);
         this.addCollaboratorButton = (Button) findViewById(R.id.addCollaboratorButton);
         this.collList = (ListView)findViewById(R.id.collListView);
+
+        this.prevPriority = this.task.getPriority();
 
         //Hide the addCollabsIV if the user is not owner
         if (!this.task.isOwnedyDeviceUser(getApplicationContext())) {
@@ -418,6 +425,23 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
 
     }
 
+    private void checkPriorityChanged() {
+        if(this.prevPriority !=this.task.getPriority()) {
+            this.newPriority = this.task.getPriority();
+            if(this.prevPriority == Config.PRIORITY.HIGH.getValue()) {
+                // Previous priority was HIGH
+                BaseApplication.getEventBus().post(
+                        new FellFromHighPriorityEvent(this.task)
+                );
+            } else if(this.newPriority == Config.PRIORITY.HIGH.getValue()) {
+                // Priority was set to HIGH
+                BaseApplication.getEventBus().post(
+                        new RoseToHighPriorityEvent(this.task)
+                );
+            }
+        }
+    }
+
     /**
      * Enables an edit mode of the task.
      */
@@ -513,6 +537,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
                 if(isEditMode) {
                     editViewToggle.setIcon(R.drawable.ic_edit_white);
                     editViewToggle.setTitle("Edit");
+                    checkPriorityChanged();
                     setUpViewMode();
 
                 } else {
