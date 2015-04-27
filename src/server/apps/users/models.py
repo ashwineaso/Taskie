@@ -1,4 +1,4 @@
-from mongoengine import *
+import mongoengine
 from settings.methods import connect
 from settings.altEngine import mongo_to_dict_helper
 from passlib.hash import sha256_crypt
@@ -7,7 +7,7 @@ from uuid import uuid4
 import time
 from settings.constants import *
 
-connect()
+mongoengine.connect("taskapp")
 
 class TimeStampGenerator(object):
 	"""
