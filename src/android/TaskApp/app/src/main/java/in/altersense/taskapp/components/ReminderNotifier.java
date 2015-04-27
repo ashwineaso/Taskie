@@ -56,6 +56,17 @@ public class ReminderNotifier extends BroadcastReceiver {
                 0
         );
 
+        // Set up action pending Intent to hide any more notifications
+        Intent showNoMoreNotificationsIntent = new Intent(this.context, TaskFragmentsActivity.class);
+        showNoMoreNotificationsIntent.putExtra(Task.ID, this.rsn.getTaskId());
+        showNoMoreNotificationsIntent.putExtra(RemindSyncNotification.KEYS.HIDE_NOTIF.getName(), true);
+        PendingIntent showNoMoreNotificationsPendingIntent = PendingIntent.getActivity(
+                this.context,
+                0,
+                showNoMoreNotificationsIntent,
+                0
+        );
+
         // Build notification
         NotificationCompat.Builder notificaion = new NotificationCompat.Builder(this.context)
                 .setSmallIcon(R.drawable.ic_launcher)
@@ -72,6 +83,11 @@ public class ReminderNotifier extends BroadcastReceiver {
                                         "\" have not yet reached certain collaborators."
                         )
                         .setBigContentTitle("Taskie")
+                )
+                .addAction(
+                        R.drawable.ic_delete_white_36dp,
+                        "Dismiss Reminders from this task",
+                        showNoMoreNotificationsPendingIntent
                 );
 
         NotificationManager notificationManager =
