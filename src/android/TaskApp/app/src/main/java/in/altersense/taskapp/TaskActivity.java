@@ -1,6 +1,8 @@
 package in.altersense.taskapp;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,13 +42,17 @@ import in.altersense.taskapp.adapters.TaskDetailsViewAdapter;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.components.BaseApplication;
+import in.altersense.taskapp.components.ReminderNotifier;
 import in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
 import in.altersense.taskapp.events.ChangeInTaskEvent;
+import in.altersense.taskapp.events.FellFromHighPriorityEvent;
+import in.altersense.taskapp.events.RoseToHighPriorityEvent;
 import in.altersense.taskapp.events.TaskDeletedEvent;
 import in.altersense.taskapp.events.UserRemovedFromCollaboratorsEvent;
 import in.altersense.taskapp.models.Collaborator;
+import in.altersense.taskapp.models.RemindSyncNotification;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.User;
 import in.altersense.taskapp.requests.UpdateTaskRequest;
@@ -107,6 +113,9 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
     private List<User> userList;
     private List<User> collaboratorAdditionList = new ArrayList<>();
 
+    private int prevPriority;
+    private int newPriority;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         String TAG = CLASS_TAG+ " OnCreate";
@@ -161,6 +170,8 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         this.collaboratorsTCET = (TokenCompleteCollaboratorsEditText) findViewById(R.id.collaboratorsTokenEditText);
         this.addCollaboratorButton = (Button) findViewById(R.id.addCollaboratorButton);
         this.collList = (ListView)findViewById(R.id.collListView);
+
+        this.prevPriority = this.task.getPriority();
 
         //Hide the addCollabsIV if the user is not owner
         if (!this.task.isOwnedyDeviceUser(getApplicationContext())) {
@@ -388,6 +399,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         }
         // Set mode.
         this.isEditMode = false;
+
         // Update TextViews
         this.taskTitleTV.setText(this.task.getName());
         this.taskDescriptionTV.setText(this.task.getDescription());
@@ -417,6 +429,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         this.resultIntent.putExtra(Config.SHARED_PREF_KEYS.UPDATE_LIST.getKey(), true);
 
     }
+
 
     /**
      * Enables an edit mode of the task.
