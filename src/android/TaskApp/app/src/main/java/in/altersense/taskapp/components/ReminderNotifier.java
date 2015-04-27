@@ -1,11 +1,13 @@
 package in.altersense.taskapp.components;
 
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 
 import in.altersense.taskapp.R;
 import in.altersense.taskapp.common.Config;
@@ -43,8 +45,13 @@ public class ReminderNotifier extends BroadcastReceiver {
         NotificationCompat.Builder notificaion = new NotificationCompat.Builder(this.context)
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setTicker(Config.MESSAGES.TASK_CANT_REACH_COLLABORATOR.getMessage())
-                .setContentTitle("Task \""+this.rsn.getTask().getName()+"\" have not yet reached certain collaborators.")
+                .setContentTitle(
+                        "Task \""+this.rsn.getTask().getName()+
+                                "\" have not yet reached certain collaborators.")
                 .setContentText(Config.MESSAGES.TASK_CANT_REACH_COLLABORATOR.getMessage());
+        NotificationManager notificationManager =
+                (NotificationManager) this.context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify((int) rsn.getTaskId(), notificaion.build());
     }
 
     private void setNextAlarm(Intent intent) {
