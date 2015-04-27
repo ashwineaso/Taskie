@@ -164,7 +164,10 @@ def authorize_user():
 	obj = request.json
 	try:
 		userObj.email = obj["email"]
-		userObj.authMethod = obj["authMethod"]
+		try:
+			userObj.authMethod = obj["authMethod"]
+		except Exception, e:
+			userObj.authMethod = "taskieAuth"
 		try:
 			userObj.password = obj["password"]
 		except KeyError as e:
