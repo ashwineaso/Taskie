@@ -247,6 +247,16 @@ def checkAccessTokenValid(tokenObj):
 	return token
 
 
+def updatePassword(userObj):
+	""" Update user with a new password"""
+	# try:
+	userObj.password_hash = hash_password(userObj.password)
+	dal.updatePassword(userObj)
+	return True
+	# except Exception, e:
+	# 	return False
+
+
 def convertUserToDict(userObj):
 	"""
 	Convert a User object into a dict with the necessary information
