@@ -1,4 +1,5 @@
 from apps.main.views import *
+from apps.users.views import *
 from settings.constants import DEBUG
 from apps.users.routes import users_app
 from apps.task.routes import task_app

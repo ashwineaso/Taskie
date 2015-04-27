@@ -7,7 +7,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from settings.altEngine import Collection
 
-taskie_mail = "invites@taskie.me"
+taskie_mail = "noreply@taskie.me"
 HOST = "mail.taskie.me"
 PORT = "25"
 password = "wxqkqxr4$&$@"

@@ -269,3 +269,13 @@ def verifyUser(userObj):
 		user.save()
 		return True
 	return False
+
+
+def updatePassword(userObj):
+	""" Update user with new password"""
+	User.objects(id = userObj.user.id).update(set__password_hash = userObj.password_hash)
+	userObj.user.save()
+	Token.objects(user = userObj.user).delete()
+	#Create a new token
+	token = Token(user = userObj.user)
+	token.save()

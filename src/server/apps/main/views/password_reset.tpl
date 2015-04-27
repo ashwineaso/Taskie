@@ -22,7 +22,7 @@
 		<link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900,200italic,300italic,400italic,600italic,700italic,900italic" rel="stylesheet" type="text/css">
 		
 		<!-- Modernizer and IE specyfic files -->  
-		<script src="js/modernizr.custom.js"></script>
+		<script src="modernizr.custom.js"></script>
  	</head>
   
   <body>
@@ -48,15 +48,17 @@
 		<div class="container">
 			<div class="row" id="newsletter">
                 <div class="col-sm-12 col-md-12 col-lg-12" >
-                    <div id="logo"><a href="#home"><img src="images/logo.png" alt="logo"></a></div>
+                    <div id="logo"><a href="#home"><img src="logo.png" alt="logo"></a></div>
                     <h2>Reset your password</h2>
                     <p>Provide a new password which is not the same as your old password.
                     </p>
                     
                     <div id="newsletter_form">
-                        <form action="http://ww.shegy.nazwa.pl/themeforest/hype/image/php/send.php" method="post" class="subscribe-form" id="subscribe-form">
+                        <form action="/user/doUpdatePassword" method="post" class="subscribe-form" id="subscribe-form">
+                            <input type="email" name="email" class="subscribe-input" value="{{ email }}" hidden>
+                            <input type="key" name="key" class="subscribe-input" value="{{ key }}"  hidden>
                             <input type="password" name="password" class="subscribe-input" placeholder="Enter Password"  required>
-							<button type="submit" class="subscribe-submit">Reset Password</button>
+							<input type="submit" class="subscribe-submit" value="Reset Password">
                         </form>
                     </div>
                     <div id="preview"></div>
@@ -81,15 +83,15 @@
 	<!--###############################-->
 
 	<!-- JavaScript plugins comes here -->
-	<script src="js/jquery-2.0.3.min.js"></script>
-	<script src="js/jquery.easing.min.js"></script>
-	<script src="js/jquery.scrollTo.js"></script>
-	<script src="js/jquery.form.js"></script>
-	<script src="js/main.js"></script>
-	<script src="js/retina.js"></script>
-	<script src="js/waypoints.min.js"></script>
-	<script src="js/owl.carousel.min.js"></script>
-	<script src="js/nivo-lightbox.min.js"></script>
+	<script src="jquery-2.0.3.min.js"></script>
+	<script src="jquery.easing.min.js"></script>
+	<script src="jquery.scrollTo.js"></script>
+	<script src="jquery.form.js"></script>
+	<script src="main.js"></script>
+	<script src="retina.js"></script>
+	<script src="waypoints.min.js"></script>
+	<script src="owl.carousel.min.js"></script>
+	<script src="nivo-lightbox.min.js"></script>
 	<script type="text/javascript">
 		$('document').ready(function(){
 				$('#subscribe-form').ajaxForm( {
@@ -102,13 +104,13 @@
 			});
 	</script>
 	<script>
-		var url ='images/icons.svg';
+		var url ='icons.svg';
 		var c=new XMLHttpRequest(); c.open('GET.html', url, false); c.setRequestHeader('Content-Type', 'text/xml'); c.send();
 		document.body.insertBefore(c.responseXML.firstChild, document.body.firstChild)
 	</script>
 
 	<!-- Demo Switcher JS -->
-	<script type="text/javascript" src="js/fswit.js"></script>
+	<script type="text/javascript" src="fswit.js"></script>
 		
   </body>
 </html>
