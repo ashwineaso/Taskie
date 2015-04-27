@@ -89,6 +89,7 @@ public class Config {
         INVALID_EMAIL("Invalid email."),
         CONFIRM_TASK_DELETE("You are about to delete this task. Do you really want to ?"),
         CONFIRM_REMOVE_COLLABORATOR("Remove collaborator from task. Confirm ?"),
+        TASK_CANT_REACH_COLLABORATOR ("Task not synced by collaborators."),
         CANT_REACH_SERVER("Cannot reach server. Check internet connection.");
 
         private String message;

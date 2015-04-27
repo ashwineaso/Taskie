@@ -19,6 +19,7 @@ public class RemindSyncNotification {
     public static enum KEYS {
 
         TASK_ID("task_id", "TEXT"),
+        CREATED_TIME("created_time", "INTEGER"),
         HIDE_NOTIF("hide_notification", "INTEGER");
 
         public String getName() {
@@ -48,11 +49,13 @@ public class RemindSyncNotification {
     private Context context;
     private TaskDbHelper taskDbHelper;
     private Task task;
+    private long createdTime;
     private long id;
 
-    public RemindSyncNotification(long taskId, boolean hideNotification, Context context) {
+    public RemindSyncNotification(long taskId, long createdTime, boolean hideNotification, Context context) {
         this.context = context;
         this.taskId = taskId;
+        this.createdTime = createdTime;
         this.hideNotification = hideNotification;
         this.taskDbHelper = new TaskDbHelper(this.context);
         this.task = this.taskDbHelper.getTaskByRowId(this.taskId);
@@ -61,6 +64,7 @@ public class RemindSyncNotification {
     public RemindSyncNotification(Cursor cursor, Context context) {
         this(
                 cursor.getLong(cursor.getColumnIndex(KEYS.TASK_ID.getName())),
+                cursor.getLong(cursor.getColumnIndex(KEYS.CREATED_TIME.getName())),
                 cursor.getInt(cursor.getColumnIndex(KEYS.HIDE_NOTIF.getName()))==1,
                 context
         );
@@ -89,6 +93,14 @@ public class RemindSyncNotification {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public long getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(long createdTime) {
+        this.createdTime = createdTime;
     }
 
     public static String[] getAllColumns() {

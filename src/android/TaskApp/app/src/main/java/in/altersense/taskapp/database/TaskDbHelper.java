@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import in.altersense.taskapp.common.Config;
@@ -877,6 +878,36 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         return collaborator;
     }
 
+    /**
+     * Checks whether the task has collaborators with pending status
+     * @param task Task to search for.
+     * @return True if pending collaborators are present.
+     */
+    public boolean hasPendingCollaborators(Task task) {
+        // Open readable database
+        SQLiteDatabase readableDatabase = this.getReadableDatabase();
+        // find the count of collaborators with status pending
+        Cursor result = readableDatabase.query(
+                Collaborator.TABLE_NAME,
+                new String[] { "COUNT(*)" },
+                Collaborator.KEYS.TASK_ROWID.getName()+" =? AND " +
+                        Collaborator.KEYS.STATUS.getName() + " =?",
+                new String[] {
+                        task.getId()+"",
+                        Config.COLLABORATOR_STATUS.PENDING.getStatus()+""
+                },
+                null,
+                null,
+                null
+        );
+        int pendingCollaboratorCount = result.getInt(0);
+        // close database
+        readableDatabase.close();
+        result.close();
+        // return collaborator count > 0
+        return pendingCollaboratorCount > 0;
+    }
+
     public boolean updateStatus(Task task, Collaborator collaborator) {
         String TAG = CLASS_TAG+"updateStatus";
         // Open writable database.
@@ -1005,6 +1036,10 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 newRemindSyncNotification.getTaskId()
         );
         values.put(
+                RemindSyncNotification.KEYS.CREATED_TIME.getName(),
+                newRemindSyncNotification.getCreatedTime()
+        );
+        values.put(
                 RemindSyncNotification.KEYS.HIDE_NOTIF.getName(),
                 newRemindSyncNotification.getHideNotification()
         );
@@ -1026,6 +1061,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         // Setup a RSN object
         RemindSyncNotification rsn = new RemindSyncNotification(
                 task.getId(),
+                System.currentTimeMillis(),
                 false,
                 this.context
         );

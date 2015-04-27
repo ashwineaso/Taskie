@@ -1,6 +1,8 @@
 package in.altersense.taskapp;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,6 +42,7 @@ import in.altersense.taskapp.adapters.TaskDetailsViewAdapter;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.components.BaseApplication;
+import in.altersense.taskapp.components.ReminderNotifier;
 import in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
@@ -49,6 +52,7 @@ import in.altersense.taskapp.events.RoseToHighPriorityEvent;
 import in.altersense.taskapp.events.TaskDeletedEvent;
 import in.altersense.taskapp.events.UserRemovedFromCollaboratorsEvent;
 import in.altersense.taskapp.models.Collaborator;
+import in.altersense.taskapp.models.RemindSyncNotification;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.User;
 import in.altersense.taskapp.requests.UpdateTaskRequest;
@@ -426,18 +430,46 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
     }
 
     private void checkPriorityChanged() {
+        // Check if a priority change had occurred.
         if(this.prevPriority !=this.task.getPriority()) {
             this.newPriority = this.task.getPriority();
             if(this.prevPriority == Config.PRIORITY.HIGH.getValue()) {
-                // Previous priority was HIGH
-                BaseApplication.getEventBus().post(
-                        new FellFromHighPriorityEvent(this.task)
-                );
+                // Priority fell from HIGH
+                // Remove from reminder notification table.
+                this.taskDbHelper.deleteRSN(this.task.getId());
             } else if(this.newPriority == Config.PRIORITY.HIGH.getValue()) {
                 // Priority was set to HIGH
-                BaseApplication.getEventBus().post(
-                        new RoseToHighPriorityEvent(this.task)
-                );
+                // Check if pending collaborators are present
+                if(taskDbHelper.hasPendingCollaborators(this.task)) {
+                    // Add to reminder notification table.
+                    RemindSyncNotification rsn = taskDbHelper.createRSN(this.task);
+                    // Calculate alarm time.
+                    long notifInterval = 20 * 60 * 1000;
+                    if(task.getDueDateTimeAsLong()!=0) {
+                        long timeDiff = task.getDueDateTimeAsLong() - rsn.getCreatedTime();
+                        notifInterval = timeDiff/3;
+                    }
+                    long nextAlarmTime = 0;
+                    do {
+                        nextAlarmTime += rsn.getCreatedTime();
+                    } while (nextAlarmTime>System.currentTimeMillis() && nextAlarmTime<task.getDueDateTimeAsLong());
+                    // Setup intent for pending intent
+                    Intent myIntent = new Intent(TaskActivity.this, ReminderNotifier.class);
+                    // Add task id to intent
+                    myIntent.putExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey(), rsn.getTaskId());
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                            TaskActivity.this,
+                            (int) task.getId(),
+                            myIntent,
+                            PendingIntent.FLAG_CANCEL_CURRENT
+                    );
+                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                    alarmManager.set(
+                            AlarmManager.RTC_WAKEUP,
+                            nextAlarmTime,
+                            pendingIntent
+                    );
+                }
             }
         }
     }
@@ -537,6 +569,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
                 if(isEditMode) {
                     editViewToggle.setIcon(R.drawable.ic_edit_white);
                     editViewToggle.setTitle("Edit");
+                    // Checks for change in priority and fires the event.
                     checkPriorityChanged();
                     setUpViewMode();
 
