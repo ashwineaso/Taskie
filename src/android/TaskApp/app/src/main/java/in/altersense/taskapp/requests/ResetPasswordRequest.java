@@ -54,7 +54,7 @@ public class ResetPasswordRequest extends AsyncTask<Void, Integer, JSONObject
     protected JSONObject doInBackground(Void... params) {
         JSONObject responseObject = new JSONObject();
         APIRequest passwordReset = new APIRequest(
-                AltEngine.formURL("user/resetPassword"),
+                AltEngine.formURL("user/passwordReset"),
                 this.requestObject,
                 this.activity.getApplicationContext()
         );
