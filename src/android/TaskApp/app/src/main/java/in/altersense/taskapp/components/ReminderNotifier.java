@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.util.Log;
 
 import in.altersense.taskapp.R;
 import in.altersense.taskapp.common.Config;
@@ -42,6 +43,7 @@ public class ReminderNotifier extends BroadcastReceiver {
     }
 
     private void displayNotification() {
+        Log.d("displayNotification", "Started");
         NotificationCompat.Builder notificaion = new NotificationCompat.Builder(this.context)
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setTicker(Config.MESSAGES.TASK_CANT_REACH_COLLABORATOR.getMessage())
@@ -52,6 +54,7 @@ public class ReminderNotifier extends BroadcastReceiver {
         NotificationManager notificationManager =
                 (NotificationManager) this.context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify((int) rsn.getTaskId(), notificaion.build());
+        Log.d("displayNotification", "displayed");
     }
 
     private void setNextAlarm(Intent intent) {

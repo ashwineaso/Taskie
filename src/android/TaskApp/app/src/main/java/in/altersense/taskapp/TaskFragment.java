@@ -1,6 +1,8 @@
 package in.altersense.taskapp;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -41,6 +43,7 @@ import in.altersense.taskapp.adapters.TaskDetailsViewAdapter;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.components.BaseApplication;
+import in.altersense.taskapp.components.ReminderNotifier;
 import in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
@@ -48,6 +51,7 @@ import in.altersense.taskapp.events.ChangeInTaskEvent;
 import in.altersense.taskapp.events.TaskDeletedEvent;
 import in.altersense.taskapp.events.UserRemovedFromCollaboratorsEvent;
 import in.altersense.taskapp.models.Collaborator;
+import in.altersense.taskapp.models.RemindSyncNotification;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.User;
 import in.altersense.taskapp.requests.UpdateTaskRequest;
@@ -110,6 +114,8 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     private List<User> collaboratorAdditionList = new ArrayList<>();
     private Context context;
     private Intent createViewIntent;
+
+    private int prevPriority, newPriority;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -587,6 +593,9 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                 if(isEditMode) {
                     this.editViewToggle.setIcon(R.drawable.ic_edit_white);
                     this.editViewToggle.setTitle("Edit");
+                    // Checks for change in priority and fires the event.
+                    Log.d("checkPriorityChanged", "Calling");
+                    checkPriorityChanged();
                     this.setUpViewMode();
 
                 } else {
@@ -600,6 +609,54 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         return super.onOptionsItemSelected(item);
     }
 
+    private void checkPriorityChanged() {
+        Log.d("checkPriorityChanged", "Started");
+        // Check if a priority change had occurred.
+        if(this.prevPriority !=this.task.getPriority()) {
+            this.newPriority = this.task.getPriority();
+            if(this.prevPriority == Config.PRIORITY.HIGH.getValue()) {
+                // Priority fell from HIGH
+                // Remove from reminder notification table.
+                this.taskDbHelper.deleteRSN(this.task.getId());
+            } else if(this.newPriority == Config.PRIORITY.HIGH.getValue()) {
+                // Priority was set to HIGH
+                // Check if pending collaborators are present
+                Log.d("checkPriorityChanged", "Rose to high priority");
+                if(taskDbHelper.hasPendingCollaborators(this.task)) {
+                    // Add to reminder notification table.
+                    RemindSyncNotification rsn = taskDbHelper.createRSN(this.task);
+                    // Calculate alarm time.
+                    long notifInterval = 20 * 60 * 1000;
+                    if(task.getDueDateTimeAsLong()!=0) {
+                        long timeDiff = task.getDueDateTimeAsLong() - rsn.getCreatedTime();
+                        notifInterval = timeDiff/3;
+                    }
+                    long nextAlarmTime = rsn.getCreatedTime();
+                    do {
+                        nextAlarmTime += notifInterval;
+                    } while (nextAlarmTime>System.currentTimeMillis() && nextAlarmTime<task.getDueDateTimeAsLong());
+                    // Setup intent for pending intent
+                    Intent myIntent = new Intent(this.context, ReminderNotifier.class);
+                    // Add task id to intent
+                    myIntent.putExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey(), rsn.getTaskId());
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                            this.context,
+                            (int) task.getId(),
+                            myIntent,
+                            PendingIntent.FLAG_CANCEL_CURRENT
+                    );
+                    AlarmManager alarmManager = (AlarmManager) this.context.getSystemService(Context.ALARM_SERVICE);
+                    alarmManager.set(
+                            AlarmManager.RTC_WAKEUP,
+                            nextAlarmTime,
+                            pendingIntent
+                    );
+                    Log.d("checkPriorityChanged", "alarm set");
+
+                }
+            }
+        }
+    }
 
 
 //    @Override

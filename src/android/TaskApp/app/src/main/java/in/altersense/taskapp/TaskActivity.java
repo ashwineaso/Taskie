@@ -399,6 +399,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         }
         // Set mode.
         this.isEditMode = false;
+
         // Update TextViews
         this.taskTitleTV.setText(this.task.getName());
         this.taskDescriptionTV.setText(this.task.getDescription());
@@ -429,50 +430,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
 
     }
 
-    private void checkPriorityChanged() {
-        // Check if a priority change had occurred.
-        if(this.prevPriority !=this.task.getPriority()) {
-            this.newPriority = this.task.getPriority();
-            if(this.prevPriority == Config.PRIORITY.HIGH.getValue()) {
-                // Priority fell from HIGH
-                // Remove from reminder notification table.
-                this.taskDbHelper.deleteRSN(this.task.getId());
-            } else if(this.newPriority == Config.PRIORITY.HIGH.getValue()) {
-                // Priority was set to HIGH
-                // Check if pending collaborators are present
-                if(taskDbHelper.hasPendingCollaborators(this.task)) {
-                    // Add to reminder notification table.
-                    RemindSyncNotification rsn = taskDbHelper.createRSN(this.task);
-                    // Calculate alarm time.
-                    long notifInterval = 20 * 60 * 1000;
-                    if(task.getDueDateTimeAsLong()!=0) {
-                        long timeDiff = task.getDueDateTimeAsLong() - rsn.getCreatedTime();
-                        notifInterval = timeDiff/3;
-                    }
-                    long nextAlarmTime = 0;
-                    do {
-                        nextAlarmTime += rsn.getCreatedTime();
-                    } while (nextAlarmTime>System.currentTimeMillis() && nextAlarmTime<task.getDueDateTimeAsLong());
-                    // Setup intent for pending intent
-                    Intent myIntent = new Intent(TaskActivity.this, ReminderNotifier.class);
-                    // Add task id to intent
-                    myIntent.putExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey(), rsn.getTaskId());
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                            TaskActivity.this,
-                            (int) task.getId(),
-                            myIntent,
-                            PendingIntent.FLAG_CANCEL_CURRENT
-                    );
-                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                    alarmManager.set(
-                            AlarmManager.RTC_WAKEUP,
-                            nextAlarmTime,
-                            pendingIntent
-                    );
-                }
-            }
-        }
-    }
+
 
     /**
      * Enables an edit mode of the task.
@@ -569,8 +527,6 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
                 if(isEditMode) {
                     editViewToggle.setIcon(R.drawable.ic_edit_white);
                     editViewToggle.setTitle("Edit");
-                    // Checks for change in priority and fires the event.
-                    checkPriorityChanged();
                     setUpViewMode();
 
                 } else {
