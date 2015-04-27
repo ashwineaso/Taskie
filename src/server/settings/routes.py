@@ -14,9 +14,4 @@ def set(app):
 	if DEBUG:
 		app.route('/version', 'GET', version)
 
-	app.route('/<filename:re:.*\.css>', 'GET', stylesheets)
-	app.route('/<filename:re:.*\.js>', 'GET', javascripts)
-	app.route('/<filename:re:.*\.(jpg|png|gif|ico)>', 'GET', images)
-	app.route('/<filename:re:.*\.(eot|ttf|woff|svg)>', 'GET', fonts)
-
 __author__ = ['mahesmohan', 'ashwineaso']
