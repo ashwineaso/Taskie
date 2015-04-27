@@ -94,6 +94,7 @@
         </activity>
         <activity
             android:name=".ForgotPasswordActivity"
+            android:label="@string/title_activity_forgot_password"
             android:theme="@style/RegisterTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
