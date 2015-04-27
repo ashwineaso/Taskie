@@ -37,6 +37,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import in.altersense.taskapp.adapters.TaskDetailsViewAdapter;
@@ -402,6 +403,11 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         }
         // Set mode.
         this.isEditMode = false;
+
+        // Checks for change in priority and fires the event.
+        Log.d("checkPriorityChanged", "Calling");
+        checkPriorityChanged();
+
         // Update TextViews
         this.taskTitleTV.setText(this.task.getName());
         this.taskDescriptionTV.setText(this.task.getDescription());
@@ -593,9 +599,6 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                 if(isEditMode) {
                     this.editViewToggle.setIcon(R.drawable.ic_edit_white);
                     this.editViewToggle.setTitle("Edit");
-                    // Checks for change in priority and fires the event.
-                    Log.d("checkPriorityChanged", "Calling");
-                    checkPriorityChanged();
                     this.setUpViewMode();
 
                 } else {
@@ -618,6 +621,8 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                 // Priority fell from HIGH
                 // Remove from reminder notification table.
                 this.taskDbHelper.deleteRSN(this.task.getId());
+                Log.d("checkPriorityChanged", "Fell from high priority");
+                this.prevPriority = task.getPriority();
             } else if(this.newPriority == Config.PRIORITY.HIGH.getValue()) {
                 // Priority was set to HIGH
                 // Check if pending collaborators are present
@@ -651,7 +656,9 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                             nextAlarmTime,
                             pendingIntent
                     );
-                    Log.d("checkPriorityChanged", "alarm set");
+                    SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM d, yyyy h:mm:ss a");
+
+                    Log.d("checkPriorityChanged", "alarm set for "+sdf.format(new Date(nextAlarmTime)) );
 
                 }
             }

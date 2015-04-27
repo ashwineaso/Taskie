@@ -68,7 +68,7 @@ public class RemindSyncNotification {
                 cursor.getInt(cursor.getColumnIndex(KEYS.HIDE_NOTIF.getName()))==1,
                 context
         );
-        this.id = cursor.getLong(cursor.getColumnIndex("ROWID"));
+        this.id = cursor.getLong(cursor.getColumnIndex("_id"));
     }
 
     public long getTaskId() {

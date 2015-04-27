@@ -65,6 +65,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
 
     private static String CREATION_STATEMENT_REMINDSYNCNOTIFY = "CREATE TABLE " + RemindSyncNotification.TABLE_NAME + " ( " +
             RemindSyncNotification.KEYS.TASK_ID.getName() + " " + RemindSyncNotification.KEYS.TASK_ID.getType() + ", " +
+            RemindSyncNotification.KEYS.CREATED_TIME.getName() + " " + RemindSyncNotification.KEYS.CREATED_TIME.getType() + ", " +
             RemindSyncNotification.KEYS.HIDE_NOTIF.getName() + " " + RemindSyncNotification.KEYS.HIDE_NOTIF.getType() + ");";
 
     public TaskDbHelper(Context context) {
@@ -116,6 +117,11 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 db.execSQL(
                         CREATION_STATEMENT_REMINDSYNCNOTIFY
                 );
+            case 5:
+                db.execSQL(
+                        "ALTER TABLE "+ RemindSyncNotification.TABLE_NAME+
+                                " ADD "+RemindSyncNotification.KEYS.CREATED_TIME.getName()+" "+
+                                RemindSyncNotification.KEYS.CREATED_TIME.getType()+";");
         }
     }
 
@@ -900,6 +906,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 null,
                 null
         );
+        result.moveToFirst();
         int pendingCollaboratorCount = result.getInt(0);
         // close database
         readableDatabase.close();
@@ -1084,6 +1091,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 null,
                 null
         );
+        cursor.moveToFirst();
         // Create RSN object from the cursor
         RemindSyncNotification rsn = new RemindSyncNotification(
                 cursor,

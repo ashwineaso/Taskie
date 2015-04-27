@@ -11,6 +11,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import in.altersense.taskapp.R;
+import in.altersense.taskapp.TaskFragment;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.models.Notification;
@@ -44,13 +45,25 @@ public class ReminderNotifier extends BroadcastReceiver {
 
     private void displayNotification() {
         Log.d("displayNotification", "Started");
+        // Set up pending intent to display task when clicking the notification.
+        Intent showTaskFragmentIntent = new Intent(this.context, TaskFragment.class);
+        showTaskFragmentIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        showTaskFragmentIntent.putExtra(Task.ID, this.rsn.getTaskId());
+        PendingIntent showTaskFragmentPendingIntent = PendingIntent.getActivity(
+                this.context,
+                0,
+                showTaskFragmentIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
+        // Build notification
         NotificationCompat.Builder notificaion = new NotificationCompat.Builder(this.context)
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setTicker(Config.MESSAGES.TASK_CANT_REACH_COLLABORATOR.getMessage())
                 .setContentTitle(
                         "Task \""+this.rsn.getTask().getName()+
                                 "\" have not yet reached certain collaborators.")
-                .setContentText(Config.MESSAGES.TASK_CANT_REACH_COLLABORATOR.getMessage());
+                .setContentText(Config.MESSAGES.TASK_CANT_REACH_COLLABORATOR.getMessage())
+                .setContentIntent(showTaskFragmentPendingIntent);
         NotificationManager notificationManager =
                 (NotificationManager) this.context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify((int) rsn.getTaskId(), notificaion.build());

@@ -431,7 +431,6 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
     }
 
 
-
     /**
      * Enables an edit mode of the task.
      */
