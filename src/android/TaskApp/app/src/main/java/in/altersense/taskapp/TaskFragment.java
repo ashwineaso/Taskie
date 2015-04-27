@@ -633,13 +633,13 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                     // Calculate alarm time.
                     long notifInterval = 20 * 60 * 1000;
                     if(task.getDueDateTimeAsLong()!=0) {
-                        long timeDiff = task.getDueDateTimeAsLong() - rsn.getCreatedTime();
+                        long timeDiff = Math.abs(task.getDueDateTimeAsLong() - rsn.getCreatedTime());
                         notifInterval = timeDiff/3;
                     }
                     long nextAlarmTime = rsn.getCreatedTime();
                     do {
                         nextAlarmTime += notifInterval;
-                    } while (nextAlarmTime>System.currentTimeMillis() && nextAlarmTime<task.getDueDateTimeAsLong());
+                    } while (nextAlarmTime<System.currentTimeMillis());
                     // Setup intent for pending intent
                     Intent myIntent = new Intent(this.context, ReminderNotifier.class);
                     // Add task id to intent
