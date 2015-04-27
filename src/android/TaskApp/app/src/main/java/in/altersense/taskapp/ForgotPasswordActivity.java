@@ -40,7 +40,7 @@ public class ForgotPasswordActivity extends ActionBarActivity {
             public void onClick(View v) {
                 ResetPasswordRequest resetPasswordRequest = new ResetPasswordRequest(
                         emailET.getText().toString(),
-                        getApplicationContext()
+                        ForgotPasswordActivity.this
                 );
                 resetPasswordRequest.execute();
             }

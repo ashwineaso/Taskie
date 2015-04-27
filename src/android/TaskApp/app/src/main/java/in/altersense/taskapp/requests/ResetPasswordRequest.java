@@ -1,6 +1,8 @@
 package in.altersense.taskapp.requests;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -20,16 +22,18 @@ public class ResetPasswordRequest extends AsyncTask<Void, Integer, JSONObject
 
     private String email;
     private JSONObject requestObject;
-    private Context context;
+    private Activity activity;
+    private ProgressDialog dialog;
 
-    public ResetPasswordRequest(String email, Context context) {
+    public ResetPasswordRequest(String email, Activity activity) {
         this.email = email;
-        this.context = context;
+        this.activity = activity;
     }
 
     @Override
     protected void onPreExecute() {
         this.requestObject = new JSONObject();
+        this.dialog = new ProgressDialog(this.activity);
         try {
             this.requestObject.put(
                     Config.REQUEST_RESPONSE_KEYS.EMAIL.getKey(),
@@ -38,6 +42,12 @@ public class ResetPasswordRequest extends AsyncTask<Void, Integer, JSONObject
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        this.dialog.setMessage("Loading request...");
+        if(!this.dialog.isShowing()) {
+            this.dialog.show();
+        }
+        this.dialog.setCancelable(false);
+        publishProgress(1);
     }
 
     @Override
@@ -46,7 +56,7 @@ public class ResetPasswordRequest extends AsyncTask<Void, Integer, JSONObject
         APIRequest passwordReset = new APIRequest(
                 AltEngine.formURL("user/resetPassword"),
                 this.requestObject,
-                this.context
+                this.activity.getApplicationContext()
         );
         try {
             responseObject = passwordReset.request();
@@ -68,18 +78,28 @@ public class ResetPasswordRequest extends AsyncTask<Void, Integer, JSONObject
                 title = "Failed";
                 message = jsonObject.getString(Config.REQUEST_RESPONSE_KEYS.MESSAGE.getKey());
             }
-            AlertDialog alertDialog = new AlertDialog.Builder(this.context).create();
+            AlertDialog alertDialog = new AlertDialog.Builder(this.activity).create();
             alertDialog.setTitle(title);
             alertDialog.setMessage(message);
             alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-
+                    activity.finish();
                 }
             });
+            if(dialog.isShowing()) {
+                dialog.hide();
+            }
             alertDialog.show();
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onProgressUpdate(Integer... values) {
+        if(values.equals(1)) {
+            dialog.setMessage("Please wait...");
         }
     }
 }
