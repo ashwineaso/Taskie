@@ -112,4 +112,4 @@ def passwordReset(userObj):
         'us-west-2',
         aws_access_key_id=SES_KEY,
         aws_secret_access_key=SES_SECRET)
-	conn.send_email(taskie_mail, " Taskie Account  - Password Reset", "hello", userObj.user.email)
+	conn.send_email(taskie_mail, " Taskie Account  - Password Reset", html, userObj.user.email)
