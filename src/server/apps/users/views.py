@@ -385,20 +385,19 @@ def doUpdatePassword():
 	userObj.email = request.forms.get('email')
 	userObj.password = request.forms.get('password')
 	userObj.key = request.forms.get('key')
-	# try:
-	userObj.user = bll.getUserByEmail(userObj)
-	token = bll.getTokenByUser(userObj)
-	if (userObj.key == token.key):
-		flag = bll.updatePassword(userObj)
-		if flag:
-			message = "Password has been updated"
+	try:
+		userObj.user = bll.getUserByEmail(userObj)
+		token = bll.getTokenByUser(userObj)
+		if (userObj.key == token.key):
+			flag = bll.updatePassword(userObj)
+			if flag:
+				message = "Password has been updated"
+			else:
+				message = "Password Update Failed. Please Try again"
 		else:
-			message = "Password Update Failed. Please Try again"
-	else:
-		message = "Email and Key mismatch. Please try again"
-	# except Exception as e:
-	# 	message = "Oops! Something went wrong. Please try again"
-
+			message = "Email and Key mismatch. Please try again"
+	except Exception as e:
+		message = "Oops! Something went wrong. Please try again"
 	return template("updatePasswordResult", message = message)
 
 # Static Routes
