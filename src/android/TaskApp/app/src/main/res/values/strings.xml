@@ -67,9 +67,22 @@
     <string name="title_activity_tutorial">Tutorial Activity</string>
     <string name="page1WelcomText">Welcome to Taskie</string>
     <string name="page1Desc">A great way to get things done.\nFaster and Simpler,\nWith a personal touch.</string>
-    <string name="finalPageLine1">Stay on top of your tasks...</string>
-    <string name="finalPageLine2">Lets begin.</string>
+    <string name="finalPageLine1">Thats all about Taskie.</string>
+    <string name="finalPageLine2">Stay on top of your tasks...</string>
     <string name="fontCabinSemiBold">fonts/Cabin-SemiBold-TTF.ttf</string>
     <string name="fontCabinRegular">fonts/Cabin-Regular-TTF.ttf</string>
+    <string name="page2Title">Understanding Task</string>
+    <string name="page2Text1">Task panel shows you everything you need to know about the task.\n\nThe rings have initials of task collaborators.</string>
+    <string name="page3Text2">Different colors denote different status.</string>
+    <string name="page3Title">Understanding Status</string>
+    <string name="page3Text1">The colour of each rings shows the status of the collaborator.\n\nThe colour strip shows your status.</string>
+    <string name="page2Text2">The first ring always belongs to the owner of the task.</string>
+    <string name="page4Title">Actions on Tasks</string>
+    <string name="page4Text1">Tap a task to get more details about it.\n\nTap the check box on the right to update your status on the task.</string>
+    <string name="page4Text2">Swipe away tasks to decline or delete them.</string>
+    <string name="page5Title">Creating Tasks</string>
+    <string name="page5Text1">Tap the plus sign on the top right corner of the task to create a new task.\n\nEnter title of the task and email of the collaborators separated by space or comma.</string>
+    <string name="page5Text2">If a new collaborator\'s email is not identified by Taskie make sure to add a comma or a space at the end of the email address.</string>
+    <string name="label_beginTaskie">Begin Taskie</string>
 
 </resources>

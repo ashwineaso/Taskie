@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    tools:ignore="MissingPrefix">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/page4Title"
+        style="@style/TutorialH1"
+        android:id="@+id/page4Title" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TutorialText"
+        android:id="@+id/page4Text1"
+        android:layout_below="@id/page4Title"
+        android:text="@string/page4Text1"/>
+
+    <ImageView
+        android:id="@+id/page4Image"
+        android:layout_below="@id/page4Text1"
+        android:layout_width="match_parent"
+        android:adjustViewBounds="true"
+        android:padding="@dimen/smallMargin_xhdp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/task_panel_tutorial"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TutorialText"
+        android:id="@+id/page4Text2"
+        android:layout_below="@id/page4Image"
+        android:gravity="center_horizontal"
+        android:text="@string/page4Text2"/>
+
+</RelativeLayout>

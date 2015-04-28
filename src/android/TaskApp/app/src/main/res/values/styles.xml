@@ -92,6 +92,9 @@
     <style name="primaryButton">
         <item name="android:background">@drawable/major_button</item>
         <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_subHeader_xhdpi</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:gravity">center_horizontal</item>
     </style>
 
     <style name="transparentButton">
@@ -113,12 +116,29 @@
         <item name="android:layout_marginTop">@dimen/smallMargin_xhdp</item>
     </style>
 
-    <style name="TutorialH1">
+    <style name="TutorialHugeSubtitle">
         <item name="android:textSize">@dimen/tutorialH1_xhdpi</item>
         <item name="android:layout_gravity">left</item>
         <item name="android:gravity">left|center_vertical</item>
         <item name="android:padding">@dimen/smallMargin_xhdp</item>
         <item name="fontPath">@string/fontCabinRegular</item>
+    </style>
+
+    <style name="TutorialH1">
+        <item name="android:textSize">@dimen/tutorialTitle_xhdpi</item>
+        <item name="fontPath">@string/fontCabinSemiBold</item>
+        <item name="android:textColor">@color/taskPrimaryColor</item>
+        <item name="android:paddingLeft">@dimen/smallMargin_xhdp</item>
+        <item name="android:paddingRight">@dimen/smallMargin_xhdp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_centerHorizontal">true</item>
+    </style>
+
+    <style name="TutorialText">
+        <item name="android:textSize">@dimen/text_subHeader_xhdpi</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:padding">@dimen/smallMargin_xhdp</item>
     </style>
 
     <style name="LogoImage" >
@@ -127,6 +147,7 @@
         <item name="android:layout_height">@dimen/hugeHeader_hdpi</item>
         <item name="android:src">@drawable/ic_launcher</item>
     </style>
+
     <style name="LogoCompanionText">
         <item name="android:textSize">@dimen/hugeHeader_hdpi</item>
         <item name="android:textColor">@color/taskPrimaryColor</item>
