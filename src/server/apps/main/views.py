@@ -1,4 +1,4 @@
-from settings.constants import CURRENT_VERSION, DEBUG
+from settings.constants import CURRENT_VERSION, DEBUG, PROJECT_ROOT
 from settings.altEngine import RESPONSE_SUCCESS, RESPONSE_FAILED
 from bottle import Bottle, route, static_file, template, get
 
@@ -29,7 +29,7 @@ def index(filename = 'index'):
 	"""
 	Display the landing page
 	"""
-	return template("apps/main/views/index")
+	return template(PROJECT_ROOT+"/apps/main/views/index")
 
 # Static Routes
 
