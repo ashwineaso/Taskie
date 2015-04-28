@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -12,13 +12,36 @@
         android:layout_height="wrap_content"
         android:text="@string/page1WelcomText"
         style="@style/TutorialHugeTitle"
-        android:id="@+id/textView" />
+        android:id="@+id/page1HugeTitle" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/page1Desc"
         style="@style/TutorialH1"
-        android:id="@+id/textView6" />
+        android:layout_below="@id/page1HugeTitle"
+        android:id="@+id/page1H1" />
 
-</LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_below="@id/page1H1"
+        android:layout_marginBottom="@dimen/smallMargin_xhdp"
+        android:layout_alignParentBottom="true">
+
+        <ImageView
+            style="@style/LogoImage"
+            android:id="@+id/imageView3" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/LogoCompanionText"
+            android:text="@string/app_name" />
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -105,7 +105,7 @@
 
     <style name="TutorialHugeTitle">
         <item name="android:textSize">@dimen/tutorialHugeTitle_xhdpi</item>
-        <item name="fontPath">@string/fontCabinBold</item>
+        <item name="fontPath">@string/fontCabinSemiBold</item>
         <item name="android:textColor">@color/taskPrimaryColor</item>
         <item name="android:padding">@dimen/smallMargin_xhdp</item>
         <item name="android:gravity">left</item>
@@ -119,6 +119,18 @@
         <item name="android:gravity">left|center_vertical</item>
         <item name="android:padding">@dimen/smallMargin_xhdp</item>
         <item name="fontPath">@string/fontCabinRegular</item>
+    </style>
+
+    <style name="LogoImage" >
+        <item name="android:padding">@dimen/tinyMargin_xhdpi</item>
+        <item name="android:layout_width">@dimen/hugeHeader_hdpi</item>
+        <item name="android:layout_height">@dimen/hugeHeader_hdpi</item>
+        <item name="android:src">@drawable/ic_launcher</item>
+    </style>
+    <style name="LogoCompanionText">
+        <item name="android:textSize">@dimen/hugeHeader_hdpi</item>
+        <item name="android:textColor">@color/taskPrimaryColor</item>
+        <item name="fontPath">@string/fontCabinSemiBold</item>
     </style>
 
 </resources>
