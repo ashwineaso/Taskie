@@ -35,6 +35,10 @@
     <dimen name="text_small_xhdpi">12sp</dimen>
     <dimen name="hugeHeader_hdpi">64dp</dimen>
     <dimen name="collabortorStatusText_xhdpi">12sp</dimen>
+    <dimen name="tutorialPagenationHeight_xhdpi">48dp</dimen>
+    <dimen name="tutoralPageSelectedSize_xhdpi">16dp</dimen>
+    <dimen name="tutorialHugeTitle_xhdpi">48sp</dimen>
+    <dimen name="tutorialH1_xhdpi">24sp</dimen>
 
 
 </resources>

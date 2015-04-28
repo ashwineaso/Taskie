@@ -103,4 +103,22 @@
         <item name="colorAccent">@color/createTaskPrimaryActionBar</item>
     </style>
 
+    <style name="TutorialHugeTitle">
+        <item name="android:textSize">@dimen/tutorialHugeTitle_xhdpi</item>
+        <item name="fontPath">@string/fontCabinBold</item>
+        <item name="android:textColor">@color/taskPrimaryColor</item>
+        <item name="android:padding">@dimen/smallMargin_xhdp</item>
+        <item name="android:gravity">left</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:layout_marginTop">@dimen/smallMargin_xhdp</item>
+    </style>
+
+    <style name="TutorialH1">
+        <item name="android:textSize">@dimen/tutorialH1_xhdpi</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:padding">@dimen/smallMargin_xhdp</item>
+        <item name="fontPath">@string/fontCabinRegular</item>
+    </style>
+
 </resources>

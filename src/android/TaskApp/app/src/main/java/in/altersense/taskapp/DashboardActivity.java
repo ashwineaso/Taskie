@@ -171,6 +171,17 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
     private boolean authenticateUser() {
         String TAG = CLASS_TAG+"authenticateUser";
         Log.d(TAG, "Authenticating user.");
+        boolean displayTutorials = AltEngine.readBooleanFromSharedPref(
+                this,
+                Config.SHARED_PREF_KEYS.DISPLAY_TUTORIALS.getKey(),
+                true
+        );
+        if(displayTutorials) {
+            Intent displayTutorialIntent = new Intent(this,TutorialActivity.class);
+            startActivity(displayTutorialIntent);
+            this.finish();
+            return false;
+        }
         this.ownerId = AltEngine.readStringFromSharedPref(
                 getApplicationContext(),
                 Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),

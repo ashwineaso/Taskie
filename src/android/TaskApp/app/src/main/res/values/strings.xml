@@ -64,5 +64,12 @@
     </string-array>
 
     <string name="title_activity_task_fragments">TaskFragmentsActivity</string>
+    <string name="title_activity_tutorial">Tutorial Activity</string>
+    <string name="page1WelcomText">Welcome to Taskie</string>
+    <string name="page1Desc">A great way to get things done.\nFaster and Simpler,\nWith a personal touch.</string>
+    <string name="finalPageLine1">Stay on top of your tasks...</string>
+    <string name="finalPageLine2">Lets begin.</string>
+    <string name="fontCabinBold">fonts/Cabin-SemiBold-TTF.ttf</string>
+    <string name="fontCabinRegular">fonts/Cabin-Regular-TTF.ttf</string>
 
 </resources>

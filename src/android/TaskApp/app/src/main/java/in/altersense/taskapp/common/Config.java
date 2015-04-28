@@ -115,7 +115,8 @@ public class Config {
         APP_KEY("devOwnerEmail"),
         SYNC_IN_PROGRESS("syncInProcess"),
         GCM_REG_ID("gcmRegId"),
-        UPDATE_LIST("updateDashboardTaskList");
+        UPDATE_LIST("updateDashboardTaskList"),
+        DISPLAY_TUTORIALS("displayTutorials");
 
         private String key;
 

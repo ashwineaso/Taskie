@@ -93,6 +93,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="in.altersense.taskapp.DashboardActivity" />
         </activity>
+        <activity
+            android:name=".TutorialActivity"
+            android:label="@string/title_activity_tutorial"
+            android:screenOrientation="portrait"
+            android:theme="@style/TaskTheme" >
+        </activity>
     </application>
 
 </manifest>
