@@ -8,7 +8,6 @@ from settings.constants import DEBUG, PROJECT_ROOT, PHOTOS_DIRECTORY, PHOTOS_DEB
 from bottle import Bottle, debug, default_app, TEMPLATE_PATH
 
 print 'ROOT:', PROJECT_ROOT
-TEMPLATE_PATH.insert(0, PROJECT_ROOT+'/apps/main/views/')
 
 from settings import routes
 
@@ -21,6 +20,8 @@ debug(DEBUG)
 # In case of execution from command line the following gets executed.
 if __name__ == '__main__':
 	TaskApp.run(host='0.0.0.0', port=8080, reloader=True)
+	TEMPLATE_PATH.insert(0, PROJECT_ROOT+'/apps/main/views/')
 else:
 	application = default_app()
 	routes.set(application)
+	TEMPLATE_PATH.insert(0, PROJECT_ROOT+'/apps/main/views/')
