@@ -1,7 +1,7 @@
 __author__ = ["Ashwin Easo"]
 
 import smtplib
-import boto.ses import SESConnection
+import boto.ses
 from models import *
 from . import dal
 from email.mime.multipart import MIMEMultipart
@@ -108,5 +108,8 @@ def passwordReset(userObj):
 	msg.attach(html_msg)
 
 	#Send the message via local smtp server
-	client = SESConnection(SES_KEY, SES_SECRET)
-	client.send_raw_mail(taskie_mail, msg.as_string(), userObj.user.email)
+	conn = boto.ses.connect_to_region(
+        'us-west-2',
+        aws_access_key_id=SES_KEY,
+        aws_secret_access_key=SES_SECRET)
+	conn.send_email(taskie_mail, " Taskie Account  - Password Reset", "hello", userObj.user.email)
