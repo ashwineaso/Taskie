@@ -5,9 +5,10 @@ import os
 
 from settings.constants import DEBUG, PROJECT_ROOT, PHOTOS_DIRECTORY, PHOTOS_DEBUG_DIRECTORY, ATTACHMENT_DIRECTORY
 
-from bottle import Bottle, debug, default_app
+from bottle import Bottle, debug, default_app, TEMPLATE_PATH
 
 print 'ROOT:', PROJECT_ROOT
+TEMPLATE_PATH.insert(0, PROJECT_ROOT+'/apps/main/views/')
 
 from settings import routes
 

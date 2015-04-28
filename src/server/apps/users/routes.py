@@ -18,9 +18,4 @@ users_app.route('/passwordReset', 'POST', passwordReset)
 users_app.route('/updatePassword/<email>/<key>', 'GET', updatePassword)
 users_app.route('/doUpdatePassword', 'POST', doUpdatePassword)
 
-users_app.route('*\/<filename:re:.*\.css>', 'GET', stylesheets)
-users_app.route('*\/<filename:re:.*\.js>', 'GET', javascripts)
-users_app.route('*\/<filename:re:.*\.(jpg|png|gif|ico)>', 'GET', images)
-users_app.route('*\/<filename:re:.*\.(eot|ttf|woff|svg)>', 'GET', fonts)
-
 __author__ = ["ashwineaso"]

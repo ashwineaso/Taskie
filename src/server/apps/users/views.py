@@ -399,19 +399,4 @@ def doUpdatePassword():
 	# 	message = "Oops! Something went wrong. Please try again"
 
 	return template("apps/main/views/updatePasswordResult", message = message)
-
-
-# Static Routes
-
-def javascripts(filename):
-    return static_file(filename, root='apps/user/static')
-
-def stylesheets(filename):
-    return static_file(filename, root='apps/user/static')
-
-def images(filename):
-    return static_file(filename, root='apps/main/static')
-
-def fonts(filename):
-    return static_file(filename, root='apps/main/static')
-
+	
