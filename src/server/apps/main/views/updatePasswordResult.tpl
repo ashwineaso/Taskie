@@ -22,7 +22,7 @@
 		<link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900,200italic,300italic,400italic,600italic,700italic,900italic" rel="stylesheet" type="text/css">
 		
 		<!-- Modernizer and IE specyfic files -->  
-		<script src="js/modernizr.custom.js"></script>
+		<script src="../../js/modernizr.custom.js"></script>
  	</head>
   
   <body>
@@ -101,13 +101,13 @@
 			});
 	</script>
 	<script>
-		var url ='images/icons.svg';
+		var url ='../../images/icons.svg';
 		var c=new XMLHttpRequest(); c.open('GET.html', url, false); c.setRequestHeader('Content-Type', 'text/xml'); c.send();
 		document.body.insertBefore(c.responseXML.firstChild, document.body.firstChild)
 	</script>
 
 	<!-- Demo Switcher JS -->
-	<script type="text/javascript" src="js/fswit.js"></script>
+	<script type="text/javascript" src="../../js/fswit.js"></script>
 		
   </body>
 </html>
