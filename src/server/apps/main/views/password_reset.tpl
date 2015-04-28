@@ -5,7 +5,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>  
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-		<link rel="icon" href="/favicon.ico" type="image/x-icon">
+		<link rel="icon" href="images/favicon.ico" type="image/x-icon">
 		
 		<!-- CSS Files comes here -->
 		<link href="css/bootstrap.css" rel="stylesheet" media="screen">
@@ -22,7 +22,7 @@
 		<link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900,200italic,300italic,400italic,600italic,700italic,900italic" rel="stylesheet" type="text/css">
 		
 		<!-- Modernizer and IE specyfic files -->  
-		<script src="modernizr.custom.js"></script>
+		<script src="js/modernizr.custom.js"></script>
  	</head>
   
   <body>
@@ -48,7 +48,7 @@
 		<div class="container">
 			<div class="row" id="newsletter">
                 <div class="col-sm-12 col-md-12 col-lg-12" >
-                    <div id="logo"><a href="#home"><img src="logo.png" alt="logo"></a></div>
+                    <div id="logo"><a href="#home"><img src="images/logo.png" alt="logo"></a></div>
                     <h2>Reset your password</h2>
                     <p>Provide a new password which is not the same as your old password.
                     </p>
@@ -83,15 +83,15 @@
 	<!--###############################-->
 
 	<!-- JavaScript plugins comes here -->
-	<script src="jquery-2.0.3.min.js"></script>
-	<script src="jquery.easing.min.js"></script>
-	<script src="jquery.scrollTo.js"></script>
-	<script src="jquery.form.js"></script>
-	<script src="main.js"></script>
-	<script src="retina.js"></script>
-	<script src="waypoints.min.js"></script>
-	<script src="owl.carousel.min.js"></script>
-	<script src="nivo-lightbox.min.js"></script>
+	<script src="js/jquery-2.0.3.min.js"></script>
+	<script src="js/jquery.easing.min.js"></script>
+	<script src="js/jquery.scrollTo.js"></script>
+	<script src="js/jquery.form.js"></script>
+	<script src="js/main.js"></script>
+	<script src="js/retina.js"></script>
+	<script src="js/waypoints.min.js"></script>
+	<script src="js/owl.carousel.min.js"></script>
+	<script src="js/nivo-lightbox.min.js"></script>
 	<script type="text/javascript">
 		$('document').ready(function(){
 				$('#subscribe-form').ajaxForm( {
@@ -110,7 +110,7 @@
 	</script>
 
 	<!-- Demo Switcher JS -->
-	<script type="text/javascript" src="fswit.js"></script>
+	<script type="text/javascript" src="js/fswit.js"></script>
 		
   </body>
 </html>

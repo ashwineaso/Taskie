@@ -17,5 +17,9 @@ users_app.route('/syncUserInfo', 'POST', syncUserInfo)
 users_app.route('/passwordReset', 'POST', passwordReset)
 users_app.route('/updatePassword/<email>/<key>', 'GET', updatePassword)
 users_app.route('/doUpdatePassword', 'POST', doUpdatePassword)
+#for the static files
+users_app.route('/css/<filename:path>', 'GET', stylesheets)
+users_app.route('/js/<filename:path>', 'GET', javascripts)
+users_app.route('/images/<filename:path>', 'GET', images)
 
 __author__ = ["ashwineaso"]

@@ -374,7 +374,7 @@ def updatePassword(email, key):
 	userObj.key = key;
 	userObj.user = bll.getUserByEmail(userObj)
 	token = bll.getTokenByUser(userObj)
-	return template("apps/main/views/password_reset", email = userObj.email, key = token.key)
+	return template("password_reset", email = userObj.email, key = token.key)
 
 
 def doUpdatePassword():
@@ -398,5 +398,5 @@ def doUpdatePassword():
 	# except Exception as e:
 	# 	message = "Oops! Something went wrong. Please try again"
 
-	return template("apps/main/views/updatePasswordResult", message = message)
+	return template("updatePasswordResult", message = message)
 	
