@@ -50,18 +50,22 @@
                 <div class="col-sm-12 col-md-12 col-lg-12" >
                     <div id="logo"><a href="#home"><img src="../../images/logo.png" alt="logo"></a></div>
                     <h2>Reset your password</h2>
-                    <p>Provide a new password which is not the same as your old password.
-                    </p>
-                    
-                    <div id="newsletter_form">
-                        <form action="/user/doUpdatePassword" method="post" class="subscribe-form" id="subscribe-form">
-                            <input type="email" name="email" class="subscribe-input" value="{{ email }}" hidden>
-                            <input type="key" name="key" class="subscribe-input" value="{{ key }}"  hidden>
-                            <input type="password" name="password" class="subscribe-input" placeholder="Enter Password"  required>
-							<input type="submit" class="subscribe-submit" value="Reset Password">
-                        </form>
-                    </div>
-                    <div id="preview"></div>
+
+                    %if flag == True:
+	                    <p>Provide a new password which is not the same as your old password.</p>
+	                    
+	                    <div id="newsletter_form">
+	                        <form action="/user/doUpdatePassword" method="post" class="subscribe-form" id="subscribe-form">
+	                            <input type="email" name="email" class="subscribe-input" value="{{ email }}" hidden>
+	                            <input type="key" name="key" class="subscribe-input" value="{{ key }}"  hidden>
+	                            <input type="password" name="password" class="subscribe-input" placeholder="Enter Password"  required>
+								<input type="submit" class="subscribe-submit" value="Reset Password">
+	                        </form>
+	                    </div>
+	                    <div id="preview"></div>
+	                %else:
+	                	<p>{{ message }}</p>
+	                %end
 
                     <br>                    
                 </div>

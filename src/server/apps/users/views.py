@@ -375,7 +375,10 @@ def updatePassword(email, key):
 	userObj.key = key;
 	userObj.user = bll.getUserByEmail(userObj)
 	token = bll.getTokenByUser(userObj)
-	return template("password_reset", email = userObj.email, key = token.key)
+	if token.key == userObj.key:
+		return template("password_reset", flag = True, email = userObj.email, key = token.key)
+	else:
+		return template("password_reset", flag = False, message = "Email and Key does not match or the key has expired. Please try again")
 
 
 def doUpdatePassword():
