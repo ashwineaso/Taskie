@@ -176,12 +176,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                 Config.SHARED_PREF_KEYS.DISPLAY_TUTORIALS.getKey(),
                 true
         );
-        if(displayTutorials) {
-            Intent displayTutorialIntent = new Intent(this,TutorialActivity.class);
-            startActivity(displayTutorialIntent);
-            this.finish();
-            return false;
-        }
+
         this.ownerId = AltEngine.readStringFromSharedPref(
                 getApplicationContext(),
                 Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
@@ -203,7 +198,13 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
             return false;
         }
 
-        Log.d(TAG, "Creatig new GCMHandler.");
+        if(displayTutorials) {
+            Intent displayTutorialIntent = new Intent(this,TutorialActivity.class);
+            startActivity(displayTutorialIntent);
+            this.finish();
+            return false;
+        }
+
         gcmHandler = new GCMHandler(
                 Config.getGCMSenderId(),
                 AltEngine.SHARED_PREFERENCE,
@@ -211,7 +212,6 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                 this
         );
 
-        Log.d(CLASS_TAG, "Auth completed device owner identified");
         return true;
     }
 
