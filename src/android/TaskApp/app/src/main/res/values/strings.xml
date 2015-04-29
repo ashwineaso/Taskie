@@ -64,5 +64,8 @@
     </string-array>
 
     <string name="title_activity_task_fragments">TaskFragmentsActivity</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="title_activity_forgot_password">Reset Password</string>
+    <string name="label_ResetPassword">RESET PASSWORD</string>
 
 </resources>

@@ -18,15 +18,15 @@
     <uses-permission android:name="in.altersense.taskapp.permission.C2D_MESSAGE" />
 
     <application
+        android:name=".components.BaseApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppBaseTheme"
-        android:name=".components.BaseApplication">
-
+        android:theme="@style/AppBaseTheme" >
         <receiver android:name=".components.ReminderNotifier" />
 
-        <meta-data android:name="com.google.android.gms.version"
+        <meta-data
+            android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
         <receiver
@@ -38,7 +38,6 @@
                 <category android:name="in.altersense.taskapp" />
             </intent-filter>
         </receiver>
-
         <receiver android:name=".components.NetworkStateChangeReceiver" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -92,6 +91,14 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="in.altersense.taskapp.DashboardActivity" />
+        </activity>
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:label="@string/title_activity_forgot_password"
+            android:theme="@style/RegisterTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".UserLoginActivity" />
         </activity>
     </application>
 
