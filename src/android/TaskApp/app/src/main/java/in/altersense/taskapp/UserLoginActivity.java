@@ -45,6 +45,8 @@ public class UserLoginActivity extends ActionBarActivity implements
     private GoogleApiClient googleApiClient;
     private Button googleAuthButton;
 
+
+    private boolean isPasswordHidden = true;
     private boolean intentInProgress = false;
     private boolean signInClicked;
 
@@ -117,18 +119,23 @@ public class UserLoginActivity extends ActionBarActivity implements
             public void onClick(View v) {
                 ImageButton imageButton = (ImageButton) v;
                 int inputType = passwordET.getInputType();
+                if(isPasswordHidden) {
+                    imageButton.setImageResource(R.drawable.ic_hide_password);
+                    isPasswordHidden = false;
+                } else {
+                    imageButton.setImageResource(R.drawable.ic_action_showpassword);
+                    isPasswordHidden = true;
+                }
                 if (inputType == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
                     Log.d(TAG,"1");
                     passwordET.setInputType(
                             InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
                     );
-                    imageButton.setImageResource(R.drawable.ic_hide_password);
                 } else {
                     Log.d(TAG,"2");
                     passwordET.setInputType(
                             InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
                     );
-                    imageButton.setImageResource(R.drawable.ic_action_showpassword);
                 }
             }
         });

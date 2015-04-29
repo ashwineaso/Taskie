@@ -23,6 +23,7 @@ public class UserRegistrationActivity extends ActionBarActivity {
     private EditText regPasswordET;
     private Button regButton;
     private ImageButton showPasswordButton;
+    private boolean isPasswordHidden = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,16 +49,21 @@ public class UserRegistrationActivity extends ActionBarActivity {
             public void onClick(View v) {
                 ImageButton imageButton = (ImageButton) v;
                 int inputType = regPasswordET.getInputType();
+                if(isPasswordHidden) {
+                    imageButton.setImageResource(R.drawable.ic_hide_password);
+                    isPasswordHidden = false;
+                } else {
+                    imageButton.setImageResource(R.drawable.ic_action_showpassword);
+                    isPasswordHidden = true;
+                }
                 if (inputType == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
                     regPasswordET.setInputType(
                             InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
                     );
-                    imageButton.setImageResource(R.drawable.ic_hide_password);
                 } else {
                     regPasswordET.setInputType(
                             InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
                     );
-                    imageButton.setImageResource(R.drawable.ic_action_showpassword);
                 }
             }
         });
