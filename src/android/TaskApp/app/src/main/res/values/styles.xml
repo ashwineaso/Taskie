@@ -118,8 +118,8 @@
 
     <style name="TutorialHugeSubtitle">
         <item name="android:textSize">@dimen/tutorialH1_xhdpi</item>
-        <item name="android:layout_gravity">left</item>
-        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center_horizontal|center_vertical</item>
         <item name="android:padding">@dimen/smallMargin_xhdp</item>
         <item name="fontPath">@string/fontCabinRegular</item>
     </style>
