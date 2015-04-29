@@ -111,8 +111,7 @@ def passwordReset(userObj):
 			</p>
 		</body>
 	</html>
-	"""
-	 %(userObj.user.name, userObj.user.email, link)
+	"""  % (userObj.user.name, userObj.user.email, link)
 
 	# Create message container - the correct MIME type is multipart/alternative.
 	Subject = " Taskie Account  - Password Reset"
@@ -122,4 +121,4 @@ def passwordReset(userObj):
         'us-west-2',
         aws_access_key_id=SES_KEY,
         aws_secret_access_key=SES_SECRET)
-	conn.send_email(taskie_mail, Subject, html, userObj.user.email)
+	conn.send_email(taskie_mail, Subject, "", userObj.user.email, html_body=html)
