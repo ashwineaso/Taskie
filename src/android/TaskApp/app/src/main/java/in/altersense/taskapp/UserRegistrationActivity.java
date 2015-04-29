@@ -130,5 +130,5 @@ public class UserRegistrationActivity extends ActionBarActivity {
         startActivity(showUpdateNowActivityIntent);
         this.finish();
     }
-    
+
 }
