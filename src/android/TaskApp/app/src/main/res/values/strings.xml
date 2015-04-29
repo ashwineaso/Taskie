@@ -87,7 +87,7 @@
     <string name="forgot_password">Forgot Password</string>
     <string name="title_activity_forgot_password">Reset Password</string>
     <string name="label_ResetPassword">RESET PASSWORD</string>
-    <string name="title_activity_update_now">UpdateNowActivity</string>
+    <string name="title_activity_update_now">App Update</string>
     <string name="updateApp">Please Update the App</string>
     <string name="updatAppMessage">We know its a hiccup. But it is absolutely necessary that you update the app.</string>
     <string name="label_UpdateTaskie">Update Taskie</string>

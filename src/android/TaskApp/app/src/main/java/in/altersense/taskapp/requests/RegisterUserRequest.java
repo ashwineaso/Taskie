@@ -3,12 +3,15 @@ package in.altersense.taskapp.requests;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import in.altersense.taskapp.UserLoginActivity;
+import in.altersense.taskapp.UserRegistrationActivity;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.APIRequest;
 import in.altersense.taskapp.components.AltEngine;
@@ -83,14 +86,14 @@ public class RegisterUserRequest extends AsyncTask<Void, Integer, JSONObject> {
             String responseStatus = result.getString(Config.REQUEST_RESPONSE_KEYS.STATUS.getKey());
             if(responseStatus.equals(Config.RESPONSE_STATUS_SUCCESS)) {
                 // If successful
-                // login user
+                // take user to the login page
                 Log.d(TAG, "Request success.");
-                UserLoginRequest loginRequest = new UserLoginRequest(
-                        this.user,
-                        this.activity
+                Intent startLoginIntent = new Intent(
+                        activity.getApplicationContext(),
+                        UserLoginActivity.class
                 );
-                // load TasksActivity.
-                loginRequest.execute();
+                activity.startActivity(startLoginIntent);
+                activity.finish();
 
             } else {
                 // if not

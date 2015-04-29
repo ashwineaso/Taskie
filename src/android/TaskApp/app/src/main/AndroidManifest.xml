@@ -108,7 +108,8 @@
         </activity>
         <activity
             android:name=".UpdateNowActivity"
-            android:label="@string/title_activity_update_now" >
+            android:label="@string/title_activity_update_now"
+            android:theme="@style/TaskTheme">
         </activity>
     </application>
 

@@ -32,7 +32,7 @@ public class UpdateNowActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_update_now);
 
-        this.updateButton = (Button) findViewById(R.id.updateTaskButton);
+        this.updateButton = (Button) findViewById(R.id.updateNowButton);
         this.updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
