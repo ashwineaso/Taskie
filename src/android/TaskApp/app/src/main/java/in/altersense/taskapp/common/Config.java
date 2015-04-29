@@ -9,6 +9,7 @@ import android.util.Log;
 public class Config {
 
     public static final boolean DEBUG = true;
+    public static final String PACKAGE_NAME = "in.altersense.taskapp";
 
     public static int DATABASE_VERSION = 6;
 
