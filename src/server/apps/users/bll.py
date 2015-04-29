@@ -6,7 +6,6 @@ from settings.constants import *
 from . import mailing
 from models import *
 
-
 def createUser(userObj):
 	"""
 	Creating a new User
@@ -137,6 +136,8 @@ def authorize_user(userObj):
 		if not verify_password(userObj.password, user.password_hash):
 			match_flag = False
 			raise PasswordMismatch
+		if not user.status == ACCOUNT_ACTIVE:
+			raise UserPendingConfirmation
 		return match_flag
 	#Case 2: Google Auth
 	elif userObj.authMethod == GOOGLE_AUTH:
