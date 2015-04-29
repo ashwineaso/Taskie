@@ -96,20 +96,30 @@ def passwordReset(userObj):
 	token = dal.getTokenByUser(userObj)
 
 	link = """http://taskie.me/user/updatePassword/%s/%s""" % (userObj.user.email, token.key)
-	html = """A password reset has been made for your email address. Please click the following link and provide a new password : %s. If the request was not made by you, please ignore this mail.""" %(link)
+	html = """\
+	<html>
+		<head></head>
+		<body>
+			<p>Hi! %s<br>
+			<br>Greetings from Taskie<br>
+			<br>A password reset request was recently made using your email id : %s .<br>
+			If the request was made by you, please visit the following link and provide a new password : %s.
+			If not, please ignore this mail.<br>
+			<br>For more information and support, please feel free to send us an email at someone@taskie.me<br>
+			<br>Thanks and Warm Regards<br>
+			<br>The Taskie Team.
+			</p>
+		</body>
+	</html>
+	"""
+	 %(userObj.user.name, userObj.user.email, link)
 
 	# Create message container - the correct MIME type is multipart/alternative.
-	msg = MIMEMultipart('alternative')
-	msg['Subject'] = " Taskie Account  - Password Reset"
-	msg['From'] = taskie_mail
-	msg['To'] = userObj.user.email
-
-	html_msg = MIMEText(html, 'html')
-	msg.attach(html_msg)
+	Subject = " Taskie Account  - Password Reset"
 
 	#Send the message via local smtp server
 	conn = boto.ses.connect_to_region(
         'us-west-2',
         aws_access_key_id=SES_KEY,
         aws_secret_access_key=SES_SECRET)
-	conn.send_email(taskie_mail, " Taskie Account  - Password Reset", html, userObj.user.email)
+	conn.send_email(taskie_mail, Subject, html, userObj.user.email)
