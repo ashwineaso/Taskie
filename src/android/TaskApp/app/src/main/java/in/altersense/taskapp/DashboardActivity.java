@@ -37,8 +37,10 @@ import in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
 import in.altersense.taskapp.events.ChangeInTasksEvent;
+import in.altersense.taskapp.events.UpdateNowEvent;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.User;
+import in.altersense.taskapp.requests.AppVersionCheckRequest;
 import in.altersense.taskapp.requests.CreateTaskRequest;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -171,6 +173,9 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
     private boolean authenticateUser() {
         String TAG = CLASS_TAG+"authenticateUser";
         Log.d(TAG, "Authenticating user.");
+        // Check for if an update is necessary
+        AppVersionCheckRequest appVersionCheckRequest = new AppVersionCheckRequest(this.getApplicationContext());
+        appVersionCheckRequest.execute();
         boolean displayTutorials = AltEngine.readBooleanFromSharedPref(
                 this,
                 Config.SHARED_PREF_KEYS.DISPLAY_TUTORIALS.getKey(),
@@ -482,5 +487,12 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
     @Subscribe
     public void onChangeInTasksEvent(ChangeInTasksEvent changeInTasksEvent) {
         updateList();
+    }
+
+    @Subscribe
+    public void onUpdateNowEvent(UpdateNowEvent event) {
+        Intent showUpdateNowActivityIntent = new Intent(this, UpdateNowActivity.class);
+        startActivity(showUpdateNowActivityIntent);
+        this.finish();
     }
 }

@@ -6,6 +6,8 @@ import android.content.IntentSender;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,8 +23,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
+import com.squareup.otto.Subscribe;
 
 import in.altersense.taskapp.components.BaseApplication;
+import in.altersense.taskapp.events.UpdateNowEvent;
 import in.altersense.taskapp.models.User;
 import in.altersense.taskapp.requests.UserLoginRequest;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -45,6 +49,8 @@ public class UserLoginActivity extends ActionBarActivity implements
     private GoogleApiClient googleApiClient;
     private Button googleAuthButton;
 
+
+    private boolean isPasswordHidden = true;
     private boolean intentInProgress = false;
     private boolean signInClicked;
 
@@ -58,6 +64,9 @@ public class UserLoginActivity extends ActionBarActivity implements
                         .setFontAttrId(R.attr.fontPath)
                         .build()
         );
+
+        BaseApplication.getEventBus().register(this);
+
         setContentView(R.layout.activity_user_login);
 
         getSupportActionBar().hide();
@@ -116,20 +125,16 @@ public class UserLoginActivity extends ActionBarActivity implements
             @Override
             public void onClick(View v) {
                 ImageButton imageButton = (ImageButton) v;
-                int inputType = passwordET.getInputType();
-                if (inputType == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
-                    Log.d(TAG,"1");
-                    passwordET.setInputType(
-                            InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
-                    );
+                if(isPasswordHidden) {
                     imageButton.setImageResource(R.drawable.ic_hide_password);
+                    passwordET.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    isPasswordHidden = false;
                 } else {
-                    Log.d(TAG,"2");
-                    passwordET.setInputType(
-                            InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                    );
                     imageButton.setImageResource(R.drawable.ic_action_showpassword);
+                    passwordET.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    isPasswordHidden = true;
                 }
+                passwordET.setSelection(passwordET.length());
             }
         });
 
@@ -261,6 +266,13 @@ public class UserLoginActivity extends ActionBarActivity implements
         });
         popupMenu.inflate(R.menu.menu_user_login);
         popupMenu.show();
+    }
+
+    @Subscribe
+    public void onUpdateNowEvent(UpdateNowEvent event) {
+        Intent showUpdateNowActivityIntent = new Intent(this, UpdateNowActivity.class);
+        startActivity(showUpdateNowActivityIntent);
+        this.finish();
     }
 
 }

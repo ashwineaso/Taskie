@@ -64,6 +64,42 @@ public class AltEngine {
     }
 
     /**
+     * Write int to SharedPreferences.
+     * @param context Current context
+     * @param key The key to store the value.
+     * @param value The value to be stored String the key.
+     */
+    public static void writeIntToSharedPref(Context context, String key, int value) {
+        SharedPreferences radioRemotePrefs = context.getSharedPreferences(
+                SHARED_PREFERENCE,
+                Context.MODE_PRIVATE
+        );
+        SharedPreferences.Editor prefEditor = radioRemotePrefs.edit();
+        prefEditor.putInt(key, value);
+
+        prefEditor.commit();
+        Log.i(CLASS_TAG +" writeStringToSharedPref", "Success. ("+key+","+value+")");
+    }
+
+    /**
+     * Read int from SharedPreferences.
+     * @param context Current context
+     * @param key The key to fetch the value from.
+     * @param defaultValue The default value to be returned.
+     * @return String The fetched value.
+     */
+    public static int readIntFromSharedPref(Context context, String key, int defaultValue) {
+        SharedPreferences radioRemotePrefs = context.getSharedPreferences(
+                SHARED_PREFERENCE,
+                Context.MODE_PRIVATE
+        );
+
+        int result = radioRemotePrefs.getInt(key, defaultValue);
+        Log.i(CLASS_TAG + " readStringFromSharedPref", "Success. (" + key + "," + result + ")");
+        return result;
+    }
+
+    /**
      * Write String to SharedPreferences.
      * @param context Current context
      * @param key The key to store the value.

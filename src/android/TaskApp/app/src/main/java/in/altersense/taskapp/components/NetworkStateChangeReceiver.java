@@ -14,6 +14,7 @@ import in.altersense.taskapp.CreateTaskActivity;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
 import in.altersense.taskapp.models.Task;
+import in.altersense.taskapp.requests.AppVersionCheckRequest;
 import in.altersense.taskapp.requests.CreateTaskRequest;
 import in.altersense.taskapp.requests.SyncRequest;
 
@@ -64,6 +65,10 @@ public class NetworkStateChangeReceiver extends BroadcastReceiver {
     private void onNetworkAvailable() {
         final String TAG = CLASS_TAG + "onNetworkAvailable";
         Log.d(TAG, "NetworkConnection Available.");
+
+        // Check if update is necessary
+        AppVersionCheckRequest appVersionCheckRequest = new AppVersionCheckRequest(this.context);
+        appVersionCheckRequest.execute();
 
         List<Task> unSyncedTasks = this.taskDbHelper.retrieveAllUnsyncedTask();
         List<Task> tasksNotAddedToServer = new ArrayList<>();

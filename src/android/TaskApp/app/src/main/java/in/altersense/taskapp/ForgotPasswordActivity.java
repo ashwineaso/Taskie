@@ -1,6 +1,7 @@
 package in.altersense.taskapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,6 +10,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.squareup.otto.Subscribe;
+
+import in.altersense.taskapp.components.BaseApplication;
+import in.altersense.taskapp.events.UpdateNowEvent;
 import in.altersense.taskapp.requests.ResetPasswordRequest;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -32,6 +37,8 @@ public class ForgotPasswordActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_forgot_password);
 
+        BaseApplication.getEventBus().register(this);
+
         this.emailET = (EditText) findViewById(R.id.emailET);
         this.resetPasswordBtn = (Button) findViewById(R.id.resetPasswordButton);
 
@@ -50,5 +57,12 @@ public class ForgotPasswordActivity extends ActionBarActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Subscribe
+    public void onUpdateNowEvent(UpdateNowEvent event) {
+        Intent showUpdateNowActivityIntent = new Intent(this, UpdateNowActivity.class);
+        startActivity(showUpdateNowActivityIntent);
+        this.finish();
     }
 }

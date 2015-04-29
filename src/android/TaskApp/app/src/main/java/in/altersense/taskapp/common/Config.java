@@ -9,6 +9,7 @@ import android.util.Log;
 public class Config {
 
     public static final boolean DEBUG = true;
+    public static final String PACKAGE_NAME = "in.altersense.taskapp";
 
     public static int DATABASE_VERSION = 6;
 
@@ -116,7 +117,9 @@ public class Config {
         SYNC_IN_PROGRESS("syncInProcess"),
         GCM_REG_ID("gcmRegId"),
         UPDATE_LIST("updateDashboardTaskList"),
-        DISPLAY_TUTORIALS("displayTutorials");
+        DISPLAY_TUTORIALS("displayTutorials"),
+        FAILED_APP_VERSION("failedAppVersion"),
+        IS_UPDATE_NECESSARY("isUpdateNecessary");
 
         private String key;
 
@@ -128,6 +131,8 @@ public class Config {
             this.key = key;
         }
 
+        public class IS_UPDATE_NECESSARY {
+        }
     }
 
     public static enum REQUEST_ERROR_CODES {
@@ -167,7 +172,8 @@ public class Config {
         PRIORITY("priority"),
         SERVER_PUSH_ID("serverPushId"),
         ERROR_CODE("code"),
-        AUTHMETHOD("authMethod");
+        AUTHMETHOD("authMethod"),
+        VERSION_CODE("appVersionCode");
 
         private String key;
 
