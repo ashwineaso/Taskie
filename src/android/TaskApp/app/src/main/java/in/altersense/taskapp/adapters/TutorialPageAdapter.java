@@ -64,6 +64,7 @@ public class TutorialPageAdapter extends FragmentPagerAdapter {
                             );
                             Intent intent = new Intent(activity, DashboardActivity.class);
                             activity.startActivity(intent);
+                            activity.finish();
                         }
                     });
                     return fragmentView;
