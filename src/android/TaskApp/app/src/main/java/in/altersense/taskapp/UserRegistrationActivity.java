@@ -1,6 +1,7 @@
 package in.altersense.taskapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.InputType;
@@ -13,6 +14,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.squareup.otto.Subscribe;
+
+import in.altersense.taskapp.components.BaseApplication;
+import in.altersense.taskapp.events.UpdateNowEvent;
 import in.altersense.taskapp.models.User;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -36,6 +41,9 @@ public class UserRegistrationActivity extends ActionBarActivity {
                         .setFontAttrId(R.attr.fontPath)
                         .build()
         );
+
+        BaseApplication.getEventBus().register(this);
+
         setContentView(R.layout.activity_user_registration);
 
         getSupportActionBar().hide();
@@ -115,4 +123,12 @@ public class UserRegistrationActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Subscribe
+    public void onUpdateNowEvent(UpdateNowEvent event) {
+        Intent showUpdateNowActivityIntent = new Intent(this, UpdateNowActivity.class);
+        startActivity(showUpdateNowActivityIntent);
+        this.finish();
+    }
+    
 }

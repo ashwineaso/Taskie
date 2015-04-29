@@ -15,8 +15,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TabHost;
 
+import com.squareup.otto.Subscribe;
+
 import in.altersense.taskapp.adapters.TaskTabsAdapter;
 import in.altersense.taskapp.common.Config;
+import in.altersense.taskapp.components.BaseApplication;
+import in.altersense.taskapp.events.UpdateNowEvent;
 import in.altersense.taskapp.models.Task;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -39,6 +43,8 @@ public class TaskFragmentsActivity extends ActionBarActivity implements ActionBa
                         .setFontAttrId(R.attr.fontPath)
                         .build()
         );
+
+        BaseApplication.getEventBus().register(this);
 
         tabsViewPager = (ViewPager) findViewById(R.id.tabspager);
         TaskTabsAdapter taskTabsAdapter = new TaskTabsAdapter(getSupportFragmentManager());
@@ -96,4 +102,12 @@ public class TaskFragmentsActivity extends ActionBarActivity implements ActionBa
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
 
     }
+
+    @Subscribe
+    public void onUpdateNowEvent(UpdateNowEvent event) {
+        Intent showUpdateNowActivityIntent = new Intent(this, UpdateNowActivity.class);
+        startActivity(showUpdateNowActivityIntent);
+        this.finish();
+    }
+
 }

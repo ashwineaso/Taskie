@@ -1,6 +1,7 @@
 package in.altersense.taskapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -13,9 +14,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.squareup.otto.Subscribe;
+
 import java.util.zip.Inflater;
 
 import in.altersense.taskapp.adapters.TutorialPageAdapter;
+import in.altersense.taskapp.components.BaseApplication;
+import in.altersense.taskapp.events.UpdateNowEvent;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -43,6 +48,8 @@ public class TutorialActivity extends FragmentActivity {
                         .setFontAttrId(R.attr.fontPath)
                         .build()
         );
+
+        BaseApplication.getEventBus().register(this);
 
         smallLayoutParams = new LinearLayout.LayoutParams(16,16);
         smallLayoutParams.setMargins(2,2,2,2);
@@ -96,6 +103,13 @@ public class TutorialActivity extends FragmentActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Subscribe
+    public void onUpdateNowEvent(UpdateNowEvent event) {
+        Intent showUpdateNowActivityIntent = new Intent(this, UpdateNowActivity.class);
+        startActivity(showUpdateNowActivityIntent);
+        this.finish();
     }
 
 }

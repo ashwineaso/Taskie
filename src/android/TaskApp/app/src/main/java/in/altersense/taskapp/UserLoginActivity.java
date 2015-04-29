@@ -23,8 +23,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
+import com.squareup.otto.Subscribe;
 
 import in.altersense.taskapp.components.BaseApplication;
+import in.altersense.taskapp.events.UpdateNowEvent;
 import in.altersense.taskapp.models.User;
 import in.altersense.taskapp.requests.UserLoginRequest;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -62,6 +64,9 @@ public class UserLoginActivity extends ActionBarActivity implements
                         .setFontAttrId(R.attr.fontPath)
                         .build()
         );
+
+        BaseApplication.getEventBus().register(this);
+
         setContentView(R.layout.activity_user_login);
 
         getSupportActionBar().hide();
@@ -261,6 +266,13 @@ public class UserLoginActivity extends ActionBarActivity implements
         });
         popupMenu.inflate(R.menu.menu_user_login);
         popupMenu.show();
+    }
+
+    @Subscribe
+    public void onUpdateNowEvent(UpdateNowEvent event) {
+        Intent showUpdateNowActivityIntent = new Intent(this, UpdateNowActivity.class);
+        startActivity(showUpdateNowActivityIntent);
+        this.finish();
     }
 
 }
