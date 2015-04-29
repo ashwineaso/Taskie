@@ -6,6 +6,8 @@ import android.content.IntentSender;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -118,25 +120,16 @@ public class UserLoginActivity extends ActionBarActivity implements
             @Override
             public void onClick(View v) {
                 ImageButton imageButton = (ImageButton) v;
-                int inputType = passwordET.getInputType();
                 if(isPasswordHidden) {
                     imageButton.setImageResource(R.drawable.ic_hide_password);
+                    passwordET.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                     isPasswordHidden = false;
                 } else {
                     imageButton.setImageResource(R.drawable.ic_action_showpassword);
+                    passwordET.setTransformationMethod(PasswordTransformationMethod.getInstance());
                     isPasswordHidden = true;
                 }
-                if (inputType == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
-                    Log.d(TAG,"1");
-                    passwordET.setInputType(
-                            InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
-                    );
-                } else {
-                    Log.d(TAG,"2");
-                    passwordET.setInputType(
-                            InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                    );
-                }
+                passwordET.setSelection(passwordET.length());
             }
         });
 

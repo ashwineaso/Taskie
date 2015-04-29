@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,23 +50,16 @@ public class UserRegistrationActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 ImageButton imageButton = (ImageButton) v;
-                int inputType = regPasswordET.getInputType();
                 if(isPasswordHidden) {
                     imageButton.setImageResource(R.drawable.ic_hide_password);
+                    regPasswordET.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                     isPasswordHidden = false;
                 } else {
                     imageButton.setImageResource(R.drawable.ic_action_showpassword);
+                    regPasswordET.setTransformationMethod(PasswordTransformationMethod.getInstance());
                     isPasswordHidden = true;
                 }
-                if (inputType == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
-                    regPasswordET.setInputType(
-                            InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
-                    );
-                } else {
-                    regPasswordET.setInputType(
-                            InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                    );
-                }
+                regPasswordET.setSelection(regPasswordET.length());
             }
         });
 
