@@ -8,6 +8,7 @@ from apps.group.routes import group_app
 
 def set(app):
 	app.route('/version/', ['GET', 'POST'], version)
+	app.route('/appVersionCheck', appVersionCheck)
 	app.mount('/user/', users_app)
 	app.mount('/task/', task_app)
 	app.mount('/group/', group_app)

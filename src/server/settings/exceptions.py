@@ -128,4 +128,15 @@ class UserNotMember(Exception):
 		self.code = 4002
 
 	def __str__(self):
-		return self.msg		
+		return self.msg
+
+class AppVersionDepreciated(Exception):
+	"""docstring for UserNotMember"""
+	def __init__(self):
+		super(AppVersionDepreciated, self).__init__()
+		self.msg = "The application cuurently installed is of an older version. Please update Immediately"
+		self.code = 0010
+
+	def __str__(self):
+		return self.msg
+

@@ -133,5 +133,9 @@ class UrlPost():
 #Current version of the API
 CURRENT_VERSION = 0.2
 
+#Current version of the API
+APP_CURRENT_VERSION = 1
+UPDATE_REQUIRED = False
+
 #Debig status of the API
 DEBUG = True
