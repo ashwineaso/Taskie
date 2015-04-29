@@ -1,7 +1,7 @@
 __author__ = ["ashwineaso"]
 from passlib.hash import sha256_crypt as pwd_context
 from . import dal
-from settings.exceptions import AuthenticationError
+from settings.exceptions import AuthenticationError, PasswordMismatch
 from settings.constants import *
 from . import mailing
 from models import *

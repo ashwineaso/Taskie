@@ -84,5 +84,8 @@
     <string name="page5Text1">Tap the plus sign on the top right corner of the task to create a new task.\n\nEnter title of the task and email of the collaborators separated by space or comma.</string>
     <string name="page5Text2">If a new collaborator\'s email is not identified by Taskie make sure to add a comma or a space at the end of the email address.</string>
     <string name="label_beginTaskie">Begin Taskie</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="title_activity_forgot_password">Reset Password</string>
+    <string name="label_ResetPassword">RESET PASSWORD</string>
 
 </resources>

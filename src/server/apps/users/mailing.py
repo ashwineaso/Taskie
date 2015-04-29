@@ -1,6 +1,7 @@
 __author__ = ["Ashwin Easo"]
 
 import smtplib
+import boto.ses
 from models import *
 from . import dal
 from email.mime.multipart import MIMEMultipart
@@ -8,9 +9,10 @@ from email.mime.text import MIMEText
 from settings.altEngine import Collection
 
 taskie_mail = "noreply@taskie.me"
-HOST = "mail.taskie.me"
+HOST = "email-smtp.us-west-2.amazonaws.com"
 PORT = "25"
-password = "wxqkqxr4$&$@"
+SES_KEY = "AKIAIPC67FFTNLDSAXHA"
+SES_SECRET = "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"
 
 
 def sendInvite(userObj):
@@ -106,9 +108,8 @@ def passwordReset(userObj):
 	msg.attach(html_msg)
 
 	#Send the message via local smtp server
-	server = smtplib.SMTP()
-	server.connect(HOST, PORT)
-	server.starttls()
-	server.login(taskie_mail,password)
-	server.sendmail(taskie_mail,userObj.user.email, msg.as_string())
-	server.close()
+	conn = boto.ses.connect_to_region(
+        'us-west-2',
+        aws_access_key_id=SES_KEY,
+        aws_secret_access_key=SES_SECRET)
+	conn.send_email(taskie_mail, " Taskie Account  - Password Reset", html, userObj.user.email)

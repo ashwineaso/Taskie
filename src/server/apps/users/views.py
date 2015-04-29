@@ -1,6 +1,7 @@
 import os
 from bottle import request, static_file, template
 from settings.altEngine import Collection, RESPONSE_SUCCESS, RESPONSE_FAILED, _decode_list, _decode_dict
+from settings.constants import PROJECT_ROOT
 import bll
 import requests
 import json
@@ -374,7 +375,10 @@ def updatePassword(email, key):
 	userObj.key = key;
 	userObj.user = bll.getUserByEmail(userObj)
 	token = bll.getTokenByUser(userObj)
-	return template("apps/main/views/password_reset", email = userObj.email, key = token.key)
+	if token.key == userObj.key:
+		return template("password_reset", flag = True, email = userObj.email, key = token.key)
+	else:
+		return template("password_reset", flag = False, message = "Email and Key does not match or the key has expired. Please try again")
 
 
 def doUpdatePassword():
@@ -384,19 +388,29 @@ def doUpdatePassword():
 	userObj.email = request.forms.get('email')
 	userObj.password = request.forms.get('password')
 	userObj.key = request.forms.get('key')
-	# try:
-	userObj.user = bll.getUserByEmail(userObj)
-	token = bll.getTokenByUser(userObj)
-	if (userObj.key == token.key):
-		flag = bll.updatePassword(userObj)
-		if flag:
-			message = "Password has been updated"
+	try:
+		userObj.user = bll.getUserByEmail(userObj)
+		token = bll.getTokenByUser(userObj)
+		if (userObj.key == token.key):
+			flag = bll.updatePassword(userObj)
+			if flag:
+				message = "Password has been updated"
+			else:
+				message = "Password Update Failed. Please Try again"
 		else:
-			message = "Password Update Failed. Please Try again"
-	else:
-		message = "Email and Key mismatch. Please try again"
-	# except Exception as e:
-	# 	message = "Oops! Something went wrong. Please try again"
+			message = "Email and Key mismatch. Please try again"
+	except Exception as e:
+		message = "Oops! Something went wrong. Please try again"
+	return template("updatePasswordResult", message = message)
 
-	return template("apps/main/views/updatePasswordResult", message = message)
+# Static Routes
+
+def javascripts(filename):
+    return static_file(filename, root=PROJECT_ROOT+'/apps/static/js/')
+
+def stylesheets(filename):
+	return static_file(filename, root=PROJECT_ROOT+'/apps/static/css/')
+
+def images(filename):
+    return static_file(filename, root=PROJECT_ROOT+'/apps/static/images/')
 	

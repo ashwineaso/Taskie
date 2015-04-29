@@ -56,6 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:inputType="textEmailAddress"
             android:hint="@string/hint_Email"/>
 
     </LinearLayout>
@@ -98,14 +99,29 @@
         android:background="@color/taskPrimaryColor"
         android:textColor="@color/lightText" />
 
-    <Button android:id="@+id/regButton"
+    <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/smallMargin_xhdp"
+        android:gravity="center_vertical">
+
+        <Button android:id="@+id/regButton"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
         style="@style/transparentButton"
-        android:layout_marginTop="@dimen/smallMargin_xhdp"
         android:text="@string/label_CreateAccount"
         android:textSize="@dimen/text_subHeader_xhdpi" />
+
+        <ImageButton android:id="@+id/moreButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            style="@style/transparentButton"
+            android:src="@drawable/ic_pink_action_more_vert" />
+
+    </LinearLayout>
 
     <View
         android:layout_width="fill_parent"
