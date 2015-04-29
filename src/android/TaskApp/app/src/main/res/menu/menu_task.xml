@@ -9,4 +9,10 @@
         android:title="Edit"
         app:showAsAction="withText|always" />
 
+    <item
+        android:icon="@drawable/ic_help_white_24dp"
+        android:id="@+id/action_help"
+        android:title="Help"
+        app:showAsAction="withText|always" />
+
 </menu>
