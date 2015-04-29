@@ -86,7 +86,7 @@ public class AppVersionCheckRequest extends AsyncTask<Void, Integer, JSONObject>
         }
         // Create APIRequestObject
         APIRequest appVersionCheck = new APIRequest(
-                AltEngine.formURL("checkAppVersion"),
+                AltEngine.formURL("appVersionCheck"),
                 this.requestObject,
                 this.context
         );
