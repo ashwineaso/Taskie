@@ -76,16 +76,15 @@ def verifyEmail(email, key):
 
 	route(/user/verifyEmail/<email>/<key>)
 	"""
-	response = {}
-	data = {}
 	userObj = Collection()
 	userObj.email = email
 	userObj.key = key
 	flag = bll.verifyEmail(userObj)
 	if flag is True:
-		return "Account has been verified"
+		message = "Verification was Sucessful. Your account has been activiated"
 	else:
-		return "Email and Key mismatch occured"
+		message = "Email and Key does not match or the key has expired. Please try again"
+	return template("email_verified", message = message)
 
 
 def updateUser():
