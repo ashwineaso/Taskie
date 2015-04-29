@@ -139,6 +139,7 @@
         android:layout_gravity="center_horizontal"
         android:background="@drawable/common_signin_btn_text_dark"
         android:textColor="@color/lightText"
-        android:layout_marginTop="@dimen/thinMargin_xhdpi" />
+        android:layout_marginTop="@dimen/thinMargin_xhdpi"
+        android:visibility="gone" />
 
 </LinearLayout>

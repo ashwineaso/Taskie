@@ -79,11 +79,14 @@ def verifyEmail(email, key):
 	userObj = Collection()
 	userObj.email = email
 	userObj.key = key
-	flag = bll.verifyEmail(userObj)
-	if flag is True:
-		message = "Verification was Sucessful. Your account has been activiated"
-	else:
-		message = "Email and Key does not match or the key has expired. Please try again"
+	try:
+		flag = bll.verifyEmail(userObj)
+		if flag is True:
+			message = "Verification was Sucessful. Your account has been activiated"
+		else:
+			message = "Email and Key does not match or the key has expired. Please try again"
+	except Exception as e:
+		message = "Oops! The user doesnt seem to exist"
 	return template("email_verified", message = message)
 
 

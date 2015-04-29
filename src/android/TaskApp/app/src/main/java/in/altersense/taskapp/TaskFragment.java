@@ -620,6 +620,9 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                     this.setUpEditMode();
                 }
                 break;
+
+            case R.id.action_help:
+                break;
         }
 
         return super.onOptionsItemSelected(item);
