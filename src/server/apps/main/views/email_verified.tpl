@@ -82,31 +82,10 @@
 	<script src="js/jquery-2.0.3.min.js"></script>
 	<script src="js/jquery.easing.min.js"></script>
 	<script src="js/jquery.scrollTo.js"></script>
-	<script src="js/jquery.form.js"></script>
 	<script src="js/main.js"></script>
 	<script src="js/retina.js"></script>
 	<script src="js/waypoints.min.js"></script>
 	<script src="js/owl.carousel.min.js"></script>
-	<script src="js/nivo-lightbox.min.js"></script>
-	<script type="text/javascript">
-		$('document').ready(function(){
-				$('#subscribe-form').ajaxForm( {
-				target: '#preview',
-				success: function() { 
-					  $('#subscribe-form').slideUp('slow');
-					  $('#preview').css({"opacity":"1"});
-					}
-				});
-			});
-	</script>
-	<script>
-		var url ='images/icons.svg';
-		var c=new XMLHttpRequest(); c.open('GET.html', url, false); c.setRequestHeader('Content-Type', 'text/xml'); c.send();
-		document.body.insertBefore(c.responseXML.firstChild, document.body.firstChild)
-	</script>
-
-	<!-- Demo Switcher JS -->
-	<script type="text/javascript" src="js/fswit.js"></script>
-		
+	<script src="js/nivo-lightbox.min.js"></script>		
   </body>
 </html>
