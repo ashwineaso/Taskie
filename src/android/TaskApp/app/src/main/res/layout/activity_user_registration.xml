@@ -123,6 +123,7 @@
         android:layout_gravity="center_horizontal"
         style="@style/primaryButton"
         android:layout_marginTop="@dimen/smallMargin_xhdp"
-        android:text="@string/label_Register"/>
+        android:text="@string/label_Register"
+        android:gravity="center_vertical|center_horizontal" />
 
 </LinearLayout>

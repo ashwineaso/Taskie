@@ -21,7 +21,8 @@
         style="@style/TutorialText"
         android:id="@+id/page5Text1"
         android:layout_below="@id/page5Title"
-        android:text="@string/page5Text1"/>
+        android:text="@string/page5Text1"
+        android:gravity="center_horizontal" />
 
     <ImageView
         android:id="@+id/page5Image"
@@ -30,7 +31,7 @@
         android:adjustViewBounds="true"
         android:padding="@dimen/smallMargin_xhdp"
         android:layout_height="wrap_content"
-        android:src="@drawable/task_panel_tutorial"/>
+        android:src="@drawable/img_tutpage4"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -38,7 +39,7 @@
         style="@style/TutorialText"
         android:id="@+id/page5Text2"
         android:layout_below="@id/page5Image"
-        android:gravity="left"
-        android:text="@string/page5Text2"/>
+        android:text="@string/page5Text2"
+        android:gravity="center_horizontal" />
 
 </RelativeLayout>
