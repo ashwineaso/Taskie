@@ -18,7 +18,14 @@ SES_SECRET = "uOnSgsT5wB8WYymezGhsHtB9Ta9YWZpHuOR5cQSM"
 
 
 def sendInvite(userObj):
-	inviter = dal.getUserById(userObj.user)
+	"""Send invite mail to the a new user
+	:: type : Collection()
+	:: param : id - id of the owner
+				email - email of the new user to be invite
+				user - the newly created user
+	"""
+
+	inviter = dal.getUserById(userObj)
 	invited_by = inviter.email
 	invite_to = userObj.email
 	token = Token.objects.get(user = inviter)
