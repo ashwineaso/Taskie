@@ -1,0 +1,37 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="in.altersense.taskapp.UpdateNowActivity"
+    android:orientation="vertical"
+    android:gravity="center|center_vertical|center_horizontal">
+
+    <TextView
+        android:id="@+id/updateNowHeaderTextView"
+        style="@style/TutorialHugeSubtitle"
+        android:text="@string/updateApp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/updateNowMessage"
+        android:padding="@dimen/smallMargin_xhdp"
+        android:text="@string/updatAppMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:textSize="@dimen/text_normal_xhdpi" />
+
+    <Button
+        android:id="@+id/updateNowButton"
+        style="@style/primaryButton"
+        android:layout_marginTop="@dimen/smallMargin_xhdp"
+        android:padding="@dimen/smallMargin_xhdp"
+        android:gravity="center"
+        android:text="@string/label_UpdateTaskie"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

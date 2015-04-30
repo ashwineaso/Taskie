@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    tools:ignore="MissingPrefix">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/page3Title"
+        style="@style/TutorialH1"
+        android:id="@+id/page3Title" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TutorialText"
+        android:id="@+id/page3Text1"
+        android:layout_below="@id/page3Title"
+        android:text="@string/page3Text1"
+        android:gravity="center_horizontal" />
+
+    <ImageView
+        android:id="@+id/page3Image"
+        android:layout_below="@id/page3Text1"
+        android:layout_width="match_parent"
+        android:adjustViewBounds="true"
+        android:padding="@dimen/smallMargin_xhdp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/img_tutpage2"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TutorialText"
+        android:id="@+id/page3Text2"
+        android:layout_below="@id/page3Image"
+        android:gravity="center_horizontal"
+        android:text="@string/page3Text2"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/smallMargin_xhdp"
+        android:paddingRight="@dimen/smallMargin_xhdp"
+        android:id="@+id/page3LinearLayout"
+        android:gravity="center_horizontal"
+        android:layout_below="@id/page3Text2">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TutorialText"
+            android:padding="0dp"
+            android:layout_marginRight="@dimen/tinyMargin_xhdpi"
+            android:textColor="@color/status_declined"
+            android:text="Declined"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TutorialText"
+            android:padding="0dp"
+            android:layout_marginRight="@dimen/tinyMargin_xhdpi"
+            android:textColor="@color/status_pending"
+            android:text="Pending"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TutorialText"
+            android:padding="0dp"
+            android:layout_marginRight="@dimen/tinyMargin_xhdpi"
+            android:textColor="@color/status_accepted"
+            android:text="Accepted"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TutorialText"
+            android:padding="0dp"
+            android:layout_marginRight="@dimen/tinyMargin_xhdpi"
+            android:textColor="@color/status_done"
+            android:text="Done"/>
+
+        </LinearLayout>
+
+</RelativeLayout>

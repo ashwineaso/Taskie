@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.daimajia.swipe.SwipeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/collSwipe"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:background="@color/primaryText"
+        android:padding="@dimen/thinMargin_xhdpi"
+        android:gravity="center_vertical"
+        android:id="@+id/collBack">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView5"
+            android:src="@drawable/ic_delete_white_36dp"
+            android:layout_marginRight="@dimen/thinMargin_xhdpi" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Remove Collaborator ?"
+            android:id="@+id/lbl_delete"
+            android:textSize="@dimen/text_subHeader_xhdpi"
+            android:textColor="@color/lightText"
+            android:layout_marginRight="@dimen/smallMargin_xhdp" />
+
+        <LinearLayout
+            android:id="@+id/btn_confirm"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CONFIRM"
+                android:id="@+id/lbl_confirm"
+                android:layout_gravity="right|center_vertical"
+                android:textSize="@dimen/text_subHeader_xhdpi"
+                android:textColor="@color/taskPrimaryColor" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/collFront"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|center_horizontal"
+        android:background="@color/emptyBackground"
+        android:padding="@dimen/thinMargin_xhdpi">
+
+        <TextView android:id="@+id/collInitials"
+        android:layout_width="@dimen/collaboratorTokenRadius_xhdpi"
+        android:gravity="center"
+        android:layout_height="@dimen/collaboratorTokenRadius_xhdpi"
+        android:textSize="@dimen/collabortorStatusText_xhdpi"
+            android:textColor="@color/primaryText" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="8dp"
+            android:textSize="16dp"
+            android:textColor="@color/primaryText"
+            android:text="Collaborator Name"
+            android:id="@+id/collName" />
+
+    </LinearLayout>
+
+</com.daimajia.swipe.SwipeLayout>

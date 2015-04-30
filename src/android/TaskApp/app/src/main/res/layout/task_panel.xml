@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.daimajia.swipe.SwipeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/taskSwipe"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent" >
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:background="@color/primaryText"
+        android:padding="@dimen/smallMargin_xhdp"
+        android:gravity="center_vertical"
+        android:id="@+id/taskBack">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView5"
+            android:src="@drawable/ic_delete_white_36dp"
+            android:layout_marginRight="@dimen/thinMargin_xhdpi" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete Task ?"
+            android:id="@+id/lbl_delete"
+            android:textSize="@dimen/text_subHeader_xhdpi"
+            android:textColor="@color/lightText"
+            android:layout_marginRight="@dimen/smallMargin_xhdp" />
+
+        <LinearLayout
+            android:id="@+id/btn_confirm"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CONFIRM"
+                android:id="@+id/lbl_confirm"
+                android:layout_gravity="right|center_vertical"
+                android:textSize="@dimen/text_subHeader_xhdpi"
+                android:textColor="@color/taskPrimaryColor" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/taskFront"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:background="@color/emptyBackground"
+        android:visibility="visible">
+
+        <LinearLayout android:id="@+id/taskStatusLinearLayout"
+            android:layout_width="@dimen/taskStatusStripWidth_xhdp"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal"
+            android:background="#ff0fa0ae"
+            android:layout_marginRight="@dimen/tinyMargin_xhdpi" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <LinearLayout android:id="@+id/taskPanelLinearLayout"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent" >
+
+                <LinearLayout android:id="@+id/taskContentLinearLayout"
+                    android:orientation="vertical"
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    tools:ignore="MissingPrefix">
+
+                    <TextView android:id="@+id/taskTitleTextView"
+                        android:text="Boil Eggs"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        fontPath="fonts/Cabin-Medium-TTF.ttf"
+                        android:textSize="@dimen/text_subHeader_xhdpi"
+                        android:paddingLeft="@dimen/thinMargin_xhdpi"
+                        android:paddingRight="@dimen/thinMargin_xhdpi"
+                        android:paddingTop="@dimen/tinyMargin_xhdpi"
+                        android:ellipsize="end"
+                        android:lines="1"
+                        android:singleLine="true"
+                        android:textColor="#1e1e1e" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <LinearLayout android:id="@+id/collaboratorsList"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView android:id="@+id/collaboratorName1"
+                                android:layout_width="@dimen/collaboratorTokenRadius_xhdpi"
+                                android:layout_height="@dimen/collaboratorTokenRadius_xhdpi"
+                                android:gravity="center"
+                                android:background="@drawable/collaborator_status_accepted"
+                                android:textSize="@dimen/collabortorStatusText_xhdpi" />
+
+                            <TextView android:id="@+id/collaboratorName2"
+                                android:layout_width="@dimen/collaboratorTokenRadius_xhdpi"
+                                android:gravity="center"
+                                android:layout_height="@dimen/collaboratorTokenRadius_xhdpi"
+                                android:textSize="@dimen/collabortorStatusText_xhdpi" />
+
+                            <TextView android:id="@+id/collaboratorName3"
+                                android:layout_width="@dimen/collaboratorTokenRadius_xhdpi"
+                                android:gravity="center"
+                                android:layout_height="@dimen/collaboratorTokenRadius_xhdpi"
+                                android:textSize="@dimen/collabortorStatusText_xhdpi" />
+
+                            <TextView android:id="@+id/collaboratorName4"
+                                android:layout_width="@dimen/collaboratorTokenRadius_xhdpi"
+                                android:gravity="center"
+                                android:layout_height="@dimen/collaboratorTokenRadius_xhdpi"
+                                android:textSize="@dimen/collabortorStatusText_xhdpi" />
+
+                            <TextView android:id="@+id/collaboratorName5"
+                                android:layout_width="@dimen/collaboratorTokenRadius_xhdpi"
+                                android:gravity="center"
+                                android:layout_height="@dimen/collaboratorTokenRadius_xhdpi"
+                                android:textSize="@dimen/collabortorStatusText_xhdpi" />
+
+                            <TextView android:id="@+id/collaboratorName6"
+                                android:layout_width="@dimen/collaboratorTokenRadius_xhdpi"
+                                android:gravity="center"
+                                android:layout_height="@dimen/collaboratorTokenRadius_xhdpi"
+                                android:textSize="@dimen/collabortorStatusText_xhdpi" />
+
+                            <TextView android:id="@+id/collaboratorName7"
+                                android:layout_width="@dimen/collaboratorTokenRadius_xhdpi"
+                                android:gravity="center"
+                                android:layout_height="@dimen/collaboratorTokenRadius_xhdpi"
+                                android:textSize="@dimen/collabortorStatusText_xhdpi" />
+
+                            <TextView android:id="@+id/collaboratorName8"
+                                android:gravity="center"
+                                android:layout_width="@dimen/collaboratorTokenRadius_xhdpi"
+                                android:layout_height="@dimen/collaboratorTokenRadius_xhdpi"
+                                android:textSize="@dimen/collabortorStatusText_xhdpi" />
+
+                            <TextView android:id="@+id/collaboratorName9"
+                                android:layout_width="@dimen/collaboratorTokenRadius_xhdpi"
+                                android:gravity="center"
+                                android:layout_height="@dimen/collaboratorTokenRadius_xhdpi"
+                                android:textSize="@dimen/collabortorStatusText_xhdpi" />
+
+                            <TextView android:id="@+id/collaboratorName10"
+                                android:layout_width="@dimen/collaboratorTokenRadius_xhdpi"
+                                android:gravity="center"
+                                android:layout_height="@dimen/collaboratorTokenRadius_xhdpi"
+                                android:textSize="@dimen/collabortorStatusText_xhdpi" />
+
+                        </LinearLayout>
+
+                        <LinearLayout android:id="@+id/taskIconsListLinearLayout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:layout_gravity="right"
+                            android:gravity="right"
+                            android:padding="@dimen/tinyMargin_xhdpi">
+
+                            <CheckBox
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/checkComplete"
+                                android:checked="false"
+                                android:button="@drawable/abc_btn_check_material" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        tools:ignore="MissingPrefix">
+
+                        <TextView
+                            android:id="@+id/dueDateTimeTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            fontPath="fonts/Cabin-Regular-TTF.ttf"
+                            android:textSize="@dimen/text_small_xhdpi"
+                            android:paddingLeft="@dimen/thinMargin_xhdpi"
+                            android:paddingRight="@dimen/thinMargin_xhdpi" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:src="@drawable/line"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.daimajia.swipe.SwipeLayout>
+

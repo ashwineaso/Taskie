@@ -1,4 +1,9 @@
-bottle==0.12.7
-mongoengine==0.8.7
-pymongo==2.7.2
-wsgiref==0.1.2
+boto==2.38.0
+httplib2==0.9
+mongoengine==0.9.0
+passlib==1.6.2
+pyasn1==0.1.7
+pycparser==2.10
+pymongo==3.0
+-e git+https://github.com/serdarakarca/requests@35b1041a8fc4732626e3aac83481e3e13918e8ac#egg=requests-master
+uuid==1.30

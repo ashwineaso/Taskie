@@ -1,0 +1,172 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+    
+    <style name="TasksAtHandTheme"
+        parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#FFFFFF</item>
+        <!-- For the resting Spinner style -->
+        <item name="android:spinnerItemStyle">@style/spinnerItemStyle</item>
+        <!-- For each individual Spinner list item once clicked on -->
+        <item name="spinnerDropDownItemStyle">@style/spinnerDropDownItemStyle</item>
+        <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="actionMenuTextColor">@color/headerText</item>
+    </style>
+
+    <!-- ActionBar styles -->
+    <style name="MyActionBar"
+        parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="titleTextStyle">@style/MyActionBarTitleText</item>
+    </style>
+
+    <!-- ActionBar title text -->
+    <style name="MyActionBarTitleText"
+        parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/headerText</item>
+    </style>
+
+
+    <style name="GroupActivityTheme"
+        parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/tasksAtHandPrimaryActionBar</item>
+        <!-- For the resting Spinner style -->
+        <item name="android:spinnerItemStyle">
+            @style/spinnerItemStyle
+        </item>
+
+        <!-- For each individual Spinner list item once clicked on -->
+        <item name="android:spinnerDropDownItemStyle">
+            @style/spinnerDropDownItemStyle
+        </item>
+    </style>
+
+    <style name="CreateTasksTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/createTaskPrimaryActionBar</item>
+        <item name="colorAccent">@color/createTaskPrimaryActionBar</item>
+    </style>
+
+    <style name="TaskTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="colorPrimary">@color/taskPrimaryColor</item>
+        <item name="android:buttonStyle">@style/primaryButton</item>
+    </style>
+
+    <style name="RegisterTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/createTaskPrimaryActionBar</item>
+        <item name="colorAccent">@color/createTaskPrimaryActionBar</item>
+    </style>
+
+    <style name="spinnerItemStyle" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:textSize">@dimen/text_subHeader_xhdpi</item>
+        <item name="android:textColor">@color/primary_material_dark</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+    </style>
+
+    <style name="spinnerDropDownItemStyle">
+        <item name="android:padding">@dimen/tinyMargin_xhdpi</item>
+        <item name="android:textSize">@dimen/text_subHeader_xhdpi</item>
+    </style>
+
+    <style name="RobotoTextView" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="fontPath">fonts/roboto_slab_regular.ttf</item>
+    </style>
+
+    <style name="primaryButton">
+        <item name="android:background">@drawable/major_button</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_subHeader_xhdpi</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="transparentButton">
+        <item name="android:background">@drawable/transparent_button</item>
+        <item name="android:textColor">@color/createTaskPrimaryActionBar</item>
+    </style>
+
+    <style name="tokenEditText" parent="Widget.AppCompat.EditText">
+        <item name="colorAccent">@color/createTaskPrimaryActionBar</item>
+    </style>
+
+    <style name="TutorialHugeTitle">
+        <item name="android:textSize">@dimen/tutorialHugeTitle_xhdpi</item>
+        <item name="fontPath">@string/fontCabinSemiBold</item>
+        <item name="android:textColor">@color/taskPrimaryColor</item>
+        <item name="android:padding">@dimen/smallMargin_xhdp</item>
+        <item name="android:gravity">left</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:layout_marginTop">@dimen/smallMargin_xhdp</item>
+    </style>
+
+    <style name="TutorialHugeSubtitle">
+        <item name="android:textSize">@dimen/tutorialH1_xhdpi</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center_horizontal|center_vertical</item>
+        <item name="android:padding">@dimen/smallMargin_xhdp</item>
+        <item name="fontPath">@string/fontCabinRegular</item>
+    </style>
+
+    <style name="TutorialH1">
+        <item name="android:textSize">@dimen/tutorialTitle_xhdpi</item>
+        <item name="fontPath">@string/fontCabinSemiBold</item>
+        <item name="android:textColor">@color/taskPrimaryColor</item>
+        <item name="android:paddingLeft">@dimen/smallMargin_xhdp</item>
+        <item name="android:paddingRight">@dimen/smallMargin_xhdp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_centerHorizontal">true</item>
+    </style>
+
+    <style name="TutorialText">
+        <item name="android:textSize">@dimen/text_subHeader_xhdpi</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:padding">@dimen/smallMargin_xhdp</item>
+    </style>
+
+    <style name="LogoImage" >
+        <item name="android:padding">@dimen/tinyMargin_xhdpi</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:src">@drawable/ic_launcher</item>
+    </style>
+
+    <style name="LogoCompanionText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">@dimen/logoImageHeight_xhdpi</item>
+        <item name="android:textColor">@color/taskPrimaryColor</item>
+        <item name="fontPath">@string/fontCabinSemiBold</item>
+        <item name="android:text">@string/app_name</item>
+    </style>
+
+    <style name="BetaBadge">
+        <item name="android:textSize">@dimen/tinyText_xhdpi</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">top|left</item>
+        <item name="android:padding">@dimen/tinyMargin_xhdpi</item>
+        <item name="android:textColor">@color/taskPrimaryColor</item>
+        <item name="fontPath">@string/fontCabinRegular</item>
+        <item name="android:text">@string/beta</item>
+    </style>
+
+    <dimen name="logoImageHeight_xhdpi">48sp</dimen>
+</resources>

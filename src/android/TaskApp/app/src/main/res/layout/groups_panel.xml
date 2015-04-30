@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/lightText"
+    android:gravity="center_vertical"
+    android:orientation="vertical">
+
+    <LinearLayout android:id="@+id/taskPanelLinearLayout"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:padding="@dimen/tinyMargin_xhdpi"
+        android:gravity="center_vertical"
+        tools:ignore="MissingPrefix">
+
+        <ImageView android:id="@+id/groupColor"
+            android:layout_width="@dimen/userImageHeight_xhdp"
+            android:layout_height="@dimen/userImageHeight_xhdp"
+            android:padding="@dimen/smallMargin_xhdp"
+            android:src="@drawable/group_icon"/>
+
+        <TextView android:id="@+id/groupTitleTextView"
+            android:text="AlterSense"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:padding="@dimen/smallMargin_xhdp"
+            android:textColor="@color/primaryText"
+            fontPath="fonts/Cabin-Medium-TTF.ttf"
+            android:textSize="@dimen/text_header_xhdpi"/>
+
+        <LinearLayout android:id="@+id/taskCountBackground"
+            android:layout_width="@dimen/tasksCountSize_xhdpi"
+            android:layout_height="@dimen/tasksCountSize_xhdpi"
+            android:orientation="horizontal" >
+
+            <TextView android:id="@+id/taskCountTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/primaryText"
+                android:textSize="@dimen/text_header_xhdpi"
+                android:gravity="center"
+                android:text="2"/>
+
+            </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

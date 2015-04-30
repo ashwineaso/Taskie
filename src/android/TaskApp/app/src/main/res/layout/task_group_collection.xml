@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools=" http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content" tools:ignore="MissingPrefix"
+    android:background="#ffffffff">
+
+    <TextView android:id="@+id/taskCollectionTitleTextView"
+        android:layout_marginLeft="@dimen/smallMargin_xhdp"
+        android:layout_height="@dimen/subHeaderHeight_xhdp"
+        android:textSize="@dimen/text_header_xhdpi"
+        android:layout_width="wrap_content"
+        android:gravity="center_vertical"
+        android:textColor="@color/headerText"
+        fontPath="fonts/Cabin-SemiBold-TTF.ttf"
+        android:text="GROUPS"
+        tools:ignore="MissingPrefix" />
+
+    <LinearLayout android:id="@+id/taskListLinearLayout"
+        android:animateLayoutChanges="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"></LinearLayout>
+
+</LinearLayout>

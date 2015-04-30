@@ -28,6 +28,8 @@ proguard/
 *.ipr
 *.iws
 .idea/
+.gradle
+build/
 
 # Python compiled files
 *.pyc
@@ -51,3 +53,5 @@ cache/
 
 # Adobe Illustrator Files.
 *.ai
+
+IP.java

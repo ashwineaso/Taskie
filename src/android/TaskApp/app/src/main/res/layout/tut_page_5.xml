@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    tools:ignore="MissingPrefix">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/page5Title"
+        style="@style/TutorialH1"
+        android:id="@+id/page5Title" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TutorialText"
+        android:id="@+id/page5Text1"
+        android:layout_below="@id/page5Title"
+        android:text="@string/page5Text1"
+        android:gravity="center_horizontal" />
+
+    <ImageView
+        android:id="@+id/page5Image"
+        android:layout_below="@id/page5Text1"
+        android:layout_width="match_parent"
+        android:adjustViewBounds="true"
+        android:padding="@dimen/smallMargin_xhdp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/img_tutpage4"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TutorialText"
+        android:id="@+id/page5Text2"
+        android:layout_below="@id/page5Image"
+        android:text="@string/page5Text2"
+        android:gravity="center_horizontal" />
+
+</RelativeLayout>

@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="in.altersense.taskapp.TaskActivity">
+
+    <item
+        android:icon="@drawable/ic_edit_white"
+        android:id="@+id/action_toggle_view_edit"
+        android:title="Edit"
+        app:showAsAction="withText|always" />
+
+</menu>

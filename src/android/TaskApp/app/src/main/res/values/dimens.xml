@@ -1,0 +1,46 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- Dimensions for xHdpi -->
+    <dimen name="tinyMargin_xhdpi">4dp</dimen>
+    <dimen name="thinMargin_xhdpi">8dp</dimen>
+    <dimen name="smallMargin_xhdp">16dp</dimen>
+    <dimen name="mediumMargin_xhdp">32dp</dimen>
+    <dimen name="bigMargin_xhdp">72dp</dimen>
+    <dimen name="subHeaderHeight_xhdp">48dp</dimen>
+    <dimen name="taskPanelHeight_xhdp">96dp</dimen>
+    <dimen name="userImageHeight_xhdp">72dp</dimen>
+    <dimen name="userImageWidth_xhdp">36dp</dimen>
+    <dimen name="smallTextHeight_xhdp">24dp</dimen>
+    <dimen name="taskStatusStripWidth_xhdp">5dp</dimen>
+    <dimen name="statusCircleDiameter_xhdp">16dp</dimen>
+    <dimen name="roundedRectangleCornerRadius_xhdpi">5dp</dimen>
+    <dimen name="tasksCountSize_xhdpi">30dp</dimen>
+    <dimen name="taskActionIconHeight_xhdpi">32dp</dimen>
+    <dimen name="taskActionHeight_xhdpi">40dp</dimen>
+    <dimen name="priorityTextViewWidth_xhdpi">80dp</dimen>
+    <dimen name="statusRingWidth_xhdpi">3dp</dimen>
+    <dimen name="collaboratorTokenRadius_xhdpi">40dp</dimen>
+    <dimen name="collaboratorTokenInnerRadius_xhdpi">12dp</dimen>
+    <dimen name="spinnerMarginLeft_xhdpi">-9dp</dimen>
+
+    <!-- Text Sizes for xHdpi -->
+    <dimen name="text_dueDats_xhdpi">30sp</dimen>
+    <dimen name="text_header_xhdpi">22sp</dimen>
+    <dimen name="text_subHeader_xhdpi">18sp</dimen>
+    <dimen name="text_normal_xhdpi">16sp</dimen>
+    <dimen name="text_small_xhdpi">12sp</dimen>
+    <dimen name="hugeHeader_hdpi">64dp</dimen>
+    <dimen name="collabortorStatusText_xhdpi">12sp</dimen>
+    <dimen name="tutorialPagenationHeight_xhdpi">48dp</dimen>
+    <dimen name="tutoralPageSelectedSize_xhdpi">16dp</dimen>
+    <dimen name="tutorialHugeTitle_xhdpi">48sp</dimen>
+    <dimen name="tutorialH1_xhdpi">24sp</dimen>
+    <dimen name="tutorialTitle_xhdpi">32sp</dimen>
+    <dimen name="tinyText_xhdpi">18sp</dimen>
+
+
+</resources>

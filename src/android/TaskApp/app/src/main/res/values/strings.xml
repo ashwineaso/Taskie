@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Taskie</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_create_task">Edit Task</string>
+    <string name="title_activity_task">Activity Details</string>
+
+    <!-- Fonts -->
+    <string name="font_textCondensed">fonts/Cabin-Regular-TTF.ttf</string>
+    <string name="font_textRegular">fonts/Cabin-Medium-TTF.ttf</string>
+
+    <!-- Labels -->
+    <string name="label_sortby">Sort By</string>
+    <string name="label_SignUp">Sign Up</string>
+
+    <!-- Arrays -->
+    <string-array name="array_sortBy">
+        <item>Due Date</item>
+        <item>Owners</item>
+        <item>Priority</item>
+    </string-array>
+
+    <string name="title_activity_group">Group Activity</string>
+    <string name="quickTaskCreate">Quick Task Creation</string>
+    <string name="title_activity_user_registration">User Registration</string>
+
+    <!-- Hints -->
+    <string name="hint_FullName">Your Name</string>
+    <string name="hint_Email">Your Email</string>
+    <string name="hint_PhoneNum">Your Phone Number</string>
+    <string name="hint_Password">Password</string>
+    <string name="label_Register">REGISTER</string>
+    <string name="title_activity_user_login">UserLoginActivity</string>
+    <string name="label_Login">Log In</string>
+    <string name="label_CreateAccount">CREATE AN ACCOUNT</string>
+    <string name="label_SignIn">SIGN IN</string>
+    <string name="label_createTask">CREATE TASK</string>
+    <string name="labbel_updateTask">UPDATE TASK</string>
+    <string name="addCollaboratorsMessage">Enter collaborator name or email seperated by comma.</string>
+
+    <string-array name="country">
+        <item>India</item>
+        <item>United States</item>
+        <item>Canada</item>
+        <item>Australia</item>
+        <item>United Kingdom</item>
+        <item>Philippines</item>
+        <item>Japan</item>
+        <item>Italy</item>
+        <item>Germany</item>
+        <item>Russia</item>
+        <item>Malaysia</item>
+        <item>France</item>
+        <item>Sweden</item>
+        <item>New Zealand</item>
+        <item>Singapore</item>
+    </string-array>
+    <string-array name="priorityStringArray">
+        <item>Low Priority</item>
+        <item>Normal Priority</item>
+        <item>High Priority</item>
+    </string-array>
+
+    <string name="title_activity_task_fragments">TaskFragmentsActivity</string>
+    <string name="title_activity_tutorial">Tutorial Activity</string>
+    <string name="page1WelcomText">Welcome to Taskie</string>
+    <string name="page1Desc">A great way to get things done.\nFaster and Simpler,\nWith a personal touch.</string>
+    <string name="finalPageLine1">Thats all about Taskie.</string>
+    <string name="finalPageLine2">Stay on top of your tasks...</string>
+    <string name="fontCabinSemiBold">fonts/Cabin-SemiBold-TTF.ttf</string>
+    <string name="fontCabinRegular">fonts/Cabin-Regular-TTF.ttf</string>
+    <string name="page2Title">Understanding Task</string>
+    <string name="page2Text1">Task panel shows you everything you need to know about the task.\n\nThe rings hold initials of collaborators.</string>
+    <string name="page3Text2">Different colors denote different status.</string>
+    <string name="page3Title">Understanding Status</string>
+    <string name="page3Text1">The colour of each ring shows the status of the collaborator.\n\nThe colour strip shows your status.</string>
+    <string name="page2Text2">The first ring always belong to the owner of the task.</string>
+    <string name="page4Title">Actions on Tasks</string>
+    <string name="page4Text1">Tap a task for more details.\n\nTap the check box to mark a task as \"Completed\".</string>
+    <string name="page4Text2">Swipe away tasks and collaborators to decline or delete them.</string>
+    <string name="page5Title">Creating Tasks</string>
+    <string name="page5Text1">Tap the plus sign to create a new task.\n\nEnter title of the task and name/email of the collaborators.</string>
+    <string name="page5Text2">If a collaborator\'s email is not identified, add a comma/space at the end.</string>
+    <string name="label_beginTaskie">Begin Taskie</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="title_activity_forgot_password">Reset Password</string>
+    <string name="label_ResetPassword">RESET PASSWORD</string>
+    <string name="title_activity_update_now">App Update</string>
+    <string name="updateApp">Please Update the App</string>
+    <string name="updatAppMessage">We know its a hiccup. But it is absolutely necessary that you update the app.</string>
+    <string name="label_UpdateTaskie">Update Taskie</string>
+    <string name="beta">beta</string>
+
+</resources>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:gravity="center_vertical"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/finalPageLine1"
+        style="@style/TutorialHugeSubtitle"
+        android:gravity="center_horizontal"
+        android:text="@string/finalPageLine1"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_beginTaskie"
+        android:paddingTop="@dimen/smallMargin_xhdp"
+        android:paddingBottom="@dimen/smallMargin_xhdp"
+        android:id="@+id/btnEndTut"
+        style="@style/primaryButton"
+        android:layout_below="@id/finalPageLine1"
+        android:layout_margin="16dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnEndTut"
+        android:id="@+id/finalPageLine2"
+        style="@style/TutorialText"
+        android:gravity="center_horizontal"
+        android:text="@string/finalPageLine2" />
+
+</RelativeLayout>
