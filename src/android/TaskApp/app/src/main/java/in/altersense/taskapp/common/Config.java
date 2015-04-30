@@ -140,7 +140,8 @@ public class Config {
         ACCESS_TOKEN_INVALID(3002),
         REFRESH_TOKEN_INVALID(3003),
         ACCESS_TOKEN_EXPIRED(3004),
-        TASK_WITH_ID_NOT_FOUND(2001);
+        TASK_WITH_ID_NOT_FOUND(2001),
+        APP_VERSION_DEPRECATED(0010);
 
         public int getCode() {
             return code;

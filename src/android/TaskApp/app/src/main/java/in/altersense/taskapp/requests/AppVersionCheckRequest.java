@@ -77,6 +77,10 @@ public class AppVersionCheckRequest extends AsyncTask<Void, Integer, JSONObject>
                             Config.REQUEST_RESPONSE_KEYS.STATUS.getKey(),
                             Config.RESPONSE_STATUS_FAILED
                     );
+                    responseObject.put(
+                            Config.REQUEST_RESPONSE_KEYS.ERROR_CODE.getKey(),
+                            Config.REQUEST_ERROR_CODES.APP_VERSION_DEPRECATED.getCode()
+                    );
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -104,13 +108,15 @@ public class AppVersionCheckRequest extends AsyncTask<Void, Integer, JSONObject>
     protected void onPostExecute(JSONObject jsonObject) {
         // Check status
         String responseStatus = "";
+        int errorCode = 0;
         try {
             responseStatus = jsonObject.getString(Config.REQUEST_RESPONSE_KEYS.STATUS.getKey());
+            errorCode = jsonObject.getInt(Config.REQUEST_RESPONSE_KEYS.ERROR_CODE.getKey());
         } catch (JSONException e) {
             e.printStackTrace();
         }
         // if failed
-        if(responseStatus.equals(Config.RESPONSE_STATUS_FAILED)) {
+        if(responseStatus.equals(Config.RESPONSE_STATUS_FAILED) && errorCode == Config.REQUEST_ERROR_CODES.APP_VERSION_DEPRECATED.getCode()) {
             // add failed version to SHARED PREF
             AltEngine.writeIntToSharedPref(
                     context,
