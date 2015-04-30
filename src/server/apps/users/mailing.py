@@ -8,7 +8,9 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from settings.altEngine import Collection
 
-taskie_mail = "noreply@taskie.me"
+taskie_mail_invite = "Taskie Team <noreply@taskie.me>"
+taskie_mail_verification = "Taskie Email Verification <noreply@taskie.me>"
+taskie_mail_password_reset = "Taskie Password Reset <noreply@taskie.me>"
 HOST = "email-smtp.us-west-2.amazonaws.com"
 PORT = "25"
 SES_KEY = "AKIAIPC67FFTNLDSAXHA"
@@ -48,7 +50,7 @@ def sendInvite(userObj):
         'us-west-2',
         aws_access_key_id=SES_KEY,
         aws_secret_access_key=SES_SECRET)
-	conn.send_email(taskie_mail, Subject, "", invite_to, html_body=html)
+	conn.send_email(taskie_mail_invite, Subject, "", invite_to, html_body=html)
 
 
 
@@ -99,7 +101,7 @@ def sendVerification(user):
         'us-west-2',
         aws_access_key_id=SES_KEY,
         aws_secret_access_key=SES_SECRET)
-	conn.send_email(taskie_mail, Subject, "", userObj.user.email, html_body=html)
+	conn.send_email(taskie_mail_verification, Subject, "", userObj.user.email, html_body=html)
 
 
 def passwordReset(userObj):
@@ -132,4 +134,4 @@ def passwordReset(userObj):
         'us-west-2',
         aws_access_key_id=SES_KEY,
         aws_secret_access_key=SES_SECRET)
-	conn.send_email(taskie_mail, Subject, "", userObj.user.email, html_body=html)
+	conn.send_email(taskie_mail_password_reset, Subject, "", userObj.user.email, html_body=html)

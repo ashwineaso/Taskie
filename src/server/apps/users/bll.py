@@ -41,10 +41,10 @@ def createAndInvite(userObj):
 	::return user : An intance of the User class
 	"""
 
-	user = dal.createMinimalUser(userObj)
+	userObj.user = dal.createMinimalUser(userObj)
 	## Send a personalise invite to the user's email
 	mailing.sendInvite(userObj)
-	return user
+	return userObj.user
 
 
 def verifyEmail(userObj):
