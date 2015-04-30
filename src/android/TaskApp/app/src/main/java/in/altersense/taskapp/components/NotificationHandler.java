@@ -202,6 +202,7 @@ public class NotificationHandler {
         Intent intent =  new Intent(context, DashboardActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
+        int notification_id = 1;
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)
@@ -224,7 +225,7 @@ public class NotificationHandler {
         mBuilder.setContentIntent(pendingIntent);
         mBuilder.setAutoCancel(true);
         mBuilder.setStyle(inboxStyle);
-        mNotificationManager.notify(0, mBuilder.build());
+        mNotificationManager.notify(notification_id, mBuilder.build());
 
     }
 }
