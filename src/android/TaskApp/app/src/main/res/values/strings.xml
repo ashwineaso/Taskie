@@ -91,5 +91,6 @@
     <string name="updateApp">Please Update the App</string>
     <string name="updatAppMessage">We know its a hiccup. But it is absolutely necessary that you update the app.</string>
     <string name="label_UpdateTaskie">Update Taskie</string>
+    <string name="beta">beta</string>
 
 </resources>

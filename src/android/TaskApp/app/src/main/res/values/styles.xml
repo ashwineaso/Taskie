@@ -143,15 +143,30 @@
 
     <style name="LogoImage" >
         <item name="android:padding">@dimen/tinyMargin_xhdpi</item>
-        <item name="android:layout_width">@dimen/hugeHeader_hdpi</item>
-        <item name="android:layout_height">@dimen/hugeHeader_hdpi</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
         <item name="android:src">@drawable/ic_launcher</item>
     </style>
 
     <style name="LogoCompanionText">
-        <item name="android:textSize">@dimen/hugeHeader_hdpi</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">@dimen/logoImageHeight_xhdpi</item>
         <item name="android:textColor">@color/taskPrimaryColor</item>
         <item name="fontPath">@string/fontCabinSemiBold</item>
+        <item name="android:text">@string/app_name</item>
     </style>
 
+    <style name="BetaBadge">
+        <item name="android:textSize">@dimen/tinyText_xhdpi</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">top|left</item>
+        <item name="android:padding">@dimen/tinyMargin_xhdpi</item>
+        <item name="android:textColor">@color/taskPrimaryColor</item>
+        <item name="fontPath">@string/fontCabinRegular</item>
+        <item name="android:text">@string/beta</item>
+    </style>
+
+    <dimen name="logoImageHeight_xhdpi">48sp</dimen>
 </resources>

@@ -40,6 +40,7 @@
     <dimen name="tutorialHugeTitle_xhdpi">48sp</dimen>
     <dimen name="tutorialH1_xhdpi">24sp</dimen>
     <dimen name="tutorialTitle_xhdpi">32sp</dimen>
+    <dimen name="tinyText_xhdpi">18sp</dimen>
 
 
 </resources>
