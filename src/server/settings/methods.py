@@ -3,6 +3,6 @@ from settings.constants import getDatabase
 
 #Database connection
 def connect():
-	mongoengine.connect("taskapp")
+	mongoengine.connect("taskappdebug")
 
 __author__ = ['ashwineaso','mahesmohan']
