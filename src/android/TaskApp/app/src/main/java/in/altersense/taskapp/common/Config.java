@@ -17,7 +17,7 @@ public class Config {
         if(Config.DEBUG) {
             return "475977412823";
         } else {
-            return "475977412823 ";
+            return "1090322518422";
         }
     }
 
