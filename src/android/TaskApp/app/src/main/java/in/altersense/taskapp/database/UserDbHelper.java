@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
@@ -222,16 +223,20 @@ public class UserDbHelper extends SQLiteOpenHelper {
         );
         User userFromContacts;
         usersFromContactsCursor.moveToFirst();
-        do {
-            userFromContacts = new User(
-                    "",
-                    usersFromContactsCursor.getString(2),
-                    usersFromContactsCursor.getString(1)
-            );
-            if(!userList.contains(userFromContacts)) {
-                userList.add(userFromContacts);
-            }
-        } while (usersFromContactsCursor.moveToNext());
+        try {
+            do {
+                userFromContacts = new User(
+                        "",
+                        usersFromContactsCursor.getString(2),
+                        usersFromContactsCursor.getString(1)
+                );
+                if(!userList.contains(userFromContacts)) {
+                    userList.add(userFromContacts);
+                }
+            } while (usersFromContactsCursor.moveToNext());
+        } catch (CursorIndexOutOfBoundsException e) {
+            Log.d(TAG, "The device has no contacts with email. Moving on...");
+        }
         return userList;
     }
 

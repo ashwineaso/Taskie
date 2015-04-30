@@ -663,7 +663,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 },
                 null,
                 null,
-                null
+                "ROWID DESC"
         );
         result.moveToFirst();
         // Create notification from cursor
@@ -699,7 +699,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 },
                 null,
                 null,
-                null
+                "ROWID DESC"
         );
         result.moveToFirst();
         //loop through each cursor and add new notification to a list
