@@ -38,9 +38,9 @@ def sendInvite(userObj):
 			<p>Hi!<br>
 			<br>Greetings from Taskie,<br>
 			<br> %s has sent you a task via our task sharing and collaboration app Taskie. If you wish to collaborate 
-			via Taskie, please dowload the app from Google Play Store<br>
+			via Taskie, please download the app from Google Play Store<br>
 			or simply click the link below.<br>
-			<br>www.play.google.com/com.altersense.taskie<br>
+			<br>www.play.google.com/in.altersense.taskapp<br>
 			<br>For more information and support, please feel free to send us an email at someone@taskie.me.
 			Our support team will be getting back to you within 24 Hrs.<br>
 			<br>Thanks and Warm Regards,<br>
@@ -67,8 +67,8 @@ def sendVerification(user):
 
 	::type userObj: object
 	::param userObj: instance of User class with the following attributes
-					email
-					name
+					email - email id of the user
+					name - name of the user
 					**kwargs
 	"""
 	userObj = Collection()
@@ -112,7 +112,11 @@ def sendVerification(user):
 
 
 def passwordReset(userObj):
-	"""Send a password reset mail to the user along with email and key"""
+	"""Send a password reset mail to the user along with email and key
+
+	::type : Collection()
+	::param : user - the user whose password has to be reset
+	"""
 	token = dal.getTokenByUser(userObj)
 
 	link = """http://taskie.me/user/updatePassword/%s/%s""" % (userObj.user.email, token.key)
