@@ -8,7 +8,7 @@ import android.util.Log;
  */
 public class Config {
 
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
     public static final String PACKAGE_NAME = "in.altersense.taskapp";
 
     public static int DATABASE_VERSION = 6;
@@ -17,13 +17,13 @@ public class Config {
         if(Config.DEBUG) {
             return "475977412823";
         } else {
-            return "";
+            return "475977412823 ";
         }
     }
 
     public static int REQUEST_MAXOUT = 3;
 //    public static String SERVER_ADDRESS = "taskieserver-mahesmohan.rhcloud.com";
-    public static String SERVER_ADDRESS = "52.11.159.173";
+    public static String SERVER_ADDRESS = "taskie.me";
     public static String RESPONSE_STATUS_FAILED = "failed";
     public static String RESPONSE_STATUS_SUCCESS = "success";
 
