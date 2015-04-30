@@ -294,9 +294,13 @@ public class UserDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase database = this.getWritableDatabase();
         Log.d(TAG, "Set up a readable database");
         // Setup data to be written
+        String name;
+        if (newUser.getName().equals("None")) {
+            name = newUser.getEmail();
+        } else { name = newUser.getName(); }
         ContentValues values = new ContentValues();
         values.put(User.KEYS.UUID.getName(), newUser.getUuid());
-        values.put(User.KEYS.NAME.getName(), newUser.getName());
+        values.put(User.KEYS.NAME.getName(), name);
         values.put(User.KEYS.EMAIL.getName(), newUser.getEmail());
         values.put(User.KEYS.SYNC_STATUS.getName(), newUser.getSyncStatusAsInt());
         Log.d(TAG, "Set up a content values.");
@@ -347,7 +351,11 @@ public class UserDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase writableDb = this.getWritableDatabase();
         // Make query
         ContentValues values = new ContentValues();
-        values.put(User.KEYS.NAME.getName(), user.getName());
+        String name;
+        if (user.getName().equals("None")) {
+            name = user.getEmail();
+        } else { name = user.getName(); }
+        values.put(User.KEYS.NAME.getName(), name);
         values.put(User.KEYS.UUID.getName(), user.getUuid());
         values.put(User.KEYS.SYNC_STATUS.getName(), user.getSyncStatusAsInt());
         Log.d(TAG, "Content values: " + values.toString());
