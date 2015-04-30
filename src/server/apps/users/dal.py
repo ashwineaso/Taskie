@@ -121,7 +121,7 @@ def updateUser(userObj):
 	###################################################
 	if user.status == ACCOUNT_INVITED_UNREGISTERED:
 		user.password_hash = userObj.password_hash
-		user.status = ACCOUNT_ACTIVE
+		user.status = ACCOUNT_NOT_VERIFIED
 
 	user.save()
 	user.reload()
