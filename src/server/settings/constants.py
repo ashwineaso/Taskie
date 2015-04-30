@@ -46,7 +46,7 @@ GOOGLE_AUTH = "googleAuth"
 TASKIE_AUTH = "taskieAuth"
 
 #GCM API Keys
-GCM_KEY = 'AIzaSyCNoXZ78VPIMmiGJ63N2j78zbtbPxB51w4'
+GCM_KEY = 'AIzaSyAEieoJLlvME-tQRKfCBUPrp0yerG0w3d4'
 TOKEN_GCM_REGISTRATION_IDS = 'registration_ids'
 
 #GCM 
