@@ -84,9 +84,9 @@ public class NotificationAdapter extends ArrayAdapter<Notification> {
      * @return dateTime - String format of dueDateTime
      */
     public String dateToString(long dueDateTime) {
-        String dateTime = "Set a due date.";
+        String dateTime = "";
         if (dueDateTime == 0) { return dateTime; }
-        Date date = new Date(dueDateTime);
+        Date date = new Date(dueDateTime * 1000); //Converting time to milliseconds for the sdf to work
         SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM d, yyyy h:mm a");
         dateTime = sdf.format(date);
         return dateTime;
