@@ -237,7 +237,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        this.context = activity.getApplicationContext();
+        this.context = activity;
     }
 
     @Override
