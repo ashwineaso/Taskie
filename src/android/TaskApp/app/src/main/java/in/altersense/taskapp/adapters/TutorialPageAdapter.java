@@ -14,6 +14,7 @@ import android.widget.Button;
 
 import in.altersense.taskapp.DashboardActivity;
 import in.altersense.taskapp.R;
+import in.altersense.taskapp.TutorialFragment;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.AltEngine;
 
@@ -24,6 +25,7 @@ public class TutorialPageAdapter extends FragmentPagerAdapter {
 
     private static final String PAGE_NUM = "pageNum";
     private static final int TOTAL_PAGES = 6;
+
     private final Activity activity;
 
     public TutorialPageAdapter(FragmentManager supportFragmentManager, Activity activity) {
@@ -45,43 +47,4 @@ public class TutorialPageAdapter extends FragmentPagerAdapter {
         return TOTAL_PAGES;
     }
 
-    class TutorialFragment extends Fragment {
-        @Override
-        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            Bundle args = getArguments();
-            int page = args.getInt(PAGE_NUM);
-            switch (page) {
-                case 5: {
-                    View fragmentView = inflater.inflate(R.layout.tut_page_final, container, false);
-                    Button btnEndTut = (Button) fragmentView.findViewById(R.id.btnEndTut);
-                    btnEndTut.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            AltEngine.writeBooleanToSharedPref(
-                                    activity.getApplicationContext(),
-                                    Config.SHARED_PREF_KEYS.DISPLAY_TUTORIALS.getKey(),
-                                    false
-                            );
-                            Intent intent = new Intent(activity, DashboardActivity.class);
-                            activity.startActivity(intent);
-                            activity.finish();
-                        }
-                    });
-                    return fragmentView;
-                }
-                case 4:
-                    return inflater.inflate(R.layout.tut_page_5, container, false);
-                case 3:
-                    return inflater.inflate(R.layout.tut_page_4, container, false);
-                case 2:
-                    return inflater.inflate(R.layout.tut_page_3, container, false);
-                case 1:
-                    return inflater.inflate(R.layout.tut_page_2, container, false);
-                case 0:
-                default:
-                    return inflater.inflate(R.layout.tut_page_1, container, false);
-            }
-        }
-
-    }
 }
