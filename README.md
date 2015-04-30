@@ -11,7 +11,7 @@ TaskApp enables users to share tasks and collaborate
 ### How do I get set up? ###
 
 * Create a virtualenv
-* Install Bottle and Mongoengine (Requirement file is provided in the deployment directory.)
+* Install Bottle, Mongoengine, uuid and hashlib (Requirement file is provided in the deployment directory.)
 
 
 ### Contribution guidelines ###
