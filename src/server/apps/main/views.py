@@ -34,7 +34,7 @@ def appVersionCheck():
 	obj = request.json
 	try:
 		device_version = obj["appVersionCode"]
-		if UPDATE_REQUIRED == true and APP_CURRENT_VERSION > device_version:
+		if UPDATE_REQUIRED == True and APP_CURRENT_VERSION > device_version:
 			response["status"] = RESPONSE_FAILED
 			response["code"] = 0010
 			raise AppVersionDepreciated
