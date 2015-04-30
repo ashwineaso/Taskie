@@ -30,7 +30,7 @@ public class AppVersionCheckRequest extends AsyncTask<Void, Integer, JSONObject>
                     0
             ).versionCode;
         } catch (PackageManager.NameNotFoundException e) {
-            this.appVersionCode = 0;
+            this.appVersionCode = 1;
         }
     }
 
