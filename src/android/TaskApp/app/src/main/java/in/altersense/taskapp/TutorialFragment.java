@@ -28,6 +28,7 @@ public class TutorialFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         this.activity = activity;
+        super.onAttach(activity);
     }
 
     @Override
