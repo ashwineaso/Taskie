@@ -76,8 +76,8 @@ def sendVerification(user):
 	token = dal.getTokenByUser(userObj)
 	userObj.key = token.refresh_token
 
-	link = """http://taskie.me/user/verifyEmail/%s/%s""" % (userObj.user.email,userObj.key)
-	delete = """http://taskie.me/user/deleteAccount/%s/%s""" % (userObj.user.email,userObj.key)
+	link = """http://52.11.164.148/user/verifyEmail/%s/%s""" % (userObj.user.email,userObj.key)
+	delete = """http://52.11.164.148/user/deleteAccount/%s/%s""" % (userObj.user.email,userObj.key)
 	html = """\
 	<html>
 		<head></head>
@@ -119,7 +119,7 @@ def passwordReset(userObj):
 	"""
 	token = dal.getTokenByUser(userObj)
 
-	link = """http://taskie.me/user/updatePassword/%s/%s""" % (userObj.user.email, token.key)
+	link = """http://52.11.164.148/user/updatePassword/%s/%s""" % (userObj.user.email, token.key)
 	html = """\
 	<html>
 		<head></head>
