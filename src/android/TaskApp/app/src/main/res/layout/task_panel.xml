@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:background="@color/emptyBackground"
+        android:background="@drawable/list_background"
         android:visibility="visible">
 
         <LinearLayout android:id="@+id/taskStatusLinearLayout"
