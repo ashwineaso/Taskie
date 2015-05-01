@@ -23,7 +23,7 @@ public class Config {
 
     public static int REQUEST_MAXOUT = 3;
 //    public static String SERVER_ADDRESS = "taskieserver-mahesmohan.rhcloud.com";
-    public static String SERVER_ADDRESS = "52.11.159.173";
+    public static String SERVER_ADDRESS = "52.11.164.148";
     public static String RESPONSE_STATUS_FAILED = "failed";
     public static String RESPONSE_STATUS_SUCCESS = "success";
 
