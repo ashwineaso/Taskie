@@ -29,6 +29,7 @@ import in.altersense.taskapp.components.BaseApplication;
 import in.altersense.taskapp.events.UpdateNowEvent;
 import in.altersense.taskapp.models.User;
 import in.altersense.taskapp.requests.UserLoginRequest;
+import me.drakeet.materialdialog.MaterialDialog;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -53,6 +54,7 @@ public class UserLoginActivity extends ActionBarActivity implements
     private boolean isPasswordHidden = true;
     private boolean intentInProgress = false;
     private boolean signInClicked;
+    private MaterialDialog mMaterialDialog;
 
 
     @Override
@@ -68,6 +70,10 @@ public class UserLoginActivity extends ActionBarActivity implements
         BaseApplication.getEventBus().register(this);
 
         setContentView(R.layout.activity_user_login);
+
+        //Checking for extras
+        Intent userLoginIntent = this.getIntent();
+        if (userLoginIntent.hasExtra("afterRegistration")) { showVerificationAlert();}
 
         getSupportActionBar().hide();
 
@@ -145,6 +151,21 @@ public class UserLoginActivity extends ActionBarActivity implements
             }
         });
 
+    }
+
+    private void showVerificationAlert() {
+
+        mMaterialDialog = new MaterialDialog(this)
+                .setTitle("Verification Mail Sent")
+                .setMessage(R.string.verificationString)
+                .setPositiveButton("OK", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mMaterialDialog.dismiss();
+                    }
+                });
+
+        mMaterialDialog.show();
     }
 
     @Override

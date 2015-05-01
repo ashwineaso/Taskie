@@ -3,19 +3,23 @@ package in.altersense.taskapp.requests;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import in.altersense.taskapp.R;
 import in.altersense.taskapp.UserLoginActivity;
 import in.altersense.taskapp.UserRegistrationActivity;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.APIRequest;
 import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.models.User;
+import me.drakeet.materialdialog.MaterialDialog;
 
 /**
  * Created by mahesmohan on 2/5/15.
@@ -92,6 +96,7 @@ public class RegisterUserRequest extends AsyncTask<Void, Integer, JSONObject> {
                         activity.getApplicationContext(),
                         UserLoginActivity.class
                 );
+                startLoginIntent.putExtra("afterRegistration", true);
                 activity.startActivity(startLoginIntent);
                 activity.finish();
 

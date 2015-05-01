@@ -92,5 +92,6 @@
     <string name="updatAppMessage">We know its a hiccup. But it is absolutely necessary that you update the app.</string>
     <string name="label_UpdateTaskie">Update Taskie</string>
     <string name="beta">beta</string>
+    <string name="verificationString">A verification mail has been sent to your email account. Please remember to check your SPAM mail too. Visit the link provided in the mail to complete the verification process.</string>
 
 </resources>
