@@ -34,6 +34,7 @@ import com.tokenautocomplete.TokenCompleteTextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -447,9 +448,6 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
 
     private void createNewDialog() {
 
-        // Create a new task
-        this.quickTask = new Task();
-
         // Create a master dialog
         materialDialog = new MaterialDialog.Builder(this)
                 .title("Create Task")
@@ -474,6 +472,9 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
                         }
                 )
                 .build();
+
+        this.collaboratorAdditionList = new ArrayList<>();
+        this.collaboratorRemovalList = new ArrayList<>();
 
     }
 
