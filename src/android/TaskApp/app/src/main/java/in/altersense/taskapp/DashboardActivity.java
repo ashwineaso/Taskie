@@ -17,8 +17,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,11 +57,11 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
     private TaskDbHelper taskDbHelper;
     private boolean isQuickTaskCreationHidden;
     private EditText newTaskTitle;
-    private Button createQuickTask;
     private TokenCompleteCollaboratorsEditText participantNameTCET;
     private FilteredArrayAdapter adapter;
 
     private MaterialDialog materialDialog;
+    private View taskCreationView;
 
     private TasksAdapter taskAdapter;
 
@@ -71,6 +73,11 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
     private List<User> collaboratorAdditionList;
     private List<User> collaboratorRemovalList;
     private List<User> userList;
+    private Spinner prioritySpinner;
+    private LinearLayout dueDateChangerLinearLayout;
+    private TextView dueDateTextView;
+    private ImageView cancelDateButton;
+    private EditText descriptionEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +118,13 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
 
         // Setup the create task dialog.
         setupTaskCreationDialog();
+
+        this.participantNameTCET =
+                (TokenCompleteCollaboratorsEditText) findViewById(R.id.quickTaskParticipantName);
+        this.participantNameTCET.setTokenListener(this);
+        this.participantNameTCET.allowDuplicates(false);
+        char[] splitChars = {',', ' ', ';'};
+        this.participantNameTCET.setSplitChar(splitChars);
 
         //Set onItemClickListener for the task list
         this.taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -275,6 +289,17 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                         }
                 )
                 .build();
+
+        this.taskCreationView = materialDialog.getCustomView();
+
+        this.newTaskTitle = (EditText) taskCreationView.findViewById(R.id.newTaskTitle);
+        this.participantNameTCET = (TokenCompleteCollaboratorsEditText) taskCreationView.findViewById(R.id.taskParticipantName);
+        this.prioritySpinner = (Spinner) taskCreationView.findViewById(R.id.taskPrioritySpinner);
+        this.dueDateChangerLinearLayout = (LinearLayout) taskCreationView.findViewById(R.id.dueDateChangerLinearLayout);
+        this.dueDateTextView = (TextView) taskCreationView.findViewById(R.id.dueDateTextView);
+        this.cancelDateButton = (ImageView) taskCreationView.findViewById(R.id.btnCancelDate);
+        this.descriptionEditText = (EditText) taskCreationView.findViewById(R.id.taskDescriptionEditText);
+
     }
 
 
