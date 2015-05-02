@@ -115,7 +115,7 @@ public class Task {
      * @tempDateTime = gets long format of the dueDateTime
      * @return dateTime - String format of dueDateTime
      */
-    public String dateToString(long dueDateTime) {
+    public static String dateToString(long dueDateTime) {
         String dateTime = "Set a due date.";
         if (dueDateTime == 0) { return dateTime; }
         Date date = new Date(dueDateTime);
@@ -358,8 +358,6 @@ public class Task {
      * @param priority Priority level of the task
      * @param dueDateTime Deadline of the task
      * @param status Current status of the task
-     * @param isGroup Is task in a group
-     * @param group Task group
      * @param context Current context
      */
     public Task(
@@ -370,8 +368,6 @@ public class Task {
             int priority,
             long dueDateTime,
             int status,
-            boolean isGroup,
-            TaskGroup group,
             Context context
     ) {
         Log.d(CLASS_TAG, "Constructor2 called.");
@@ -382,8 +378,6 @@ public class Task {
         this.priority = priority;
         this.dueDateTime = dueDateTime;
         this.status = status;
-        this.isGroup = isGroup;
-        this.group = group;
         this.collaborators = new ArrayList<Collaborator>();
         Log.d(CLASS_TAG, "Basic fields set.");
     }
@@ -415,8 +409,6 @@ public class Task {
                 0,
                 0,
                 0,
-                false,
-                null,
                 activity
         );
     }
@@ -441,8 +433,6 @@ public class Task {
                 priority,
                 dueDateTime,
                 status,
-                isGroup==1,
-                group,
                 context
         );
         Log.d(CLASS_TAG, "Constructor4 called.");

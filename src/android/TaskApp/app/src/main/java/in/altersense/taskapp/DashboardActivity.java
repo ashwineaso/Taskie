@@ -35,6 +35,7 @@ import com.tokenautocomplete.TokenCompleteTextView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import in.altersense.taskapp.adapters.TasksAdapter;
@@ -50,6 +51,7 @@ import in.altersense.taskapp.events.UpdateNowEvent;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.User;
 import in.altersense.taskapp.requests.AppVersionCheckRequest;
+import in.altersense.taskapp.requests.CreateTaskRequest;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -84,6 +86,8 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
 
     private GCMHandler gcmHandler;
 
+    private User deviceUser;
+
 //    Authenticated user details.
     private String ownerId;
     private String ownerName;
@@ -110,6 +114,16 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
                         .setDefaultFontPath("fonts/Cabin-Medium-TTF.ttf")
                         .setFontAttrId(R.attr.fontPath)
                         .build()
+        );
+
+        // Setup device user.
+        this.deviceUser = new User(
+                AltEngine.readStringFromSharedPref(
+                        getApplicationContext(),
+                        Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
+                        ""
+                ),
+                DashboardActivity.this
         );
 
         // Authenticate user.
@@ -336,38 +350,6 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
             }
         });
 
-    }
-
-    private void createNewDialog() {
-
-        // Create a new task
-        this.quickTask = new Task();
-
-        // Create a master dialog
-        materialDialog = new MaterialDialog.Builder(this)
-                .title("Create Task")
-                .customView(R.layout.create_task_dialog, true)
-                .positiveText("DONE")
-                .negativeText("CANCEL")
-                .neutralText("MORE")
-                .autoDismiss(false)
-                .callback(
-                        new MaterialDialog.ButtonCallback() {
-                            @Override
-                            public void onNegative(MaterialDialog dialog) {
-                                super.onNegative(dialog);
-                                dialog.dismiss();
-                                createNewDialog();
-                            }
-
-                            @Override
-                            public void onPositive(MaterialDialog dialog) {
-
-                            }
-                        }
-                )
-                .build();
-
         // By default dialog is not expanded
         this.isExpandedDialog = false;
 
@@ -400,9 +382,98 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+                String taskName = newTaskTitle.getText().toString();
+                taskName = taskName.trim();
+                if (!(taskName.length() < 1)) {
+                    Task quickTask;
+                    if(isExpandedDialog) {
+                        quickTask = new Task(
+                                "",
+                                taskName,
+                                descriptionEditText.getText().toString(),
+                                deviceUser,
+                                prioritySpinner.getSelectedItemPosition(),
+                                duelong,
+                                Config.TASK_STATUS.INCOMPLETE.getStatus(),
+                                getApplicationContext()
+                        );
+                    } else {
+                        quickTask = new Task(
+                                taskName,
+                                "",
+                                deviceUser,
+                                DashboardActivity.this
+                        );
+                    }
+
+                    Task createdQuickTask = addQuickTaskToDb(quickTask);
+                    createdQuickTask.updateCollaborators(
+                            collaboratorAdditionList,
+                            collaboratorRemovalList,
+                            DashboardActivity.this,
+                            false
+                    );
+                    CreateTaskRequest createTaskRequest = new CreateTaskRequest(
+                            createdQuickTask,
+                            DashboardActivity.this
+                    );
+                    createTaskRequest.execute();
+
+                    // Add task to the adapter.
+                    taskAdapter.changeCursor(taskDbHelper.getAllNonGroupTasksAsCursor());
+                    taskAdapter.notifyDataSetChanged();
+
+                    materialDialog.dismiss();
+
+                } else {
+                    Toast.makeText(
+                            getApplicationContext(),
+                            Config.MESSAGES.TASK_TITLE_TOO_SHORT.getMessage(),
+                            Toast.LENGTH_SHORT
+                    ).show();
+                }
             }
         });
+
+        this.cancelDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                duelong = 0;
+                dueDateTextView.setText(Task.dateToString(duelong));
+                cancelDateButton.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void createNewDialog() {
+
+        // Create a new task
+        this.quickTask = new Task();
+
+        // Create a master dialog
+        materialDialog = new MaterialDialog.Builder(this)
+                .title("Create Task")
+                .customView(R.layout.create_task_dialog, true)
+                .positiveText("DONE")
+                .negativeText("CANCEL")
+                .neutralText("MORE")
+                .autoDismiss(false)
+                .callback(
+                        new MaterialDialog.ButtonCallback() {
+                            @Override
+                            public void onNegative(MaterialDialog dialog) {
+                                super.onNegative(dialog);
+                                dialog.dismiss();
+                                createNewDialog();
+                            }
+
+                            @Override
+                            public void onPositive(MaterialDialog dialog) {
+
+                            }
+                        }
+                )
+                .build();
 
     }
 
@@ -538,6 +609,8 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
         this.dueString += hour > 12 ? "PM" : "AM";
         try {
             this.duelong = sdf.parse(this.dueString).getTime();
+            dueString = Task.dateToString(duelong);
+            cancelDateButton.setVisibility(View.VISIBLE);
             this.dueDateTextView.setText(this.dueString);
         } catch (ParseException e) {
             e.printStackTrace();
