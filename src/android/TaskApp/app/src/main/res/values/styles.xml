@@ -168,5 +168,6 @@
         <item name="android:text">@string/beta</item>
     </style>
 
+
     <dimen name="logoImageHeight_xhdpi">48sp</dimen>
 </resources>

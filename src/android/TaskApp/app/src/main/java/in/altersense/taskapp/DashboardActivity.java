@@ -2,6 +2,7 @@ package in.altersense.taskapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -21,11 +22,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.squareup.otto.Subscribe;
 import com.tokenautocomplete.FilteredArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import in.altersense.taskapp.adapters.TasksAdapter;
@@ -41,7 +43,6 @@ import in.altersense.taskapp.events.UpdateNowEvent;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.User;
 import in.altersense.taskapp.requests.AppVersionCheckRequest;
-import in.altersense.taskapp.requests.CreateTaskRequest;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -123,8 +124,6 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
             }
         });
 
-        setUpQuickTaskLayout();
-
         this.isQuickTaskCreationHidden = true;
         Log.d(CLASS_TAG,"Done.");
     }
@@ -159,7 +158,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                 return convertView;
             }
         };
-        this.participantNameTCET.setAdapter(adapter);
+//        this.participantNameTCET.setAdapter(adapter);
 
         // Inflate all the nonGroupTasks in the TasksListStage.
         Log.d(CLASS_TAG, "Done.");
@@ -229,136 +228,6 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    public void toggleQuickTaskLayout() {
-
-//        Check whether task is displayed
-        if(this.isQuickTaskCreationHidden) {
-
-            // Initializing lists.
-            this.collaboratorRemovalList = new ArrayList<>();
-            this.collaboratorAdditionList = new ArrayList<>();
-
-            newTaskTitle.setText("");
-
-            // Code to remove all the objects in the participants
-            for(Object object:participantNameTCET.getObjects()) {
-                participantNameTCET.removeObject(object);
-            }
-
-//            Set flag to show the layout is open
-            this.isQuickTaskCreationHidden = false;
-
-//            Display quick task pane
-            this.quickCreateStageLinearLayout.setVisibility(View.VISIBLE);
-//            Request focus to edit text
-            newTaskTitle.requestFocus();
-
-
-        } else {
-            this.quickCreateStageLinearLayout.setVisibility(View.GONE);
-            this.newTaskTitle.clearFocus();
-            this.taskList.requestFocus();
-            this.taskList.requestFocusFromTouch();
-            hideKeyBoard(
-                    getApplicationContext(),
-                    getCurrentFocus()
-            );
-            this.isQuickTaskCreationHidden = true;
-        }
-    }
-
-    private void setUpQuickTaskLayout() {
-
-        // Setting initial views.
-        this.newTaskTitle = (EditText) findViewById(R.id.newTaskTitle);
-        this.newTaskTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-//                Set up input manager
-                InputMethodManager keyboardManager = (InputMethodManager) getApplicationContext()
-                        .getSystemService(
-                                Context.INPUT_METHOD_SERVICE
-                        );
-                if (hasFocus) {
-                    Log.i(CLASS_TAG, "hasFocus");
-//                    Display keyboard
-                    keyboardManager.showSoftInput(
-                            v,
-                            InputMethodManager.SHOW_IMPLICIT
-                    );
-                }
-            }
-        });
-        this.participantNameTCET =
-                (TokenCompleteCollaboratorsEditText) findViewById(R.id.quickTaskParticipantName);
-        this.participantNameTCET.setTokenListener(this);
-        this.participantNameTCET.allowDuplicates(false);
-        char[] splitChars = {',', ' ', ';'};
-        this.participantNameTCET.setSplitChar(splitChars);
-
-        this.createQuickTask = (Button) findViewById(R.id.createQuickTaskButton);
-        this.createQuickTask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String TAG = CLASS_TAG+" createQuickTask OnClickListener.";
-                String taskName = newTaskTitle.getText().toString();
-                taskName = taskName.trim();
-                if(!(taskName.length() <1)) {
-                    Task quickTask = new Task(
-                            taskName,
-                            "",
-                            // TODO: Create user once and call pass that user instead of creating her everytime.
-                            new User(
-                                    AltEngine.readStringFromSharedPref(
-                                            getApplicationContext(),
-                                            Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
-                                            ""
-                                    ),
-                                    DashboardActivity.this
-                            ),
-                            DashboardActivity.this
-                    );
-                    quickTask.setStatus(
-                            Config.TASK_STATUS.INCOMPLETE.getStatus()
-                    );
-                    Task createdQuickTask = addQuickTaskToDb(quickTask);
-                    createdQuickTask.updateCollaborators(
-                            collaboratorAdditionList,
-                            collaboratorRemovalList,
-                            DashboardActivity.this,
-                            false
-                    );
-                    CreateTaskRequest createTaskRequest = new CreateTaskRequest(
-                            createdQuickTask,
-                            DashboardActivity.this
-                    );
-                    createTaskRequest.execute();
-
-                    // Add task to the adapter.
-                    taskAdapter.changeCursor(taskDbHelper.getAllNonGroupTasksAsCursor());
-                    taskAdapter.notifyDataSetChanged();
-
-                    toggleQuickTaskLayout();
-                } else {
-                    Toast.makeText(
-                            getApplicationContext(),
-                            Config.MESSAGES.TASK_TITLE_TOO_SHORT.getMessage(),
-                            Toast.LENGTH_SHORT
-                    ).show();
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onBackPressed() {
-        if(!this.isQuickTaskCreationHidden) {
-            toggleQuickTaskLayout();
-        } else {
-            super.onBackPressed();
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -376,10 +245,31 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         // Catches every click on Menu
         switch (id) {
             case R.id.quickTaskCreate:
-                toggleQuickTaskLayout();
+                displayQuickTaskCreationDialog();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void displayQuickTaskCreationDialog() {
+        MaterialDialog materialDialog = new MaterialDialog.Builder(this)
+                .title("Create Task")
+                .customView(R.layout.create_task_dialog, true)
+                .positiveText("DONE")
+                .negativeText("CANCEL")
+                .neutralText("MORE")
+                .autoDismiss(false)
+                .callback(
+                        new MaterialDialog.ButtonCallback() {
+                            @Override
+                            public void onNeutral(MaterialDialog dialog) {
+                                View dialogView = dialog.getCustomView();
+                                LinearLayout moreView = (LinearLayout) dialogView.findViewById(R.id.moreLinearLayout);
+                                moreView.setVisibility(View.VISIBLE);
+                            }
+                        }
+                )
+                .build();
     }
 
 

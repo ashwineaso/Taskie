@@ -5,4 +5,8 @@
         android:icon="@drawable/ic_plus_pink_24dp"
         app:showAsAction="always"
         android:title="@string/quickTaskCreate"/>
+    <item android:id="@+id/settingsButton"
+        android:icon="@drawable/ic_action_settings"
+        app:showAsAction="always"
+        android:title="@string/action_settings" />
 </menu>
