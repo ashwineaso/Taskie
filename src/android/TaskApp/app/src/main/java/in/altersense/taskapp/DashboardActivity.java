@@ -454,7 +454,7 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
         // Create a master dialog
         materialDialog = new MaterialDialog.Builder(this)
                 .title("Create Task")
-                .customView(R.layout.create_task_dialog, false)
+                .customView(R.layout.create_task_dialog, true)
                 .positiveText("DONE")
                 .negativeText("CANCEL")
                 .neutralText("MORE")
@@ -469,6 +469,7 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
                             }
                         }
                 )
+                .widgetColorRes(R.color.taskPrimaryColor)
                 .build();
 
         this.collaboratorAdditionList = new ArrayList<>();
