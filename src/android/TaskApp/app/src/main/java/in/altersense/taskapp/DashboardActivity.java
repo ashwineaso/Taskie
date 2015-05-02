@@ -75,7 +75,7 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
     private DatePickerDialog datePickerDialog;
     private TimePickerDialog timePickerDialog;
 
-    private TokenCompleteCollaboratorsEditText participantNameTCET;
+    private TokenCompleteCollaboratorsEditText participantNameTCET, newTCET;
     private FilteredArrayAdapter adapter;
 
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
@@ -175,13 +175,6 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
         // Setup the create task dialog.
         setupTaskCreationDialog();
 
-        this.participantNameTCET =
-                (TokenCompleteCollaboratorsEditText) findViewById(R.id.quickTaskParticipantName);
-        this.participantNameTCET.setTokenListener(this);
-        this.participantNameTCET.allowDuplicates(false);
-        char[] splitChars = {',', ' ', ';'};
-        this.participantNameTCET.setSplitChar(splitChars);
-
         //Set onItemClickListener for the task list
         this.taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -207,12 +200,12 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
     protected void onResume() {
         super.onResume();
         this.gcmHandler.checkPlayServices();
+
         UserDbHelper userDbHelper = new UserDbHelper(this);
         // Setting a Filtered Array Adapter to autocomplete with users in db
         userList = userDbHelper.listAllUsers();
-        Log.d(CLASS_TAG, "User list: " + userList.toString());
 
-        adapter = new FilteredArrayAdapter<User>(this, R.layout.collaorator_list_layout, userList) {
+        this.adapter = new FilteredArrayAdapter<User>(this, R.layout.collaorator_list_layout, userList) {
             @Override
             protected boolean keepObject(User user, String s) {
                 s = s.toLowerCase();
@@ -234,6 +227,9 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
             }
         };
         this.participantNameTCET.setAdapter(adapter);
+
+        Log.d(CLASS_TAG, "User list: " + userList.toString());
+
 //        this.participantNameTCET.setAdapter(adapter);
 
         // Inflate all the nonGroupTasks in the TasksListStage.
@@ -340,6 +336,11 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
         this.dueDateTextView = (TextView) taskCreationView.findViewById(R.id.dueDateTextView);
         this.cancelDateButton = (ImageView) taskCreationView.findViewById(R.id.btnCancelDate);
         this.descriptionEditText = (EditText) taskCreationView.findViewById(R.id.taskDescriptionEditText);
+
+        this.participantNameTCET.setTokenListener(this);
+        this.participantNameTCET.allowDuplicates(false);
+        char[] splitChars = {',', ' ', ';'};
+        this.participantNameTCET.setSplitChar(splitChars);
 
         final Calendar calendar = Calendar.getInstance();
         this.dueDateChangerLinearLayout.setOnClickListener(new View.OnClickListener() {
@@ -453,7 +454,7 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
         // Create a master dialog
         materialDialog = new MaterialDialog.Builder(this)
                 .title("Create Task")
-                .customView(R.layout.create_task_dialog, true)
+                .customView(R.layout.create_task_dialog, false)
                 .positiveText("DONE")
                 .negativeText("CANCEL")
                 .neutralText("MORE")
