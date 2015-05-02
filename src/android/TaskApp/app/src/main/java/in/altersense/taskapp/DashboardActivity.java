@@ -2,11 +2,10 @@ package in.altersense.taskapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,11 +24,17 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.Theme;
+import com.afollestad.materialdialogs.internal.MDButton;
+import com.fourmob.datetimepicker.date.DatePickerDialog;
+import com.sleepbot.datetimepicker.time.RadialPickerLayout;
+import com.sleepbot.datetimepicker.time.TimePickerDialog;
 import com.squareup.otto.Subscribe;
 import com.tokenautocomplete.FilteredArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import in.altersense.taskapp.adapters.TasksAdapter;
@@ -50,16 +54,28 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
-public class DashboardActivity extends ActionBarActivity implements TokenCompleteTextView.TokenListener {
+public class DashboardActivity extends AppCompatActivity implements TokenCompleteTextView.TokenListener,
+        DatePickerDialog.OnDateSetListener,
+        TimePickerDialog.OnTimeSetListener {
 
     private static final String CLASS_TAG = "DashboardActivity ";
+
+    private static final String DATEPICKER_TAG = "datePicker";
+    private static final String TIMEPICKER_TAG = "timePicker";
+
     private ListView taskList;  // For handling the main content area.
     private LinearLayout quickCreateStageLinearLayout; // Quick task creation area
     private TaskDbHelper taskDbHelper;
     private boolean isQuickTaskCreationHidden;
     private EditText newTaskTitle;
+
+    private DatePickerDialog datePickerDialog;
+    private TimePickerDialog timePickerDialog;
+
     private TokenCompleteCollaboratorsEditText participantNameTCET;
     private FilteredArrayAdapter adapter;
+
+    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
 
     private MaterialDialog materialDialog;
     private View taskCreationView;
@@ -79,6 +95,9 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
     private TextView dueDateTextView;
     private ImageView cancelDateButton;
     private EditText descriptionEditText;
+    private boolean isExpandedDialog;
+    private String dueString;
+    private long duelong;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +135,24 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         this.taskList = (ListView) findViewById(R.id.taskListView);
         this.taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasksAsCursor());
         this.taskList.setAdapter(this.taskAdapter);
+
+        // Initialize date time picker.
+        final Calendar calendar = Calendar.getInstance();
+
+        this.datePickerDialog = DatePickerDialog.newInstance(
+                this,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH),
+                false
+        );
+        this.timePickerDialog = TimePickerDialog.newInstance(
+                this,
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE),
+                false,
+                false
+        );
 
         // Setup the create task dialog.
         setupTaskCreationDialog();
@@ -298,24 +335,33 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                 .callback(
                         new MaterialDialog.ButtonCallback() {
                             @Override
-                            public void onNeutral(MaterialDialog dialog) {
-                                View dialogView = dialog.getCustomView();
-                                LinearLayout moreView = (LinearLayout) dialogView.findViewById(R.id.moreLinearLayout);
-                                moreView.setVisibility(View.VISIBLE);
+                            public void onNegative(MaterialDialog dialog) {
+                                super.onNegative(dialog);
+                                dialog.dismiss();
+                                createNewDialog();
                             }
                         }
                 )
                 .build();
-        View positiveButton = materialDialog.getActionButton(DialogAction.POSITIVE);
-        View negativeButton = materialDialog.getActionButton(DialogAction.NEGATIVE);
-        View neutralButton = materialDialog.getActionButton(DialogAction.NEUTRAL);
+
+        this.isExpandedDialog = false;
+
+        final MDButton neutralButton = (MDButton) materialDialog.getActionButton(DialogAction.NEUTRAL);
 
         neutralButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 View dialogView = materialDialog.getCustomView();
                 LinearLayout moreView = (LinearLayout) dialogView.findViewById(R.id.moreLinearLayout);
-                moreView.setVisibility(View.VISIBLE);
+                if(!isExpandedDialog) {
+                    moreView.setVisibility(View.VISIBLE);
+                    neutralButton.setText("LESS");
+                    isExpandedDialog = true;
+                } else {
+                    moreView.setVisibility(View.GONE);
+                    neutralButton.setText("MORE");
+                    isExpandedDialog = false;
+                }
             }
         });
 
@@ -434,4 +480,29 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         startActivity(showUpdateNowActivityIntent);
         this.finish();
     }
+
+    @Override
+    public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
+        String TAG = CLASS_TAG + "onDateSet";
+        Log.d(TAG, "Date: "+year+"-"+month+"-"+day);
+        timePickerDialog.setCloseOnSingleTapMinute(false);
+        timePickerDialog.show(getSupportFragmentManager(), TIMEPICKER_TAG);
+        this.dueString = year + "-" + (month+1) + "-" + day + " ";
+    }
+
+    @Override
+    public void onTimeSet(RadialPickerLayout radialPickerLayout, int hour, int minute) {
+        String TAG = CLASS_TAG + "onTimeSet";
+        Log.d(TAG, "Time: "+ hour +":"+ minute);
+        this.dueString += hour > 12 ? (hour-12) : hour;
+        this.dueString +=":"+ minute +" ";
+        this.dueString += hour > 12 ? "PM" : "AM";
+        try {
+            this.duelong = sdf.parse(this.dueString).getTime();
+            this.dueDateTextView.setText(this.dueString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
