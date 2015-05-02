@@ -24,6 +24,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.squareup.otto.Subscribe;
@@ -271,6 +272,22 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
     }
 
     private void setupTaskCreationDialog() {
+
+        createNewDialog();
+
+        this.taskCreationView = materialDialog.getCustomView();
+
+        this.newTaskTitle = (EditText) taskCreationView.findViewById(R.id.newTaskTitle);
+        this.participantNameTCET = (TokenCompleteCollaboratorsEditText) taskCreationView.findViewById(R.id.taskParticipantName);
+        this.prioritySpinner = (Spinner) taskCreationView.findViewById(R.id.taskPrioritySpinner);
+        this.dueDateChangerLinearLayout = (LinearLayout) taskCreationView.findViewById(R.id.dueDateChangerLinearLayout);
+        this.dueDateTextView = (TextView) taskCreationView.findViewById(R.id.dueDateTextView);
+        this.cancelDateButton = (ImageView) taskCreationView.findViewById(R.id.btnCancelDate);
+        this.descriptionEditText = (EditText) taskCreationView.findViewById(R.id.taskDescriptionEditText);
+
+    }
+
+    private void createNewDialog() {
         materialDialog = new MaterialDialog.Builder(this)
                 .title("Create Task")
                 .customView(R.layout.create_task_dialog, true)
@@ -289,16 +306,18 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
                         }
                 )
                 .build();
+        View positiveButton = materialDialog.getActionButton(DialogAction.POSITIVE);
+        View negativeButton = materialDialog.getActionButton(DialogAction.NEGATIVE);
+        View neutralButton = materialDialog.getActionButton(DialogAction.NEUTRAL);
 
-        this.taskCreationView = materialDialog.getCustomView();
-
-        this.newTaskTitle = (EditText) taskCreationView.findViewById(R.id.newTaskTitle);
-        this.participantNameTCET = (TokenCompleteCollaboratorsEditText) taskCreationView.findViewById(R.id.taskParticipantName);
-        this.prioritySpinner = (Spinner) taskCreationView.findViewById(R.id.taskPrioritySpinner);
-        this.dueDateChangerLinearLayout = (LinearLayout) taskCreationView.findViewById(R.id.dueDateChangerLinearLayout);
-        this.dueDateTextView = (TextView) taskCreationView.findViewById(R.id.dueDateTextView);
-        this.cancelDateButton = (ImageView) taskCreationView.findViewById(R.id.btnCancelDate);
-        this.descriptionEditText = (EditText) taskCreationView.findViewById(R.id.taskDescriptionEditText);
+        neutralButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View dialogView = materialDialog.getCustomView();
+                LinearLayout moreView = (LinearLayout) dialogView.findViewById(R.id.moreLinearLayout);
+                moreView.setVisibility(View.VISIBLE);
+            }
+        });
 
     }
 
