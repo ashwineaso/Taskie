@@ -322,6 +322,17 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
         this.cancelDateButton = (ImageView) taskCreationView.findViewById(R.id.btnCancelDate);
         this.descriptionEditText = (EditText) taskCreationView.findViewById(R.id.taskDescriptionEditText);
 
+        final Calendar calendar = Calendar.getInstance();
+        this.dueDateChangerLinearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int currentYear = calendar.get(Calendar.YEAR);
+                datePickerDialog.setYearRange(currentYear, currentYear+50<2037?currentYear+50:2037);
+                datePickerDialog.setCloseOnSingleTapDay(false);
+                datePickerDialog.show(getSupportFragmentManager(), DATEPICKER_TAG);
+            }
+        });
+
     }
 
     private void createNewDialog() {
