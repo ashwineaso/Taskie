@@ -54,7 +54,7 @@
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical|center_horizontal"
-        android:background="@color/emptyBackground"
+        android:background="@drawable/list_background"
         android:padding="@dimen/thinMargin_xhdpi">
 
         <TextView android:id="@+id/collInitials"
