@@ -32,19 +32,43 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <Spinner android:id="@+id/taskPrioritySpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/lineColor"
+            android:layout_marginTop="@dimen/tinyMargin_xhdpi"
             android:layout_marginBottom="@dimen/tinyMargin_xhdpi"
-            android:textSize="@dimen/text_normal_xhdpi"
-            android:entries="@array/priorityStringArray"
-            android:popupBackground="@color/emptyBackground" />
+            android:orientation="horizontal" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/tinyMargin_xhdpi"
+            android:layout_marginBottom="@dimen/smallMargin_xhdpi"
+            android:orientation="horizontal">
+
+            <TextView android:id="@+id/priorityTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_normal_xhdpi"
+                fontPath="@string/font_CabinMedium"
+                tools:ignore="MissingPrefix"
+                android:hint="@string/label_Priority"
+                android:layout_marginRight="@dimen/tinyMargin_xhdpi"/>
+
+            <Spinner android:id="@+id/taskPrioritySpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_normal_xhdpi"
+                android:entries="@array/priorityStringArray"
+                android:popupBackground="@color/emptyBackground" />
+
+            </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/tinyMargin_xhdpi"
             android:gravity="center_vertical"
             android:id="@+id/taskDueDateTimeLL">
 
@@ -66,7 +90,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_normal_xhdpi"
-                    fontPath="fonts/Cabin-Medium-TTF.ttf"
+                    fontPath="@string/font_CabinMedium"
                     tools:ignore="MissingPrefix"
                     android:hint="No Due Date and Time" />
 

@@ -59,6 +59,8 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
     private TokenCompleteCollaboratorsEditText participantNameTCET;
     private FilteredArrayAdapter adapter;
 
+    private MaterialDialog materialDialog;
+
     private TasksAdapter taskAdapter;
 
     private GCMHandler gcmHandler;
@@ -106,6 +108,9 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         this.taskList = (ListView) findViewById(R.id.taskListView);
         this.taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasksAsCursor());
         this.taskList.setAdapter(this.taskAdapter);
+
+        // Setup the create task dialog.
+        setupTaskCreationDialog();
 
         //Set onItemClickListener for the task list
         this.taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -245,14 +250,14 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         // Catches every click on Menu
         switch (id) {
             case R.id.quickTaskCreate:
-                displayQuickTaskCreationDialog();
+                this.materialDialog.show();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void displayQuickTaskCreationDialog() {
-        MaterialDialog materialDialog = new MaterialDialog.Builder(this)
+    private void setupTaskCreationDialog() {
+        materialDialog = new MaterialDialog.Builder(this)
                 .title("Create Task")
                 .customView(R.layout.create_task_dialog, true)
                 .positiveText("DONE")

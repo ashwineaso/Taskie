@@ -29,7 +29,7 @@
         android:layout_below="@id/page3Text1"
         android:layout_width="match_parent"
         android:adjustViewBounds="true"
-        android:padding="@dimen/smallMargin_xhdp"
+        android:padding="@dimen/smallMargin_xhdpi"
         android:layout_height="wrap_content"
         android:src="@drawable/img_tutpage2"/>
 
@@ -46,8 +46,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingLeft="@dimen/smallMargin_xhdp"
-        android:paddingRight="@dimen/smallMargin_xhdp"
+        android:paddingLeft="@dimen/smallMargin_xhdpi"
+        android:paddingRight="@dimen/smallMargin_xhdpi"
         android:id="@+id/page3LinearLayout"
         android:gravity="center_horizontal"
         android:layout_below="@id/page3Text2">
