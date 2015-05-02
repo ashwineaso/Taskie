@@ -87,6 +87,9 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
 //    Authenticated user details.
     private String ownerId;
     private String ownerName;
+
+    // For quick task creation.
+    private Task quickTask;
     private List<User> collaboratorAdditionList;
     private List<User> collaboratorRemovalList;
     private List<User> userList;
@@ -327,7 +330,7 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
             @Override
             public void onClick(View v) {
                 int currentYear = calendar.get(Calendar.YEAR);
-                datePickerDialog.setYearRange(currentYear, currentYear+50<2037?currentYear+50:2037);
+                datePickerDialog.setYearRange(currentYear, currentYear + 50 < 2037 ? currentYear + 50 : 2037);
                 datePickerDialog.setCloseOnSingleTapDay(false);
                 datePickerDialog.show(getSupportFragmentManager(), DATEPICKER_TAG);
             }
@@ -336,6 +339,11 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
     }
 
     private void createNewDialog() {
+
+        // Create a new task
+        this.quickTask = new Task();
+
+        // Create a master dialog
         materialDialog = new MaterialDialog.Builder(this)
                 .title("Create Task")
                 .customView(R.layout.create_task_dialog, true)
@@ -351,18 +359,30 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
                                 dialog.dismiss();
                                 createNewDialog();
                             }
+
+                            @Override
+                            public void onPositive(MaterialDialog dialog) {
+
+                            }
                         }
                 )
                 .build();
 
+        // By default dialog is not expanded
         this.isExpandedDialog = false;
 
+        // The neutral button that helps users add more info to the task.
         final MDButton neutralButton = (MDButton) materialDialog.getActionButton(DialogAction.NEUTRAL);
 
+        // The positive Button that creates tas and adds it to the database
+        final MDButton positiveButton = (MDButton) materialDialog.getActionButton(DialogAction.POSITIVE);
+
+        final View dialogView = materialDialog.getCustomView();
+
+        // Set click listener for positive button.
         neutralButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                View dialogView = materialDialog.getCustomView();
                 LinearLayout moreView = (LinearLayout) dialogView.findViewById(R.id.moreLinearLayout);
                 if(!isExpandedDialog) {
                     moreView.setVisibility(View.VISIBLE);
@@ -373,6 +393,14 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
                     neutralButton.setText("MORE");
                     isExpandedDialog = false;
                 }
+            }
+        });
+
+        // Set click listener for positive button
+        positiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
             }
         });
 
