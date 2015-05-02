@@ -233,6 +233,7 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
                 return convertView;
             }
         };
+        this.participantNameTCET.setAdapter(adapter);
 //        this.participantNameTCET.setAdapter(adapter);
 
         // Inflate all the nonGroupTasks in the TasksListStage.
