@@ -425,6 +425,7 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
                     taskAdapter.notifyDataSetChanged();
 
                     materialDialog.dismiss();
+                    createNewDialog();
 
                 } else {
                     Toast.makeText(
@@ -463,11 +464,6 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
                                 super.onNegative(dialog);
                                 dialog.dismiss();
                                 createNewDialog();
-                            }
-
-                            @Override
-                            public void onPositive(MaterialDialog dialog) {
-
                             }
                         }
                 )

@@ -159,7 +159,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         values.put(Task.KEYS.DESCRIPTION.getName(), newTask.getDescription());
         values.put(Task.KEYS.OWNER_UUID.getName(), newTask.getOwner().getUuid());
         values.put(Task.KEYS.PRIORITY.getName(), newTask.getPriority());
-        values.put(Task.KEYS.DUE_DATE_TIME.getName(), newTask.getDueDateTime());
+        values.put(Task.KEYS.DUE_DATE_TIME.getName(), newTask.getDueDateTimeAsLong());
         values.put(Task.KEYS.STATUS.getName(), newTask.getStatus());
         values.put(Task.KEYS.IS_GROUP.getName(), newTask.getIntIsGroup());
         values.put(Task.KEYS.SYNC_STATUS.getName(), newTask.getSyncStatusAsInt());
@@ -835,6 +835,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                         cursorString+=result.getColumnName(i)+"="+result.getString(i)+", ";
                     } catch (CursorIndexOutOfBoundsException e) {
                         Log.d(TAG, "No collaborator to display");
+                        readableDb.close();
                         return collaboratorList;
                     }
                 }
