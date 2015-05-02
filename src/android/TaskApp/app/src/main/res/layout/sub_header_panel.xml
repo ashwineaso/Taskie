@@ -6,7 +6,7 @@
     android:background="@color/white">
     
     <TextView android:id="@+id/titleText"
-        android:layout_marginLeft="@dimen/smallMargin_xhdp"
+        android:layout_marginLeft="@dimen/smallMargin_xhdpi"
         android:layout_height="@dimen/subHeaderHeight_xhdp"
         android:layout_width="wrap_content"
         android:gravity="center_vertical"

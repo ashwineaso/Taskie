@@ -3,7 +3,7 @@
     xmlns:tools2="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/smallMargin_xhdp"
+    android:padding="@dimen/smallMargin_xhdpi"
     android:orientation="vertical"
     android:gravity="center"
     tools:context="in.altersense.taskapp.UserLoginActivity"
@@ -32,7 +32,7 @@
         android:layout_gravity="center_horizontal"
         android:text="@string/label_Login"
         android:textSize="@dimen/text_header_xhdpi"
-        android:layout_marginBottom="@dimen/smallMargin_xhdp"
+        android:layout_marginBottom="@dimen/smallMargin_xhdpi"
         android:textColor="@color/createTaskPrimaryActionBar"/>
 
     <LinearLayout
@@ -88,7 +88,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/smallMargin_xhdp"
+        android:layout_marginTop="@dimen/smallMargin_xhdpi"
         android:text="@string/label_SignIn"
         android:textSize="@dimen/text_subHeader_xhdpi"
         android:background="@color/taskPrimaryColor"
@@ -98,7 +98,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="@dimen/smallMargin_xhdp"
+        android:layout_marginTop="@dimen/smallMargin_xhdpi"
         android:gravity="center_vertical">
 
         <Button android:id="@+id/regButton"

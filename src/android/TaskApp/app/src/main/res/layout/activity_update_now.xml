@@ -17,7 +17,7 @@
 
     <TextView
         android:id="@+id/updateNowMessage"
-        android:padding="@dimen/smallMargin_xhdp"
+        android:padding="@dimen/smallMargin_xhdpi"
         android:text="@string/updatAppMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,8 +27,8 @@
     <Button
         android:id="@+id/updateNowButton"
         style="@style/primaryButton"
-        android:layout_marginTop="@dimen/smallMargin_xhdp"
-        android:padding="@dimen/smallMargin_xhdp"
+        android:layout_marginTop="@dimen/smallMargin_xhdpi"
+        android:padding="@dimen/smallMargin_xhdpi"
         android:gravity="center"
         android:text="@string/label_UpdateTaskie"
         android:layout_width="match_parent"

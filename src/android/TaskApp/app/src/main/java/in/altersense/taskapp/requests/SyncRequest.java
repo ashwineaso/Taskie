@@ -479,8 +479,6 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
                     priority,
                     dueDateTime,
                     status,
-                    false,
-                    null,
                     this.context
             );
             this.taskDbHelper.createTask(task);
