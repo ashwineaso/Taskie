@@ -93,5 +93,7 @@
     <string name="label_UpdateTaskie">Update Taskie</string>
     <string name="beta">beta</string>
     <string name="verificationString">A verification mail has been sent to your email account. Please remember to check your SPAM mail too. Visit the link provided in the mail to complete the verification process.</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="pref_sync_everything">syncEverything</string>
 
 </resources>

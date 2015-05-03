@@ -378,6 +378,11 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
             case R.id.quickTaskCreate:
                 toggleQuickTaskLayout();
                 break;
+
+            case R.id.action_settings:
+                Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(settingsIntent);
+
         }
         return super.onOptionsItemSelected(item);
     }
