@@ -51,10 +51,12 @@ import in.altersense.taskapp.database.UserDbHelper;
 import in.altersense.taskapp.events.ChangeInTaskEvent;
 import in.altersense.taskapp.events.TaskDeletedEvent;
 import in.altersense.taskapp.events.UserRemovedFromCollaboratorsEvent;
+import in.altersense.taskapp.models.Buzz;
 import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.RemindSyncNotification;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.User;
+import in.altersense.taskapp.requests.BuzzCollaboratorRequest;
 import in.altersense.taskapp.requests.UpdateTaskRequest;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
@@ -622,6 +624,11 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                     this.setUpEditMode();
                 }
                 break;
+
+            case R.id.action_buzz:
+                Buzz buzz = new Buzz(this.task, context);
+                BuzzCollaboratorRequest buzzCollaboratorRequest = new BuzzCollaboratorRequest(buzz, context);
+                buzzCollaboratorRequest.execute();
         }
 
         return super.onOptionsItemSelected(item);
