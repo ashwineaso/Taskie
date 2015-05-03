@@ -410,6 +410,21 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         return affectedRows>0;
     }
 
+    public boolean truncateTaskTable() {
+        // Open a writable database
+        SQLiteDatabase writableDatabase = this.getWritableDatabase();
+        // exectute query
+        int affectedRows = writableDatabase.delete(
+                Task.TABLE_NAME,
+                null,
+                null
+        );
+        // Close db
+        writableDatabase.close();
+        // return affected rows > 1
+        return affectedRows > 1;
+    }
+
     public Buzz createBuzz(Buzz buzz) {
         String TAG = CLASS_TAG+"createBuzz";
         // Open writable datanase.
@@ -529,6 +544,21 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         writableDb.close();
         // if affected row greater than 0 return true
         return affectedRows>0;
+    }
+
+    public boolean truncateBuzzTable() {
+        // Open a writable database
+        SQLiteDatabase writableDatabase = this.getWritableDatabase();
+        // exectute query
+        int affectedRows = writableDatabase.delete(
+                Buzz.TABLE_NAME,
+                null,
+                null
+        );
+        // Close db
+        writableDatabase.close();
+        // return affected rows > 1
+        return affectedRows > 1;
     }
 
     public List<Task> retrieveAllUnsyncedTask() {
@@ -744,6 +774,21 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         writeableDb.close();
         // if affected row greater than 0 return true
         return affectedRows > 0;
+    }
+
+    public boolean truncateNotificationsTable() {
+        // Open a writable database
+        SQLiteDatabase writableDatabase = this.getWritableDatabase();
+        // exectute query
+        int affectedRows = writableDatabase.delete(
+                Notification.TABLE_NAME,
+                null,
+                null
+        );
+        // Close db
+        writableDatabase.close();
+        // return affected rows > 1
+        return affectedRows > 1;
     }
 
     // Collaborators dal
@@ -1024,6 +1069,21 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         return affectedRows>0;
     }
 
+    public boolean truncateCollaboratorTable() {
+        // Open a writable database
+        SQLiteDatabase writableDatabase = this.getWritableDatabase();
+        // exectute query
+        int affectedRows = writableDatabase.delete(
+                Collaborator.TABLE_NAME,
+                null,
+                null
+        );
+        // Close db
+        writableDatabase.close();
+        // return affected rows > 1
+        return affectedRows > 1;
+    }
+
     /*************************************************
      * Remind Sync Notifier Table CRUD
      *************************************************/
@@ -1144,6 +1204,21 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         writableDb.close();
         // return true if affectedRows>0
         return  affectedRows > 0;
+    }
+
+    public boolean truncateRSNTable() {
+        // Open a writable database
+        SQLiteDatabase writableDatabase = this.getWritableDatabase();
+        // exectute query
+        int affectedRows = writableDatabase.delete(
+                RemindSyncNotification.TABLE_NAME,
+                null,
+                null
+        );
+        // Close db
+        writableDatabase.close();
+        // return affected rows > 1
+        return affectedRows > 1;
     }
 
 }
