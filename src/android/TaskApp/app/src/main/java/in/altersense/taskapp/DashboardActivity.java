@@ -163,7 +163,7 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
         );
 
         // Setup the create task dialog.
-        setupTaskCreationDialog();
+        createNewDialog();
 
         //Set onItemClickListener for the task list
         this.taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -323,9 +323,31 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
         return super.onOptionsItemSelected(item);
     }
 
-    private void setupTaskCreationDialog() {
+    private void createNewDialog() {
 
-        createNewDialog();
+        // Create a master dialog
+        materialDialog = new MaterialDialog.Builder(this)
+                .title("Create Task")
+                .customView(R.layout.create_task_dialog, true)
+                .positiveText("DONE")
+                .negativeText("CANCEL")
+                .neutralText("MORE")
+                .autoDismiss(false)
+                .callback(
+                        new MaterialDialog.ButtonCallback() {
+                            @Override
+                            public void onNegative(MaterialDialog dialog) {
+                                super.onNegative(dialog);
+                                dialog.dismiss();
+                                createNewDialog();
+                            }
+                        }
+                )
+                .widgetColorRes(R.color.taskPrimaryColor)
+                .build();
+
+        this.collaboratorAdditionList = new ArrayList<>();
+        this.collaboratorRemovalList = new ArrayList<>();
 
         this.taskCreationView = materialDialog.getCustomView();
 
@@ -450,35 +472,6 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
             }
         });
     }
-
-    private void createNewDialog() {
-
-        // Create a master dialog
-        materialDialog = new MaterialDialog.Builder(this)
-                .title("Create Task")
-                .customView(R.layout.create_task_dialog, true)
-                .positiveText("DONE")
-                .negativeText("CANCEL")
-                .neutralText("MORE")
-                .autoDismiss(false)
-                .callback(
-                        new MaterialDialog.ButtonCallback() {
-                            @Override
-                            public void onNegative(MaterialDialog dialog) {
-                                super.onNegative(dialog);
-                                dialog.dismiss();
-                                createNewDialog();
-                            }
-                        }
-                )
-                .widgetColorRes(R.color.taskPrimaryColor)
-                .build();
-
-        this.collaboratorAdditionList = new ArrayList<>();
-        this.collaboratorRemovalList = new ArrayList<>();
-
-    }
-
 
     private  void hideKeyBoard(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context

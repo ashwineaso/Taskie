@@ -408,7 +408,7 @@ public class Task {
                 owner,
                 0,
                 0,
-                0,
+                Config.TASK_STATUS.INCOMPLETE.getStatus(),
                 activity
         );
     }
