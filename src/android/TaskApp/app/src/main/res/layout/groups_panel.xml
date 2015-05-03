@@ -18,7 +18,7 @@
         <ImageView android:id="@+id/groupColor"
             android:layout_width="@dimen/userImageHeight_xhdp"
             android:layout_height="@dimen/userImageHeight_xhdp"
-            android:padding="@dimen/smallMargin_xhdp"
+            android:padding="@dimen/smallMargin_xhdpi"
             android:src="@drawable/group_icon"/>
 
         <TextView android:id="@+id/groupTitleTextView"
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:padding="@dimen/smallMargin_xhdp"
+            android:padding="@dimen/smallMargin_xhdpi"
             android:textColor="@color/primaryText"
             fontPath="fonts/Cabin-Medium-TTF.ttf"
             android:textSize="@dimen/text_header_xhdpi"/>

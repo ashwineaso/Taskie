@@ -24,6 +24,7 @@
         <item name="android:spinnerItemStyle">@style/spinnerItemStyle</item>
         <!-- For each individual Spinner list item once clicked on -->
         <item name="spinnerDropDownItemStyle">@style/spinnerDropDownItemStyle</item>
+        <item name="colorAccent">@color/createTaskPrimaryActionBar</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="actionMenuTextColor">@color/headerText</item>
@@ -65,6 +66,7 @@
     <style name="TaskTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:windowContentOverlay">@null</item>
         <item name="colorPrimary">@color/taskPrimaryColor</item>
+        <item name="colorAccent">@color/createTaskPrimaryActionBar</item>
         <item name="android:buttonStyle">@style/primaryButton</item>
     </style>
 
@@ -110,17 +112,17 @@
         <item name="android:textSize">@dimen/tutorialHugeTitle_xhdpi</item>
         <item name="fontPath">@string/fontCabinSemiBold</item>
         <item name="android:textColor">@color/taskPrimaryColor</item>
-        <item name="android:padding">@dimen/smallMargin_xhdp</item>
+        <item name="android:padding">@dimen/smallMargin_xhdpi</item>
         <item name="android:gravity">left</item>
         <item name="android:layout_gravity">left</item>
-        <item name="android:layout_marginTop">@dimen/smallMargin_xhdp</item>
+        <item name="android:layout_marginTop">@dimen/smallMargin_xhdpi</item>
     </style>
 
     <style name="TutorialHugeSubtitle">
         <item name="android:textSize">@dimen/tutorialH1_xhdpi</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:gravity">center_horizontal|center_vertical</item>
-        <item name="android:padding">@dimen/smallMargin_xhdp</item>
+        <item name="android:padding">@dimen/smallMargin_xhdpi</item>
         <item name="fontPath">@string/fontCabinRegular</item>
     </style>
 
@@ -128,8 +130,8 @@
         <item name="android:textSize">@dimen/tutorialTitle_xhdpi</item>
         <item name="fontPath">@string/fontCabinSemiBold</item>
         <item name="android:textColor">@color/taskPrimaryColor</item>
-        <item name="android:paddingLeft">@dimen/smallMargin_xhdp</item>
-        <item name="android:paddingRight">@dimen/smallMargin_xhdp</item>
+        <item name="android:paddingLeft">@dimen/smallMargin_xhdpi</item>
+        <item name="android:paddingRight">@dimen/smallMargin_xhdpi</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:layout_centerHorizontal">true</item>
@@ -138,7 +140,7 @@
     <style name="TutorialText">
         <item name="android:textSize">@dimen/text_subHeader_xhdpi</item>
         <item name="android:singleLine">false</item>
-        <item name="android:padding">@dimen/smallMargin_xhdp</item>
+        <item name="android:padding">@dimen/smallMargin_xhdpi</item>
     </style>
 
     <style name="LogoImage" >
@@ -166,6 +168,15 @@
         <item name="android:textColor">@color/taskPrimaryColor</item>
         <item name="fontPath">@string/fontCabinRegular</item>
         <item name="android:text">@string/beta</item>
+    </style>
+
+    <style name="NormalSpinner" parent="Widget.AppCompat.Spinner">
+        <item name="android:popupBackground">@color/emptyBackground</item>
+        <item name="android:spinnerItemStyle">@style/NormalSpinnerItemStyle</item>
+    </style>
+
+    <style name="NormalSpinnerItemStyle" parent="Widget.AppCompat.TextView.SpinnerItem">
+        <item name="fontPath">@string/font_CabinMedium</item>
     </style>
 
     <dimen name="logoImageHeight_xhdpi">48sp</dimen>

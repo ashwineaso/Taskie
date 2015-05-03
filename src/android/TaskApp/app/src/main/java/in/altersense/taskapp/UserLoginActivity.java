@@ -3,12 +3,10 @@ package in.altersense.taskapp;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.text.InputType;
+import android.support.v7.app.ActionBarActivity;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,8 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
@@ -29,7 +27,6 @@ import in.altersense.taskapp.components.BaseApplication;
 import in.altersense.taskapp.events.UpdateNowEvent;
 import in.altersense.taskapp.models.User;
 import in.altersense.taskapp.requests.UserLoginRequest;
-import me.drakeet.materialdialog.MaterialDialog;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -155,17 +152,17 @@ public class UserLoginActivity extends ActionBarActivity implements
 
     private void showVerificationAlert() {
 
-        mMaterialDialog = new MaterialDialog(this)
-                .setTitle("Verification Mail Sent")
-                .setMessage(R.string.verificationString)
-                .setPositiveButton("OK", new View.OnClickListener() {
+        new MaterialDialog.Builder(this)
+                .title("Verification Mail Sent")
+                .content(R.string.verificationString)
+                .positiveText("OK")
+                .callback(new MaterialDialog.ButtonCallback() {
                     @Override
-                    public void onClick(View v) {
-                        mMaterialDialog.dismiss();
+                    public void onPositive(MaterialDialog dialog) {
+                        dialog.dismiss();
                     }
-                });
-
-        mMaterialDialog.show();
+                })
+                .show();
     }
 
     @Override

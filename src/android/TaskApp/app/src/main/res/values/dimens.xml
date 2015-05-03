@@ -7,7 +7,7 @@
     <!-- Dimensions for xHdpi -->
     <dimen name="tinyMargin_xhdpi">4dp</dimen>
     <dimen name="thinMargin_xhdpi">8dp</dimen>
-    <dimen name="smallMargin_xhdp">16dp</dimen>
+    <dimen name="smallMargin_xhdpi">16dp</dimen>
     <dimen name="mediumMargin_xhdp">32dp</dimen>
     <dimen name="bigMargin_xhdp">72dp</dimen>
     <dimen name="subHeaderHeight_xhdp">48dp</dimen>

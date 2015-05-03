@@ -19,7 +19,6 @@ import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.APIRequest;
 import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.models.User;
-import me.drakeet.materialdialog.MaterialDialog;
 
 /**
  * Created by mahesmohan on 2/5/15.

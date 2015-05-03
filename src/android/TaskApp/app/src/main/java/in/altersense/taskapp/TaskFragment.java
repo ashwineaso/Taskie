@@ -117,6 +117,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     private Intent createViewIntent;
 
     private int prevPriority, newPriority;
+    private LinearLayout dueDateChangerLL;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -132,7 +133,8 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         this.taskStatusTV = (TextView) view.findViewById(R.id.taskStatusTextView);
         this.taskOwnerTV = (TextView) view.findViewById(R.id.taskOwnerTV);
         this.checkComplete = (CompoundButton) view.findViewById(R.id.checkComplete);
-        this.calendarIV = (ImageView) view.findViewById(R.id.calendarImageView);
+        this.calendarIV = (ImageView) view.findViewById(R.id.calendarIconImageView);
+        this.dueDateChangerLL = (LinearLayout) view.findViewById(R.id.dueDateChangerLinearLayout);
         this.cancelIV = (ImageView) view.findViewById(R.id.btnCancelDate);
         this.addCollabsIV = (ImageView) view.findViewById(R.id.addCollaboratorsImageView);
         this.addCollabsLinearLayout = (LinearLayout) view.findViewById(R.id.addCollaboratorsLinearLayout);
@@ -194,11 +196,11 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                 false
         );
 
-        this.calendarIV.setOnClickListener(new View.OnClickListener() {
+        this.dueDateChangerLL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int currentYear = calendar.get(Calendar.YEAR);
-                datePickerDialog.setYearRange(currentYear, currentYear+50<2037?currentYear+50:2037);
+                datePickerDialog.setYearRange(currentYear, currentYear + 50 < 2037 ? currentYear + 50 : 2037);
                 datePickerDialog.setCloseOnSingleTapDay(false);
                 datePickerDialog.show(getActivity().getSupportFragmentManager(), DATEPICKER_TAG);
             }

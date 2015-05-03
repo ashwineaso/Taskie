@@ -8,7 +8,7 @@
     tools:context="in.altersense.taskapp.UserRegistrationActivity"
     android:background="@color/white"
     android:gravity="center_vertical|center_horizontal"
-    android:padding="@dimen/smallMargin_xhdp">
+    android:padding="@dimen/smallMargin_xhdpi">
 
 
     <LinearLayout
@@ -34,7 +34,7 @@
         android:text="@string/label_SignUp"
         fontPath="fonts/Cabin-SemiBold-TTF.ttf"
         android:textSize="@dimen/text_header_xhdpi"
-        android:layout_marginBottom="@dimen/smallMargin_xhdp"
+        android:layout_marginBottom="@dimen/smallMargin_xhdpi"
         android:textColor="@color/createTaskPrimaryActionBar"/>
 
     <LinearLayout
@@ -117,7 +117,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         style="@style/primaryButton"
-        android:layout_marginTop="@dimen/smallMargin_xhdp"
+        android:layout_marginTop="@dimen/smallMargin_xhdpi"
         android:text="@string/label_Register"
         android:gravity="center_vertical|center_horizontal" />
 

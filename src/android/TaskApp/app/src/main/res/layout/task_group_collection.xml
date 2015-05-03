@@ -6,7 +6,7 @@
     android:background="#ffffffff">
 
     <TextView android:id="@+id/taskCollectionTitleTextView"
-        android:layout_marginLeft="@dimen/smallMargin_xhdp"
+        android:layout_marginLeft="@dimen/smallMargin_xhdpi"
         android:layout_height="@dimen/subHeaderHeight_xhdp"
         android:textSize="@dimen/text_header_xhdpi"
         android:layout_width="wrap_content"
