@@ -118,16 +118,6 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
                         .build()
         );
 
-        // Setup device user.
-        this.deviceUser = new User(
-                AltEngine.readStringFromSharedPref(
-                        getApplicationContext(),
-                        Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
-                        ""
-                ),
-                DashboardActivity.this
-        );
-
         // Authenticate user.
         if(!authenticateUser()) {
             this.finish();
