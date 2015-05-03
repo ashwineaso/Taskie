@@ -106,6 +106,7 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
     private String dueString;
     private long duelong;
     private ImageView calendarIV;
+    private UserDbHelper userDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +135,7 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
 
         // Initializing the dbhelper.
         this.taskDbHelper = new TaskDbHelper(this.getApplicationContext());
+        this.userDbHelper = new UserDbHelper(this.getApplicationContext());
 
         // Initializing the layout.
         Log.d(CLASS_TAG,"Initializing layout.");
@@ -190,41 +192,6 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
     protected void onResume() {
         super.onResume();
         this.gcmHandler.checkPlayServices();
-
-        UserDbHelper userDbHelper = new UserDbHelper(this);
-        // Setting a Filtered Array Adapter to autocomplete with users in db
-        userList = userDbHelper.listAllUsers();
-
-        this.adapter = new FilteredArrayAdapter<User>(this, R.layout.collaorator_list_layout, userList) {
-            @Override
-            protected boolean keepObject(User user, String s) {
-                s = s.toLowerCase();
-                return user.getName().toLowerCase().startsWith(s) || user.getEmail().toLowerCase().startsWith(s);
-            }
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                if(convertView==null) {
-                    LayoutInflater l = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                    convertView = l.inflate(R.layout.collaorator_list_layout, parent, false);
-                }
-
-                User u = getItem(position);
-                ((TextView)convertView.findViewById(R.id.name)).setText(u.getName());
-                ((TextView)convertView.findViewById(R.id.email)).setText(u.getEmail());
-
-                return convertView;
-            }
-        };
-        this.participantNameTCET.setAdapter(adapter);
-
-        Log.d(CLASS_TAG, "User list: " + userList.toString());
-
-//        this.participantNameTCET.setAdapter(adapter);
-
-        // Inflate all the nonGroupTasks in the TasksListStage.
-        Log.d(CLASS_TAG, "Done.");
-
     }
 
     /**
@@ -364,6 +331,31 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
         this.participantNameTCET.allowDuplicates(false);
         char[] splitChars = {',', ' ', ';'};
         this.participantNameTCET.setSplitChar(splitChars);
+
+        // Setting a Filtered Array Adapter to autocomplete with users in db
+        userList = this.userDbHelper.listAllUsers();
+        this.adapter = new FilteredArrayAdapter<User>(this, R.layout.collaorator_list_layout, userList) {
+            @Override
+            protected boolean keepObject(User user, String s) {
+                s = s.toLowerCase();
+                return user.getName().toLowerCase().startsWith(s) || user.getEmail().toLowerCase().startsWith(s);
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                if(convertView==null) {
+                    LayoutInflater l = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                    convertView = l.inflate(R.layout.collaorator_list_layout, parent, false);
+                }
+
+                User u = getItem(position);
+                ((TextView)convertView.findViewById(R.id.name)).setText(u.getName());
+                ((TextView)convertView.findViewById(R.id.email)).setText(u.getEmail());
+
+                return convertView;
+            }
+        };
+        this.participantNameTCET.setAdapter(adapter);
 
         final Calendar calendar = Calendar.getInstance();
         this.dueDateChangerLinearLayout.setOnClickListener(new View.OnClickListener() {
