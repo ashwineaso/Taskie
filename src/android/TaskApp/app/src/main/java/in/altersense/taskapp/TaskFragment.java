@@ -199,10 +199,12 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         this.dueDateChangerLL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int currentYear = calendar.get(Calendar.YEAR);
-                datePickerDialog.setYearRange(currentYear, currentYear + 50 < 2037 ? currentYear + 50 : 2037);
-                datePickerDialog.setCloseOnSingleTapDay(false);
-                datePickerDialog.show(getActivity().getSupportFragmentManager(), DATEPICKER_TAG);
+                if(isEditMode) {
+                    int currentYear = calendar.get(Calendar.YEAR);
+                    datePickerDialog.setYearRange(currentYear, currentYear + 50 < 2037 ? currentYear + 50 : 2037);
+                    datePickerDialog.setCloseOnSingleTapDay(false);
+                    datePickerDialog.show(getActivity().getSupportFragmentManager(), DATEPICKER_TAG);
+                }
             }
         });
 
@@ -213,6 +215,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                 duelong = 0;
                 dueString = task.dateToString(duelong);
                 dueDateTV.setText(dueString);
+                cancelIV.setVisibility(View.GONE);
             }
         });
 
@@ -469,7 +472,9 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         this.taskDescriptionET.setVisibility(View.VISIBLE);
         this.taskPrioritySpinner.setVisibility(View.VISIBLE);
         this.calendarIV.setVisibility(View.VISIBLE);
-        this.cancelIV.setVisibility(View.VISIBLE);
+        if(this.task.getDueDateTimeAsLong()>0) {
+            this.cancelIV.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -491,6 +496,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         try {
             this.duelong = sdf.parse(this.dueString).getTime();
             this.dueDateTV.setText(this.task.dateToString(this.duelong));
+            this.cancelIV.setVisibility(View.VISIBLE);
         } catch (ParseException e) {
             e.printStackTrace();
         }
