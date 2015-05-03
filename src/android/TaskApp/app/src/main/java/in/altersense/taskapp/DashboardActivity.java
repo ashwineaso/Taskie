@@ -286,6 +286,10 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
             case R.id.quickTaskCreate:
                 this.materialDialog.show();
                 break;
+
+            case R.id.action_settings:
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                startActivity(settingsIntent);
         }
         return super.onOptionsItemSelected(item);
     }
