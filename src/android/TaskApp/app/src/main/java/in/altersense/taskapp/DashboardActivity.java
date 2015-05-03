@@ -424,15 +424,15 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
                         );
                     }
 
-                    Task createdQuickTask = addQuickTaskToDb(quickTask);
-                    createdQuickTask.updateCollaborators(
+                    quickTask = addQuickTaskToDb(quickTask);
+                    quickTask.updateCollaborators(
                             collaboratorAdditionList,
                             collaboratorRemovalList,
                             DashboardActivity.this,
                             false
                     );
                     CreateTaskRequest createTaskRequest = new CreateTaskRequest(
-                            createdQuickTask,
+                            quickTask,
                             DashboardActivity.this
                     );
                     createTaskRequest.execute();

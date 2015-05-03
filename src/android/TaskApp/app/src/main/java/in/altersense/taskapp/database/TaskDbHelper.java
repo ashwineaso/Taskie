@@ -201,12 +201,6 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 null
         );
         selfCursor.moveToFirst();
-        String cursorString = new String();
-        for(int i=0;i<selfCursor.getColumnCount();i++) {
-            cursorString+=selfCursor.getColumnName(i)+":"+selfCursor.getString(i)+", ";
-        }
-        Log.d(TAG, "Cursor: "+cursorString);
-        selfCursor.moveToFirst();
         Task task = new Task(
                 selfCursor,
                 this.context
