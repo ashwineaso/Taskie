@@ -94,7 +94,6 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
     private String ownerName;
 
     // For quick task creation.
-    private Task quickTask;
     private List<User> collaboratorAdditionList;
     private List<User> collaboratorRemovalList;
     private List<User> userList;
@@ -106,6 +105,7 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
     private boolean isExpandedDialog;
     private String dueString;
     private long duelong;
+    private ImageView calendarIV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -333,6 +333,7 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
         this.participantNameTCET = (TokenCompleteCollaboratorsEditText) taskCreationView.findViewById(R.id.taskParticipantName);
         this.prioritySpinner = (Spinner) taskCreationView.findViewById(R.id.taskPrioritySpinner);
         this.dueDateChangerLinearLayout = (LinearLayout) taskCreationView.findViewById(R.id.dueDateChangerLinearLayout);
+        this.calendarIV = (ImageView) taskCreationView.findViewById(R.id.calendarIconImageView);
         this.dueDateTextView = (TextView) taskCreationView.findViewById(R.id.dueDateTextView);
         this.cancelDateButton = (ImageView) taskCreationView.findViewById(R.id.btnCancelDate);
         this.descriptionEditText = (EditText) taskCreationView.findViewById(R.id.taskDescriptionEditText);
@@ -445,6 +446,7 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
                 duelong = 0;
                 dueDateTextView.setText(Task.dateToString(duelong));
                 cancelDateButton.setVisibility(View.GONE);
+                calendarIV.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -611,6 +613,7 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
             this.duelong = sdf.parse(this.dueString).getTime();
             dueString = Task.dateToString(duelong);
             cancelDateButton.setVisibility(View.VISIBLE);
+            calendarIV.setVisibility(View.GONE);
             this.dueDateTextView.setText(this.dueString);
         } catch (ParseException e) {
             e.printStackTrace();
