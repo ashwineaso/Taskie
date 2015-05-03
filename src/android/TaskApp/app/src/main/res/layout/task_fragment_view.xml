@@ -179,22 +179,29 @@
                         android:gravity="center_vertical"
                         android:id="@+id/taskDueDateTimeLL">
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone"
-                            android:layout_marginRight="@dimen/tinyMargin_xhdpi"
-                            android:id="@+id/calendarImageView"
-                            android:src="@drawable/ic_calender" />
-
-                        <TextView android:id="@+id/dueDateTextView"
+                        <LinearLayout
+                            android:id="@+id/dueDateChangerLinearLayout"
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
-                            android:textSize="@dimen/text_normal_xhdpi"
-                            fontPath="fonts/Cabin-Medium-TTF.ttf"
-                            tools2:ignore="MissingPrefix"
-                            android:hint="No Due Date and Time" />
+                            android:orientation="horizontal">
+
+                            <ImageView android:id="@+id/calendarIconImageView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="@dimen/tinyMargin_xhdpi"
+                                android:src="@drawable/ic_calender" />
+
+                            <TextView android:id="@+id/dueDateTextView"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/text_normal_xhdpi"
+                                fontPath="@string/font_CabinMedium"
+                                tools:ignore="MissingPrefix"
+                                android:hint="No Due Date and Time" />
+
+                        </LinearLayout>
 
                         <ImageView
                             android:layout_width="wrap_content"
