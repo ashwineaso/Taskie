@@ -16,6 +16,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import in.altersense.taskapp.DashboardActivity;
 import in.altersense.taskapp.R;
 import in.altersense.taskapp.TaskActivity;
+import in.altersense.taskapp.TaskFragmentsActivity;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.events.ChangeInTasksEvent;
 import in.altersense.taskapp.events.UserRemovedFromCollaboratorsEvent;
@@ -148,8 +149,8 @@ public class GcmMessageHandler extends IntentService {
         mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         Intent intent;
         if(showTask) {
-            intent  = new Intent(this, TaskActivity.class);
-            intent.putExtra(Task.ID, tempTask.getUuid());
+            intent  = new Intent(this, TaskFragmentsActivity.class);
+            intent.putExtra(Task.ID, tempTask.getId());
         } else {
             intent = new Intent(this, DashboardActivity.class);
         }
