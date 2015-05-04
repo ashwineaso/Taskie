@@ -94,6 +94,4 @@ public class TutorialFragment extends Fragment {
         }
     }
 
-    
-
 }
