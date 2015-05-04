@@ -151,11 +151,18 @@ public class NotificationFragment extends Fragment {
         int id = item.getItemId();
         switch (id) {
             case R.id.action_clear_notifs:
-                taskDbHelper.deleteNotifications(this.task);
-                adapter.notifyDataSetChanged();
+                clearNotifications();
 
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void clearNotifications() {
+        taskDbHelper.deleteNotifications(this.task);
+        this.notificationList = taskDbHelper.retrieveNotification(this.task);
+        adapter.clear();
+        adapter.notifyDataSetChanged();
+    }
+
 }
