@@ -21,6 +21,7 @@ public class TutorialFragment extends Fragment {
     private static final String PAGE_NUM = "pageNum";
     private static final int TOTAL_PAGES = 6;
     private Activity activity;
+    private boolean isNotFirstTimeDisplay = true;
 
     public TutorialFragment() {
     }
@@ -28,6 +29,16 @@ public class TutorialFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         this.activity = activity;
+
+        // Fetch the intent
+        Intent intent = this.activity.getIntent();
+
+        // Check if an extra is present
+        if(intent.hasExtra(TutorialActivity.INVOKED_FROM_SETTINGS)) {
+            // set isNotFirstTimeDisplay according to from where the intent is invoked from
+            this.isNotFirstTimeDisplay = intent.getExtras().getBoolean(TutorialActivity.INVOKED_FROM_SETTINGS, false);
+        }
+
         super.onAttach(activity);
     }
 
@@ -38,20 +49,35 @@ public class TutorialFragment extends Fragment {
         switch (page) {
             case 5: {
                 View fragmentView = inflater.inflate(R.layout.tut_page_final, container, false);
-                Button btnEndTut = (Button) fragmentView.findViewById(R.id.btnEndTut);
-                btnEndTut.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        AltEngine.writeBooleanToSharedPref(
-                                activity.getApplicationContext(),
-                                Config.SHARED_PREF_KEYS.DISPLAY_TUTORIALS.getKey(),
-                                false
-                        );
-                        Intent intent = new Intent(activity, DashboardActivity.class);
-                        activity.startActivity(intent);
-                        activity.finish();
-                    }
-                });
+                // Checks if the tutorial fragment is loading for the first time
+                if(this.isNotFirstTimeDisplay) {
+                    // Display the continue using taskie button
+                    Button btnContinueTaskie = (Button) fragmentView.findViewById(R.id.btnConitinueTaskie);
+                    btnContinueTaskie.setVisibility(View.VISIBLE);
+                    btnContinueTaskie.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            activity.finish();
+                        }
+                    });
+                } else {
+                    // Display the begin taskie button
+                    Button btnEndTut = (Button) fragmentView.findViewById(R.id.btnBeginTaskie);
+                    btnEndTut.setVisibility(View.VISIBLE);
+                    btnEndTut.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            AltEngine.writeBooleanToSharedPref(
+                                    activity.getApplicationContext(),
+                                    Config.SHARED_PREF_KEYS.DISPLAY_TUTORIALS.getKey(),
+                                    false
+                            );
+                            Intent intent = new Intent(activity, DashboardActivity.class);
+                            activity.startActivity(intent);
+                            activity.finish();
+                        }
+                    });
+                }
                 return fragmentView;
             }
             case 4:
