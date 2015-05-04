@@ -298,7 +298,7 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
 
         // Create a master dialog
         materialDialog = new MaterialDialog.Builder(this)
-                .title("Create Task")
+                .title("CREATE A TASK")
                 .customView(R.layout.create_task_dialog, true)
                 .positiveText("DONE")
                 .negativeText("CANCEL")

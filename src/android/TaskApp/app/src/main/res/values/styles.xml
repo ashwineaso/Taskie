@@ -28,6 +28,10 @@
         <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="actionMenuTextColor">@color/headerText</item>
+        <!-- For the quick task dialogue -->
+        <item name="md_medium_font">Cabin-SemiBold-TTF.ttf</item>
+        <item name="md_regular_font">Cabin-Regular-TTF.ttf</item>
+        <item name="md_title_color">@color/taskPrimaryColor</item>
     </style>
 
     <!-- ActionBar styles -->
