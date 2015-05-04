@@ -73,11 +73,12 @@ public class SettingsActivity extends ActionBarActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
 
-            Preference syncPref = getPreferenceManager().findPreference(getString(R.string.pref_sync_everything));
+            final Preference syncPref = getPreferenceManager().findPreference(getString(R.string.pref_sync_everything));
             syncPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     SyncRequest syncRequest = new SyncRequest(getActivity().getApplicationContext());
+                    syncRequest.setVisibleSync(true, getActivity());
                     syncRequest.execute();
                     return true;
                 }
