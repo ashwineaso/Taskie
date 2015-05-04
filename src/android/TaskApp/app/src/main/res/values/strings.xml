@@ -99,5 +99,7 @@
     <string name="view_walkthrough">displayWalkthrough</string>
     <string name="label_Priority">Priority</string>
     <string name="label_continueTaskie">Continue Taskie</string>
+    <string name="page6Title">Icons to Remember</string>
+    <string name="page6Text1">Here are some icons and their functions</string>
 
 </resources>
