@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    tools:ignore="MissingPrefix">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/page6Title"
+        style="@style/TutorialH1"
+        android:id="@+id/page5Title" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TutorialText"
+        android:id="@+id/page5Text1"
+        android:layout_below="@id/page5Title"
+        android:text="@string/page6Text1"
+        android:gravity="center_horizontal" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/page5Text1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:orientation="vertical"
+        android:padding="@dimen/smallMargin_xhdpi"
+        android:id="@+id/iconsListLL">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView2"
+                android:src="@drawable/ic_notifications_white_24dp"
+                android:background="@color/taskPrimaryColor"
+                android:padding="@dimen/tinyMargin_xhdpi" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Buzz - Send a buzz to the collaborators to remind them to complete the task"
+                android:id="@+id/lblBuzz"
+                android:layout_marginLeft="@dimen/thinMargin_xhdpi" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="@dimen/thinMargin_xhdpi">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView3"
+                android:src="@drawable/ic_edit_white"
+                android:background="@color/taskPrimaryColor"
+                android:padding="@dimen/tinyMargin_xhdpi" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Edit - Tap the Edit button to edit the task properties anytime after being sent"
+                android:id="@+id/lblEdit"
+                android:layout_marginLeft="@dimen/thinMargin_xhdpi" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="@dimen/thinMargin_xhdpi">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView4"
+                android:src="@drawable/ic_save_white_36dp"
+                android:background="@color/taskPrimaryColor"
+                android:padding="@dimen/tinyMargin_xhdpi" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save - Tap the Save icon to save the task after updating"
+                android:id="@+id/lblSave"
+                android:layout_marginLeft="@dimen/thinMargin_xhdpi" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/lineColor"
+            android:layout_marginTop="@dimen/thinMargin_xhdpi"
+            android:layout_marginBottom="@dimen/tinyMargin_xhdpi"
+            android:orientation="horizontal" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView5"
+                android:src="@drawable/ic_user_add_24dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tap to add any number of Collaborators"
+                android:id="@+id/lblAddColl"
+                android:layout_marginLeft="@dimen/thinMargin_xhdpi" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

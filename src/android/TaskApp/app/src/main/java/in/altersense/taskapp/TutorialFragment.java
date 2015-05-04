@@ -19,7 +19,7 @@ import in.altersense.taskapp.components.AltEngine;
 public class TutorialFragment extends Fragment {
 
     private static final String PAGE_NUM = "pageNum";
-    private static final int TOTAL_PAGES = 6;
+    private static final int TOTAL_PAGES = 7;
     private Activity activity;
     private boolean isNotFirstTimeDisplay = true;
 
@@ -47,7 +47,7 @@ public class TutorialFragment extends Fragment {
         Bundle args = getArguments();
         int page = args.getInt(PAGE_NUM);
         switch (page) {
-            case 5: {
+            case 6: {
                 View fragmentView = inflater.inflate(R.layout.tut_page_final, container, false);
                 // Checks if the tutorial fragment is loading for the first time
                 if(this.isNotFirstTimeDisplay) {
@@ -80,6 +80,8 @@ public class TutorialFragment extends Fragment {
                 }
                 return fragmentView;
             }
+            case 5:
+                return inflater.inflate(R.layout.tut_page_6, container, false);
             case 4:
                 return inflater.inflate(R.layout.tut_page_5, container, false);
             case 3:

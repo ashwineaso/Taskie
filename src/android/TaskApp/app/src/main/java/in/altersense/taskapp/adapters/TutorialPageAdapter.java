@@ -24,7 +24,7 @@ import in.altersense.taskapp.components.AltEngine;
 public class TutorialPageAdapter extends FragmentPagerAdapter {
 
     private static final String PAGE_NUM = "pageNum";
-    private static final int TOTAL_PAGES = 6;
+    private static final int TOTAL_PAGES = 7;
 
     private final Activity activity;
 
