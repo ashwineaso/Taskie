@@ -30,9 +30,12 @@ public class TutorialFragment extends Fragment {
     public void onAttach(Activity activity) {
         this.activity = activity;
 
+        // Fetch the intent
         Intent intent = this.activity.getIntent();
 
+        // Check if an extra is present
         if(intent.hasExtra(TutorialActivity.INVOKED_FROM_SETTINGS)) {
+            // set isNotFirstTimeDisplay according to from where the intent is invoked from
             this.isNotFirstTimeDisplay = intent.getExtras().getBoolean(TutorialActivity.INVOKED_FROM_SETTINGS, false);
         }
 
@@ -46,7 +49,9 @@ public class TutorialFragment extends Fragment {
         switch (page) {
             case 5: {
                 View fragmentView = inflater.inflate(R.layout.tut_page_final, container, false);
+                // Checks if the tutorial fragment is loading for the first time
                 if(this.isNotFirstTimeDisplay) {
+                    // Display the continue using taskie button
                     Button btnContinueTaskie = (Button) fragmentView.findViewById(R.id.btnConitinueTaskie);
                     btnContinueTaskie.setVisibility(View.VISIBLE);
                     btnContinueTaskie.setOnClickListener(new View.OnClickListener() {
@@ -56,6 +61,7 @@ public class TutorialFragment extends Fragment {
                         }
                     });
                 } else {
+                    // Display the begin taskie button
                     Button btnEndTut = (Button) fragmentView.findViewById(R.id.btnBeginTaskie);
                     btnEndTut.setVisibility(View.VISIBLE);
                     btnEndTut.setOnClickListener(new View.OnClickListener() {
@@ -87,5 +93,7 @@ public class TutorialFragment extends Fragment {
                 return inflater.inflate(R.layout.tut_page_1, container, false);
         }
     }
+
+    
 
 }
