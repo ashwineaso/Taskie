@@ -35,13 +35,13 @@
         android:id="@+id/btnConitinueTaskie"
         style="@style/primaryButton"
         android:visibility="gone"
-        android:layout_below="@id/finalPageLine1"
+        android:layout_below="@id/btnBeginTaskie"
         android:layout_margin="16dp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/btnBeginTaskie"
+        android:layout_below="@id/btnConitinueTaskie"
         android:id="@+id/finalPageLine2"
         style="@style/TutorialText"
         android:gravity="center_horizontal"
