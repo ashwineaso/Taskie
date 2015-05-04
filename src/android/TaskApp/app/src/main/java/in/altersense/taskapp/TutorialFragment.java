@@ -21,7 +21,7 @@ public class TutorialFragment extends Fragment {
     private static final String PAGE_NUM = "pageNum";
     private static final int TOTAL_PAGES = 7;
     private Activity activity;
-    private boolean isNotFirstTimeDisplay = true;
+    private boolean isNotFirstTimeDisplay = false;
 
     public TutorialFragment() {
     }
