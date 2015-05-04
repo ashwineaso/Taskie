@@ -15,6 +15,16 @@
         android:padding="@dimen/smallMargin_xhdpi"
         android:baselineAligned="false">
 
+        <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkComplete"
+        android:clickable="true"
+        android:checked="false"
+        android:layout_marginRight="@dimen/thinMargin_xhdpi"
+        android:theme="@style/Theme.AppCompat"
+            android:visibility="invisible" />
+
         <TextView android:id="@+id/taskTitleTextView"
             android:layout_width="0dp"
             android:layout_weight="1"

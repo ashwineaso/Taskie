@@ -36,7 +36,8 @@
                         android:id="@+id/checkComplete"
                         android:clickable="true"
                         android:checked="false"
-                        android:layout_marginRight="@dimen/thinMargin_xhdpi" />
+                        android:layout_marginRight="@dimen/thinMargin_xhdpi"
+                        android:theme="@style/Theme.AppCompat" />
 
                     <EditText android:id="@+id/taskTitleEditText"
                         android:visibility="gone"
