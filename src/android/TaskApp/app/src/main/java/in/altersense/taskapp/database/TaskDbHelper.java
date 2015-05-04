@@ -759,6 +759,11 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         return (affectedRows>0);
     }
 
+    /**
+     * Deletes a particular notification
+     * @param notification
+     * @return true if delete is success
+     */
     public boolean deleteNotification(Notification notification) {
         String TAG = CLASS_TAG + "deleteNotification";
         //Open  writable database.
@@ -769,6 +774,28 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 Notification.TABLE_NAME,
                 "ROWID =?",
                 new String[] { notification.getId()+"" }
+        );
+        // close db
+        writeableDb.close();
+        // if affected row greater than 0 return true
+        return affectedRows > 0;
+    }
+
+    /**
+     * Delete all notifications of a particular task
+     * @param task whose notifications are to be deleted
+     * @return true if delete was success
+     */
+    public boolean deleteNotifications(Task task) {
+        String TAG = CLASS_TAG + "deleteNotification of Task";
+        //Open  writable database.
+        SQLiteDatabase writeableDb = this.getWritableDatabase();
+        // execute delete query
+        // find affected row count
+        int affectedRows = writeableDb.delete(
+                Notification.TABLE_NAME,
+                Notification.KEYS.TASK_ROW_ID + "=?",
+                new String[] { task.getId()+"" }
         );
         // close db
         writeableDb.close();

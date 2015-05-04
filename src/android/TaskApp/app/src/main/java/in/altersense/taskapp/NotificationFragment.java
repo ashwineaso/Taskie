@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
@@ -18,8 +21,10 @@ import in.altersense.taskapp.adapters.NotificationAdapter;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.BaseApplication;
 import in.altersense.taskapp.database.TaskDbHelper;
+import in.altersense.taskapp.models.Buzz;
 import in.altersense.taskapp.models.Notification;
 import in.altersense.taskapp.models.Task;
+import in.altersense.taskapp.requests.BuzzCollaboratorRequest;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
@@ -88,6 +93,8 @@ public class NotificationFragment extends Fragment {
                         .build()
         );
 
+        setHasOptionsMenu(true);
+
         //Obtain the context
         context = getActivity().getApplicationContext();
 
@@ -122,5 +129,28 @@ public class NotificationFragment extends Fragment {
         params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
         listView.requestLayout();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+//        Inflate the menu; this adds items to the action bar if it is present.
+//        MenuInflater menuInflater = getActivity().getMenuInflater();
+        menuInflater.inflate(R.menu.menu_notification, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_clear_notifs:
+                taskDbHelper.deleteNotifications(this.task);
+                adapter.notifyDataSetChanged();
+
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
