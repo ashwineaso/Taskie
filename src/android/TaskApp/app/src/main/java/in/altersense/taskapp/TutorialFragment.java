@@ -48,27 +48,30 @@ public class TutorialFragment extends Fragment {
                 View fragmentView = inflater.inflate(R.layout.tut_page_final, container, false);
                 if(this.isNotFirstTimeDisplay) {
                     Button btnContinueTaskie = (Button) fragmentView.findViewById(R.id.btnConitinueTaskie);
+                    btnContinueTaskie.setVisibility(View.VISIBLE);
                     btnContinueTaskie.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             activity.finish();
                         }
                     });
+                } else {
+                    Button btnEndTut = (Button) fragmentView.findViewById(R.id.btnBeginTaskie);
+                    btnEndTut.setVisibility(View.VISIBLE);
+                    btnEndTut.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            AltEngine.writeBooleanToSharedPref(
+                                    activity.getApplicationContext(),
+                                    Config.SHARED_PREF_KEYS.DISPLAY_TUTORIALS.getKey(),
+                                    false
+                            );
+                            Intent intent = new Intent(activity, DashboardActivity.class);
+                            activity.startActivity(intent);
+                            activity.finish();
+                        }
+                    });
                 }
-                Button btnEndTut = (Button) fragmentView.findViewById(R.id.btnBeginTaskie);
-                btnEndTut.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        AltEngine.writeBooleanToSharedPref(
-                                activity.getApplicationContext(),
-                                Config.SHARED_PREF_KEYS.DISPLAY_TUTORIALS.getKey(),
-                                false
-                        );
-                        Intent intent = new Intent(activity, DashboardActivity.class);
-                        activity.startActivity(intent);
-                        activity.finish();
-                    }
-                });
                 return fragmentView;
             }
             case 4:
