@@ -348,7 +348,6 @@ public class UserDbHelper extends SQLiteOpenHelper {
         return user;
     }
 
-
     public boolean updateUser(User user) {
         String TAG = CLASS_TAG+"updateUser";
         // Open writable db
@@ -378,5 +377,20 @@ public class UserDbHelper extends SQLiteOpenHelper {
         writableDb.close();
         // Return status.
         return affectedRows>0;
+    }
+
+    public boolean truncateUserTable() {
+        // Open a writable database
+        SQLiteDatabase writableDatabase = this.getWritableDatabase();
+        // exectute query
+        int affectedRows = writableDatabase.delete(
+                User.TABLE_NAME,
+                null,
+                null
+        );
+        // Close db
+        writableDatabase.close();
+        // return affected rows > 1
+        return affectedRows > 1;
     }
 }
