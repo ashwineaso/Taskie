@@ -27,6 +27,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class TutorialActivity extends FragmentActivity {
 
+    public static final String INVOKED_FROM_SETTINGS = "invokedFromSettings";
+
     private TutorialPageAdapter tutorialPageAdapter;
     private ViewPager viewPager;
     private LinearLayout pagenation;
