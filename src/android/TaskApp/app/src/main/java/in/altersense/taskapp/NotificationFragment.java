@@ -42,12 +42,14 @@ public class NotificationFragment extends Fragment {
     private ListView notifList;
     private NotificationAdapter adapter;
     private TextView noNotification;
+    private TextView taskTitle;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.notification_fragment_view, container, false);
 
         //retrieve the notification list by id
+        this.taskTitle = (TextView) view.findViewById(R.id.taskTitleTextView);
         this.notifList = (ListView) view.findViewById(R.id.notifList);
         this.noNotification = (TextView) view.findViewById(R.id.txt_no_notif);
         final long taskId;
@@ -63,6 +65,9 @@ public class NotificationFragment extends Fragment {
             Log.d(CLASS_TAG, "Fetching row from the db");
             this.task = taskDbHelper.getTaskByRowId(taskId);
         }
+
+        //Set the task title on top
+        this.taskTitle.setText(this.task.getName());
 
         this.notificationList = taskDbHelper.retrieveNotification(this.task);
 
