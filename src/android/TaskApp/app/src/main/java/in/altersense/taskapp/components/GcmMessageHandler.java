@@ -1,20 +1,28 @@
 package in.altersense.taskapp.components;
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import java.util.prefs.Preferences;
+
 import in.altersense.taskapp.DashboardActivity;
 import in.altersense.taskapp.R;
+import in.altersense.taskapp.SettingsActivity;
 import in.altersense.taskapp.TaskActivity;
 import in.altersense.taskapp.TaskFragmentsActivity;
 import in.altersense.taskapp.database.TaskDbHelper;
@@ -81,7 +89,7 @@ public class GcmMessageHandler extends IntentService {
                         //Implement showing a buzz
                         tempTask = taskDbHelper.getTaskByUUID(id);
                         sendNotification(tempTask.getOwner().getName()
-                                + "has reminded you to complete the task : "
+                                + " has reminded you to complete the task : "
                                 + tempTask.getName(),
                                 "Reminder",
                                 true);
@@ -160,14 +168,27 @@ public class GcmMessageHandler extends IntentService {
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle(title)
+                        .setTicker(msg)
+                        .setDefaults(Notification.DEFAULT_VIBRATE)
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
-                        .setDefaults(android.app.Notification.DEFAULT_ALL)
                         .setContentText(msg);
+
+        //Get the notification preferences
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean notifSoundEnable = prefs.getBoolean("notification_sounds_preference", true);
+        boolean notifEnable = prefs.getBoolean("notfication_push_preference", true);
+
+        if (notifSoundEnable) {
+            Uri notification_sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            mBuilder.setSound(notification_sound);
+        }
 
         mBuilder.setContentIntent(pendingIntent);
         mBuilder.setAutoCancel(true);
         mBuilder.setStyle(new NotificationCompat.InboxStyle());
-        mNotificationManager.notify(0, mBuilder.build());
+        if (notifEnable) {
+            mNotificationManager.notify(0, mBuilder.build()); //Display notiifcation only if enabled
+        }
 
     }
 }
