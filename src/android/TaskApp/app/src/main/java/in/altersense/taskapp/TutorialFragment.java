@@ -21,6 +21,7 @@ public class TutorialFragment extends Fragment {
     private static final String PAGE_NUM = "pageNum";
     private static final int TOTAL_PAGES = 6;
     private Activity activity;
+    private boolean isNotFirstTimeDisplay = true;
 
     public TutorialFragment() {
     }
@@ -28,6 +29,13 @@ public class TutorialFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         this.activity = activity;
+
+        Intent intent = this.activity.getIntent();
+
+        if(intent.hasExtra(TutorialActivity.INVOKED_FROM_SETTINGS)) {
+            this.isNotFirstTimeDisplay = intent.getExtras().getBoolean(TutorialActivity.INVOKED_FROM_SETTINGS, false);
+        }
+
         super.onAttach(activity);
     }
 
@@ -38,7 +46,16 @@ public class TutorialFragment extends Fragment {
         switch (page) {
             case 5: {
                 View fragmentView = inflater.inflate(R.layout.tut_page_final, container, false);
-                Button btnEndTut = (Button) fragmentView.findViewById(R.id.btnEndTut);
+                if(this.isNotFirstTimeDisplay) {
+                    Button btnContinueTaskie = (Button) fragmentView.findViewById(R.id.btnConitinueTaskie);
+                    btnContinueTaskie.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            activity.finish();
+                        }
+                    });
+                }
+                Button btnEndTut = (Button) fragmentView.findViewById(R.id.btnBeginTaskie);
                 btnEndTut.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

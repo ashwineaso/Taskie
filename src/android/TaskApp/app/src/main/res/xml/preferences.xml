@@ -22,4 +22,9 @@
 
         </PreferenceCategory>
 
+    <Preference
+        android:title="View the Walkthrough"
+        android:summary="A walkthrough on how to use Taskie"
+        android:key="@string/view_walkthrough" />
+
 </PreferenceScreen>
