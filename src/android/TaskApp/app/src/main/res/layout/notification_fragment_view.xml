@@ -1,14 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools2="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/emptyBackground">
+    android:background="@color/emptyBackground"
+    tools2:ignore="MissingPrefix">
+
+    <LinearLayout android:id="@+id/taskHeaderLinearLayout"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/createTaskPrimaryActionBar"
+        android:gravity="center_vertical"
+        android:padding="@dimen/smallMargin_xhdpi"
+        android:baselineAligned="false">
+
+        <TextView android:id="@+id/taskTitleTextView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_header_xhdpi"
+            android:text="Title of the Task"
+            fontPath="fonts/Cabin-SemiBold-TTF.ttf"
+            tools2:ignore="MissingPrefix"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/notifList"
-        android:visibility="visible" />
+        android:visibility="visible"
+        android:layout_below="@+id/taskHeaderLinearLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"

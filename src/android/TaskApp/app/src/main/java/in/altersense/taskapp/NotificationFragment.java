@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
@@ -18,8 +21,10 @@ import in.altersense.taskapp.adapters.NotificationAdapter;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.BaseApplication;
 import in.altersense.taskapp.database.TaskDbHelper;
+import in.altersense.taskapp.models.Buzz;
 import in.altersense.taskapp.models.Notification;
 import in.altersense.taskapp.models.Task;
+import in.altersense.taskapp.requests.BuzzCollaboratorRequest;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
@@ -37,12 +42,14 @@ public class NotificationFragment extends Fragment {
     private ListView notifList;
     private NotificationAdapter adapter;
     private TextView noNotification;
+    private TextView taskTitle;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.notification_fragment_view, container, false);
 
         //retrieve the notification list by id
+        this.taskTitle = (TextView) view.findViewById(R.id.taskTitleTextView);
         this.notifList = (ListView) view.findViewById(R.id.notifList);
         this.noNotification = (TextView) view.findViewById(R.id.txt_no_notif);
         final long taskId;
@@ -58,6 +65,9 @@ public class NotificationFragment extends Fragment {
             Log.d(CLASS_TAG, "Fetching row from the db");
             this.task = taskDbHelper.getTaskByRowId(taskId);
         }
+
+        //Set the task title on top
+        this.taskTitle.setText(this.task.getName());
 
         this.notificationList = taskDbHelper.retrieveNotification(this.task);
 
@@ -87,6 +97,8 @@ public class NotificationFragment extends Fragment {
                         .setFontAttrId(R.attr.fontPath)
                         .build()
         );
+
+        setHasOptionsMenu(true);
 
         //Obtain the context
         context = getActivity().getApplicationContext();
@@ -122,5 +134,28 @@ public class NotificationFragment extends Fragment {
         params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
         listView.requestLayout();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+//        Inflate the menu; this adds items to the action bar if it is present.
+//        MenuInflater menuInflater = getActivity().getMenuInflater();
+        menuInflater.inflate(R.menu.menu_notification, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_clear_notifs:
+                taskDbHelper.deleteNotifications(this.task);
+                adapter.notifyDataSetChanged();
+
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
