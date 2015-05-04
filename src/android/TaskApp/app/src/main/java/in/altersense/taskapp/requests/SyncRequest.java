@@ -46,6 +46,7 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
     private JSONObject requestObject;
     private String url;
     private boolean isVisibleSync;
+    private boolean wipeEverything;
     private MaterialDialog dialog;
 
     private Collaborator deviceOwnerAsCollaborator;
@@ -201,9 +202,15 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         this.parentActivity = parentActivity;
     }
 
+    public void setWipeEverything(boolean wipeEverything) {
+        this.wipeEverything = wipeEverything;
+    }
+
     @Override
     protected void onPreExecute() {
-        publishProgress(1);
+        if(this.isVisibleSync) {
+            publishProgress(1);
+        }
         super.onPreExecute();
     }
 
@@ -240,6 +247,16 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
                 this.errorMessage = result.getString(Config.REQUEST_RESPONSE_KEYS.MESSAGE.getKey());
                 publishProgress(2);
             } else {
+
+                if(wipeEverything) {
+                    taskDbHelper.truncateBuzzTable();
+                    taskDbHelper.truncateCollaboratorTable();
+                    taskDbHelper.truncateNotificationsTable();
+                    taskDbHelper.truncateTaskTable();
+                    taskDbHelper.truncateRSNTable();
+                    userDbHelper.truncateUserTable();
+                }
+
                 responseArray = result.getJSONArray(Config.REQUEST_RESPONSE_KEYS.DATA.getKey());
 
                 switch (this.mode){

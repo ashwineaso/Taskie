@@ -78,6 +78,7 @@ public class SettingsActivity extends ActionBarActivity {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     SyncRequest syncRequest = new SyncRequest(getActivity().getApplicationContext());
+                    syncRequest.setWipeEverything(true);
                     syncRequest.setVisibleSync(true, getActivity());
                     syncRequest.execute();
                     return true;
