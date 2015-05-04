@@ -120,6 +120,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
 
     private int prevPriority, newPriority;
     private LinearLayout dueDateChangerLL;
+    private MenuItem buzz;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -605,8 +606,11 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
 //        MenuInflater menuInflater = getActivity().getMenuInflater();
         menuInflater.inflate(R.menu.menu_task, menu);
         this.editViewToggle = menu.findItem(R.id.action_toggle_view_edit);
+        this.buzz = menu.findItem(R.id.action_buzz);
         if (!task.isOwnedyDeviceUser(context)) {
+            //Not shown if the task is not owned by the device user
             this.editViewToggle.setVisible(false);
+            this.buzz.setVisible(false);
         }
 
     }
