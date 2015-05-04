@@ -11,7 +11,7 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:padding="@dimen/smallMargin_xhdp">
+        android:padding="@dimen/smallMargin_xhdpi">
 
         <com.wrapp.floatlabelededittext.FloatLabeledEditText
             android:layout_width="match_parent"
@@ -54,7 +54,7 @@
             android:text="Collaborators"
             android:id="@+id/lbl_colls"
             android:layout_margin="@dimen/tinyMargin_xhdpi"
-            android:paddingTop="@dimen/smallMargin_xhdp"
+            android:paddingTop="@dimen/smallMargin_xhdpi"
             android:textColor="@color/headerText"
             android:textSize="@dimen/text_normal_xhdpi"
             fontPath="fonts/Cabin-SemiBold-TTF.ttf"/>
@@ -104,7 +104,7 @@
             android:text="Priority"
             android:id="@+id/lbl_priority"
             android:layout_margin="@dimen/tinyMargin_xhdpi"
-            android:paddingTop="@dimen/smallMargin_xhdp"
+            android:paddingTop="@dimen/smallMargin_xhdpi"
             android:textSize="@dimen/text_normal_xhdpi"
             fontPath="fonts/Cabin-SemiBold-TTF.ttf"/>
 
@@ -133,7 +133,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="@dimen/smallMargin_xhdp">
+            android:layout_marginTop="@dimen/smallMargin_xhdpi">
 
             <Button android:id="@+id/createTaskButton"
                 android:layout_width="match_parent"

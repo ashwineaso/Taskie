@@ -10,7 +10,7 @@
 
     <color name="taskPrimaryColor">#d81b60</color>
     <color name="taskAccentColor">#00acc1</color>
-    <color name="taskSecondaryAccent">#C36CA4</color>
+    <color name="taskSecondaryAccent">#ffcecdcc</color>
 
     <color name="collaborationInvited">#d81b60</color>
     <color name="taskUnattended">#607D88</color>

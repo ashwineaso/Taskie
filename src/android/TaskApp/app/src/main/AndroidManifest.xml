@@ -109,7 +109,16 @@
         <activity
             android:name=".UpdateNowActivity"
             android:label="@string/title_activity_update_now"
-            android:theme="@style/TaskTheme">
+            android:theme="@style/TaskTheme" >
+        </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/TaskTheme"
+            android:parentActivityName=".DashboardActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="in.altersense.taskapp.DashboardActivity" />
         </activity>
     </application>
 

@@ -54,7 +54,7 @@ def pushSyncNotification(syncObj, taskObj = Collection()):
         task = taskdal.getTaskById(syncObj)
         for userObj.email in taskObj.collaborators:
             coll = userdal.getUserByEmail(userObj)
-            if not coll.serverPushId in androidPayload and (-1 < coll.status.status < 2):
+            if not coll.serverPushId in androidPayload:
                 androidPayload.append(str(coll.serverPushId))
 
     #Define the lookup dictionary

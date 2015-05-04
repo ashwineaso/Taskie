@@ -27,7 +27,7 @@
         android:id="@+id/page4Image"
         android:layout_width="match_parent"
         android:adjustViewBounds="true"
-        android:padding="@dimen/smallMargin_xhdp"
+        android:padding="@dimen/smallMargin_xhdpi"
         android:layout_height="wrap_content"
         android:src="@drawable/img_tutpage3"/>
 

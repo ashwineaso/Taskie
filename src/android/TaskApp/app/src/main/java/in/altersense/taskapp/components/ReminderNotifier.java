@@ -1,11 +1,16 @@
 package in.altersense.taskapp.components;
 
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -59,6 +64,11 @@ public class ReminderNotifier extends BroadcastReceiver {
                 0
         );
 
+        //Get the notification preferences
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean notifSoundEnable = prefs.getBoolean("notification_sounds_preference", true);
+        boolean notifEnable = prefs.getBoolean("notfication_push_preference", true);
+
         /*
         // Set up action pending Intent to hide any more notifications
         Intent showNoMoreNotificationsIntent = new Intent(this.context, TaskFragmentsActivity.class);
@@ -81,6 +91,7 @@ public class ReminderNotifier extends BroadcastReceiver {
                                 "\" have not yet reached certain collaborators.")
                 .setContentText(Config.MESSAGES.TASK_CANT_REACH_COLLABORATOR.getMessage())
                 .setContentIntent(showTaskFragmentPendingIntent)
+                .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setAutoCancel(true)
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .bigText(
@@ -90,11 +101,16 @@ public class ReminderNotifier extends BroadcastReceiver {
                         .setBigContentTitle("Taskie")
                 );
 
+        if (notifSoundEnable) {
+            Uri notification_sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            notificaion.setSound(notification_sound);
+        }
+
         NotificationManager notificationManager =
                 (NotificationManager) this.context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         // display notification
-        notificationManager.notify((int) rsn.getTaskId(), notificaion.build());
+        if (notifEnable) { notificationManager.notify((int) rsn.getTaskId(), notificaion.build()); }
         Log.d("displayNotification", "displayed");
     }
 

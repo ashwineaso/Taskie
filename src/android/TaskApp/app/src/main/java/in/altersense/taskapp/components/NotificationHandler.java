@@ -4,7 +4,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Switch;
@@ -208,7 +212,18 @@ public class NotificationHandler {
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle(title)
                         .setContentText(msg)
-                        .setDefaults(1);
+                        .setTicker(msg)
+                        .setDefaults(android.app.Notification.DEFAULT_VIBRATE);
+
+        //Get the notification preferences
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean notifSoundEnable = prefs.getBoolean("notification_sounds_preference", true);
+        boolean notifEnable = prefs.getBoolean("notfication_push_preference", true);
+
+        if (notifSoundEnable) {
+            Uri notification_sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            mBuilder.setSound(notification_sound);
+        }
 
         //Retrieve all the unseen notifications
         List<Notification> notificationList = taskDbHelper.retrieveUnseenNotiifcation();
@@ -225,7 +240,7 @@ public class NotificationHandler {
         mBuilder.setContentIntent(pendingIntent);
         mBuilder.setAutoCancel(true);
         mBuilder.setStyle(inboxStyle);
-        mNotificationManager.notify(notification_id, mBuilder.build());
+        if (notifEnable) { mNotificationManager.notify(notification_id, mBuilder.build()); }
 
     }
 }

@@ -163,7 +163,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         this.taskStatusTV = (TextView)findViewById(R.id.taskStatusTextView);
         this.taskOwnerTV = (TextView) findViewById(R.id.taskOwnerTV);
         this.checkComplete = (CompoundButton) findViewById(R.id.checkComplete);
-        this.calendarIV = (ImageView) findViewById(R.id.calendarImageView);
+        this.calendarIV = (ImageView) findViewById(R.id.calendarIconImageView);
         this.cancelIV = (ImageView) findViewById(R.id.btnCancelDate);
         this.addCollabsIV = (ImageView) findViewById(R.id.addCollaboratorsImageView);
         this.addCollabsLinearLayout = (LinearLayout) findViewById(R.id.addCollaboratorsLinearLayout);

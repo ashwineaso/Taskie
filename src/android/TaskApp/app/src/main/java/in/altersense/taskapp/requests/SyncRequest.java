@@ -1,9 +1,12 @@
 package in.altersense.taskapp.requests;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.afollestad.materialdialogs.MaterialDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,11 +45,16 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
     private List<Task> taskList;
     private JSONObject requestObject;
     private String url;
+    private boolean isVisibleSync;
+    private boolean wipeEverything;
+    private MaterialDialog dialog;
 
     private Collaborator deviceOwnerAsCollaborator;
 
     private int mode;
     private boolean collaboratorAcceptedTask = false;
+    private String errorMessage;
+    private Activity parentActivity;
 
     /**
      * Base constructor called by all the constructors
@@ -89,6 +97,8 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         } else {
             this.mode=0;
         }
+
+        this.isVisibleSync = false;
 
         initializeRequest();
 
@@ -187,8 +197,20 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         return apiRequest;
     }
 
+    public void setVisibleSync(boolean isVisibleSync, Activity parentActivity) {
+        this.isVisibleSync = isVisibleSync;
+        this.parentActivity = parentActivity;
+    }
+
+    public void setWipeEverything(boolean wipeEverything) {
+        this.wipeEverything = wipeEverything;
+    }
+
     @Override
     protected void onPreExecute() {
+        if(this.isVisibleSync) {
+            publishProgress(1);
+        }
         super.onPreExecute();
     }
 
@@ -215,49 +237,71 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
         String TAG = CLASS_TAG+"onPostExecute";
         super.onPostExecute(result);
 
+        String status = "";
+
         JSONArray responseArray = new JSONArray();
+
         try {
-            responseArray = result.getJSONArray(Config.REQUEST_RESPONSE_KEYS.DATA.getKey());
+            status = result.getString(Config.REQUEST_RESPONSE_KEYS.STATUS.getKey());
+            if(status.equals(Config.RESPONSE_STATUS_FAILED)) {
+                this.errorMessage = result.getString(Config.REQUEST_RESPONSE_KEYS.MESSAGE.getKey());
+                publishProgress(2);
+            } else {
+
+                if(wipeEverything) {
+                    taskDbHelper.truncateBuzzTable();
+                    taskDbHelper.truncateCollaboratorTable();
+                    taskDbHelper.truncateNotificationsTable();
+                    taskDbHelper.truncateTaskTable();
+                    taskDbHelper.truncateRSNTable();
+                    userDbHelper.truncateUserTable();
+                }
+
+                responseArray = result.getJSONArray(Config.REQUEST_RESPONSE_KEYS.DATA.getKey());
+
+                switch (this.mode){
+                    case 1:
+                        //  Sync User
+                        try {
+                            for(int ctr=0; ctr<responseArray.length();ctr++) {
+                                JSONObject responseObject = responseArray.getJSONObject(ctr);
+                                postExecuteSyncUser(responseObject, userList.get(ctr));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case 2:
+                        // Sync Task
+                        try {
+                            for(int ctr=0; ctr<responseArray.length();ctr++) {
+                                JSONObject responseObject = responseArray.getJSONObject(ctr);
+                                postExecuteSyncTask(responseObject, taskList.get(ctr));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case 3:
+                        // Sync everything
+                        try {
+                            postExecuteSyncEverything(result.getJSONArray(Config.REQUEST_RESPONSE_KEYS.DATA.getKey()));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    default:
+                        // Hell breaks loose.
+                }
+
+                publishProgress(3);
+                getEventBus().post(new ChangeInTasksEvent("Sync Completed."));
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        switch (this.mode){
-            case 1:
-                //  Sync User
-                try {
-                    for(int ctr=0; ctr<responseArray.length();ctr++) {
-                        JSONObject responseObject = responseArray.getJSONObject(ctr);
-                        postExecuteSyncUser(responseObject, userList.get(ctr));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case 2:
-                // Sync Task
-                try {
-                    for(int ctr=0; ctr<responseArray.length();ctr++) {
-                        JSONObject responseObject = responseArray.getJSONObject(ctr);
-                        postExecuteSyncTask(responseObject, taskList.get(ctr));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case 3:
-                // Sync everything
-                try {
-                    postExecuteSyncEverything(result.getJSONArray(Config.REQUEST_RESPONSE_KEYS.DATA.getKey()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                break;
-            default:
-                // Hell breaks loose.
-        }
 
-        getEventBus().post(new ChangeInTasksEvent("Sync Completed."));
 
     }
 
@@ -479,8 +523,6 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
                     priority,
                     dueDateTime,
                     status,
-                    false,
-                    null,
                     this.context
             );
             this.taskDbHelper.createTask(task);
@@ -536,6 +578,41 @@ public class SyncRequest extends AsyncTask<Void, Integer, JSONObject> {
             collaborator.setStatus(collStatus);
             Log.d(TAG, "Adding collaborator to db.");
             this.taskDbHelper.addCollaborator(task, collaborator);
+        }
+    }
+
+    @Override
+    protected void onProgressUpdate(Integer... values) {
+        super.onProgressUpdate(values);
+        if(isVisibleSync) {
+            if(this.dialog != null) {
+                this.dialog.dismiss();
+            }
+            switch (values[0]) {
+                case 1:
+                    dialog = new MaterialDialog.Builder(this.parentActivity)
+                            .title("Syncing")
+                            .content("Please wait")
+                            .progress(true, 0)
+                            .cancelable(false)
+                            .build();
+                    dialog.show();
+                    break;
+                case 2:
+                    dialog = new MaterialDialog.Builder(this.parentActivity)
+                            .title("Error")
+                            .content(this.errorMessage)
+                            .cancelable(true)
+                            .positiveText("OK")
+                            .build();
+                    dialog.show();
+                    break;
+                case 3:
+                    if(dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    break;
+            }
         }
     }
 }

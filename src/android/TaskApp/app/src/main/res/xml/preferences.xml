@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="mainPrefs">
+
+    <Preference
+        android:title="Sync Everything"
+        android:summary="Sync all tasks and users"
+        android:key="@string/pref_sync_everything" />
+
+    <Preference
+        android:title="View the Walkthrough"
+        android:summary="A walkthrough on how to use Taskie"
+        android:key="@string/view_walkthrough" />
+
+    <PreferenceCategory
+        android:title="Notifications">
+
+        <CheckBoxPreference
+            android:key="notfication_push_preference"
+            android:title="Popup Notifications"
+            android:defaultValue="true"/>
+
+        <CheckBoxPreference
+            android:key="notification_sounds_preference"
+            android:title="Notification Sounds"
+            android:defaultValue="true" />
+
+        </PreferenceCategory>
+
+</PreferenceScreen>

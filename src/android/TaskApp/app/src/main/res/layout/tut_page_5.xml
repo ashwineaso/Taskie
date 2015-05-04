@@ -29,9 +29,10 @@
         android:layout_below="@id/page5Text1"
         android:layout_width="match_parent"
         android:adjustViewBounds="true"
-        android:padding="@dimen/smallMargin_xhdp"
         android:layout_height="wrap_content"
-        android:src="@drawable/img_tutpage4"/>
+        android:src="@drawable/img_tutpage4"
+        android:layout_marginLeft="@dimen/mediumMargin_xhdp"
+        android:layout_marginRight="@dimen/mediumMargin_xhdp" />
 
     <TextView
         android:layout_width="match_parent"

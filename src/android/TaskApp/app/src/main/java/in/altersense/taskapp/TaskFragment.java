@@ -51,10 +51,12 @@ import in.altersense.taskapp.database.UserDbHelper;
 import in.altersense.taskapp.events.ChangeInTaskEvent;
 import in.altersense.taskapp.events.TaskDeletedEvent;
 import in.altersense.taskapp.events.UserRemovedFromCollaboratorsEvent;
+import in.altersense.taskapp.models.Buzz;
 import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.RemindSyncNotification;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.User;
+import in.altersense.taskapp.requests.BuzzCollaboratorRequest;
 import in.altersense.taskapp.requests.UpdateTaskRequest;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
@@ -117,6 +119,8 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     private Intent createViewIntent;
 
     private int prevPriority, newPriority;
+    private LinearLayout dueDateChangerLL;
+    private MenuItem buzz;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -132,7 +136,8 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         this.taskStatusTV = (TextView) view.findViewById(R.id.taskStatusTextView);
         this.taskOwnerTV = (TextView) view.findViewById(R.id.taskOwnerTV);
         this.checkComplete = (CompoundButton) view.findViewById(R.id.checkComplete);
-        this.calendarIV = (ImageView) view.findViewById(R.id.calendarImageView);
+        this.calendarIV = (ImageView) view.findViewById(R.id.calendarIconImageView);
+        this.dueDateChangerLL = (LinearLayout) view.findViewById(R.id.dueDateChangerLinearLayout);
         this.cancelIV = (ImageView) view.findViewById(R.id.btnCancelDate);
         this.addCollabsIV = (ImageView) view.findViewById(R.id.addCollaboratorsImageView);
         this.addCollabsLinearLayout = (LinearLayout) view.findViewById(R.id.addCollaboratorsLinearLayout);
@@ -194,13 +199,15 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                 false
         );
 
-        this.calendarIV.setOnClickListener(new View.OnClickListener() {
+        this.dueDateChangerLL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int currentYear = calendar.get(Calendar.YEAR);
-                datePickerDialog.setYearRange(currentYear, currentYear+50<2037?currentYear+50:2037);
-                datePickerDialog.setCloseOnSingleTapDay(false);
-                datePickerDialog.show(getActivity().getSupportFragmentManager(), DATEPICKER_TAG);
+                if(isEditMode) {
+                    int currentYear = calendar.get(Calendar.YEAR);
+                    datePickerDialog.setYearRange(currentYear, currentYear + 50 < 2037 ? currentYear + 50 : 2037);
+                    datePickerDialog.setCloseOnSingleTapDay(false);
+                    datePickerDialog.show(getActivity().getSupportFragmentManager(), DATEPICKER_TAG);
+                }
             }
         });
 
@@ -211,6 +218,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                 duelong = 0;
                 dueString = task.dateToString(duelong);
                 dueDateTV.setText(dueString);
+                cancelIV.setVisibility(View.GONE);
             }
         });
 
@@ -467,7 +475,9 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         this.taskDescriptionET.setVisibility(View.VISIBLE);
         this.taskPrioritySpinner.setVisibility(View.VISIBLE);
         this.calendarIV.setVisibility(View.VISIBLE);
-        this.cancelIV.setVisibility(View.VISIBLE);
+        if(this.task.getDueDateTimeAsLong()>0) {
+            this.cancelIV.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -489,6 +499,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         try {
             this.duelong = sdf.parse(this.dueString).getTime();
             this.dueDateTV.setText(this.task.dateToString(this.duelong));
+            this.cancelIV.setVisibility(View.VISIBLE);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -595,8 +606,11 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
 //        MenuInflater menuInflater = getActivity().getMenuInflater();
         menuInflater.inflate(R.menu.menu_task, menu);
         this.editViewToggle = menu.findItem(R.id.action_toggle_view_edit);
+        this.buzz = menu.findItem(R.id.action_buzz);
         if (!task.isOwnedyDeviceUser(context)) {
+            //Not shown if the task is not owned by the device user
             this.editViewToggle.setVisible(false);
+            this.buzz.setVisible(false);
         }
 
     }
@@ -620,6 +634,11 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                     this.setUpEditMode();
                 }
                 break;
+
+            case R.id.action_buzz:
+                Buzz buzz = new Buzz(this.task, context);
+                BuzzCollaboratorRequest buzzCollaboratorRequest = new BuzzCollaboratorRequest(buzz, context);
+                buzzCollaboratorRequest.execute();
         }
 
         return super.onOptionsItemSelected(item);

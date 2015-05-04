@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,18 +14,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.internal.MDButton;
+import com.fourmob.datetimepicker.date.DatePickerDialog;
+import com.sleepbot.datetimepicker.time.RadialPickerLayout;
+import com.sleepbot.datetimepicker.time.TimePickerDialog;
 import com.squareup.otto.Subscribe;
 import com.tokenautocomplete.FilteredArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import in.altersense.taskapp.adapters.TasksAdapter;
@@ -46,28 +57,56 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
-public class DashboardActivity extends ActionBarActivity implements TokenCompleteTextView.TokenListener {
+public class DashboardActivity extends AppCompatActivity implements TokenCompleteTextView.TokenListener,
+        DatePickerDialog.OnDateSetListener,
+        TimePickerDialog.OnTimeSetListener {
 
     private static final String CLASS_TAG = "DashboardActivity ";
+
+    private static final String DATEPICKER_TAG = "datePicker";
+    private static final String TIMEPICKER_TAG = "timePicker";
+
     private ListView taskList;  // For handling the main content area.
     private LinearLayout quickCreateStageLinearLayout; // Quick task creation area
     private TaskDbHelper taskDbHelper;
     private boolean isQuickTaskCreationHidden;
     private EditText newTaskTitle;
-    private Button createQuickTask;
-    private TokenCompleteCollaboratorsEditText participantNameTCET;
+
+    private DatePickerDialog datePickerDialog;
+    private TimePickerDialog timePickerDialog;
+
+    private TokenCompleteCollaboratorsEditText participantNameTCET, newTCET;
     private FilteredArrayAdapter adapter;
+
+    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
+
+    private MaterialDialog materialDialog;
+    private View taskCreationView;
 
     private TasksAdapter taskAdapter;
 
     private GCMHandler gcmHandler;
 
+    private User deviceUser;
+
 //    Authenticated user details.
     private String ownerId;
     private String ownerName;
+
+    // For quick task creation.
     private List<User> collaboratorAdditionList;
     private List<User> collaboratorRemovalList;
     private List<User> userList;
+    private Spinner prioritySpinner;
+    private LinearLayout dueDateChangerLinearLayout;
+    private TextView dueDateTextView;
+    private ImageView cancelDateButton;
+    private EditText descriptionEditText;
+    private boolean isExpandedDialog;
+    private String dueString;
+    private long duelong;
+    private ImageView calendarIV;
+    private UserDbHelper userDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +135,7 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
 
         // Initializing the dbhelper.
         this.taskDbHelper = new TaskDbHelper(this.getApplicationContext());
+        this.userDbHelper = new UserDbHelper(this.getApplicationContext());
 
         // Initializing the layout.
         Log.d(CLASS_TAG,"Initializing layout.");
@@ -106,6 +146,27 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         this.taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasksAsCursor());
         this.taskList.setAdapter(this.taskAdapter);
 
+        // Initialize date time picker.
+        final Calendar calendar = Calendar.getInstance();
+
+        this.datePickerDialog = DatePickerDialog.newInstance(
+                this,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH),
+                false
+        );
+        this.timePickerDialog = TimePickerDialog.newInstance(
+                this,
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE),
+                false,
+                false
+        );
+
+        // Setup the create task dialog.
+        createNewDialog();
+        
         //Set onItemClickListener for the task list
         this.taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -123,8 +184,6 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
             }
         });
 
-        setUpQuickTaskLayout();
-
         this.isQuickTaskCreationHidden = true;
         Log.d(CLASS_TAG,"Done.");
     }
@@ -133,37 +192,6 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
     protected void onResume() {
         super.onResume();
         this.gcmHandler.checkPlayServices();
-        UserDbHelper userDbHelper = new UserDbHelper(this);
-        // Setting a Filtered Array Adapter to autocomplete with users in db
-        userList = userDbHelper.listAllUsers();
-        Log.d(CLASS_TAG, "User list: " + userList.toString());
-
-        adapter = new FilteredArrayAdapter<User>(this, R.layout.collaorator_list_layout, userList) {
-            @Override
-            protected boolean keepObject(User user, String s) {
-                s = s.toLowerCase();
-                return user.getName().toLowerCase().startsWith(s) || user.getEmail().toLowerCase().startsWith(s);
-            }
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                if(convertView==null) {
-                    LayoutInflater l = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                    convertView = l.inflate(R.layout.collaorator_list_layout, parent, false);
-                }
-
-                User u = getItem(position);
-                ((TextView)convertView.findViewById(R.id.name)).setText(u.getName());
-                ((TextView)convertView.findViewById(R.id.email)).setText(u.getEmail());
-
-                return convertView;
-            }
-        };
-        this.participantNameTCET.setAdapter(adapter);
-
-        // Inflate all the nonGroupTasks in the TasksListStage.
-        Log.d(CLASS_TAG, "Done.");
-
     }
 
     /**
@@ -201,6 +229,16 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
             startActivity(authenticateUserIntent);
             finish();
             return false;
+        } else {
+            // Setup device user.
+            this.deviceUser = new User(
+                    AltEngine.readStringFromSharedPref(
+                            getApplicationContext(),
+                            Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
+                            ""
+                    ),
+                    DashboardActivity.this
+            );
         }
 
         if(displayTutorials) {
@@ -229,136 +267,6 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    public void toggleQuickTaskLayout() {
-
-//        Check whether task is displayed
-        if(this.isQuickTaskCreationHidden) {
-
-            // Initializing lists.
-            this.collaboratorRemovalList = new ArrayList<>();
-            this.collaboratorAdditionList = new ArrayList<>();
-
-            newTaskTitle.setText("");
-
-            // Code to remove all the objects in the participants
-            for(Object object:participantNameTCET.getObjects()) {
-                participantNameTCET.removeObject(object);
-            }
-
-//            Set flag to show the layout is open
-            this.isQuickTaskCreationHidden = false;
-
-//            Display quick task pane
-            this.quickCreateStageLinearLayout.setVisibility(View.VISIBLE);
-//            Request focus to edit text
-            newTaskTitle.requestFocus();
-
-
-        } else {
-            this.quickCreateStageLinearLayout.setVisibility(View.GONE);
-            this.newTaskTitle.clearFocus();
-            this.taskList.requestFocus();
-            this.taskList.requestFocusFromTouch();
-            hideKeyBoard(
-                    getApplicationContext(),
-                    getCurrentFocus()
-            );
-            this.isQuickTaskCreationHidden = true;
-        }
-    }
-
-    private void setUpQuickTaskLayout() {
-
-        // Setting initial views.
-        this.newTaskTitle = (EditText) findViewById(R.id.newTaskTitle);
-        this.newTaskTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-//                Set up input manager
-                InputMethodManager keyboardManager = (InputMethodManager) getApplicationContext()
-                        .getSystemService(
-                                Context.INPUT_METHOD_SERVICE
-                        );
-                if (hasFocus) {
-                    Log.i(CLASS_TAG, "hasFocus");
-//                    Display keyboard
-                    keyboardManager.showSoftInput(
-                            v,
-                            InputMethodManager.SHOW_IMPLICIT
-                    );
-                }
-            }
-        });
-        this.participantNameTCET =
-                (TokenCompleteCollaboratorsEditText) findViewById(R.id.quickTaskParticipantName);
-        this.participantNameTCET.setTokenListener(this);
-        this.participantNameTCET.allowDuplicates(false);
-        char[] splitChars = {',', ' ', ';'};
-        this.participantNameTCET.setSplitChar(splitChars);
-
-        this.createQuickTask = (Button) findViewById(R.id.createQuickTaskButton);
-        this.createQuickTask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String TAG = CLASS_TAG+" createQuickTask OnClickListener.";
-                String taskName = newTaskTitle.getText().toString();
-                taskName = taskName.trim();
-                if(!(taskName.length() <1)) {
-                    Task quickTask = new Task(
-                            taskName,
-                            "",
-                            // TODO: Create user once and call pass that user instead of creating her everytime.
-                            new User(
-                                    AltEngine.readStringFromSharedPref(
-                                            getApplicationContext(),
-                                            Config.SHARED_PREF_KEYS.OWNER_ID.getKey(),
-                                            ""
-                                    ),
-                                    DashboardActivity.this
-                            ),
-                            DashboardActivity.this
-                    );
-                    quickTask.setStatus(
-                            Config.TASK_STATUS.INCOMPLETE.getStatus()
-                    );
-                    Task createdQuickTask = addQuickTaskToDb(quickTask);
-                    createdQuickTask.updateCollaborators(
-                            collaboratorAdditionList,
-                            collaboratorRemovalList,
-                            DashboardActivity.this,
-                            false
-                    );
-                    CreateTaskRequest createTaskRequest = new CreateTaskRequest(
-                            createdQuickTask,
-                            DashboardActivity.this
-                    );
-                    createTaskRequest.execute();
-
-                    // Add task to the adapter.
-                    taskAdapter.changeCursor(taskDbHelper.getAllNonGroupTasksAsCursor());
-                    taskAdapter.notifyDataSetChanged();
-
-                    toggleQuickTaskLayout();
-                } else {
-                    Toast.makeText(
-                            getApplicationContext(),
-                            Config.MESSAGES.TASK_TITLE_TOO_SHORT.getMessage(),
-                            Toast.LENGTH_SHORT
-                    ).show();
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onBackPressed() {
-        if(!this.isQuickTaskCreationHidden) {
-            toggleQuickTaskLayout();
-        } else {
-            super.onBackPressed();
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -376,12 +284,190 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         // Catches every click on Menu
         switch (id) {
             case R.id.quickTaskCreate:
-                toggleQuickTaskLayout();
+                this.materialDialog.show();
                 break;
+
+            case R.id.action_settings:
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                startActivity(settingsIntent);
         }
         return super.onOptionsItemSelected(item);
     }
 
+    private void createNewDialog() {
+
+        // Create a master dialog
+        materialDialog = new MaterialDialog.Builder(this)
+                .title("CREATE A TASK")
+                .customView(R.layout.create_task_dialog, true)
+                .positiveText("DONE")
+                .negativeText("CANCEL")
+                .neutralText("MORE")
+                .autoDismiss(false)
+                .callback(
+                        new MaterialDialog.ButtonCallback() {
+                            @Override
+                            public void onNegative(MaterialDialog dialog) {
+                                super.onNegative(dialog);
+                                dialog.dismiss();
+                                createNewDialog();
+                            }
+                        }
+                )
+                .widgetColorRes(R.color.taskPrimaryColor)
+                .build();
+
+        this.collaboratorAdditionList = new ArrayList<>();
+        this.collaboratorRemovalList = new ArrayList<>();
+
+        this.taskCreationView = materialDialog.getCustomView();
+
+        this.newTaskTitle = (EditText) taskCreationView.findViewById(R.id.newTaskTitle);
+        this.participantNameTCET = (TokenCompleteCollaboratorsEditText) taskCreationView.findViewById(R.id.taskParticipantName);
+        this.prioritySpinner = (Spinner) taskCreationView.findViewById(R.id.taskPrioritySpinner);
+        this.dueDateChangerLinearLayout = (LinearLayout) taskCreationView.findViewById(R.id.dueDateChangerLinearLayout);
+        this.calendarIV = (ImageView) taskCreationView.findViewById(R.id.calendarIconImageView);
+        this.dueDateTextView = (TextView) taskCreationView.findViewById(R.id.dueDateTextView);
+        this.cancelDateButton = (ImageView) taskCreationView.findViewById(R.id.btnCancelDate);
+        this.descriptionEditText = (EditText) taskCreationView.findViewById(R.id.taskDescriptionEditText);
+
+        this.participantNameTCET.setTokenListener(this);
+        this.participantNameTCET.allowDuplicates(false);
+        char[] splitChars = {',', ' ', ';'};
+        this.participantNameTCET.setSplitChar(splitChars);
+
+        // Setting a Filtered Array Adapter to autocomplete with users in db
+        userList = this.userDbHelper.listAllUsers();
+        this.adapter = new FilteredArrayAdapter<User>(this, R.layout.collaorator_list_layout, userList) {
+            @Override
+            protected boolean keepObject(User user, String s) {
+                s = s.toLowerCase();
+                return user.getName().toLowerCase().startsWith(s) || user.getEmail().toLowerCase().startsWith(s);
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                if(convertView==null) {
+                    LayoutInflater l = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                    convertView = l.inflate(R.layout.collaorator_list_layout, parent, false);
+                }
+
+                User u = getItem(position);
+                ((TextView)convertView.findViewById(R.id.name)).setText(u.getName());
+                ((TextView)convertView.findViewById(R.id.email)).setText(u.getEmail());
+
+                return convertView;
+            }
+        };
+        this.participantNameTCET.setAdapter(adapter);
+
+        final Calendar calendar = Calendar.getInstance();
+        this.dueDateChangerLinearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int currentYear = calendar.get(Calendar.YEAR);
+                datePickerDialog.setYearRange(currentYear, currentYear + 50 < 2037 ? currentYear + 50 : 2037);
+                datePickerDialog.setCloseOnSingleTapDay(false);
+                datePickerDialog.show(getSupportFragmentManager(), DATEPICKER_TAG);
+            }
+        });
+
+        // By default dialog is not expanded
+        this.isExpandedDialog = false;
+
+        // The neutral button that helps users add more info to the task.
+        final MDButton neutralButton = (MDButton) materialDialog.getActionButton(DialogAction.NEUTRAL);
+
+        // The positive Button that creates tas and adds it to the database
+        final MDButton positiveButton = (MDButton) materialDialog.getActionButton(DialogAction.POSITIVE);
+
+        final View dialogView = materialDialog.getCustomView();
+
+        // Set click listener for positive button.
+        neutralButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinearLayout moreView = (LinearLayout) dialogView.findViewById(R.id.moreLinearLayout);
+                if(!isExpandedDialog) {
+                    moreView.setVisibility(View.VISIBLE);
+                    neutralButton.setText("LESS");
+                    isExpandedDialog = true;
+                } else {
+                    moreView.setVisibility(View.GONE);
+                    neutralButton.setText("MORE");
+                    isExpandedDialog = false;
+                }
+            }
+        });
+
+        // Set click listener for positive button
+        positiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String taskName = newTaskTitle.getText().toString();
+                taskName = taskName.trim();
+                if (!(taskName.length() < 1)) {
+                    Task quickTask;
+                    if(isExpandedDialog) {
+                        quickTask = new Task(
+                                "",
+                                taskName,
+                                descriptionEditText.getText().toString(),
+                                deviceUser,
+                                prioritySpinner.getSelectedItemPosition(),
+                                duelong,
+                                Config.TASK_STATUS.INCOMPLETE.getStatus(),
+                                getApplicationContext()
+                        );
+                    } else {
+                        quickTask = new Task(
+                                taskName,
+                                "",
+                                deviceUser,
+                                DashboardActivity.this
+                        );
+                    }
+
+                    quickTask = addQuickTaskToDb(quickTask);
+                    quickTask.updateCollaborators(
+                            collaboratorAdditionList,
+                            collaboratorRemovalList,
+                            DashboardActivity.this,
+                            false
+                    );
+                    CreateTaskRequest createTaskRequest = new CreateTaskRequest(
+                            quickTask,
+                            DashboardActivity.this
+                    );
+                    createTaskRequest.execute();
+
+                    // Add task to the adapter.
+                    taskAdapter.changeCursor(taskDbHelper.getAllNonGroupTasksAsCursor());
+                    taskAdapter.notifyDataSetChanged();
+
+                    materialDialog.dismiss();
+                    createNewDialog();
+
+                } else {
+                    Toast.makeText(
+                            getApplicationContext(),
+                            Config.MESSAGES.TASK_TITLE_TOO_SHORT.getMessage(),
+                            Toast.LENGTH_SHORT
+                    ).show();
+                }
+            }
+        });
+
+        this.cancelDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                duelong = 0;
+                dueDateTextView.setText(Task.dateToString(duelong));
+                cancelDateButton.setVisibility(View.GONE);
+                calendarIV.setVisibility(View.VISIBLE);
+            }
+        });
+    }
 
     private  void hideKeyBoard(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context
@@ -495,4 +581,32 @@ public class DashboardActivity extends ActionBarActivity implements TokenComplet
         startActivity(showUpdateNowActivityIntent);
         this.finish();
     }
+
+    @Override
+    public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
+        String TAG = CLASS_TAG + "onDateSet";
+        Log.d(TAG, "Date: "+year+"-"+month+"-"+day);
+        timePickerDialog.setCloseOnSingleTapMinute(false);
+        timePickerDialog.show(getSupportFragmentManager(), TIMEPICKER_TAG);
+        this.dueString = year + "-" + (month+1) + "-" + day + " ";
+    }
+
+    @Override
+    public void onTimeSet(RadialPickerLayout radialPickerLayout, int hour, int minute) {
+        String TAG = CLASS_TAG + "onTimeSet";
+        Log.d(TAG, "Time: "+ hour +":"+ minute);
+        this.dueString += hour > 12 ? (hour-12) : hour;
+        this.dueString +=":"+ minute +" ";
+        this.dueString += hour > 12 ? "PM" : "AM";
+        try {
+            this.duelong = sdf.parse(this.dueString).getTime();
+            dueString = Task.dateToString(duelong);
+            cancelDateButton.setVisibility(View.VISIBLE);
+            calendarIV.setVisibility(View.GONE);
+            this.dueDateTextView.setText(this.dueString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

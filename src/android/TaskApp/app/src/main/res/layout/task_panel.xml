@@ -11,7 +11,7 @@
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:background="@color/primaryText"
-        android:padding="@dimen/smallMargin_xhdp"
+        android:padding="@dimen/smallMargin_xhdpi"
         android:gravity="center_vertical"
         android:id="@+id/taskBack">
 
@@ -29,7 +29,7 @@
             android:id="@+id/lbl_delete"
             android:textSize="@dimen/text_subHeader_xhdpi"
             android:textColor="@color/lightText"
-            android:layout_marginRight="@dimen/smallMargin_xhdp" />
+            android:layout_marginRight="@dimen/smallMargin_xhdpi" />
 
         <LinearLayout
             android:id="@+id/btn_confirm"
@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:background="@color/emptyBackground"
+        android:background="@drawable/list_background"
         android:visibility="visible">
 
         <LinearLayout android:id="@+id/taskStatusLinearLayout"
@@ -94,8 +94,7 @@
                         android:paddingTop="@dimen/tinyMargin_xhdpi"
                         android:ellipsize="end"
                         android:lines="1"
-                        android:singleLine="true"
-                        android:textColor="#1e1e1e" />
+                        android:singleLine="true" />
 
                     <LinearLayout
                         android:layout_width="match_parent"

@@ -2,7 +2,6 @@ package in.altersense.taskapp.models;
 
 import android.util.Log;
 
-import com.google.android.gms.internal.eq;
 
 import java.util.ArrayList;
 
