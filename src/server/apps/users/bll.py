@@ -133,14 +133,16 @@ def authorize_user(userObj):
 	match_flag = True
 	if userObj.authMethod == TASKIE_AUTH:
 		user = getUserByEmail(userObj)
+		
 		try:
 			#Verify the password
 			if not verify_password(userObj.password, user.password_hash):
-			match_flag = False
-			raise PasswordMismatch
+				match_flag = False
+				raise PasswordMismatch
 		except Exception as e:
 			#Raised in case of erros in password hashing or null password
 			raise PasswordMismatch
+
 		if not user.status == ACCOUNT_ACTIVE:
 			raise UserPendingConfirmation
 		return match_flag
