@@ -12,7 +12,7 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:animateLayoutChanges="true"
             android:id="@+id/scrollHolder">
 
@@ -234,7 +234,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/text_subHeader_xhdpi"
-                        android:hint="No Task Description" />
+                        android:hint="No Task Description"
+                        android:inputType="textMultiLine|textCapSentences"
+                        android:maxLines="5" />
 
                     <View
                         android:layout_width="fill_parent"
@@ -266,11 +268,11 @@
                     android:paddingLeft="@dimen/smallMargin_xhdpi"
                     android:layout_weight="1" />
 
-                <ImageView
+                <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/addCollaboratorsImageView"
-                    android:src="@drawable/ic_user_add_24dp" />
+                    android:background="@drawable/ic_user_add_24dp" />
             </LinearLayout>
 
             <LinearLayout android:id="@+id/addCollaboratorsLinearLayout"
@@ -309,7 +311,7 @@
                 android:id="@+id/collListView"
                 android:listSelector="#00000000"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:footerDividersEnabled="true" />
 
         </LinearLayout>
