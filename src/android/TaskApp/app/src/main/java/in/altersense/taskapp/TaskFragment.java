@@ -166,7 +166,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                         getActivity()
                 );
                 adapter.clear();
-                adapter.addAll(task.getCollaborators());
+                adapter.addAll(task.getCollaborators(task, context));
                 adapter.notifyDataSetChanged();
                 toggleAddCollaborators();
                 collaboratorsTCET.clear();
