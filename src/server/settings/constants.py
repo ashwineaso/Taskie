@@ -131,7 +131,7 @@ class UrlPost():
 			print ': POST failed.'
 
 #Current version of the API
-CURRENT_VERSION = 0.3
+CURRENT_VERSION = 0.3.1
 
 #Current version of the API
 APP_CURRENT_VERSION = 5
