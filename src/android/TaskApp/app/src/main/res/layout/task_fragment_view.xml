@@ -289,7 +289,7 @@
                     android:textColor="@color/primary_material_dark"
                     android:layout_weight="1" />
 
-                <Button android:id="@+id/addCollaboratorButton"
+                <ImageButton android:id="@+id/addCollaboratorButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/ic_plus_pink_24dp" />
