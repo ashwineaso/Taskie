@@ -352,6 +352,6 @@ public class User {
 
     @Override
     public int hashCode() {
-        return this.getEmail().hashCode();
+        return this.getEmail().trim().hashCode();
     }
 }
