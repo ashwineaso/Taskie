@@ -191,7 +191,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase readableDb = this.getReadableDatabase();
         // Create array list
         // Create a set
-        Set<User> userSet = new HashSet<>();
+        HashSet<User> userSet = new HashSet<>();
         List<User> userList = new ArrayList<User>();
         // Setup columns
         String[] columns = User.getAllColumns();

@@ -349,4 +349,9 @@ public class User {
         User other = (User) obj;
         return this.email.equals(other.getEmail());
     }
+
+    @Override
+    public int hashCode() {
+        return this.getEmail().hashCode();
+    }
 }
