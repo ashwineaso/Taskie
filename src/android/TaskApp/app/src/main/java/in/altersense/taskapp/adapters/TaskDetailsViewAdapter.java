@@ -37,8 +37,6 @@ public class TaskDetailsViewAdapter extends ArraySwipeAdapter<Collaborator> {
     private static LayoutInflater inflater = null;
     public Resources res;
     Collaborator collaborator;
-    private ArrayList<User> userAdditonList, userRemovalList;
-
 
     //Constructor of custom adapter
     public TaskDetailsViewAdapter(Activity a, List<Collaborator> d, Task task) {
@@ -133,11 +131,12 @@ public class TaskDetailsViewAdapter extends ArraySwipeAdapter<Collaborator> {
                 @Override
                 public void onClick(View v) {
                     Log.d(CLASS_TAG, "Collaborator to remove" + collaborator.getName());
-                    userRemovalList = new ArrayList<User>();
+                    ArrayList<User> userRemovalList = new ArrayList<User>();
                     userRemovalList.add(collaborator);
                     task.updateCollaborators(new ArrayList<User>(), userRemovalList, activity.getApplicationContext());
                     data.remove(position);
                     notifyDataSetChanged();
+                    holder.collSwipeLayout.close();
                     Toast.makeText(activity.getApplicationContext(), "Collaborator Removed", Toast.LENGTH_LONG ).show();
                 }
             });
