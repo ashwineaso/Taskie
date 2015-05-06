@@ -322,7 +322,7 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
 
         this.taskCreationView = materialDialog.getCustomView();
 
-        this.newTaskTitle = (EditText) taskCreationView.findViewById(R.id.newTaskTitle);
+        this.newTaskTitle = (EditText) taskCreationView.findViewById(R.id.quickTaskTitle);
         this.participantNameTCET = (TokenCompleteCollaboratorsEditText) taskCreationView.findViewById(R.id.taskParticipantName);
         this.prioritySpinner = (Spinner) taskCreationView.findViewById(R.id.taskPrioritySpinner);
         this.dueDateChangerLinearLayout = (LinearLayout) taskCreationView.findViewById(R.id.dueDateChangerLinearLayout);
