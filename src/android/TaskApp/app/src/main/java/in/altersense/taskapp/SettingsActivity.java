@@ -2,6 +2,8 @@ package in.altersense.taskapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.v7.app.ActionBarActivity;
@@ -18,10 +20,21 @@ public class SettingsActivity extends ActionBarActivity {
 
     private static final String CLASS_TAG = "SettingsActivity";
 
+    private static String version;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        try {
+            version = getPackageManager().getPackageInfo(
+                    getPackageName(),
+                    0
+            ).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            version = "Unavailable";
+        }
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                         .setDefaultFontPath("fonts/Cabin-Medium-TTF.ttf")
@@ -46,6 +59,7 @@ public class SettingsActivity extends ActionBarActivity {
     public static class MainSettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener{
 
         private static final String TAG = CLASS_TAG + " MainSettingsFragment";
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -55,6 +69,7 @@ public class SettingsActivity extends ActionBarActivity {
             final Preference syncPref = getPreferenceManager().findPreference(getString(R.string.pref_sync_everything));
             final Preference viewWalkthrougPref = getPreferenceScreen().findPreference(getString(R.string.view_walkthrough));
             final Preference aboutTaskie = getPreferenceScreen().findPreference(getString(R.string.taskie_about));
+            final Preference feedback = getPreferenceScreen().findPreference(getString(R.string.taskie_feedback));
 
             /*
              * Click listeners for Prefs
@@ -90,6 +105,27 @@ public class SettingsActivity extends ActionBarActivity {
                 public boolean onPreferenceClick(Preference preference) {
                     Intent displayAboutIntent = new Intent(getActivity().getApplicationContext(), AboutActivity.class);
                     startActivity(displayAboutIntent);
+                    return true;
+                }
+            });
+
+            feedback.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    // this intent opens up only email clients
+                    Intent sendFeedbackMailIntent = new Intent(Intent.ACTION_SEND);
+                    // sets intent content type to messaages so only messaging apps may receive it.
+                    sendFeedbackMailIntent.setType("message/rfc822");
+                    // set to address
+                    sendFeedbackMailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {"someone@taskie.me"});
+                    // set a subject
+                    sendFeedbackMailIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback for Taskie v"+version);
+                    // set set basic text format
+                    sendFeedbackMailIntent.putExtra(Intent.EXTRA_TEXT, "\n---\nSent from Taskie v"+version+
+                            " on phone, "+ Build.MODEL +
+                            " running Android " + Build.VERSION.RELEASE + " API version " + Build.VERSION.SDK_INT +"." );
+                    // display the mail client
+                    startActivity(Intent.createChooser(sendFeedbackMailIntent, "Send feedback using..."));
                     return true;
                 }
             });
