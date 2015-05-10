@@ -114,11 +114,19 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/TaskTheme"
-            android:parentActivityName=".DashboardActivity" >
+            android:parentActivityName=".DashboardActivity"
+            android:theme="@style/TaskTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="in.altersense.taskapp.DashboardActivity" />
+        </activity>
+        <activity
+            android:theme="@style/TaskTheme"
+            android:name=".AboutActivity"
+            android:label="@string/title_activity_about" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="in.altersense.taskapp.SettingsActivity" />
         </activity>
     </application>
 
