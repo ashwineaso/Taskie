@@ -29,7 +29,7 @@ public class AboutActivity extends AppCompatActivity {
         this.versionDisplay.setText("Version: "+versionText);
 
         this.urlDisplay = (TextView) findViewById(R.id.urlTV);
-        urlDisplay.setMovementMethod(LinkMovementMethod.getInstance());
+        this.urlDisplay.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
 }
