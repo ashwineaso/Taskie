@@ -8,6 +8,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -16,7 +17,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
-public class SettingsActivity extends ActionBarActivity {
+public class SettingsActivity extends AppCompatActivity {
 
     private static final String CLASS_TAG = "SettingsActivity";
 
@@ -119,7 +120,7 @@ public class SettingsActivity extends ActionBarActivity {
                     // set to address
                     sendFeedbackMailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {"someone@taskie.me"});
                     // set a subject
-                    sendFeedbackMailIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback for Taskie v"+version);
+                    sendFeedbackMailIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback for Taskie v" + version);
                     // set set basic text format
                     sendFeedbackMailIntent.putExtra(Intent.EXTRA_TEXT, "\n---\nSent from Taskie v"+version+
                             " on phone, "+ Build.MODEL +

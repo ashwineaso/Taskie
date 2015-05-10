@@ -11,13 +11,11 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Switch;
 
 import java.util.List;
 
 import in.altersense.taskapp.DashboardActivity;
 import in.altersense.taskapp.R;
-import in.altersense.taskapp.TaskActivity;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.models.Notification;

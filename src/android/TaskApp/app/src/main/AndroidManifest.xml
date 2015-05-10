@@ -58,24 +58,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CreateTaskActivity"
-            android:label="@string/title_activity_create_task"
-            android:theme="@style/CreateTasksTheme" >
-        </activity>
-        <activity
-            android:name=".TaskActivity"
-            android:parentActivityName=".DashboardActivity"
-            android:theme="@style/TaskTheme" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".DashboardActivity" />
-        </activity>
-        <activity
-            android:name=".GroupActivity"
-            android:label="@string/title_activity_group"
-            android:theme="@style/GroupActivityTheme" >
-        </activity>
-        <activity
             android:name=".UserRegistrationActivity"
             android:label="@string/title_activity_user_registration"
             android:theme="@style/RegisterTheme" >
