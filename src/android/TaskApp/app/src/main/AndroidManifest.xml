@@ -124,6 +124,9 @@
             android:theme="@style/TaskTheme"
             android:name=".AboutActivity"
             android:label="@string/title_activity_about" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="in.altersense.taskapp.SettingsActivity" />
         </activity>
     </application>
 
