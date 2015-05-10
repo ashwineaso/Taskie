@@ -90,6 +90,7 @@ public class SettingsActivity extends ActionBarActivity {
                 public boolean onPreferenceClick(Preference preference) {
                     Intent displayAboutIntent = new Intent(getActivity().getApplicationContext(), AboutActivity.class);
                     startActivity(displayAboutIntent);
+                    return true;
                 }
             });
 
