@@ -27,4 +27,18 @@
 
         </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="Taskie">
+
+        <Preference
+            android:key="@string/taskie_feedback"
+            android:title="Send us a Feedback"
+            android:summary="@string/helpUs"/>
+
+        <Preference
+            android:key="@string/taskie_about"
+            android:title="About Taskie" />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

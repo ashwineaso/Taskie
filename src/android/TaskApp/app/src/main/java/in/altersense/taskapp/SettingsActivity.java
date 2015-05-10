@@ -54,6 +54,7 @@ public class SettingsActivity extends ActionBarActivity {
             // Initing the prefs
             final Preference syncPref = getPreferenceManager().findPreference(getString(R.string.pref_sync_everything));
             final Preference viewWalkthrougPref = getPreferenceScreen().findPreference(getString(R.string.view_walkthrough));
+            final Preference aboutTaskie = getPreferenceScreen().findPreference(getString(R.string.taskie_about));
 
             /*
              * Click listeners for Prefs
@@ -81,6 +82,14 @@ public class SettingsActivity extends ActionBarActivity {
                     startActivity(displayWalkthroughIntent);
                     return true;
 
+                }
+            });
+
+            aboutTaskie.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Intent displayAboutIntent = new Intent(getActivity().getApplicationContext(), AboutActivity.class);
+                    startActivity(displayAboutIntent);
                 }
             });
 
