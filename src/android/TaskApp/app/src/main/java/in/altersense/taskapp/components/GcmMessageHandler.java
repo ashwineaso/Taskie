@@ -18,17 +18,13 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-import java.util.prefs.Preferences;
-
 import in.altersense.taskapp.DashboardActivity;
 import in.altersense.taskapp.R;
-import in.altersense.taskapp.SettingsActivity;
-import in.altersense.taskapp.TaskActivity;
 import in.altersense.taskapp.TaskFragmentsActivity;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.events.ChangeInTasksEvent;
-import in.altersense.taskapp.events.UserRemovedFromCollaboratorsEvent;
 import in.altersense.taskapp.events.TaskDeletedEvent;
+import in.altersense.taskapp.events.UserRemovedFromCollaboratorsEvent;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.requests.SyncRequest;
 

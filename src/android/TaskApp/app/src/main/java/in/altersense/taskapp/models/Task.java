@@ -2,23 +2,19 @@ package in.altersense.taskapp.models;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import in.altersense.taskapp.CreateTaskActivity;
 import in.altersense.taskapp.R;
-import in.altersense.taskapp.TaskActivity;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.AltEngine;
 import in.altersense.taskapp.database.TaskDbHelper;
@@ -28,7 +24,6 @@ import in.altersense.taskapp.requests.RemoveCollaboratorsRequest;
 import in.altersense.taskapp.requests.SyncRequest;
 import in.altersense.taskapp.requests.TaskDeleteRequest;
 import in.altersense.taskapp.requests.TaskStatusChangeRequest;
-import in.altersense.taskapp.requests.UpdateTaskRequest;
 
 /**
  * Created by mahesmohan on 1/13/15.
