@@ -161,7 +161,7 @@ public class NotificationFragment extends Fragment {
     public void clearNotifications() {
         taskDbHelper.deleteNotifications(this.task);
         this.notificationList = taskDbHelper.retrieveNotification(this.task);
-        if(!adapter.isEmpty()) {
+        if(adapter!=null) {
             adapter.clear();
             adapter.notifyDataSetChanged();
         }
