@@ -102,7 +102,7 @@
     <string name="page6Title">Icons to Remember</string>
     <string name="page6Text1">Here are some icons and their functions</string>
     <string name="title_activity_about">About Taskie</string>
-    <string name="websiteUrl">http://www.taskie.me</string>
+    <string name="websiteUrl">www.taskie.me</string>
     <string name="taskie_feedback">taskie_feedback</string>
     <string name="helpUs">Yell at us so we could fix things, thank us to keep us motivated.</string>
     <string name="taskie_about">about_taskie</string>
