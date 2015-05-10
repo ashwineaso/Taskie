@@ -121,6 +121,7 @@
                 android:value="in.altersense.taskapp.DashboardActivity" />
         </activity>
         <activity
+            android:theme="@style/TaskTheme"
             android:name=".AboutActivity"
             android:label="@string/title_activity_about" >
         </activity>
