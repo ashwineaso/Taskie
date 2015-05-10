@@ -15,7 +15,9 @@ import android.support.v4.content.CursorLoader;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.AltEngine;
@@ -188,6 +190,8 @@ public class UserDbHelper extends SQLiteOpenHelper {
         // Open readable database.
         SQLiteDatabase readableDb = this.getReadableDatabase();
         // Create array list
+        // Create a set
+        HashSet<User> userSet = new HashSet<>();
         List<User> userList = new ArrayList<User>();
         // Setup columns
         String[] columns = User.getAllColumns();
@@ -209,10 +213,12 @@ public class UserDbHelper extends SQLiteOpenHelper {
         do {
             if(!cursor.getString(emailColNum).equals(deviceUserEmail)) {
                 // Add each user to the list if user is not the owner.
+                userSet.add(new User(cursor));
                 userList.add(new User(cursor));
             }
         } while (cursor.moveToNext());
         readableDb.close();
+        // Fetching contacts with email
         ContentResolver cr = this.context.getContentResolver();
         Cursor usersFromContactsCursor = cr.query(
                 ContactsContract.CommonDataKinds.Email.CONTENT_URI,
@@ -231,12 +237,14 @@ public class UserDbHelper extends SQLiteOpenHelper {
                         usersFromContactsCursor.getString(1)
                 );
                 if(!userList.contains(userFromContacts)) {
+                    userSet.add(userFromContacts);
                     userList.add(userFromContacts);
                 }
             } while (usersFromContactsCursor.moveToNext());
         } catch (CursorIndexOutOfBoundsException e) {
             Log.d(TAG, "The device has no contacts with email. Moving on...");
         }
+        userList = new ArrayList<>(userSet);
         return userList;
     }
 

@@ -64,9 +64,36 @@ public class CreateTaskRequest extends AsyncTask<Void, Integer, JSONObject> {
                         Config.REQUEST_RESPONSE_KEYS.TASK_NAME.getKey(),
                         task.getName()
                 );
+                //Adding the dueDateTime to the request
+                try {
+                    taskObject.put(
+                            Config.REQUEST_RESPONSE_KEYS.DUE_DATE_TIME.getKey(),
+                            task.getDueDateTimeAsLong()
+                    );
+                } catch (NullPointerException e) {
+                    Log.d(TAG, " No Due Date or Time set");
+                }
+                // Addign the priority to the request
+                try {
+                    taskObject.put(
+                            Config.REQUEST_RESPONSE_KEYS.PRIORITY.getKey(),
+                            task.getPriority()
+                    );
+                } catch (NullPointerException e) {
+                    Log.d(TAG, " No priorty specified. Defaults to Normal Priority");
+                }
+                //Adding the task description to the request
+                try {
+                    taskObject.put(
+                            Config.REQUEST_RESPONSE_KEYS.DESCRIPTION.getKey(),
+                            task.getDescription()
+                    );
+                } catch (NullPointerException e) {
+                    Log.d(TAG, " No Description for the task");
+                }
 
                 this.collaborators = new JSONArray();
-
+                //Adding Collaborators
                 if(task.getCollaborators(task, this.context).size()>0) {
                     for(User collaborator : task.getCollaborators()) {
                         this.collaborators.put(collaborator.getEmail());

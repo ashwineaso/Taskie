@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -96,10 +97,10 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     private CompoundButton checkComplete;
     private List<User> userAdditonList, userRemovalList;
     private ImageView calendarIV, cancelIV;
-    private ImageView addCollabsIV;
+    private ImageButton addCollabsIV;
     private LinearLayout addCollabsLinearLayout;
     private TokenCompleteCollaboratorsEditText collaboratorsTCET;
-    private Button addCollaboratorButton;
+    private ImageButton addCollaboratorButton;
 
     private boolean isEditMode = false;
     private boolean isCollabAdditionMode = false;
@@ -139,10 +140,10 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         this.calendarIV = (ImageView) view.findViewById(R.id.calendarIconImageView);
         this.dueDateChangerLL = (LinearLayout) view.findViewById(R.id.dueDateChangerLinearLayout);
         this.cancelIV = (ImageView) view.findViewById(R.id.btnCancelDate);
-        this.addCollabsIV = (ImageView) view.findViewById(R.id.addCollaboratorsImageView);
+        this.addCollabsIV = (ImageButton) view.findViewById(R.id.addCollaboratorsImageView);
         this.addCollabsLinearLayout = (LinearLayout) view.findViewById(R.id.addCollaboratorsLinearLayout);
         this.collaboratorsTCET = (TokenCompleteCollaboratorsEditText) view.findViewById(R.id.collaboratorsTokenEditText);
-        this.addCollaboratorButton = (Button) view.findViewById(R.id.addCollaboratorButton);
+        this.addCollaboratorButton = (ImageButton) view.findViewById(R.id.addCollaboratorButton);
         this.collList = (ListView) view.findViewById(R.id.collListView);
 
         //Set the text views
@@ -165,7 +166,8 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                         getActivity()
                 );
                 adapter.clear();
-                adapter.addAll(task.getCollaborators());
+                adapter.addAll(task.getCollaborators(task, context));
+                collList.smoothScrollToPosition(adapter.getCount()-1);
                 adapter.notifyDataSetChanged();
                 toggleAddCollaborators();
                 collaboratorsTCET.clear();

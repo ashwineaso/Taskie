@@ -336,4 +336,22 @@ public class User {
         }
         return list;
     }
+
+    public boolean equals(Object obj) {
+        if(obj == this) {
+            return true;
+        }
+
+        if(!(obj instanceof User)) {
+            return false;
+        }
+
+        User other = (User) obj;
+        return this.email.equals(other.getEmail());
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getEmail().trim().hashCode();
+    }
 }

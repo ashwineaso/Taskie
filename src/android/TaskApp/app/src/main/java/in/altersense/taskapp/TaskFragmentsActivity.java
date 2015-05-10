@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,7 +27,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
-public class TaskFragmentsActivity extends ActionBarActivity implements ActionBar.TabListener {
+public class TaskFragmentsActivity extends AppCompatActivity implements ActionBar.TabListener {
 
     private ViewPager tabsViewPager;
     private ActionBar actionBar;
