@@ -5,6 +5,7 @@ from apps.users import dal as userdal
 from apps.task import dal as taskdal
 from apps.group import dal as groupdal
 from settings.altEngine import Collection, SyncClass
+from multiprocessing import Process
 
 def pushSyncNotification(syncObj, taskObj = Collection()):
     """
@@ -76,5 +77,6 @@ def pushSyncNotification(syncObj, taskObj = Collection()):
         #                             )
         # gcmPostThread.start()
 
-        gcmPostThread = UrlPost( postObj = androidPush )
-        gcmPostThread.run()
+        postProcess = Process( target = UrlPost, args = (androidPush,))
+        postProcess.start()
+        postProcess.join()
