@@ -128,9 +128,8 @@ def modifyCollStatus(taskObj):
 	:type taskObj : object
 	:param taskObj : An instance with the following attributes
 					id - id of the task
-					collemail - email of the collaborator
+					email - email of the collaborator
 					collstatus - new status of the collaborator
-					statusDateTime - dateTime of status update
 	:return An instance of the Collaborator class
 	"""
 

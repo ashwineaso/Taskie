@@ -77,7 +77,7 @@ def createMinimalUser(userObj):
 				)
 	user.save()
 	user.reload()
-	token  = Token(user  = user)
+	token = Token(user = user)
 	token.save()
 	return user
 

@@ -37,8 +37,9 @@ def createAndInvite(userObj):
 	User creation by invite during task creation
 	::type userObj : object
 	::param userObj : An instance of Collection with the following attributes
-						email
-	::return user : An intance of the User class
+						email - email of the new user
+						owner - (optional) - the task owner who invited the user
+	::return user : An object of the User class - which is the new user created
 	"""
 
 	userObj.user = dal.createMinimalUser(userObj)

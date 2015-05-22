@@ -21,14 +21,12 @@ def sendInvite(userObj):
 	"""Send invite mail to the a new user
 	:: type : Collection()
 	:: param : id - id of the owner
-				email - email of the new user to be invite
 				user - the newly created user
+				owner - the owner of the task
 	"""
 
-	inviter = dal.getUserById(userObj)
-	invited_by = inviter.email
-	invite_to = userObj.email
-	token = Token.objects.get(user = inviter)
+	invited_by = userObj.owner.email
+	invite_to = userObj.user.email
 
 	# Create the body of the message (a plain-text and an HTML version).
 	html = """\
@@ -48,7 +46,7 @@ def sendInvite(userObj):
 			</p>
 		</body>
 	</html>
-	""" % (inviter.name)
+	""" % (userObj.owner.name)
 	
 	Subject = "You have been invited to try out Taskie"
 

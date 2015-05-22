@@ -116,24 +116,20 @@ def addCollaborators(taskObj):
 					)
 
 	task = getTaskById(taskObj)
-	userObj.user = task.owner
+	userObj.owner = task.owner
 	#Check if new collaborators exist
 	for userObj.email in taskObj.collaborators:
-		flag = False
-		for person in User.objects:
-			#If user exists in Server, flag is marked true and continues
-			if person.email == userObj.email:
-				flag = True
-		#If flag is false, create a new user and send invite
-		if flag is False:
-			userbll.createAndInvite(userObj)
-
-	#Get the user - collaborator id and add to list
-	for userObj.email in taskObj.collaborators:
-		my_objects.append(Collaborator(user = userbll.getUserByEmail(userObj),
+		try:
+			#try to find the user by email from the databsae
+			person = User.objects.get(email = userObj.email)
+		except Exception as e:
+			#If user is not found, create a new minimal users and send an invite
+			person = userbll.createAndInvite(userObj)
+		#Get the returned user from both cases and add create collaborators from them
+		my_objects.append(Collaborator(user = person,
 										status = taskObj.status))
 
-
+	#Update the task with the new collaborator
 	Task.objects(id = task.id).update( push_all__collaborators = my_objects)
 	task.save()
 	task.reload()
@@ -188,18 +184,16 @@ def modifyCollStatus(taskObj):
 	:type taskObj : object
 	:param taskObj :An instance with the following attributes
 					id - id of the task
-					collemail - email of the collaborator
+					email - email of the collaborator
 					collstatus - new status of the collaborator
-					statusDateTime - dateTime of status update
 	:return An instance of the Collaborator class
 	"""
 
 	task = getTaskById(taskObj)
 	userObj = userbll.getUserByEmail(taskObj)
-	for collaborator in task.collaborators:
-		if collaborator.user == userObj:
-			collaborator.status.status = taskObj.collstatus
-			collaborator.status.dateTime = time.time()
+	collaborator = [x for x in task.collaborators if x.user == userObj]
+	collaborator[0].status.status = taskObj.collstatus
+	collaborator[0].status.dateTime = time.time()
 	task.save()
 	return task
 
