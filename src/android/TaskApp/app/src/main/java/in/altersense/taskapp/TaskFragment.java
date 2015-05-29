@@ -160,6 +160,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         this.addCollaboratorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                collaboratorsTCET.clearFocus();
                 task.updateCollaborators(
                         collaboratorAdditionList,
                         new ArrayList<User>(),
