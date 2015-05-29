@@ -387,6 +387,7 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
         neutralButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                participantNameTCET.clearFocus();
                 LinearLayout moreView = (LinearLayout) dialogView.findViewById(R.id.moreLinearLayout);
                 if(!isExpandedDialog) {
                     moreView.setVisibility(View.VISIBLE);
@@ -404,6 +405,7 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                participantNameTCET.clearFocus();
                 String taskName = newTaskTitle.getText().toString();
                 taskName = taskName.trim();
                 if (!(taskName.length() < 1)) {
