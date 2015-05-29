@@ -53,8 +53,7 @@
 				 <div id="logo"><a href="#home"><img src="images/logo.png" alt="logo"></a></div>
 				 <div id="logo_header"><h5></h5></div>
 				 <div id="slogan"><h1>A great way to get things done.<br>Faster and Simpler,<br>With a personal touch.</h1></div>
-				 <a href="#" class="cta1" id="button_more">Learn More</a>
-				 <a href="#" class="cta2" id="button_download">Download Now</a>
+				 <a href="https://play.google.com/store/apps/details?id=in.altersense.taskapp" class="cta2" id="button_download">Download Now</a>
 				 <img src="images/homescreen.png" class="img-responsive" id="home_image" alt="img">
 			</div> <div class="clearfix"></div>
 		</div>
