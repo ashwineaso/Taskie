@@ -49,6 +49,7 @@ import in.altersense.taskapp.components.ReminderNotifier;
 import in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
+import in.altersense.taskapp.events.BackPressedEvent;
 import in.altersense.taskapp.events.ChangeInTaskEvent;
 import in.altersense.taskapp.events.TaskDeletedEvent;
 import in.altersense.taskapp.events.UserRemovedFromCollaboratorsEvent;
@@ -125,6 +126,9 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        BaseApplication.getEventBus().register(this);
+
         View view = inflater.inflate(R.layout.task_fragment_view, container, false);
         //Initialize the views
         this.taskTitleET = (EditText) view.findViewById(R.id.taskTitleEditText);
@@ -486,7 +490,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     @Override
     public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
         String TAG = CLASS_TAG + "onDateSet";
-        Log.d(TAG, "Date: "+year+"-"+month+"-"+day);
+        Log.d(TAG, "Date: " + year + "-" + month + "-" + day);
         timePickerDialog.setCloseOnSingleTapMinute(false);
         timePickerDialog.show(getActivity().getSupportFragmentManager(), TIMEPICKER_TAG);
         this.dueString = year + "-" + (month+1) + "-" + day + " ";
@@ -700,32 +704,32 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         }
     }
 
+    @Subscribe
+    public void OnBackPressedEvent(BackPressedEvent event) {
+        String TAG = CLASS_TAG+"onBackPressed";
+        if(this.isEditMode) {
+            // Set mode.
+            this.isEditMode = false;
+            // Update TextViews
+            this.taskTitleET.setText(this.task.getName());
+            this.taskDescriptionET.setText(this.task.getDescription());
+            this.taskPrioritySpinner.setSelection(this.task.getPriority());
+            this.dueDateTV.setText(this.task.getDueDateTime());
+            // Hide edit views
+            this.taskTitleET.setVisibility(View.GONE);
+            this.taskDescriptionET.setVisibility(View.GONE);
+            this.taskPrioritySpinner.setVisibility(View.GONE);
+            this.calendarIV.setVisibility(View.GONE);
+            this.cancelIV.setVisibility(View.GONE);
+            // display display views
+            this.taskTitleTV.setVisibility(View.VISIBLE);
+            this.taskDescriptionTV.setVisibility(View.VISIBLE);
+            this.taskPriorityTV.setVisibility(View.VISIBLE);
+            // Set toggle button to off
+            this.editViewToggle.setIcon(R.drawable.ic_edit_white);
+        } else {
+            getActivity().onBackPressed();
+        }
+    }
 
-//    @Override
-//    public void onBackPressed() {
-//        String TAG = CLASS_TAG+"onBackPressed";
-//        if(this.isEditMode) {
-//            // Set mode.
-//            this.isEditMode = false;
-//            // Update TextViews
-//            this.taskTitleET.setText(this.task.getName());
-//            this.taskDescriptionET.setText(this.task.getDescription());
-//            this.taskPrioritySpinner.setSelection(this.task.getPriority());
-//            this.dueDateTV.setText(this.task.getDueDateTime());
-//            // Hide edit views
-//            this.taskTitleET.setVisibility(View.GONE);
-//            this.taskDescriptionET.setVisibility(View.GONE);
-//            this.taskPrioritySpinner.setVisibility(View.GONE);
-//            this.calendarIV.setVisibility(View.GONE);
-//            this.cancelIV.setVisibility(View.GONE);
-//            // display display views
-//            this.taskTitleTV.setVisibility(View.VISIBLE);
-//            this.taskDescriptionTV.setVisibility(View.VISIBLE);
-//            this.taskPriorityTV.setVisibility(View.VISIBLE);
-//            // Set toggle button to off
-//            this.editViewToggle.setIcon(R.drawable.ic_edit_white);
-//        } else {
-//            getActivity().onBackPressed();
-//        }
-//    }
 }

@@ -21,6 +21,7 @@ import com.squareup.otto.Subscribe;
 import in.altersense.taskapp.adapters.TaskTabsAdapter;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.BaseApplication;
+import in.altersense.taskapp.events.BackPressedEvent;
 import in.altersense.taskapp.events.UpdateNowEvent;
 import in.altersense.taskapp.models.Task;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -28,6 +29,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 public class TaskFragmentsActivity extends AppCompatActivity implements ActionBar.TabListener {
+
+    private static final String CLASS_TAG = "TaskFragmentsActivity";
 
     private ViewPager tabsViewPager;
     private ActionBar actionBar;
@@ -109,6 +112,11 @@ public class TaskFragmentsActivity extends AppCompatActivity implements ActionBa
         Intent showUpdateNowActivityIntent = new Intent(this, UpdateNowActivity.class);
         startActivity(showUpdateNowActivityIntent);
         this.finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        BaseApplication.getEventBus().post(new BackPressedEvent());
     }
 
 }
