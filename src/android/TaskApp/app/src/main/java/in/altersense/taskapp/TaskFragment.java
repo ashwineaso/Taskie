@@ -267,7 +267,6 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         setHasOptionsMenu(true);
 
         taskDbHelper = new TaskDbHelper(context);
-        BaseApplication.getEventBus().register(this);
 
         //Get the Intent from the Parent Activity
         createViewIntent = getActivity().getIntent();
@@ -312,6 +311,18 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
 
         this.resultIntent = new Intent();
         this.getActivity().setResult(Activity.RESULT_OK, resultIntent);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        BaseApplication.getEventBus().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        BaseApplication.getEventBus().unregister(this);
     }
 
     private void setUpCollabsList() {
