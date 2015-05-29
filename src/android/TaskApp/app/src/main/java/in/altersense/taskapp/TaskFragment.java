@@ -25,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
@@ -414,7 +415,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     }
 
     /**
-     * Sets up the activity to task view mode.
+     * Sets up the activity to task view mode and saves the changes.
      */
     private void setUpViewMode() {
         String TAG = CLASS_TAG+"setUpViewMode";
@@ -704,28 +705,57 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     public void OnBackPressedEvent(BackPressedEvent event) {
         String TAG = CLASS_TAG+"onBackPressed";
         if(this.isEditMode) {
-            // Set mode.
-            this.isEditMode = false;
-            // Update TextViews
-            this.taskTitleET.setText(this.task.getName());
-            this.taskDescriptionET.setText(this.task.getDescription());
-            this.taskPrioritySpinner.setSelection(this.task.getPriority());
-            this.dueDateTV.setText(this.task.getDueDateTime());
-            // Hide edit views
-            this.taskTitleET.setVisibility(View.GONE);
-            this.taskDescriptionET.setVisibility(View.GONE);
-            this.taskPrioritySpinner.setVisibility(View.GONE);
-            this.calendarIV.setVisibility(View.GONE);
-            this.cancelIV.setVisibility(View.GONE);
-            // display display views
-            this.taskTitleTV.setVisibility(View.VISIBLE);
-            this.taskDescriptionTV.setVisibility(View.VISIBLE);
-            this.taskPriorityTV.setVisibility(View.VISIBLE);
-            // Set toggle button to off
-            this.editViewToggle.setIcon(R.drawable.ic_edit_white);
+            new MaterialDialog.Builder(context)
+                    .title("Confirm Action")
+                    .content("Save the changes you made ?")
+                    .neutralText("NEVERMIND")
+                    .positiveText("SAVE")
+                    .callback(new MaterialDialog.ButtonCallback() {
+                        @Override
+                        public void onNeutral(MaterialDialog dialog) {
+                            super.onNeutral(dialog);
+                            stopEditMode();
+                            dialog.dismiss();
+                        }
+
+                        @Override
+                        public void onPositive(MaterialDialog dialog) {
+                            super.onPositive(dialog);
+                            editViewToggle.setIcon(R.drawable.ic_edit_white);
+                            editViewToggle.setTitle("Edit");
+                            setUpViewMode();
+                            dialog.dismiss();
+                        }
+                    })
+                    .widgetColor(R.color.taskPrimaryColor)
+                    .show();
         } else {
             getActivity().finish();
         }
     }
 
+    /**
+     * Sets up the activity to task view mode without saving the changes.
+     */
+    private void stopEditMode() {
+        // Set mode.
+        this.isEditMode = false;
+        // Update TextViews
+        this.taskTitleET.setText(this.task.getName());
+        this.taskDescriptionET.setText(this.task.getDescription());
+        this.taskPrioritySpinner.setSelection(this.task.getPriority());
+        this.dueDateTV.setText(this.task.getDueDateTime());
+        // Hide edit views
+        this.taskTitleET.setVisibility(View.GONE);
+        this.taskDescriptionET.setVisibility(View.GONE);
+        this.taskPrioritySpinner.setVisibility(View.GONE);
+        this.calendarIV.setVisibility(View.GONE);
+        this.cancelIV.setVisibility(View.GONE);
+        // display display views
+        this.taskTitleTV.setVisibility(View.VISIBLE);
+        this.taskDescriptionTV.setVisibility(View.VISIBLE);
+        this.taskPriorityTV.setVisibility(View.VISIBLE);
+        // Set toggle button to off
+        this.editViewToggle.setIcon(R.drawable.ic_edit_white);
+    }
 }
