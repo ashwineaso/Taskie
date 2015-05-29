@@ -510,12 +510,16 @@ public class Task {
         userRemovalList = User.removeUserFromList(userRemovalList,ownerUser);
 
         // Remove existing collaborators from added collaborators.
-        for(Collaborator collaborator:this.getCollaborators()) {
-            Log.d(TAG, "Checking collaborator "+collaborator.toString());
-            if(userAdditionList.contains(collaborator)) {
-                Log.d(TAG, "Removing existing collaborator "+collaborator.toString());
-                userAdditionList.remove(collaborator);
+        try {
+            for(Collaborator collaborator:this.getCollaborators()) {
+                Log.d(TAG, "Checking collaborator "+collaborator.toString());
+                if(userAdditionList.contains(collaborator)) {
+                    Log.d(TAG, "Removing existing collaborator "+collaborator.toString());
+                    userAdditionList.remove(collaborator);
+                }
             }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
 
         // Convert both lists to list of collaborators
