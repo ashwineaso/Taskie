@@ -118,5 +118,4 @@ public class TaskFragmentsActivity extends AppCompatActivity implements ActionBa
     public void onBackPressed() {
         BaseApplication.getEventBus().post(new BackPressedEvent());
     }
-
 }

@@ -104,7 +104,6 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
 
     private boolean isEditMode = false;
     private boolean isCollabAdditionMode = false;
-    private Intent resultIntent;
 
     private DatePickerDialog datePickerDialog;
     private TimePickerDialog timePickerDialog;
@@ -305,12 +304,11 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         UserDbHelper userDbHelper = new UserDbHelper(getActivity());
         // Setting a Filtered Array Adapter to autocomplete with users in db
         userList = userDbHelper.listAllUsers();
-        Log.d(CLASS_TAG, "User list: "+userList.toString());
+        Log.d(CLASS_TAG, "User list: " + userList.toString());
 
         this.task.fetchAllCollaborators(this.context);
 
-        this.resultIntent = new Intent();
-        this.getActivity().setResult(Activity.RESULT_OK, resultIntent);
+        this.getActivity().setResult(Activity.RESULT_OK);
     }
 
     @Override
@@ -430,6 +428,9 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
      */
     private void setUpViewMode() {
         String TAG = CLASS_TAG+"setUpViewMode";
+        // Set result code for parent activity
+        getActivity().setResult(DashboardActivity.RESULT_OK);
+
         // Update task params
         this.task.setName(this.taskTitleET.getText().toString());
         this.task.setDescription(this.taskDescriptionET.getText().toString());
@@ -468,9 +469,6 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                 this.context
         );
         updateTaskRequest.execute();
-
-        // Update resultIntent flag to re-query the list of tasks in dashboard
-        this.resultIntent.putExtra(Config.SHARED_PREF_KEYS.UPDATE_LIST.getKey(), true);
 
     }
 
@@ -573,11 +571,8 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
             setUpTextViews();
             setUpCollabsList();
             this.collabListAdapter.notifyDataSetChanged();
-            // Set the resultIntent with a flag to update the task list.
-            this.resultIntent.putExtra(
-                    Config.SHARED_PREF_KEYS.UPDATE_LIST.getKey(),
-                    true
-            );
+            getActivity().setResult(Activity.RESULT_OK);
+
         }
     }
 
@@ -590,10 +585,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                     Toast.LENGTH_SHORT
             ).show();
             // Set the resultIntent with a flag to update the task list.
-            this.resultIntent.putExtra(
-                    Config.SHARED_PREF_KEYS.UPDATE_LIST.getKey(),
-                    true
-            );
+            getActivity().setResult(Activity.RESULT_OK);
             getActivity().finish();
         }
     }
@@ -607,10 +599,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                     Toast.LENGTH_SHORT
             ).show();
             // Set the resultIntent with a flag to update the task list.
-            this.resultIntent.putExtra(
-                    Config.SHARED_PREF_KEYS.UPDATE_LIST.getKey(),
-                    true
-            );
+            getActivity().setResult(Activity.RESULT_OK);
             getActivity().finish();
         }
     }

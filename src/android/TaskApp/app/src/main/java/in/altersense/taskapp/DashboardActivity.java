@@ -498,14 +498,8 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode==RESULT_OK) {
-            boolean updateTaskList = data.getExtras().getBoolean(
-                    Config.SHARED_PREF_KEYS.UPDATE_LIST.getKey(),
-                    false
-            );
-            if(updateTaskList) {
-                taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasksAsCursor());
-                taskList.setAdapter(taskAdapter);
-            }
+            taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasksAsCursor());
+            taskList.setAdapter(taskAdapter);
         }
     }
 
