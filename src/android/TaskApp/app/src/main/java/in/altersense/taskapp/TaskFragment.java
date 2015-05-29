@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -27,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
@@ -49,6 +48,7 @@ import in.altersense.taskapp.components.ReminderNotifier;
 import in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
+import in.altersense.taskapp.events.BackPressedEvent;
 import in.altersense.taskapp.events.ChangeInTaskEvent;
 import in.altersense.taskapp.events.TaskDeletedEvent;
 import in.altersense.taskapp.events.UserRemovedFromCollaboratorsEvent;
@@ -125,6 +125,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.task_fragment_view, container, false);
         //Initialize the views
         this.taskTitleET = (EditText) view.findViewById(R.id.taskTitleEditText);
@@ -266,7 +267,6 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         setHasOptionsMenu(true);
 
         taskDbHelper = new TaskDbHelper(context);
-        BaseApplication.getEventBus().register(this);
 
         //Get the Intent from the Parent Activity
         createViewIntent = getActivity().getIntent();
@@ -311,6 +311,18 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
 
         this.resultIntent = new Intent();
         this.getActivity().setResult(Activity.RESULT_OK, resultIntent);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        BaseApplication.getEventBus().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        BaseApplication.getEventBus().unregister(this);
     }
 
     private void setUpCollabsList() {
@@ -414,7 +426,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     }
 
     /**
-     * Sets up the activity to task view mode.
+     * Sets up the activity to task view mode and saves the changes.
      */
     private void setUpViewMode() {
         String TAG = CLASS_TAG+"setUpViewMode";
@@ -486,7 +498,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     @Override
     public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
         String TAG = CLASS_TAG + "onDateSet";
-        Log.d(TAG, "Date: "+year+"-"+month+"-"+day);
+        Log.d(TAG, "Date: " + year + "-" + month + "-" + day);
         timePickerDialog.setCloseOnSingleTapMinute(false);
         timePickerDialog.show(getActivity().getSupportFragmentManager(), TIMEPICKER_TAG);
         this.dueString = year + "-" + (month+1) + "-" + day + " ";
@@ -700,32 +712,61 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         }
     }
 
+    @Subscribe
+    public void OnBackPressedEvent(BackPressedEvent event) {
+        String TAG = CLASS_TAG+"onBackPressed";
+        if(this.isEditMode) {
+            new MaterialDialog.Builder(context)
+                    .title("Confirm Action")
+                    .content("Save the changes you made ?")
+                    .neutralText("NEVERMIND")
+                    .positiveText("SAVE")
+                    .callback(new MaterialDialog.ButtonCallback() {
+                        @Override
+                        public void onNeutral(MaterialDialog dialog) {
+                            super.onNeutral(dialog);
+                            stopEditMode();
+                            dialog.dismiss();
+                        }
 
-//    @Override
-//    public void onBackPressed() {
-//        String TAG = CLASS_TAG+"onBackPressed";
-//        if(this.isEditMode) {
-//            // Set mode.
-//            this.isEditMode = false;
-//            // Update TextViews
-//            this.taskTitleET.setText(this.task.getName());
-//            this.taskDescriptionET.setText(this.task.getDescription());
-//            this.taskPrioritySpinner.setSelection(this.task.getPriority());
-//            this.dueDateTV.setText(this.task.getDueDateTime());
-//            // Hide edit views
-//            this.taskTitleET.setVisibility(View.GONE);
-//            this.taskDescriptionET.setVisibility(View.GONE);
-//            this.taskPrioritySpinner.setVisibility(View.GONE);
-//            this.calendarIV.setVisibility(View.GONE);
-//            this.cancelIV.setVisibility(View.GONE);
-//            // display display views
-//            this.taskTitleTV.setVisibility(View.VISIBLE);
-//            this.taskDescriptionTV.setVisibility(View.VISIBLE);
-//            this.taskPriorityTV.setVisibility(View.VISIBLE);
-//            // Set toggle button to off
-//            this.editViewToggle.setIcon(R.drawable.ic_edit_white);
-//        } else {
-//            getActivity().onBackPressed();
-//        }
-//    }
+                        @Override
+                        public void onPositive(MaterialDialog dialog) {
+                            super.onPositive(dialog);
+                            editViewToggle.setIcon(R.drawable.ic_edit_white);
+                            editViewToggle.setTitle("Edit");
+                            setUpViewMode();
+                            dialog.dismiss();
+                        }
+                    })
+                    .widgetColor(R.color.taskPrimaryColor)
+                    .show();
+        } else {
+            getActivity().finish();
+        }
+    }
+
+    /**
+     * Sets up the activity to task view mode without saving the changes.
+     */
+    private void stopEditMode() {
+        // Set mode.
+        this.isEditMode = false;
+        // Update TextViews
+        this.taskTitleET.setText(this.task.getName());
+        this.taskDescriptionET.setText(this.task.getDescription());
+        this.taskPrioritySpinner.setSelection(this.task.getPriority());
+        this.dueDateTV.setText(this.task.getDueDateTime());
+        // Hide edit views
+        this.taskTitleET.setVisibility(View.GONE);
+        this.taskDescriptionET.setVisibility(View.GONE);
+        this.taskPrioritySpinner.setVisibility(View.GONE);
+        this.calendarIV.setVisibility(View.GONE);
+        this.cancelIV.setVisibility(View.GONE);
+        // display display views
+        this.taskTitleTV.setVisibility(View.VISIBLE);
+        this.taskDescriptionTV.setVisibility(View.VISIBLE);
+        this.taskPriorityTV.setVisibility(View.VISIBLE);
+        // Set toggle button to off
+        this.editViewToggle.setIcon(R.drawable.ic_edit_white);
+    }
 }
