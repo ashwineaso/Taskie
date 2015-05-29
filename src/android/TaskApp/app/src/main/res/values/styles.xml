@@ -72,6 +72,10 @@
         <item name="colorPrimary">@color/taskPrimaryColor</item>
         <item name="colorAccent">@color/createTaskPrimaryActionBar</item>
         <item name="android:buttonStyle">@style/primaryButton</item>
+        <!-- For the quick task dialogue -->
+        <item name="md_medium_font">Cabin-SemiBold-TTF.ttf</item>
+        <item name="md_regular_font">Cabin-Regular-TTF.ttf</item>
+        <item name="md_title_color">@color/taskPrimaryColor</item>
     </style>
 
     <style name="RegisterTheme" parent="Theme.AppCompat.Light.DarkActionBar">
