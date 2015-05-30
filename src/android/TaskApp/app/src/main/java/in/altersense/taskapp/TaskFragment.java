@@ -122,6 +122,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     private int prevPriority, newPriority;
     private LinearLayout dueDateChangerLL;
     private MenuItem buzz;
+    private Activity activity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -167,6 +168,9 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                         new ArrayList<User>(),
                         getActivity()
                 );
+                resultIntent = new Intent();
+                activity.setResult(Activity.RESULT_OK, resultIntent);
+                Log.d("CollabsAdded", "RESULT OK SET");
                 adapter.clear();
                 adapter.addAll(task.getCollaborators(task, context));
                 collList.smoothScrollToPosition(adapter.getCount()-1);
@@ -250,6 +254,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.context = activity;
+        this.activity = activity;
     }
 
     @Override
@@ -305,12 +310,9 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         UserDbHelper userDbHelper = new UserDbHelper(getActivity());
         // Setting a Filtered Array Adapter to autocomplete with users in db
         userList = userDbHelper.listAllUsers();
-        Log.d(CLASS_TAG, "User list: "+userList.toString());
+        Log.d(CLASS_TAG, "User list: " + userList.toString());
 
         this.task.fetchAllCollaborators(this.context);
-
-        this.resultIntent = new Intent();
-        this.getActivity().setResult(Activity.RESULT_OK, resultIntent);
     }
 
     @Override
@@ -430,6 +432,10 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
      */
     private void setUpViewMode() {
         String TAG = CLASS_TAG+"setUpViewMode";
+        this.resultIntent = new Intent();
+        this.activity.setResult(Activity.RESULT_OK, resultIntent);
+        Log.d(TAG, "RESULT OK SET");
+
         // Update task params
         this.task.setName(this.taskTitleET.getText().toString());
         this.task.setDescription(this.taskDescriptionET.getText().toString());

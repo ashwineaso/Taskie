@@ -498,6 +498,7 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode==RESULT_OK) {
+            Log.d(CLASS_TAG, "onActivityResult: RESULT_OK");
             boolean updateTaskList = data.getExtras().getBoolean(
                     Config.SHARED_PREF_KEYS.UPDATE_LIST.getKey(),
                     false
