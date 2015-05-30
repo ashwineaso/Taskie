@@ -168,7 +168,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                         new ArrayList<User>(),
                         getActivity()
                 );
-                resultIntent = new Intent();
+                resultIntent.putExtra(DashboardActivity.TASK_UPDATED, true);
                 activity.setResult(Activity.RESULT_OK, resultIntent);
                 Log.d("CollabsAdded", "RESULT OK SET");
                 adapter.clear();
@@ -261,6 +261,8 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     public void onCreate(Bundle savedInstanceState) {
         String TAG = CLASS_TAG + " OnCreate";
         super.onCreate(savedInstanceState);
+        this.resultIntent = new Intent();
+
 
         //        Setting up calligraphy
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
@@ -432,7 +434,8 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
      */
     private void setUpViewMode() {
         String TAG = CLASS_TAG+"setUpViewMode";
-        this.resultIntent = new Intent();
+
+        resultIntent.putExtra(DashboardActivity.TASK_UPDATED, true);
         this.activity.setResult(Activity.RESULT_OK, resultIntent);
         Log.d(TAG, "RESULT OK SET");
 

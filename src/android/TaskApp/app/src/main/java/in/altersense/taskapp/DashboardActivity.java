@@ -66,6 +66,8 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
     private static final String DATEPICKER_TAG = "datePicker";
     private static final String TIMEPICKER_TAG = "timePicker";
 
+    public static final String TASK_UPDATED = "taskUpdated";
+
     private ListView taskList;  // For handling the main content area.
     private LinearLayout quickCreateStageLinearLayout; // Quick task creation area
     private TaskDbHelper taskDbHelper;
@@ -107,6 +109,8 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
     private long duelong;
     private ImageView calendarIV;
     private UserDbHelper userDbHelper;
+
+    private boolean updateTaskList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,6 +196,12 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
     protected void onResume() {
         super.onResume();
         this.gcmHandler.checkPlayServices();
+        if(this.updateTaskList) {
+            Log.d(CLASS_TAG, "Updating list.");
+            updateList();
+            Log.d(CLASS_TAG, "Update complete.");
+            this.updateTaskList=false;
+        }
     }
 
     /**
@@ -499,13 +509,8 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode==RESULT_OK) {
             Log.d(CLASS_TAG, "onActivityResult: RESULT_OK");
-            boolean updateTaskList = data.getExtras().getBoolean(
-                    Config.SHARED_PREF_KEYS.UPDATE_LIST.getKey(),
-                    false
-            );
-            if(updateTaskList) {
-                taskAdapter = new TasksAdapter(DashboardActivity.this, taskDbHelper.getAllNonGroupTasksAsCursor());
-                taskList.setAdapter(taskAdapter);
+            if(data.getExtras().getBoolean(TASK_UPDATED, false)) {
+                this.updateTaskList = true;
             }
         }
     }
