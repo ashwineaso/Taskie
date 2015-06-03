@@ -51,6 +51,7 @@ import in.altersense.taskapp.database.UserDbHelper;
 import in.altersense.taskapp.events.BackPressedEvent;
 import in.altersense.taskapp.events.ChangeInTaskEvent;
 import in.altersense.taskapp.events.TaskDeletedEvent;
+import in.altersense.taskapp.events.TaskEditedEvent;
 import in.altersense.taskapp.events.UserRemovedFromCollaboratorsEvent;
 import in.altersense.taskapp.models.Buzz;
 import in.altersense.taskapp.models.Collaborator;
@@ -123,6 +124,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     private LinearLayout dueDateChangerLL;
     private MenuItem buzz;
     private Activity activity;
+    private boolean taskUpdated = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -168,10 +170,9 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                         new ArrayList<User>(),
                         getActivity()
                 );
-                resultIntent.putExtra(DashboardActivity.TASK_UPDATED, true);
-                activity.setResult(Activity.RESULT_OK, resultIntent);
-                Log.d("CollabsAdded", "RESULT OK SET");
+
                 adapter.clear();
+                taskUpdated = true;
                 adapter.addAll(task.getCollaborators(task, context));
                 collList.smoothScrollToPosition(adapter.getCount()-1);
                 adapter.notifyDataSetChanged();
@@ -435,9 +436,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     private void setUpViewMode() {
         String TAG = CLASS_TAG+"setUpViewMode";
 
-        resultIntent.putExtra(DashboardActivity.TASK_UPDATED, true);
-        this.activity.setResult(Activity.RESULT_OK, resultIntent);
-        Log.d(TAG, "RESULT OK SET");
+        this.taskUpdated = true;
 
         // Update task params
         this.task.setName(this.taskTitleET.getText().toString());
@@ -750,6 +749,12 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                     .widgetColor(R.color.taskPrimaryColor)
                     .show();
         } else {
+            if(this.taskUpdated) {
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra(DashboardActivity.TASK_UPDATED, true);
+                getActivity().setResult(DashboardActivity.RESULT_OK, resultIntent);
+                Log.d(CLASS_TAG, "RESULT OK SET");
+            }
             getActivity().finish();
         }
     }

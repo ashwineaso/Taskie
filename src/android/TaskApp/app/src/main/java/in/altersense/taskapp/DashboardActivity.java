@@ -36,7 +36,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import in.altersense.taskapp.adapters.TasksAdapter;
@@ -67,6 +66,7 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
     private static final String TIMEPICKER_TAG = "timePicker";
 
     public static final String TASK_UPDATED = "taskUpdated";
+    public static final int TASK_VIEW_REQUEST_CODE = 0;
 
     private ListView taskList;  // For handling the main content area.
     private LinearLayout quickCreateStageLinearLayout; // Quick task creation area
@@ -184,7 +184,7 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
                 Intent intent = new Intent(DashboardActivity.this, TaskFragmentsActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey(), selectedTask.getId());
-                startActivityForResult(intent,0);
+                startActivityForResult(intent, TASK_VIEW_REQUEST_CODE);
             }
         });
 
@@ -507,10 +507,13 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode==RESULT_OK) {
-            Log.d(CLASS_TAG, "onActivityResult: RESULT_OK");
-            if(data.getExtras().getBoolean(TASK_UPDATED, false)) {
-                this.updateTaskList = true;
+        Log.d(CLASS_TAG, "onActivityResult");
+        if(requestCode== TASK_VIEW_REQUEST_CODE) {
+            if(resultCode==RESULT_OK) {
+                Log.d(CLASS_TAG, "onActivityResult: RESULT_OK");
+                if(data.getExtras().getBoolean(TASK_UPDATED, false)) {
+                    this.updateTaskList = true;
+                }
             }
         }
     }

@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ import in.altersense.taskapp.adapters.TaskTabsAdapter;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.BaseApplication;
 import in.altersense.taskapp.events.BackPressedEvent;
+import in.altersense.taskapp.events.TaskEditedEvent;
 import in.altersense.taskapp.events.UpdateNowEvent;
 import in.altersense.taskapp.models.Task;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -112,6 +114,14 @@ public class TaskFragmentsActivity extends AppCompatActivity implements ActionBa
         Intent showUpdateNowActivityIntent = new Intent(this, UpdateNowActivity.class);
         startActivity(showUpdateNowActivityIntent);
         this.finish();
+    }
+
+    @Subscribe
+    public void onTaskEditedEvent(TaskEditedEvent event) {
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(DashboardActivity.TASK_UPDATED, true);
+        this.setResult(RESULT_OK, resultIntent);
+        Log.d(CLASS_TAG, "RESULT OK SET");
     }
 
     @Override
