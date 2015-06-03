@@ -196,12 +196,6 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
     protected void onResume() {
         super.onResume();
         this.gcmHandler.checkPlayServices();
-        if(this.updateTaskList) {
-            Log.d(CLASS_TAG, "Updating list.");
-            updateList();
-            Log.d(CLASS_TAG, "Update complete.");
-            this.updateTaskList=false;
-        }
     }
 
     /**
@@ -508,11 +502,17 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(CLASS_TAG, "onActivityResult");
-        if(requestCode== TASK_VIEW_REQUEST_CODE) {
+        if(requestCode==TASK_VIEW_REQUEST_CODE) {
             if(resultCode==RESULT_OK) {
                 Log.d(CLASS_TAG, "onActivityResult: RESULT_OK");
                 if(data.getExtras().getBoolean(TASK_UPDATED, false)) {
                     this.updateTaskList = true;
+                    if(this.updateTaskList) {
+                        Log.d(CLASS_TAG, "Updating list.");
+                        updateList();
+                        Log.d(CLASS_TAG, "Update complete.");
+                        this.updateTaskList=false;
+                    }
                 }
             }
         }
