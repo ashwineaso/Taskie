@@ -66,7 +66,7 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
     private static final String TIMEPICKER_TAG = "timePicker";
 
     public static final String TASK_UPDATED = "taskUpdated";
-    public static final int TASK_VIEW_REQUEST_CODE = 0;
+    public static final int TASK_VIEW_REQUEST_CODE = 2;
 
     private ListView taskList;  // For handling the main content area.
     private LinearLayout quickCreateStageLinearLayout; // Quick task creation area
@@ -182,7 +182,7 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
                         getApplicationContext()
                 );
                 Intent intent = new Intent(DashboardActivity.this, TaskFragmentsActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(Config.REQUEST_RESPONSE_KEYS.UUID.getKey(), selectedTask.getId());
                 startActivityForResult(intent, TASK_VIEW_REQUEST_CODE);
             }
@@ -501,6 +501,7 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode,resultCode,data);
         Log.d(CLASS_TAG, "onActivityResult");
         Log.i(CLASS_TAG, "reqCode: "+requestCode+" resCode: "+resultCode);
         if(requestCode==TASK_VIEW_REQUEST_CODE) {

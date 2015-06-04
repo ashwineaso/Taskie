@@ -50,6 +50,7 @@ import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
 import in.altersense.taskapp.events.BackPressedEvent;
 import in.altersense.taskapp.events.ChangeInTaskEvent;
+import in.altersense.taskapp.events.FinishingTaskActivityEvent;
 import in.altersense.taskapp.events.TaskDeletedEvent;
 import in.altersense.taskapp.events.TaskEditedEvent;
 import in.altersense.taskapp.events.UserRemovedFromCollaboratorsEvent;
@@ -439,6 +440,8 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     private void setUpViewMode() {
         String TAG = CLASS_TAG+"setUpViewMode";
 
+        this.isEditMode = false;
+
         // Update task params
         this.task.setName(this.taskTitleET.getText().toString());
         this.task.setDescription(this.taskDescriptionET.getText().toString());
@@ -752,7 +755,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                     .widgetColor(R.color.taskPrimaryColor)
                     .show();
         } else {
-            getActivity().finish();
+            BaseApplication.getEventBus().post(new FinishingTaskActivityEvent());
         }
     }
 

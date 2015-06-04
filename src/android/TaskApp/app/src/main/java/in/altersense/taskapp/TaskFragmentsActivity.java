@@ -23,6 +23,7 @@ import in.altersense.taskapp.adapters.TaskTabsAdapter;
 import in.altersense.taskapp.common.Config;
 import in.altersense.taskapp.components.BaseApplication;
 import in.altersense.taskapp.events.BackPressedEvent;
+import in.altersense.taskapp.events.FinishingTaskActivityEvent;
 import in.altersense.taskapp.events.TaskEditedEvent;
 import in.altersense.taskapp.events.UpdateNowEvent;
 import in.altersense.taskapp.models.Task;
@@ -114,6 +115,9 @@ public class TaskFragmentsActivity extends AppCompatActivity implements ActionBa
     public void onUpdateNowEvent(UpdateNowEvent event) {
         Intent showUpdateNowActivityIntent = new Intent(this, UpdateNowActivity.class);
         startActivity(showUpdateNowActivityIntent);
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(DashboardActivity.TASK_UPDATED, false);
+        setResult(DashboardActivity.TASK_VIEW_REQUEST_CODE, resultIntent);
         this.finish();
     }
 
@@ -127,12 +131,13 @@ public class TaskFragmentsActivity extends AppCompatActivity implements ActionBa
         this.taskUpdated = true;
     }
 
-    @Override
-    protected void onDestroy() {
+    @Subscribe
+    public void onFinishingTaskActivityEvent(FinishingTaskActivityEvent event) {
         Intent resultIntent = new Intent();
         resultIntent.putExtra(DashboardActivity.TASK_UPDATED, this.taskUpdated);
         setResult(DashboardActivity.TASK_VIEW_REQUEST_CODE, resultIntent);
-        super.onDestroy();
+        Log.i(CLASS_TAG, "RESULT set in onDestroy");
+        finish();
     }
 
     @Override
