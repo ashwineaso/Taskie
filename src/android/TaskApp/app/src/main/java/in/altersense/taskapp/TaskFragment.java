@@ -124,7 +124,6 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     private LinearLayout dueDateChangerLL;
     private MenuItem buzz;
     private Activity activity;
-    private boolean taskUpdated = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -172,7 +171,11 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                 );
 
                 adapter.clear();
-                taskUpdated = true;
+
+                // Fires a task edited event to the parent activty.
+                BaseApplication.getEventBus().post(new TaskEditedEvent());
+                Log.i(CLASS_TAG, "Fired TaskEditedEvent --> TaskFragmentsActivity");
+
                 adapter.addAll(task.getCollaborators(task, context));
                 collList.smoothScrollToPosition(adapter.getCount()-1);
                 adapter.notifyDataSetChanged();
@@ -436,8 +439,6 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     private void setUpViewMode() {
         String TAG = CLASS_TAG+"setUpViewMode";
 
-        this.taskUpdated = true;
-
         // Update task params
         this.task.setName(this.taskTitleET.getText().toString());
         this.task.setDescription(this.taskDescriptionET.getText().toString());
@@ -445,8 +446,10 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         if(duelong!=0) {
             this.task.setDueDateTime(this.duelong);
         }
-        // Set mode.
-        this.isEditMode = false;
+
+        // Fires event TaskEdited event to the parent activity
+        BaseApplication.getEventBus().post(new TaskEditedEvent());
+        Log.i(CLASS_TAG, "TaskEditedEvent --> TaskFragmentsActivity");
 
         // Checks for change in priority and fires the event.
         Log.d("checkPriorityChanged", "Calling");
@@ -749,12 +752,6 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                     .widgetColor(R.color.taskPrimaryColor)
                     .show();
         } else {
-            if(this.taskUpdated) {
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra(DashboardActivity.TASK_UPDATED, true);
-                getActivity().setResult(DashboardActivity.RESULT_OK, resultIntent);
-                Log.d(CLASS_TAG, "RESULT OK SET");
-            }
             getActivity().finish();
         }
     }

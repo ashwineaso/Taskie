@@ -9,6 +9,10 @@ public class TaskEditedEvent {
         this.taskId = taskId;
     }
 
+    public TaskEditedEvent() {
+        this.taskId = 0;
+    }
+
     public long getTaskId() {
         return taskId;
     }

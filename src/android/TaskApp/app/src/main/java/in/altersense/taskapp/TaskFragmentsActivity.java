@@ -37,6 +37,7 @@ public class TaskFragmentsActivity extends AppCompatActivity implements ActionBa
     private ViewPager tabsViewPager;
     private ActionBar actionBar;
     private MenuItem editViewToggle;
+    private boolean taskUpdated = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,12 +117,22 @@ public class TaskFragmentsActivity extends AppCompatActivity implements ActionBa
         this.finish();
     }
 
+    /**
+     * When a task is edited in TaskFramgent
+     * @param event TaskEditedEvent with or without taskId
+     */
     @Subscribe
     public void onTaskEditedEvent(TaskEditedEvent event) {
+        Log.i(CLASS_TAG, "TaskEditedEvent Recieved from Fragment");
+        this.taskUpdated = true;
+    }
+
+    @Override
+    protected void onDestroy() {
         Intent resultIntent = new Intent();
-        resultIntent.putExtra(DashboardActivity.TASK_UPDATED, true);
-        this.setResult(RESULT_OK, resultIntent);
-        Log.d(CLASS_TAG, "RESULT OK SET");
+        resultIntent.putExtra(DashboardActivity.TASK_UPDATED, this.taskUpdated);
+        setResult(RESULT_OK, resultIntent);
+        super.onDestroy();
     }
 
     @Override

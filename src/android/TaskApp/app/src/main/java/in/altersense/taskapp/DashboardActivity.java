@@ -502,6 +502,7 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(CLASS_TAG, "onActivityResult");
+        Log.i(CLASS_TAG, "reqCode: "+requestCode+" resCode: "+resultCode);
         if(requestCode==TASK_VIEW_REQUEST_CODE) {
             if(resultCode==RESULT_OK) {
                 Log.d(CLASS_TAG, "onActivityResult: RESULT_OK");
