@@ -504,7 +504,7 @@ public class DashboardActivity extends AppCompatActivity implements TokenComplet
         Log.d(CLASS_TAG, "onActivityResult");
         Log.i(CLASS_TAG, "reqCode: "+requestCode+" resCode: "+resultCode);
         if(requestCode==TASK_VIEW_REQUEST_CODE) {
-            if(resultCode==RESULT_OK) {
+            if(data!=null) {
                 Log.d(CLASS_TAG, "onActivityResult: RESULT_OK");
                 if(data.getExtras().getBoolean(TASK_UPDATED, false)) {
                     this.updateTaskList = true;

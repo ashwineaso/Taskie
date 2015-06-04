@@ -131,7 +131,7 @@ public class TaskFragmentsActivity extends AppCompatActivity implements ActionBa
     protected void onDestroy() {
         Intent resultIntent = new Intent();
         resultIntent.putExtra(DashboardActivity.TASK_UPDATED, this.taskUpdated);
-        setResult(RESULT_OK, resultIntent);
+        setResult(DashboardActivity.TASK_VIEW_REQUEST_CODE, resultIntent);
         super.onDestroy();
     }
 
