@@ -50,7 +50,9 @@ import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
 import in.altersense.taskapp.events.BackPressedEvent;
 import in.altersense.taskapp.events.ChangeInTaskEvent;
+import in.altersense.taskapp.events.FinishingTaskActivityEvent;
 import in.altersense.taskapp.events.TaskDeletedEvent;
+import in.altersense.taskapp.events.TaskEditedEvent;
 import in.altersense.taskapp.events.UserRemovedFromCollaboratorsEvent;
 import in.altersense.taskapp.models.Buzz;
 import in.altersense.taskapp.models.Collaborator;
@@ -122,6 +124,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     private int prevPriority, newPriority;
     private LinearLayout dueDateChangerLL;
     private MenuItem buzz;
+    private Activity activity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -167,7 +170,13 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                         new ArrayList<User>(),
                         getActivity()
                 );
+
                 adapter.clear();
+
+                // Fires a task edited event to the parent activty.
+                BaseApplication.getEventBus().post(new TaskEditedEvent());
+                Log.i(CLASS_TAG, "Fired TaskEditedEvent --> TaskFragmentsActivity");
+
                 adapter.addAll(task.getCollaborators(task, context));
                 collList.smoothScrollToPosition(adapter.getCount()-1);
                 adapter.notifyDataSetChanged();
@@ -250,12 +259,15 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.context = activity;
+        this.activity = activity;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         String TAG = CLASS_TAG + " OnCreate";
         super.onCreate(savedInstanceState);
+        this.resultIntent = new Intent();
+
 
         //        Setting up calligraphy
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
@@ -305,12 +317,9 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         UserDbHelper userDbHelper = new UserDbHelper(getActivity());
         // Setting a Filtered Array Adapter to autocomplete with users in db
         userList = userDbHelper.listAllUsers();
-        Log.d(CLASS_TAG, "User list: "+userList.toString());
+        Log.d(CLASS_TAG, "User list: " + userList.toString());
 
         this.task.fetchAllCollaborators(this.context);
-
-        this.resultIntent = new Intent();
-        this.getActivity().setResult(Activity.RESULT_OK, resultIntent);
     }
 
     @Override
@@ -430,6 +439,9 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
      */
     private void setUpViewMode() {
         String TAG = CLASS_TAG+"setUpViewMode";
+
+        this.isEditMode = false;
+
         // Update task params
         this.task.setName(this.taskTitleET.getText().toString());
         this.task.setDescription(this.taskDescriptionET.getText().toString());
@@ -437,8 +449,10 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         if(duelong!=0) {
             this.task.setDueDateTime(this.duelong);
         }
-        // Set mode.
-        this.isEditMode = false;
+
+        // Fires event TaskEdited event to the parent activity
+        BaseApplication.getEventBus().post(new TaskEditedEvent());
+        Log.i(CLASS_TAG, "TaskEditedEvent --> TaskFragmentsActivity");
 
         // Checks for change in priority and fires the event.
         Log.d("checkPriorityChanged", "Calling");
@@ -741,7 +755,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                     .widgetColor(R.color.taskPrimaryColor)
                     .show();
         } else {
-            getActivity().finish();
+            BaseApplication.getEventBus().post(new FinishingTaskActivityEvent());
         }
     }
 

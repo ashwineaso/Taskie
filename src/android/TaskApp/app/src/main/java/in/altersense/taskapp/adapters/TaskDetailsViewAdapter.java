@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.altersense.taskapp.R;
+import in.altersense.taskapp.components.BaseApplication;
+import in.altersense.taskapp.events.TaskEditedEvent;
 import in.altersense.taskapp.models.Collaborator;
 import in.altersense.taskapp.models.Task;
 import in.altersense.taskapp.models.User;
@@ -138,6 +140,11 @@ public class TaskDetailsViewAdapter extends ArraySwipeAdapter<Collaborator> {
                     task.updateCollaborators(new ArrayList<User>(), userRemovalList, activity.getApplicationContext());
                     notifyDataSetChanged();
                     holder.collSwipeLayout.close();
+
+                    // TaskEditedEvent fired to denote change in task.
+                    BaseApplication.getEventBus().post(new TaskEditedEvent());
+                    Log.i(CLASS_TAG, "Posted TaskEditedEvent --> TaskFragmentsActivity");
+
                     Toast.makeText(activity.getApplicationContext(), "Collaborator Removed", Toast.LENGTH_LONG ).show();
                 }
             });
