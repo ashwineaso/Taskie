@@ -126,10 +126,10 @@ def UrlPost(postObj):
 		print ': POST failed.'
 
 #Current version of the API
-CURRENT_VERSION = 0.3.1
+CURRENT_VERSION = 0.5
 
 #Current version of the API
-APP_CURRENT_VERSION = 5
+APP_CURRENT_VERSION = 6
 UPDATE_REQUIRED = False
 
 #Debig status of the API
