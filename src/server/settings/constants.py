@@ -106,29 +106,24 @@ class UrlPostThread(threading.Thread):
 			print self.name+': POST failed.'
 
 
-class UrlPost():
-	def __init__(self, postObj):
-		self.postObj = postObj
+def UrlPost(postObj):
+	# Make a postRequest from the postObj
+	s = requests.Session()
+	s.mount('https://android.googleapis.com/', MyAdapter())
+	headers = {'content-type': 'application/json'}
 
-	def run(self):
-		# Make a postRequest from the postObj
-		s = requests.Session()
-		s.mount('https://android.googleapis.com/', MyAdapter())
-		headers = {'content-type': 'application/json'}
-
-		response = s.post(
-			self.postObj.url,
-			data=json.dumps(self.postObj.payload),
-			headers=self.postObj.headers
-		)
-		self.response = response
-		print(response.text)
-		if response.ok:
-			print 'request:', self.postObj.payload
-			print ': POST is success.'
-			print 'content:', response.content
-		else:
-			print ': POST failed.'
+	response = s.post(
+		postObj.url,
+		data=json.dumps(postObj.payload),
+		headers=postObj.headers
+	)
+	print(response.text)
+	if response.ok:
+		print 'request:', postObj.payload
+		print ': POST is success.'
+		print 'content:', response.content
+	else:
+		print ': POST failed.'
 
 #Current version of the API
 CURRENT_VERSION = 0.3.1

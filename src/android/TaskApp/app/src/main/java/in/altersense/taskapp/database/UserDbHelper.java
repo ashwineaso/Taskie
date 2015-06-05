@@ -181,7 +181,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Lists all users for collaborator addition purposes.
+     * Lists all users from the database and device contacts for collaborator addition purposes.
      * Purposely omits the device owner to be removed from the list.
      * @return A list of all users in the db which user can add as collaborators.
      */
@@ -214,7 +214,6 @@ public class UserDbHelper extends SQLiteOpenHelper {
             if(!cursor.getString(emailColNum).equals(deviceUserEmail)) {
                 // Add each user to the list if user is not the owner.
                 userSet.add(new User(cursor));
-                userList.add(new User(cursor));
             }
         } while (cursor.moveToNext());
         readableDb.close();
@@ -236,10 +235,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
                         usersFromContactsCursor.getString(2),
                         usersFromContactsCursor.getString(1)
                 );
-                if(!userList.contains(userFromContacts)) {
-                    userSet.add(userFromContacts);
-                    userList.add(userFromContacts);
-                }
+                userSet.add(userFromContacts);
             } while (usersFromContactsCursor.moveToNext());
         } catch (CursorIndexOutOfBoundsException e) {
             Log.d(TAG, "The device has no contacts with email. Moving on...");

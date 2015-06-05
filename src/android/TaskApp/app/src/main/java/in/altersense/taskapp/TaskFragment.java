@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -27,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
@@ -49,8 +48,11 @@ import in.altersense.taskapp.components.ReminderNotifier;
 import in.altersense.taskapp.customviews.TokenCompleteCollaboratorsEditText;
 import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
+import in.altersense.taskapp.events.BackPressedEvent;
 import in.altersense.taskapp.events.ChangeInTaskEvent;
+import in.altersense.taskapp.events.FinishingTaskActivityEvent;
 import in.altersense.taskapp.events.TaskDeletedEvent;
+import in.altersense.taskapp.events.TaskEditedEvent;
 import in.altersense.taskapp.events.UserRemovedFromCollaboratorsEvent;
 import in.altersense.taskapp.models.Buzz;
 import in.altersense.taskapp.models.Collaborator;
@@ -122,9 +124,11 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     private int prevPriority, newPriority;
     private LinearLayout dueDateChangerLL;
     private MenuItem buzz;
+    private Activity activity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.task_fragment_view, container, false);
         //Initialize the views
         this.taskTitleET = (EditText) view.findViewById(R.id.taskTitleEditText);
@@ -160,12 +164,19 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         this.addCollaboratorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                collaboratorsTCET.clearFocus();
                 task.updateCollaborators(
                         collaboratorAdditionList,
                         new ArrayList<User>(),
                         getActivity()
                 );
+
                 adapter.clear();
+
+                // Fires a task edited event to the parent activty.
+                BaseApplication.getEventBus().post(new TaskEditedEvent());
+                Log.i(CLASS_TAG, "Fired TaskEditedEvent --> TaskFragmentsActivity");
+
                 adapter.addAll(task.getCollaborators(task, context));
                 collList.smoothScrollToPosition(adapter.getCount()-1);
                 adapter.notifyDataSetChanged();
@@ -248,12 +259,15 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.context = activity;
+        this.activity = activity;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         String TAG = CLASS_TAG + " OnCreate";
         super.onCreate(savedInstanceState);
+        this.resultIntent = new Intent();
+
 
         //        Setting up calligraphy
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
@@ -265,7 +279,6 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         setHasOptionsMenu(true);
 
         taskDbHelper = new TaskDbHelper(context);
-        BaseApplication.getEventBus().register(this);
 
         //Get the Intent from the Parent Activity
         createViewIntent = getActivity().getIntent();
@@ -304,12 +317,21 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         UserDbHelper userDbHelper = new UserDbHelper(getActivity());
         // Setting a Filtered Array Adapter to autocomplete with users in db
         userList = userDbHelper.listAllUsers();
-        Log.d(CLASS_TAG, "User list: "+userList.toString());
+        Log.d(CLASS_TAG, "User list: " + userList.toString());
 
         this.task.fetchAllCollaborators(this.context);
+    }
 
-        this.resultIntent = new Intent();
-        this.getActivity().setResult(Activity.RESULT_OK, resultIntent);
+    @Override
+    public void onResume() {
+        super.onResume();
+        BaseApplication.getEventBus().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        BaseApplication.getEventBus().unregister(this);
     }
 
     private void setUpCollabsList() {
@@ -413,10 +435,13 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     }
 
     /**
-     * Sets up the activity to task view mode.
+     * Sets up the activity to task view mode and saves the changes.
      */
     private void setUpViewMode() {
         String TAG = CLASS_TAG+"setUpViewMode";
+
+        this.isEditMode = false;
+
         // Update task params
         this.task.setName(this.taskTitleET.getText().toString());
         this.task.setDescription(this.taskDescriptionET.getText().toString());
@@ -424,8 +449,10 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         if(duelong!=0) {
             this.task.setDueDateTime(this.duelong);
         }
-        // Set mode.
-        this.isEditMode = false;
+
+        // Fires event TaskEdited event to the parent activity
+        BaseApplication.getEventBus().post(new TaskEditedEvent());
+        Log.i(CLASS_TAG, "TaskEditedEvent --> TaskFragmentsActivity");
 
         // Checks for change in priority and fires the event.
         Log.d("checkPriorityChanged", "Calling");
@@ -485,7 +512,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     @Override
     public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
         String TAG = CLASS_TAG + "onDateSet";
-        Log.d(TAG, "Date: "+year+"-"+month+"-"+day);
+        Log.d(TAG, "Date: " + year + "-" + month + "-" + day);
         timePickerDialog.setCloseOnSingleTapMinute(false);
         timePickerDialog.show(getActivity().getSupportFragmentManager(), TIMEPICKER_TAG);
         this.dueString = year + "-" + (month+1) + "-" + day + " ";
@@ -699,32 +726,61 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         }
     }
 
+    @Subscribe
+    public void OnBackPressedEvent(BackPressedEvent event) {
+        String TAG = CLASS_TAG+"onBackPressed";
+        if(this.isEditMode) {
+            new MaterialDialog.Builder(context)
+                    .title("Confirm Action")
+                    .content("Save the changes you made ?")
+                    .neutralText("NEVERMIND")
+                    .positiveText("SAVE")
+                    .callback(new MaterialDialog.ButtonCallback() {
+                        @Override
+                        public void onNeutral(MaterialDialog dialog) {
+                            super.onNeutral(dialog);
+                            stopEditMode();
+                            dialog.dismiss();
+                        }
 
-//    @Override
-//    public void onBackPressed() {
-//        String TAG = CLASS_TAG+"onBackPressed";
-//        if(this.isEditMode) {
-//            // Set mode.
-//            this.isEditMode = false;
-//            // Update TextViews
-//            this.taskTitleET.setText(this.task.getName());
-//            this.taskDescriptionET.setText(this.task.getDescription());
-//            this.taskPrioritySpinner.setSelection(this.task.getPriority());
-//            this.dueDateTV.setText(this.task.getDueDateTime());
-//            // Hide edit views
-//            this.taskTitleET.setVisibility(View.GONE);
-//            this.taskDescriptionET.setVisibility(View.GONE);
-//            this.taskPrioritySpinner.setVisibility(View.GONE);
-//            this.calendarIV.setVisibility(View.GONE);
-//            this.cancelIV.setVisibility(View.GONE);
-//            // display display views
-//            this.taskTitleTV.setVisibility(View.VISIBLE);
-//            this.taskDescriptionTV.setVisibility(View.VISIBLE);
-//            this.taskPriorityTV.setVisibility(View.VISIBLE);
-//            // Set toggle button to off
-//            this.editViewToggle.setIcon(R.drawable.ic_edit_white);
-//        } else {
-//            getActivity().onBackPressed();
-//        }
-//    }
+                        @Override
+                        public void onPositive(MaterialDialog dialog) {
+                            super.onPositive(dialog);
+                            editViewToggle.setIcon(R.drawable.ic_edit_white);
+                            editViewToggle.setTitle("Edit");
+                            setUpViewMode();
+                            dialog.dismiss();
+                        }
+                    })
+                    .widgetColor(R.color.taskPrimaryColor)
+                    .show();
+        } else {
+            BaseApplication.getEventBus().post(new FinishingTaskActivityEvent());
+        }
+    }
+
+    /**
+     * Sets up the activity to task view mode without saving the changes.
+     */
+    private void stopEditMode() {
+        // Set mode.
+        this.isEditMode = false;
+        // Update TextViews
+        this.taskTitleET.setText(this.task.getName());
+        this.taskDescriptionET.setText(this.task.getDescription());
+        this.taskPrioritySpinner.setSelection(this.task.getPriority());
+        this.dueDateTV.setText(this.task.getDueDateTime());
+        // Hide edit views
+        this.taskTitleET.setVisibility(View.GONE);
+        this.taskDescriptionET.setVisibility(View.GONE);
+        this.taskPrioritySpinner.setVisibility(View.GONE);
+        this.calendarIV.setVisibility(View.GONE);
+        this.cancelIV.setVisibility(View.GONE);
+        // display display views
+        this.taskTitleTV.setVisibility(View.VISIBLE);
+        this.taskDescriptionTV.setVisibility(View.VISIBLE);
+        this.taskPriorityTV.setVisibility(View.VISIBLE);
+        // Set toggle button to off
+        this.editViewToggle.setIcon(R.drawable.ic_edit_white);
+    }
 }
