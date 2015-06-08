@@ -61,6 +61,7 @@ public class GcmMessageHandler extends IntentService {
         String messageType = gcm.getMessageType(intent);
 
         if(!extras.isEmpty()) {
+            Log.d("GCM", "GCM Extras: "+extras.toString());
             /* Filtering the message based on the message type.
              * For now We will be handling only normal gcm messages */
 

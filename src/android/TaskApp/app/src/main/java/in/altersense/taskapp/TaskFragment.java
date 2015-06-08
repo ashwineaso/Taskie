@@ -50,7 +50,9 @@ import in.altersense.taskapp.database.TaskDbHelper;
 import in.altersense.taskapp.database.UserDbHelper;
 import in.altersense.taskapp.events.BackPressedEvent;
 import in.altersense.taskapp.events.ChangeInTaskEvent;
+import in.altersense.taskapp.events.FinishingTaskActivityEvent;
 import in.altersense.taskapp.events.TaskDeletedEvent;
+import in.altersense.taskapp.events.TaskEditedEvent;
 import in.altersense.taskapp.events.UserRemovedFromCollaboratorsEvent;
 import in.altersense.taskapp.models.Buzz;
 import in.altersense.taskapp.models.Collaborator;
@@ -104,6 +106,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
 
     private boolean isEditMode = false;
     private boolean isCollabAdditionMode = false;
+    private Intent resultIntent;
 
     private DatePickerDialog datePickerDialog;
     private TimePickerDialog timePickerDialog;
@@ -121,6 +124,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     private int prevPriority, newPriority;
     private LinearLayout dueDateChangerLL;
     private MenuItem buzz;
+    private Activity activity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -166,7 +170,13 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                         new ArrayList<User>(),
                         getActivity()
                 );
+
                 adapter.clear();
+
+                // Fires a task edited event to the parent activty.
+                BaseApplication.getEventBus().post(new TaskEditedEvent());
+                Log.i(CLASS_TAG, "Fired TaskEditedEvent --> TaskFragmentsActivity");
+
                 adapter.addAll(task.getCollaborators(task, context));
                 collList.smoothScrollToPosition(adapter.getCount()-1);
                 adapter.notifyDataSetChanged();
@@ -249,12 +259,15 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.context = activity;
+        this.activity = activity;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         String TAG = CLASS_TAG + " OnCreate";
         super.onCreate(savedInstanceState);
+        this.resultIntent = new Intent();
+
 
         //        Setting up calligraphy
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
@@ -307,8 +320,6 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         Log.d(CLASS_TAG, "User list: " + userList.toString());
 
         this.task.fetchAllCollaborators(this.context);
-
-        this.getActivity().setResult(Activity.RESULT_OK);
     }
 
     @Override
@@ -428,8 +439,8 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
      */
     private void setUpViewMode() {
         String TAG = CLASS_TAG+"setUpViewMode";
-        // Set result code for parent activity
-        getActivity().setResult(DashboardActivity.RESULT_OK);
+
+        this.isEditMode = false;
 
         // Update task params
         this.task.setName(this.taskTitleET.getText().toString());
@@ -438,8 +449,10 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
         if(duelong!=0) {
             this.task.setDueDateTime(this.duelong);
         }
-        // Set mode.
-        this.isEditMode = false;
+
+        // Fires event TaskEdited event to the parent activity
+        BaseApplication.getEventBus().post(new TaskEditedEvent());
+        Log.i(CLASS_TAG, "TaskEditedEvent --> TaskFragmentsActivity");
 
         // Checks for change in priority and fires the event.
         Log.d("checkPriorityChanged", "Calling");
@@ -469,6 +482,9 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                 this.context
         );
         updateTaskRequest.execute();
+
+        // Update resultIntent flag to re-query the list of tasks in dashboard
+        this.resultIntent.putExtra(Config.SHARED_PREF_KEYS.UPDATE_LIST.getKey(), true);
 
     }
 
@@ -571,8 +587,11 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
             setUpTextViews();
             setUpCollabsList();
             this.collabListAdapter.notifyDataSetChanged();
-            getActivity().setResult(Activity.RESULT_OK);
-
+            // Set the resultIntent with a flag to update the task list.
+            this.resultIntent.putExtra(
+                    Config.SHARED_PREF_KEYS.UPDATE_LIST.getKey(),
+                    true
+            );
         }
     }
 
@@ -585,7 +604,10 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                     Toast.LENGTH_SHORT
             ).show();
             // Set the resultIntent with a flag to update the task list.
-            getActivity().setResult(Activity.RESULT_OK);
+            this.resultIntent.putExtra(
+                    Config.SHARED_PREF_KEYS.UPDATE_LIST.getKey(),
+                    true
+            );
             getActivity().finish();
         }
     }
@@ -599,7 +621,10 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                     Toast.LENGTH_SHORT
             ).show();
             // Set the resultIntent with a flag to update the task list.
-            getActivity().setResult(Activity.RESULT_OK);
+            this.resultIntent.putExtra(
+                    Config.SHARED_PREF_KEYS.UPDATE_LIST.getKey(),
+                    true
+            );
             getActivity().finish();
         }
     }
@@ -730,7 +755,7 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
                     .widgetColor(R.color.taskPrimaryColor)
                     .show();
         } else {
-            getActivity().finish();
+            BaseApplication.getEventBus().post(new FinishingTaskActivityEvent());
         }
     }
 
