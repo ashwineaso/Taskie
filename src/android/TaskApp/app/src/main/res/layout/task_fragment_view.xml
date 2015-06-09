@@ -226,17 +226,23 @@
                         android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:singleLine="false"
+                        android:gravity="top|left"
+                        android:lines="3"
+                        android:scrollbars="vertical"
                         android:textSize="@dimen/text_subHeader_xhdpi"
                         android:hint="Task Description"
-                        android:inputType="textCapSentences" />
+                        android:inputType="textMultiLine|textCapSentences" />
 
                     <TextView android:id="@+id/taskDescriptionTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/text_subHeader_xhdpi"
+                        android:singleLine="false"
                         android:hint="No Task Description"
                         android:inputType="textMultiLine|textCapSentences"
-                        android:maxLines="5" />
+                        android:scrollbars="vertical"
+                        android:maxLines="3" />
 
                     <View
                         android:layout_width="fill_parent"
