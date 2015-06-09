@@ -387,9 +387,9 @@ public class TaskFragment extends Fragment implements DatePickerDialog.OnDateSet
     private String priorityToString(int priority) {
         String priorityToString = "";
         switch (priority) {
-            case 0 : priorityToString = "Low Priority"; break;
-            case 1 : priorityToString = "Normal Priority"; break;
-            case 2 : priorityToString = "High Priority"; break;
+            case 0 : priorityToString = "Low"; break;
+            case 1 : priorityToString = "Normal"; break;
+            case 2 : priorityToString = "High"; break;
         }
         return priorityToString;
     }
