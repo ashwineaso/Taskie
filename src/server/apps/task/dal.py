@@ -41,7 +41,7 @@ def addNewTask(taskObj):
 
 	#for finding the user id of the owner
 	userObj.id = taskObj.owner
-	taskObj.owner = userbll.getUserById(userObj)
+	userObj.owner = userbll.getUserById(userObj)
 	
 	#Checking whether the collaborators is a user of the app
 	#If not - Create a new account for the user
@@ -59,7 +59,7 @@ def addNewTask(taskObj):
 	
 	#Create a task with the necessary data.
 	task = Task(
-				owner = taskObj.owner,
+				owner = userObj.owner,
 				collaborators = my_objects,
 				priority = taskObj.priority,
 				name = taskObj.name,
