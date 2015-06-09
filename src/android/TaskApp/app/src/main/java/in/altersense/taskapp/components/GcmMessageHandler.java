@@ -33,6 +33,8 @@ import in.altersense.taskapp.requests.SyncRequest;
  */
 public class GcmMessageHandler extends IntentService {
 
+    private static final String CLASS_TAG = "GcmMessageHandler";
+
     String datatype, id;
     private NotificationManager mNotificationManager;
     private Task tempTask;
@@ -70,77 +72,85 @@ public class GcmMessageHandler extends IntentService {
                 datatype = extras.getString("datatype");
                 id = extras.getString("id");
                 Log.i("GCM", "Recieved + ( " + MessageType + " ) + datatype : " +datatype + " , id : " + id);
+                Log.d(CLASS_TAG, getApplicationContext()+"");
                 TaskDbHelper taskDbHelper = new TaskDbHelper(getApplicationContext());
 
-                switch(datatype) {
-                    case "Task" :
-                        //Implement syncing of a Task
-                        Task task = new Task();
-                        task.setUuid(id, GcmMessageHandler.this);
-                        Log.d("GCM", "About to sync task");
-                        SyncRequest syncRequest = new SyncRequest(task, getApplicationContext());
-                        syncRequest.execute();
-                        notificationHandler.createNotification(extras, getApplicationContext());
-                        break;
-                    case "Buzz" :
-                        //Implement showing a buzz
-                        tempTask = taskDbHelper.getTaskByUUID(id);
-                        sendNotification(tempTask.getOwner().getName()
-                                + " has reminded you to complete the task : "
-                                + tempTask.getName(),
-                                "Reminder",
-                                true);
-                        break;
+                try {
+                    switch(datatype) {
+                        case "Task" :
+                            //Implement syncing of a Task
+                            Task task = new Task();
+                            task.setUuid(id, GcmMessageHandler.this);
+                            Log.d("GCM", "About to sync task");
+                            SyncRequest syncRequest = new SyncRequest(task, getApplicationContext());
+                            syncRequest.execute();
+                            notificationHandler.createNotification(extras, getApplicationContext());
+                            break;
+                        case "Buzz" :
+                            //Implement showing a buzz
+                            tempTask = taskDbHelper.getTaskByUUID(id);
+                            sendNotification(tempTask.getOwner().getName()
+                                            + " has reminded you to complete the task : "
+                                            + tempTask.getName(),
+                                    "Reminder",
+                                    true);
+                            break;
 
-                    case "CollRemoved":
-                        // Display a notification
-                        task = taskDbHelper.getTaskByUUID(id);
-                        sendNotification(task.getOwner().getName()
-                                + " removed you from collaborators of the task: "
-                                + task.getName(),
-                                "Collaboration removed.",
-                                false);
-                        // Implement deletion of the task since the collaborator has been removed
-                        taskDbHelper.deleteCollaborator(task);
-                        Log.d("GCM", "deletion status" + taskDbHelper.delete(task));
+                        case "CollRemoved":
+                            // Display a notification
+                            task = taskDbHelper.getTaskByUUID(id);
+                            sendNotification(task.getOwner().getName()
+                                            + " removed you from collaborators of the task: "
+                                            + task.getName(),
+                                    "Collaboration removed.",
+                                    false);
+                            // Implement deletion of the task since the collaborator has been removed
+                            taskDbHelper.deleteCollaborator(task);
+                            Log.d("GCM", "deletion status" + taskDbHelper.delete(task));
 
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                // Event post for refreshing task list in dashboard.
-                                BaseApplication.getEventBus().post(new ChangeInTasksEvent("Collaborator removed."));
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // Event post for refreshing task list in dashboard.
+                                    Log.i(CLASS_TAG, "ChangeInEventTask --> DashboardActivity");
+                                    BaseApplication.getEventBus().post(new ChangeInTasksEvent("Collaborator removed."));
 
-                                // Event post for moving user away from TaskView if user is viewing the particular task.
-                                BaseApplication.getEventBus().post(new UserRemovedFromCollaboratorsEvent(id));
-                            }
-                        });
+                                    // Event post for moving user away from TaskView if user is viewing the particular task.
+                                    Log.i(CLASS_TAG, "UserRemovedFromCollaborators --> TaskActivityFragment");
+                                    BaseApplication.getEventBus().post(new UserRemovedFromCollaboratorsEvent(id));
+                                }
+                            });
 
-                        break;
+                            break;
 
-                    case "Deleted":
-                        //Delete the task from the users db
-                        task = taskDbHelper.getTaskByUUID(id);
-                        sendNotification(task.getOwner().getName()
-                                        + " has delete the task: "
-                                        + task.getName(),
-                                "Task Deleted.",
-                                false);
-                        // Delete the task from the database
-                        taskDbHelper.deleteCollaborator(task);
-                        Log.d("GCM", "deletion status" + taskDbHelper.delete(task));
+                        case "Deleted":
+                            //Delete the task from the users db
+                            task = taskDbHelper.getTaskByUUID(id);
+                            sendNotification(task.getOwner().getName()
+                                            + " has delete the task: "
+                                            + task.getName(),
+                                    "Task Deleted.",
+                                    false);
+                            // Delete the task from the database
+                            taskDbHelper.deleteCollaborator(task);
+                            Log.d("GCM", "deletion status" + taskDbHelper.delete(task));
 
-                        this.handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                // Event post for refreshing task list in dashboard.
-                                BaseApplication.getEventBus().post(new ChangeInTasksEvent("Collaborator removed."));
+                            this.handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // Event post for refreshing task list in dashboard.
+                                    BaseApplication.getEventBus().post(new ChangeInTasksEvent("Collaborator removed."));
 
-                                // Event post for moving user away from TaskView if user is viewing the particular task.
-                                BaseApplication.getEventBus().post(new TaskDeletedEvent(id));
-                            }
-                        });
-                        break;
+                                    // Event post for moving user away from TaskView if user is viewing the particular task.
+                                    BaseApplication.getEventBus().post(new TaskDeletedEvent(id));
+                                }
+                            });
+                            break;
+                    }
+                } catch (NullPointerException e) {
+                    Log.d(CLASS_TAG, "Phantom push occured");
                 }
+
             }
         }
 
