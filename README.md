@@ -1,4 +1,5 @@
-# TaskApp #
+# Taskie
+Backend REST API Service for Taskie Android App
 
 TaskApp enables users to share tasks and collaborate
 
